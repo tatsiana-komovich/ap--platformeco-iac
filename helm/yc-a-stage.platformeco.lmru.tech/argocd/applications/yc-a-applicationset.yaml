@@ -1,0 +1,49 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: yc-a-prod-applicationset
+  namespace: argocd-yc-a-prod
+  annotations:
+    argocd.argoproj.io/manifest-generate-paths: .
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  generators:
+    - git:
+        repoURL: https://github.lmru.tech/adeo/ap--platformeco-iac
+        revision: HEAD
+        directories:
+          - path: helm/yc-a.platformeco.lmru.tech/*
+          - path: helm/yc-a.platformeco.lmru.tech/argocd
+            exclude: true
+  template:
+    metadata:
+      name: '{{path.basename}}-yc-a-prod.platformeco.lmru.tech'
+      namespace: argocd-yc-a-prod
+      annotations:
+        argocd.argoproj.io/manifest-generate-paths: .
+    spec:
+      destination:
+        name: yc-a-prod-cluster
+        namespace: '{{path.basename}}'
+      project: yc-a-prod-cluster
+      source:
+        path: '{{path}}'
+        repoURL: https://github.lmru.tech/adeo/ap--platformeco-iac
+        targetRevision: HEAD
+        plugin:
+          name: argocd-vault-plugin-helm
+          env:
+            - name: HELM_RELEASE_NAME
+              value: '{{path.basename}}-yc-a-prod'
+      syncPolicy:
+        automated:
+          selfHeal: true
+          prune: false
+        syncOptions:
+          - ApplyOutOfSyncOnly=true
+          - CreateNamespace=true
+  syncPolicy:
+    applicationsSync: create-update
+    preserveResourcesOnDeletion: true
