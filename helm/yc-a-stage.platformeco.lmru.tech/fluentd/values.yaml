@@ -1,0 +1,104 @@
+fluentd:
+  kind: StatefulSet
+  image:
+    repository: "docker.art.lmru.tech/fluent/fluentd-kubernetes-daemonset"
+    tag: "v1.16.3-debian-elasticsearch8-2.1"
+  service:
+    ports:
+    - name: "forwarder"
+      protocol: TCP
+      containerPort: 24224
+    - name: "http"
+      protocol: TCP
+      containerPort: 9880
+  labels:
+    app: fluentd
+  podLabels:
+    prometheus.deckhouse.io/custom-target: yc-a-stage-fluentd
+  podAnnotations:
+    prometheus.deckhouse.io/port: "24231"
+    prometheus.deckhouse.io/path: "/metrics"
+  replicaCount: 6
+  dashboards:
+    enabled: false
+  persistence:
+    enabled: true
+    size: 60Gi
+  mountVarLogDirectory: false
+  mountDockerContainersDirectory: false
+  plugins:
+    - fluent-plugin-grafana-loki
+  livenessProbe: 
+    initialDelaySeconds: 60
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 6
+    successThreshold: 1
+    httpGet:
+      path: "/fluentd.healthcheck?json=%7B%22ping%22%3A+%22pong%22%7D"
+      port: http
+  readinessProbe: 
+    initialDelaySeconds: 60
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 6
+    successThreshold: 1
+    httpGet:
+      path: "/fluentd.healthcheck?json=%7B%22ping%22%3A+%22pong%22%7D"
+      port: http
+  resources:
+    requests:
+      cpu: 10m
+      memory: 128Mi
+    limits:
+      memory: 3Gi
+  fileConfigs:
+    01_sources.conf: |-
+      <source>
+        @type   forward
+        bind    0.0.0.0
+        port    24224
+      </source>
+      <source>
+        @type http
+        bind 0.0.0.0
+        port 9880
+      </source>
+    02_filters.conf: |-
+      <filter **>
+        @type prometheus
+        @id filter_prometheus
+        @log_level warn
+
+        <metric>
+          name fluentd_input_status_num_records_total
+          type counter
+          desc The total number of incoming records
+          <labels>
+            tag ${tag_parts[0]}
+            hostname ${hostname}
+          </labels>
+        </metric>
+      </filter>
+    03_dispatch.conf: ""
+    04_outputs.conf: |-
+      <match kube.**>
+        @type                 loki
+        url                   "https://loki-api-yc-a-stage-platformeco-infra-a.platformeco.lmru.tech"
+        remove_keys           kubernetes, _p
+        include_thread_label  false
+        <label>
+          container   $.kubernetes.container_name
+          pod         $.kubernetes.pod_name
+          namespace   $.kubernetes.namespace_name
+          cluster     $.cluster_name
+        </label>
+        <buffer>
+          @type                 memory
+          chunk_limit_size      2MB
+          flush_thread_count    12  
+          flush_interval        5s 
+          path                  /var/log/fluent/buffer
+          total_limit_size      60GB
+        </buffer>
+      </match>
