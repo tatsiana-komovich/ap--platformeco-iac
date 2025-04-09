@@ -1,0 +1,32 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: kong-dev-kong-yc-stage-a-apim-lmru-tech
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/manifest-generate-paths: .
+spec:
+  project: default 
+  destination:
+    namespace: kong
+    name: api-yc-kong-a-stage.apim.lmru.tech
+  source:
+    repoURL: 'https://github.lmru.tech/adeo/ap--kong-iac'
+    path: helm/api-yc-kong-a-stage.apim.lmru.tech/kong
+    helm:
+      RELEASE_NAME: king-dev
+          value: kong-dev
+        - name: helm_args
+          value: -f values-dev.yaml --api-versions networking.k8s.io/v1/Ingress
+    targetRevision: main
+  ignoreDifferences:
+    - group: "apps"
+      kind: "Deployment"
+  syncPolicy:
+    automated:
+      prune: false
+      selfHeal: true
+    syncOptions:
+      - ApplyOutOfSyncOnly=true
+      - CreateNamespace=true
+      - RespectIgnoreDifferences=true

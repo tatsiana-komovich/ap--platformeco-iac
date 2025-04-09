@@ -1,0 +1,71 @@
+# Configuration owners
+**                                                          @adeo/lmru-devops-core-team
+# Technologies - Observability
+apps/obs/**                                                 @adeo/lmru-observability-sre
+common/monitoring/**                                        @adeo/lmru-observability-sre
+common/observability/lm/**                                  @adeo/lmru-observability-sre
+clusters/obs/**                                             @adeo/lmru-observability-sre
+apps/opensearch/obs-logs/values/obs-logs-a-prod-cluster/**  @adeo/lmru-observability-sre @adeo/lmru-flantgolf
+
+# Technologies - Observability - Alertmanager
+common/observability/lm/alertmanager/values/prod/magfront-prod-cluster/config.yaml    @adeo/lmru-magfront
+common/observability/lm/alertmanager/values/stage/magfront-stage-cluster/config.yaml  @adeo/lmru-magfront
+common/observability/lm/alertmanager/values/prod/payment-prod-cluster/config.yaml     @adeo/lmru-payment-sre
+common/observability/lm/alertmanager/values/prod/sirius-a-prod-cluster/config.yaml    @adeo/lmru-payment-sre
+
+# remote-write-apim
+common/prometheus-remote-write/**/apim-*.yaml                             @adeo/lmru-api-platform-devops
+common/prometheus-remote-write/**/platformeco-*.yaml                      @adeo/lmru-api-platform-devops
+common/prometheus-remote-write/**/yc-cloud-studio-cluster.yaml            @adeo/lmru-api-platform-devops
+common/prometheus-remote-write/**/yc-platformeco-metrics-cluster.yaml     @adeo/lmru-api-platform-devops
+
+# Flant teams
+clusters/**                              @adeo/lmru-flantbravo @adeo/lmru-flantgolf @adeo/lmru-flantrnd @adeo/lmru-devops-core-team
+common/deckhouse-modules/**              @adeo/lmru-flantbravo @adeo/lmru-flantgolf @adeo/lmru-flantrnd @adeo/lmru-devops-core-team
+common/observability/flant/**            @adeo/lmru-flantbravo @adeo/lmru-flantgolf @adeo/lmru-flantrnd
+apps/opensearch/**                       @adeo/lmru-flantgolf
+observability/lm/log-shipper/**          @adeo/lmru-flantgolf
+clusters/kong/**                         @adeo/lmru-flantalfa 
+
+# LMRU - Information Security
+common/deckhouse-modules/namespace-configurator/exclusion/*   @adeo/lmru-information-security
+
+# Kong - Api-platform
+clusters/kong/**                                                                                           @adeo/lmru-api-platform-devops
+common/**/x*-kong-prod-cluster.yaml                                                                        @adeo/lmru-api-platform-devops @adeo/lmru-flantgolf
+common/observability/lm/opentelemetry-collector/values/prod/x*-kong-prod-cluster/**                        @adeo/lmru-api-platform-devops @adeo/lmru-flantgolf
+common/**/yc-*-kong-{prod,stage}-cluster.yaml                                                              @adeo/lmru-api-platform-devops @adeo/lmru-flantgolf
+common/observability/lm/{alertmanager,opentelemetry-collector}/values/{prod,stage}/yc-*-kong-*-cluster/**  @adeo/lmru-api-platform-devops @adeo/lmru-flantgolf
+common/grafana-dashboards/dashboards/yc-elk-kong/**                                                        @adeo/lmru-api-platform-devops @adeo/lmru-flantgolf
+apps/opensearch/{rock.solid,apiplatform,alpha}/values/yc-*-kong-*-cluster/**                               @adeo/lmru-api-platform-devops @adeo/lmru-flantgolf
+
+# Kafka - Api-platform
+clusters/antila/**                                                                          @adeo/lmru-api-platform-devops @adeo/lmru-flantgolf 
+common/observability/lm/alertmanager/values/{stage,prod}/antlia-{cluster}-*/**              @adeo/lmru-api-platform-devops @adeo/lmru-flantgolf 
+common/**/antlia-*-cluster.yaml                                                             @adeo/lmru-api-platform-devops @adeo/lmru-flantgolf 
+
+# Platformeco - Api-platform
+
+#apim-stage, apim 
+common/grafana-dashboards/dashboards/apim/**                                                @adeo/lmru-api-platform-devops @adeo/lmru-flantalfa
+common/grafana-dashboards/dashboards/apim/stage/**                                          @adeo/lmru-api-platform-devops @adeo/lmru-flantalfa
+common/**/apim-{stage,prod}-cluster.yaml                                                    @adeo/lmru-api-platform-devops @adeo/lmru-flantalfa
+
+#yc-cloud, hamal-a-stage
+common/observability/lm/alertmanager/values/stage/hamal-a-stage-cluster/**                  @adeo/lmru-api-platform-devops @adeo/lmru-flantalfa
+common/**/hamal-a-stage-cluster.yaml                                                        @adeo/lmru-api-platform-devops @adeo/lmru-flantalfa
+common/**/yc-cloud-studio-cluster.yaml                                                      @adeo/lmru-api-platform-devops @adeo/lmru-flantalfa
+
+#platformeco-stage, platformeco-logs-a, platformeco, platformeco-infra-a
+common/**/platformeco-{stage,prod,logs-*,infra-*}-cluster.yaml                               @adeo/lmru-api-platform-devops @adeo/lmru-flantalfa
+common/observability/lm/alertmanager/values/prod/platformeco-infra-a-prod-cluster/**         @adeo/lmru-api-platform-devops @adeo/lmru-flantalfa
+clusters/platformeco{,-infra}/**                                                             @adeo/lmru-api-platform-devops @adeo/lmru-flantalfa
+
+#x1-platformeco, x1-platformeco-stage,yc-platformeco, yc-platformeco-metrics
+common/**/{x1,yc}-platformeco-*-cluster.yaml                                                           @adeo/lmru-api-platform-devops @adeo/lmru-flantalfa
+common/observability/lm/opentelemetry-collector/values/{stage,prod}/{x1,yc}-platformeco-*-cluster/**   @adeo/lmru-api-platform-devops @adeo/lmru-flantalfa
+
+#common heze-a-stage, heze-a, heze-b-stage, heze-b, heze-d-stage, heze-d
+common/observability/lm/alertmanager/values/{stage,prod}/heze-*-{stage,prod}-cluster/*                 @adeo/lmru-api-platform-devops @adeo/lmru-flantalfa
+common/**/heze-*-{stage,prod}-cluster.yaml                                                             @adeo/lmru-api-platform-devops @adeo/lmru-flantalfa
+clusters/heze/prod/{a,b}/nodes/remove-ansible-user.yaml                                                @adeo/lmru-api-platform-devops @adeo/lmru-flantalfa

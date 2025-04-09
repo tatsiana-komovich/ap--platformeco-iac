@@ -2,8 +2,8 @@
 apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
 metadata:
-  name: yc-a-prod-applicationset
-  namespace: argocd-yc-a-prod
+  name: yc-a-stage-applicationset
+  namespace: argocd
   annotations:
     argocd.argoproj.io/manifest-generate-paths: .
   finalizers:
@@ -11,36 +11,33 @@ metadata:
 spec:
   generators:
     - git:
-        repoURL: https://github.lmru.tech/adeo/ap--platformeco-iac
+        repoURL: https://github.com/tatsiana-komovich/ap--platformeco-iac.git
         revision: HEAD
         directories:
-          - path: helm/yc-a.platformeco.lmru.tech/*
-          - path: helm/yc-a.platformeco.lmru.tech/argocd
+          - path: helm/yc-a-stage.platformeco.lmru.tech/*
+          - path: helm/yc-a-stage.platformeco.lmru.tech/argocd
             exclude: true
   template:
     metadata:
-      name: '{{path.basename}}-yc-a-prod.platformeco.lmru.tech'
-      namespace: argocd-yc-a-prod
+      name: '{{path.basename}}-yc-a-stage.platformeco.lmru.tech'
+      namespace: argocd-yc-a-stage
       annotations:
         argocd.argoproj.io/manifest-generate-paths: .
     spec:
       destination:
-        name: yc-a-prod-cluster
+        server: https://kubernetes.default.svc
         namespace: '{{path.basename}}'
-      project: yc-a-prod-cluster
+      project: default
       source:
         path: '{{path}}'
-        repoURL: https://github.lmru.tech/adeo/ap--platformeco-iac
+        repoURL: https://github.com/tatsiana-komovich/ap--platformeco-iac.git
         targetRevision: HEAD
-        plugin:
-          name: argocd-vault-plugin-helm
-          env:
-            - name: HELM_RELEASE_NAME
-              value: '{{path.basename}}-yc-a-prod'
+        helm:
+          releaseName: '{{path.basename}}-yc-a-stage'
       syncPolicy:
         automated:
           selfHeal: true
-          prune: false
+          prune: true
         syncOptions:
           - ApplyOutOfSyncOnly=true
           - CreateNamespace=true
