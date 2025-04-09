@@ -1,0 +1,15 @@
+clusterName: "k8s-yc-customer-stage"
+
+aquaSecret:
+  kubeEnforcerToken: enforcer-yc-customer-stage-k8s
+
+nodeSelector:
+  node-role.k8s.lmru.tech/application: ''
+tolerations:
+  - key: dedicated
+    operator: Equal
+    effect: "NoExecute"
+    value: commplatform
+
+enforcer:
+  enforcerToken: enforcer-yc-customer-stage

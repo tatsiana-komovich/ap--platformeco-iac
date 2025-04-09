@@ -1,0 +1,57 @@
+---
+admission-policy-engine:
+  spec:
+    version: 1
+    enabled: true
+  internal-lb-policy: true
+
+global:
+  enabled: true
+  settings:
+    modules:
+      https:
+        certManager:
+          clusterIssuerName: selfsigned
+        mode: CertManager
+      publicDomainTemplate: '%s-kafka-b-stage.apim.lmru.tech'
+  version: 2
+
+user-authn:
+  enabled: true
+  settings:
+    publishAPI:
+      enabled: true
+      https:
+        global:
+          kubeconfigGeneratorMasterCA: ""
+        mode: Global
+  version: 2
+
+prometheus:
+  enabled: true
+  settings:
+    externalLabels:
+      k8s_cluster: antlia-b-stage
+      project_name: kong
+      environment: stage
+      datacenter: yc
+      platform: yandex
+  version: 2
+
+cert-manager:
+  enabled: true
+  settings:
+    enableCAInjector: true
+  version: 1
+
+logShipper:
+  enabled: false
+  version: 1
+
+extended-monitoring:
+  enabled: true
+  settings:
+    events:
+      exporterEnabled: true
+      severityLevel: All
+  version: 2

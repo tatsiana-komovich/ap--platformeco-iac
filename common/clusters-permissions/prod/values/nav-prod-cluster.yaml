@@ -1,0 +1,111 @@
+---
+cluster_authorization:
+  defaults:
+    default_sa_permissions: &default
+      accessLevel: User
+      limitNamespaces:
+        - default
+      allowScale: true
+      allowAccessToSystemNamespaces: true
+      portForwarding: true
+  crowd:
+    groups:
+      crowd-flant-bravo-rw:
+        <<: *default
+        accessLevel: SuperAdmin
+        limitNamespaces:
+          - .*
+        allowScale: true
+        allowAccessToSystemNamespaces: true
+        portForwarding: true
+      crowd-flant-rnd-admin:
+        <<: *default
+        accessLevel: SuperAdmin
+        limitNamespaces:
+          - .*
+        allowScale: true
+        allowAccessToSystemNamespaces: true
+        portForwarding: true
+      # -- search p0356 permissions
+      crowd-search-navigation-admin:
+        <<: *default
+        accessLevel: Admin
+        allowAccessToSystemNamespaces: true
+        limitNamespaces:
+          - .*
+      crowd-search-navigation-ro:
+        <<: *default
+        accessLevel: User
+        limitNamespaces:
+          - search-.*
+          - jenkins-slaves
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+      crowd-search-navigation-rw:
+        <<: *default
+        accessLevel: Editor
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - search-.*
+          - jenkins-slaves
+      # Revert SuperAdmin role as it required to create ClusterRole and ClusterRoleBinding, for search-rms-receiver
+      # application because of using hazelcast
+      crowd-sa-search-navigation:
+        <<: *default
+        accessLevel: SuperAdmin
+        allowAccessToSystemNamespaces: true
+        limitNamespaces:
+          - search-.*
+          - jenkins-slaves
+      #<! recsys start>
+      crowd-recsys-admin:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - recsys-.*
+      crowd-recsys-ro:
+        <<: *default
+        accessLevel: User
+        limitNamespaces:
+          - recsys-.*
+          - jenkins-slaves
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+      crowd-recsys-rw:
+        <<: *default
+        accessLevel: Editor
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - recsys-.*
+          - jenkins-slaves
+      crowd-sa-recsys:
+        <<: *default
+        accessLevel: SuperAdmin
+        limitNamespaces:
+          - recsys-.*
+          - jenkins-slaves
+      #<recsys end>
+      crowd-obs-ro:
+        <<: *default
+        accessLevel: User
+        limitNamespaces:
+          - .*
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+      jenkins-runner-deploy:
+        <<: *default
+        accessLevel: SuperAdmin
+        limitNamespaces:
+          - .*
+        allowAccessToSystemNamespaces: true
+        allowScale: false
+        portForwarding: false
+        kind: ServiceAccount
+        namespace: d8-service-accounts
+
+DexProvider:
+  clientID: k8s-nav-prod
+  clientSecret: crowd_app_k8s-nav-prod

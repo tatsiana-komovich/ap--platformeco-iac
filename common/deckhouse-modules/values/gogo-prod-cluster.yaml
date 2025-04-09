@@ -1,0 +1,71 @@
+---
+admission-policy-engine:
+  spec:
+    version: 1
+    enabled: true
+  artifactory-repos:
+    enforcementAction: warn
+
+prometheus:
+  enabled: true
+  settings:
+    externalLabels:
+      k8s_cluster: gogo
+      project_name: gogomonia
+      datacenter: yc
+      environment: prod
+      platform: none # outside LM infrastructure
+  version: 2
+
+user-authn:
+  enabled: true
+  settings:
+    publishAPI:
+      enabled: true
+      https:
+        global:
+          kubeconfigGeneratorMasterCA: ""
+        mode: Global
+  version: 2
+
+logShipper:
+  enabled: true
+  version: 1
+
+istio:
+  enabled: true
+  settings:
+    sidecar:
+      resourcesManagement:
+        mode: Static
+        static:
+          limits:
+            cpu: "10"
+            memory: 10Gi
+          requests:
+            cpu: 100m
+            memory: 128Mi
+    alliance:
+      ingressGateway:
+        inlet: NodePort
+        nodeSelector:
+          node-role.deckhouse.io/frontend: ""
+        tolerations:
+          - effect: NoExecute
+            key: dedicated.deckhouse.io
+            operator: Equal
+            value: frontend
+    federation:
+      enabled: true
+    dataPlane:
+      trafficRedirectionSetupMode: CNIPlugin
+    globalVersion: "1.21"
+  version: 2
+
+extended-monitoring:
+  enabled: true
+  settings:
+    events:
+      exporterEnabled: true
+      severityLevel: All
+  version: 2

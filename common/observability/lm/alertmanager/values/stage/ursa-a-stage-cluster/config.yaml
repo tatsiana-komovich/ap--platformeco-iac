@@ -1,0 +1,56 @@
+---
+alertmanager:
+  templates:
+    alertmanager.tmpl: |-
+      '{{ define "generator.url" }} {{ (index .Alerts 0).GeneratorURL | reReplaceAll "&g0.tab=1$" "&g0.tab=0" }} {{ end }}'
+
+  config:
+    global:
+      smtp_from: 'alertmanager@leroy-merlin.ru'
+      smtp_smarthost: 'massmail.hq.ru.corp.leroymerlin.com:25'
+      smtp_require_tls: false
+
+    templates:
+      - '/etc/alertmanager/*.tmpl'
+
+    route:
+      receiver: 'void'
+      group_by: ['alertname', 'job']
+      group_wait: 30s
+      group_interval: 5m
+      repeat_interval: 4h
+
+      ## Add your Alertmanager configuration below
+
+      routes:
+
+      ## Example configuration of route (https://prometheus.io/docs/alerting/latest/configuration/#route) using matcher (https://prometheus.io/docs/alerting/latest/configuration/#matcher)
+      # - matchers:
+      #     - cool_label="cool_value"
+      #   receiver: 'my-grafana-oncall-webhook'
+        - matchers:
+            - product_id="P0355"
+          receiver: 'mr-crawler-grafana-oncall-wh'
+
+        - matchers:
+            - product_id="P0728"
+          receiver: 'sppa-grafana-oncall-spr'
+
+    receivers:
+
+      # Default receiver which points to the void and dropping all unrouted alerts
+      - name: 'void'
+
+      ## Example configuration of receiver (https://prometheus.io/docs/alerting/latest/configuration/#receiver) using webhook_configs receiver type (https://prometheus.io/docs/alerting/latest/configuration/#webhook_config)
+      # - name: 'my-grafana-oncall-webhook'
+      #   webhook_configs:
+      #     - url: 'https://obs-grafana-oncall-yc-techno.apps.lmru.tech/00/integrations/v1/alertmanager/AABBCC112233/'
+      #       send_resolved: true
+      - name: 'mr-crawler-grafana-oncall-wh'
+        webhook_configs:
+          - url: 'https://obs-grafana-oncall-yc-techno.apps.lmru.tech/80/integrations/v1/alertmanager/mUFjViYAZuwUBGCl7Ky9OIUnR/'
+            send_resolved: true
+      - name: 'sppa-grafana-oncall-spr'
+        webhook_configs:
+          - url: 'https://obs-grafana-oncall-yc-techno.apps.lmru.tech/123/integrations/v1/alertmanager/ss9MBv7mnB76I6TI6ISm116TC/'
+            send_resolved: true

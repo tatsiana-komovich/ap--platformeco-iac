@@ -1,0 +1,65 @@
+---
+alertmanager:
+  templates:
+    alertmanager.tmpl: |-
+      '{{ define "generator.url" }} {{ (index .Alerts 0).GeneratorURL | reReplaceAll "&g0.tab=1$" "&g0.tab=0" }} {{ end }}'
+
+  config:
+    global:
+      smtp_from: 'alertmanager@leroy-merlin.ru'
+      smtp_smarthost: 'massmail.hq.ru.corp.leroymerlin.com:25'
+      smtp_require_tls: false
+
+    templates:
+      - '/etc/alertmanager/*.tmpl'
+
+    route:
+      group_by: ['alertname', 'job']
+      receiver: 'void'
+      repeat_interval: 4h
+
+  ## Add your Alertmanager configuration below
+
+      routes:
+        - matchers:
+            - product_id="P0767"
+          receiver: 'repl-grafana-oncall-almaz'
+          group_by: ['alertname', 'job', 'namespace', 'datacenter']
+
+        - matchers:
+            - product_id="P0188"
+          receiver: 'strp-grafana-oncall-stockrepository'
+          group_by: ['alertname', 'job', 'namespace', 'datacenter']
+
+        - matchers:
+            - product_id="P0955"
+          receiver: 'lnc-grafana-oncall-networkconfiguration'
+          group_by: ['alertname', 'job', 'namespace', 'datacenter']
+
+        - matchers:
+            - product_id="P1168"
+          receiver: 'sdip-grafana-oncall-locrep'
+          group_by: ['alertname', 'job', 'namespace']
+
+    receivers:
+      - name: 'void'
+
+      - name: 'strp-grafana-oncall-stockrepository'
+        webhook_configs:
+          - url: 'https://obs-grafana-oncall-yc-techno.apps.lmru.tech/22/integrations/v1/alertmanager/wlXuKJppbnNK14rLuDpizglWy/'
+            send_resolved: true
+
+      - name: 'lnc-grafana-oncall-networkconfiguration'
+        webhook_configs:
+          - url: 'https://obs-grafana-oncall-yc-techno.apps.lmru.tech/124/integrations/v1/alertmanager/DUSujcFCigUdTyS1nrOAwBAto/'
+            send_resolved: true
+
+      - name: 'repl-grafana-oncall-almaz'
+        webhook_configs:
+          - url: 'https://obs-grafana-oncall-yc-techno.apps.lmru.tech/17/integrations/v1/alertmanager/4nBDe598haB2fukXK1LBPMgY5/'
+            send_resolved: true
+
+      - name: 'sdip-grafana-oncall-locrep'
+        webhook_configs:
+          - url: 'https://obs-grafana-oncall-yc-techno.apps.lmru.tech/137/integrations/v1/alertmanager/XXPhNeT7kUadNtPHvXDiCtARD/'
+            send_resolved: true

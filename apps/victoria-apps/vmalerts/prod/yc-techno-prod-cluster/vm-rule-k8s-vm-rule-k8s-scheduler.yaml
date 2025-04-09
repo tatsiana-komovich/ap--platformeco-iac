@@ -1,0 +1,19 @@
+---
+apiVersion: operator.victoriametrics.com/v1beta1
+kind: VMRule
+metadata:
+  name: vm-rule-k8s-scheduler
+  namespace: devops-core-victoria-alerts
+spec:
+  groups:
+    - name: kubernetes.scheduler
+      rules:
+        - alert: KubeControllerManagerDown
+          expr: |
+                (sum by (job, pod, k8s_cluster) (up{job="kube-scheduler", k8s_cluster=~".*"} == 1 default 0)) == 0
+          for: 5m
+          labels:
+            severity: critical
+          annotations:
+            summary: "kube-scheduler in {{ $labels.k8s_cluster }} cluster is down"
+            description: https://runbooks.prometheus-operator.dev/runbooks/kubernetes/kubeschedulerdown

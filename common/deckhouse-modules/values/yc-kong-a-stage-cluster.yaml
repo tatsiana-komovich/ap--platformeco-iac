@@ -1,0 +1,170 @@
+---
+chrony:
+  enabled: true
+  settings:
+    ntpServers:
+      - time.lmru.tech
+  version: 1
+
+istio:
+  enabled: true
+  settings:
+    alliance:
+      ingressGateway:
+        inlet: LoadBalancer
+        nodeSelector:
+          node-role/sb-frontend: ""
+        tolerations:
+          - operator: Exists
+    federation:
+      enabled: true
+  version: 2
+
+cloud-provider-yandex:
+  enabled: true
+  settings:
+    folderID: "b1gc3jvpafvnad5khff1"
+    additionalExternalNetworkIDs:
+      - ""
+  version: 1
+
+flant-integration:
+  enabled: true
+  settings:
+    kubeall:
+      host: lm-kong.s-yc-kong-a-stage-ks-master-0
+      kubeconfig: /root/.kube/config
+    licenseKey: hqfzRKsYVMRCc41D1Xthg51rviRvUHtR
+  version: 1
+
+kube-dns:
+  enabled: true
+  settings:
+    clusterDomainAliases:
+      - cluster.local
+      - yc-kong-a-stage.p.mesh
+    upstreamNameservers:
+      - 10.203.254.119
+      - 10.203.222.56
+      - 10.203.59.156
+  version: 1
+
+control-plane-manager:
+  enabled: true
+  settings:
+    apiserver:
+      certSANs:
+        - kubernetes.default.svc.cluster.local
+        - kubernetes.default.svc.yc-kong-a-stage.p.mesh
+  version: 1
+
+deckhouseSpec:
+  enabled: true
+  settings:
+    bundle: Default
+    logLevel: Info
+    releaseChannel: EarlyAccess
+    update:
+      mode: Auto
+  version: 1
+
+global:
+  enabled: true
+  settings:
+    modules:
+      https:
+        certManager:
+          clusterIssuerName: selfsigned
+        mode: CertManager
+      publicDomainTemplate: '%s-yc-kong-a-stage.apim.lmru.tech'
+      placement:
+        customTolerationKeys:
+          - dedicated.kubernetes.io
+  version: 2
+
+okmeter:
+  enabled: true
+  settings:
+    apiKey: 87cfac8a-2a20-4b69-abe5-70c950347c52
+  version: 1
+
+user-authn:
+  enabled: true
+  settings:
+    publishAPI:
+      enabled: true
+      https:
+        mode: Global
+  version: 2
+
+user-authz:
+  enabled: true
+  settings:
+    enableMultiTenancy: true
+  version: 1
+
+monitoring-ping:
+  enabled: true
+  settings:
+    externalTargets:
+      - host: 10.203.118.154
+        name: x1-master-0
+      - host: 10.203.118.148
+        name: x1-master-1
+      - host: 10.203.118.149
+        name: x1-master-2
+      - host: 10.203.107.151
+        name: x2-master-0
+      - host: 10.203.107.132
+        name: x2-master-1
+      - host: 10.203.107.137
+        name: x2-master-2
+      - host: 10.203.5.77
+        name: yc-master-0
+      - host: 10.203.21.68
+        name: yc-master-1
+      - host: 10.203.37.67
+        name: yc-master-2
+      - host: api.internal.leroymerlin.ru
+        name: api.internal.leroymerlin.ru
+  version: 1
+
+admission-policy-engine:
+  spec:
+    version: 1
+    enabled: true
+  internal-lb-policy: true
+
+ingress-nginx:
+  spec:
+    version: 1
+    enabled: true
+
+prometheus:
+  enabled: true
+  settings:
+    externalLabels:
+      k8s_cluster: yc-kong-a-stage
+      project_name: api-manager
+      datacenter: yc
+      environment: stage
+      platform: yandex
+  version: 2
+
+cert-manager:
+  enabled: true
+  settings:
+    enableCAInjector: true
+  version: 1
+
+logShipper:
+  enabled: false
+  version: 1
+
+extended-monitoring:
+  enabled: true
+  settings:
+    events:
+      exporterEnabled: true
+      severityLevel: All
+  version: 2

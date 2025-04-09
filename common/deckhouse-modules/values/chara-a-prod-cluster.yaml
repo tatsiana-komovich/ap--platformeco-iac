@@ -1,0 +1,117 @@
+---
+clusterName: chara-a
+clusterDomain: chara-a.p.mesh
+
+admission-policy-engine:
+  spec:
+    version: 1
+    enabled: true
+  artifactory-repos:
+    enforcementAction: deny
+
+global:
+  settings:
+    modules:
+      ingressClass: nginx-d8s
+
+prometheus:
+  enabled: true
+  settings:
+    externalLabels:
+      k8s_cluster: chara-a
+      project_name: inventory-planning
+      environment: prod
+      datacenter: x1
+      platform: openstack
+    grafana:
+      useDarkTheme: true
+  version: 2
+
+user-authn:
+  enabled: true
+  settings:
+    idTokenTTL: "9h"
+    publishAPI:
+      enabled: true
+      https:
+        global:
+          kubeconfigGeneratorMasterCA: ""
+        mode: Global
+  version: 2
+
+okmeter:
+  enabled: true
+  settings:
+    apiKey: c648be38-8ee6-44c3-ad12-07ccdb4da440
+    nodeSelector:
+      node-role.kubernetes.io/control-plane: ""
+    tolerations:
+      - key: node-role.kubernetes.io/control-plane
+        operator: Exists
+      - key: node-role.kubernetes.io/master
+        operator: Exists
+      - key: dedicated
+        operator: Equal
+        value: router
+  version: 1
+
+control-plane-manager:
+  enabled: true
+  settings:
+    apiserver:
+      auditPolicyEnabled: true
+      certSANs:
+        - kubernetes.default.svc.cluster.local
+        - kubernetes.default.svc.chara-a.p.mesh
+  version: 1
+
+istio:
+  enabled: true
+  settings:
+    sidecar:
+      resourcesManagement:
+        mode: Static
+        static:
+          limits:
+            cpu: "10"
+            memory: 10Gi
+          requests:
+            cpu: 100m
+            memory: 128Mi
+    alliance:
+      ingressGateway:
+        inlet: LoadBalancer
+        nodeSelector:
+          node-role/loadbalancer: ""
+        tolerations:
+          - operator: Exists
+    dataPlane:
+      trafficRedirectionSetupMode: CNIPlugin
+    globalVersion: "1.19"
+    federation:
+      enabled: true
+    multicluster:
+      enabled: true
+  version: 2
+
+cert-manager:
+  enabled: true
+  settings:
+    enableCAInjector: true
+  version: 1
+
+extended-monitoring:
+  enabled: true
+  settings:
+    events:
+      exporterEnabled: true
+      severityLevel: All
+  version: 1
+
+deckhouse:
+  updateMode: Auto
+  windows:
+    - from: "21:30"
+      to: "22:30"
+      days:
+        - Thu

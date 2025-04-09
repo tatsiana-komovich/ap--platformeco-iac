@@ -1,0 +1,105 @@
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  name: application-nodes
+spec:
+  nodeType: CloudEphemeral
+  cloudInstances:
+    minPerZone: 1
+    maxPerZone: 3
+    zones:
+      - ru-central1-a
+    classReference:
+      kind: YandexInstanceClass
+      name: application-nodes
+  disruptions:
+    approvalMode: Automatic
+  chaos:
+    mode: Disabled
+  nodeTemplate:
+    labels:
+      node-role.k8s.lmru.tech/application: ''
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  name: odfe-common
+spec:
+  chaos:
+    mode: Disabled
+  cloudInstances:
+    classReference:
+      kind: YandexInstanceClass
+      name: odfe-common
+    maxPerZone: 3
+    minPerZone: 1
+    zones:
+      - ru-central1-a
+  disruptions:
+    approvalMode: Automatic
+  nodeTemplate:
+    labels:
+      node-role/opendistro-common: ""
+    taints:
+      - effect: NoSchedule
+        key: dedicated
+        value: opendistro-common
+  nodeType: CloudEphemeral
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  name: opendistro
+spec:
+  chaos:
+    mode: Disabled
+  cloudInstances:
+    classReference:
+      kind: YandexInstanceClass
+      name: opendistro
+    maxPerZone: 5
+    minPerZone: 4
+    zones:
+      - ru-central1-a
+  disruptions:
+    approvalMode: Manual
+  nodeTemplate:
+    labels:
+      node-role/opendistro: ""
+    taints:
+      - effect: NoSchedule
+        key: dedicated
+        value: opendistro
+  nodeType: CloudEphemeral
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  name: system-a
+spec:
+  chaos:
+    mode: Disabled
+  cloudInstances:
+    classReference:
+      kind: YandexInstanceClass
+      name: system-a
+    maxPerZone: 1
+    minPerZone: 1
+    zones:
+      - ru-central1-a
+  disruptions:
+    approvalMode: Automatic
+  kubelet:
+    containerLogMaxFiles: 4
+    containerLogMaxSize: 50Mi
+    resourceReservation:
+      mode: "Off"
+  nodeTemplate:
+    labels:
+      node-role.deckhouse.io/system: ""
+    taints:
+      - effect: NoExecute
+        key: dedicated.deckhouse.io
+        value: system
+  nodeType: CloudEphemeral

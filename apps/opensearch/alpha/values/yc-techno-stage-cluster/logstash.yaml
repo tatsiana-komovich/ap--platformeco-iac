@@ -1,0 +1,110 @@
+---
+opendistro:
+  logstash:
+    enabled: true
+    filter: |-
+      filter {
+        grok {
+          id => "grok_multi"
+          match => {
+            "message" => [
+              "(((?<brick>[a-zA-Z\-0-9]+)_(?<application>[a-zA-Z\-0-9]+)\s)|((?<application>[a-zA-Z\-0-9]+)\s)|(.{0}))(?<app_timestamp>%{YEAR}-%{MONTHNUM}-%{MONTHDAY} %{TIME}) \[(?<transaction>[A-Za-z0-9\-_\.]*),{0,1}(?<traceId>[A-Za-z0-9\-_\.]*),(?<spanId>[A-Za-z0-9\-_\.]*)\]\[%{GREEDYDATA:thread}\] %{LOGLEVEL:level}[ ]+%{NOTSPACE:class} - %{GREEDYDATA:text}",
+              "(((?<brick>[a-zA-Z\-0-9]+)_(?<application>[a-zA-Z\-0-9]+)\s)|((?<application>[a-zA-Z\-0-9]+)\s)|(.{0}))(?<app_timestamp>%{YEAR}-%{MONTHNUM}-%{MONTHDAY} %{TIME}) %{LOGLEVEL:level} \[(?<transaction>[A-Za-z0-9\-_\.]*),{0,1}(?<traceId>[A-Za-z0-9\-_\.]*),(?<spanId>[A-Za-z0-9\-_\.]*),([A-Za-z0-9\-_\.]*)\] ([0-9]*) --- \[%{GREEDYDATA:thread}\] %{NOTSPACE:class}[ ]+: %{GREEDYDATA:text}",
+              "(((?<brick>[a-zA-Z\-0-9]+)_(?<application>[a-zA-Z\-0-9]+)\s)|((?<application>[a-zA-Z\-0-9]+)\s)|(.{0}))(?<app_timestamp>%{YEAR}-%{MONTHNUM}-%{MONTHDAY} %{TIME}) \[(?<processId>[A-Za-z\-0-9]*),(?<solutionId>[A-Za-z0-9\-_\.]*),{0,1}(?<traceId>[A-Za-z0-9\-_\.]*),(?<spanId>[A-Za-z0-9\-_\.]*)\]\[%{GREEDYDATA:thread}\] %{LOGLEVEL:level}[ ]+%{NOTSPACE:class} - %{GREEDYDATA:text}",
+              "(?<event>([A-Z][0-9]{0,4})) %{TIME:time}%{SPACE}%{NUMBER:n} (?<appsrc>%{WORD}\.%{WORD}:\d{1,})\] %{GREEDYDATA:msg}"
+            ]
+          }
+        }
+
+        mutate {
+          id => "mutate_log"
+          rename => { "log" => "original_log" }
+          copy => { "message" => "original_message" }
+          rename => { "text" => "log" }
+          remove_field => ["time"]
+        }
+
+        json {
+          id => "json_log"
+          source => "log"
+          skip_on_invalid_json => true
+          target => "jsonLog"
+        }
+
+        if [message] =~ "\tat" {
+          grok {
+            id => "grok_tat"
+            match => ["message", "^(\tat)"]
+            add_tag => ["stacktrace"]
+          }
+        }
+
+        if [log] {
+          mutate {
+            id => "log_remove_field"
+            remove_field => [ "message" ]
+          }
+        }
+
+        date {
+          id => "date"
+          match => ["timestamp", "yyyy-MM-dd HH:mm:ss.SSS", "ISO8601"]
+        }
+        if [shipper]=="logshipper" {
+          mutate {
+            id => "logshipper_index"
+            add_field => { "[@metadata][target_index]" => "logshipper" }
+          }
+        } else {
+         if ![kubernetes][namespace] {
+          mutate {
+            id => "filebeat_index"
+            add_field => { "[@metadata][target_index]" => "filebeat" }
+          }
+         } else {
+          grok {
+            id => "target_index"
+            match => { "[kubernetes][namespace]" => "(?<[@metadata][target_index]>^[^-]+)" }
+          }
+         }
+        }
+        if [kubernetes][namespace] =~ /finops.*/ {
+         if [kubernetes][labels][app_kubernetes_io/instance] =~ "marketplace-yandex-be" {
+           json {
+            id => "json_ybe_log"
+            source => "message"
+            skip_on_invalid_json => true
+            target => "ybeLog"
+           }
+         }
+         if [kubernetes][labels][app_kubernetes_io/instance] =~ "be-scripts" {
+           json {
+            id => "json_bes_log"
+            source => "message"
+            skip_on_invalid_json => true
+            target => "besLog"
+           }
+         }
+        }
+        if [ingress][upstream_response_time] {
+          mutate {
+            id => "ingress_nginx_float"
+            convert => { "[ingress][upstream_response_time]" => "float" }
+          }
+        }
+        if ![kubernetes][namespace_labels][product-id] {
+          mutate {
+            id => "product_id"
+            add_field => { "[kubernetes][namespace_labels][product-id]" => "none" }
+          }
+        } else {
+          mutate {
+            id => "copy_prod_id"
+            copy => { "[kubernetes][namespace_labels][product-id]" => "product_id" }
+          }
+          mutate {
+            id => "lowercase_prod_id"
+            lowercase => [ "product_id" ]
+          }
+        }
+      }

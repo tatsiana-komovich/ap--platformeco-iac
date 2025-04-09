@@ -1,0 +1,113 @@
+---
+opendistro:
+  logstash:
+    enabled: true
+    filter: |-
+      filter{
+        if [kubernetes][labels][component]=="shipping-docs-manager" {
+          json {
+            id => "json_jsonlog"
+            skip_on_invalid_json => true
+            source => "message"
+            target => "jsonLog"
+          }
+        } else {
+          json {
+            id => "json_msg"
+            skip_on_invalid_json => true
+            source => "message"
+          }
+        }
+        grok {
+          id => "grok_multi"
+          match => {
+            "message" => [
+              "(((?<brick>[a-zA-Z\-0-9]+)_(?<application>[a-zA-Z\-0-9]+)\s)|((?<application>[a-zA-Z\-0-9]+)\s)|(.{0}))(?<timestamp>%{YEAR}-%{MONTHNUM}-%{MONTHDAY} %{TIME}) \[(?<transaction>[A-Za-z0-9\-_\.]*),{0,1}(?<traceId>[A-Za-z0-9\-_\.]*),(?<spanId>[A-Za-z0-9\-_\.]*)\]\[%{GREEDYDATA:thread}\] %{LOGLEVEL:level}[ ]+%{NOTSPACE:class} - %{GREEDYDATA:text}",
+              "(((?<brick>[a-zA-Z\-0-9]+)_(?<application>[a-zA-Z\-0-9]+)\s)|((?<application>[a-zA-Z\-0-9]+)\s)|(.{0}))(?<timestamp>%{YEAR}-%{MONTHNUM}-%{MONTHDAY} %{TIME}) %{LOGLEVEL:level} \[(?<transaction>[A-Za-z0-9\-_\.]*),{0,1}(?<traceId>[A-Za-z0-9\-_\.]*),(?<spanId>[A-Za-z0-9\-_\.]*),([A-Za-z0-9\-_\.]*)\] ([0-9]*) --- \[%{GREEDYDATA:thread}\] %{NOTSPACE:class}[ ]+: %{GREEDYDATA:text}",
+              "(((?<brick>[a-zA-Z\-0-9]+)_(?<application>[a-zA-Z\-0-9]+)\s)|((?<application>[a-zA-Z\-0-9]+)\s)|(.{0}))(?<timestamp>%{YEAR}-%{MONTHNUM}-%{MONTHDAY} %{TIME}) \[(?<processId>[A-Za-z\-0-9]*),(?<solutionId>[A-Za-z0-9\-_\.]*),{0,1}(?<traceId>[A-Za-z0-9\-_\.]*),(?<spanId>[A-Za-z0-9\-_\.]*)\]\[%{GREEDYDATA:thread}\] %{LOGLEVEL:level}[ ]+%{NOTSPACE:class} - %{GREEDYDATA:text}",
+              "(((?<brick>[a-zA-Z\-0-9]+)_(?<application>[a-zA-Z\-0-9]+)\s)|((?<application>[a-zA-Z\-0-9]+)\s)|(.{0}))(?<timestamp>%{YEAR}-%{MONTHNUM}-%{MONTHDAY} %{TIME}) \[((?<transaction>[A-Za-z0-9\-_\.]*),{0,1})(?<traceId>[A-Za-z0-9\-_\.]*),(?<spanId>[A-Za-z0-9\-_\.]*)\]\[%{GREEDYDATA:thread}\] %{LOGLEVEL:level}[ ]+%{NOTSPACE:class} - %{GREEDYDATA:text}",
+              "(?<event>([A-Z][0-9]{0,4})) %{TIME:etime}%{SPACE}%{NUMBER:n} (?<appsrc>%{WORD}\.%{WORD}:\d{1,})\] %{GREEDYDATA:msg}"
+            ]
+          }
+        }
+        if [kubernetes] {
+          if [kubernetes][namespace]=~/^d8.*/ {
+              grok {
+                  id => "grok_app"
+                  match => { "component" => "lmru-les-%{GREEDYDATA:app}" }
+              }
+              mutate {
+                  id => "mutate_targetindex"
+                  add_field => { "[@metadata][target_index]" => "%{[kubernetes][namespace]}" }
+              }
+              if [jsonLog][binding] {
+                  mutate {
+                      id => "mutate_binding"
+                      add_field => { "[jsonLog][binding_name]" => "%{[jsonLog][binding.name]}" }
+                      add_field => { "[jsonLog][hook_type]" => "%{[jsonLog][hook.type]}" }
+                      remove_field => [ "[jsonLog][binding.name]",  "[jsonLog][hook.type]" ]
+                  }
+              }
+              if [host][name] {
+                  mutate {
+                      remove_field => [ "host", "ingressLog" ]
+                  }
+              }
+          } else if [kubernetes][namespace]=~/^les.*/  {
+              mutate {
+                  id => "mutate_component"
+                  add_field => {"component" => "%{[kubernetes][labels][component]}"}
+              }
+              grok {
+                  id => "grok_app2"
+                  match => { "component" => "lmru-les-%{GREEDYDATA:app}" }
+              }
+              if [app] {
+                  mutate {
+                      id => "mutate_addfield"
+                      add_field => { "[@metadata][target_index]" => "%{[kubernetes][namespace]}-%{app}" }
+                  }
+              } else {
+                  mutate {
+                      id => "mutate_targetindex2"
+                      add_field => { "[@metadata][target_index]" => "%{[kubernetes][namespace]}" }
+                  }
+              }
+          } else if [kubernetes][labels][opendistro_index] {
+            mutate {
+              id => "mutate_targetindex3"
+              add_field => { "[@metadata][target_index]" => "%{[kubernetes][labels][opendistro_index]}" }
+            }
+          } else {
+              grok {
+                 id => "grok_msg2"
+                 match => { "message" => "%{MONTHDAY}-%{MONTH}-%{YEAR} %{TIME} %{LOGLEVEL:level} \[%{DATA:thread}\] %{NOTSPACE:class} %{GREEDYDATA:text}"}
+              }
+              mutate {
+                 id => "mutate_targetindex4"
+                 add_field => { "[@metadata][target_index]" => "%{[kubernetes][namespace]}" }
+              }
+          }
+        } else {
+              mutate {
+                  id => "mutate_targetindex5"
+                  add_field => { "[@metadata][target_index]" => "commonlog" }
+              }
+        }
+        mutate {
+          id => "mutate_removefields2"
+          remove_field => ["ecs", "tags", "@version", "log","agent","input","stream","app","component"]
+        }
+        if [jsonLog] {
+          mutate {
+            id => "mutate_removefields"
+            remove_field => ["message"]
+          }
+        }
+        if [ingress][upstream_response_time] {
+          mutate {
+            id => "ingress_nginx_float"
+            convert => { "[ingress][upstream_response_time]" => "float" }
+          }
+        }
+      }

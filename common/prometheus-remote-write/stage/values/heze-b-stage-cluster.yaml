@@ -1,0 +1,22 @@
+---
+k8s_prometheus_remote_write:
+  vminsert-devops-lmru-tech-custom-remote-write:
+    url:
+      _default: https://vminsert.devops.lmru.tech/insert/0/prometheus/
+    writeRelabelConfigs: {}
+  vminsert-victoriametrics-platformeco-tech-remote-write:
+    url:
+      _default: https://victoriametrics.platformeco.lmru.tech/insert/0/prometheus/
+    writeRelabelConfigs:
+      _default:
+        - action: replace
+          replacement: yc-b-stage.platformeco.lmru.tech
+          sourceLabels: [__name__]
+          targetLabel: kubernetes
+        - action: replace
+          replacement: stage
+          sourceLabels: [__name__]
+          targetLabel: tenant_id
+        - action: keep
+          sourceLabels: [job]
+          regex: "kubelet|kube-state-metrics|nginx-ingress-controller|custom-otel-.*|custom-jaeger-.*|image-availability-exporter|custom-.*-fluent-bit|custom-jdbc-satellite"

@@ -1,0 +1,176 @@
+---
+opendistro:
+  logstash:
+    filter: |-
+      filter {
+         if [kubernetes][namespace]=="infra-elklogs" and [kubernetes][labels][service]!="curator" {
+            drop {
+              id => "drop_infra_elklogs"
+            }
+         }
+         if [message] {
+           ruby {
+             code => "event.cancel if event.get('message').bytesize > 16384"
+           }
+         }
+         if [kubernetes][namespace]!="eventrouter" {
+           if [message] =~ /^{.*}$/ {
+             json {
+               id => "json_message"
+               source => "message"
+               skip_on_invalid_json => true
+               target => "json"
+             }
+          } else {
+            grok {
+              id => "grok_multi"
+              match => {
+                "message" => [
+                  "(((?<brick>[a-zA-Z\-0-9]+)_(?<application>[a-zA-Z\-0-9]+)\s)|((?<appname>[a-zA-Z\-0-9]+)\s)|(.{0}))(?<datetime>%{YEAR}-%{MONTHNUM}-%{MONTHDAY} %{TIME}) \[(?<transaction>[A-Za-z0-9\-_\.]*),{0,1}(?<traceId>[A-Za-z0-9\-_\.]*),(?<spanId>[A-Za-z0-9\-_\.]*)\]\[%{GREEDYDATA:thread}\] %{LOGLEVEL:level}[ ]+%{NOTSPACE:class} - %{GREEDYDATA:lmsg}",
+                  "(((?<brick>[a-zA-Z\-0-9]+)_(?<application>[a-zA-Z\-0-9]+)\s)|((?<appname>[a-zA-Z\-0-9]+)\s)|(.{0}))(?<datetime>%{YEAR}-%{MONTHNUM}-%{MONTHDAY} %{TIME}) %{LOGLEVEL:level} \[(?<transaction>[A-Za-z0-9\-_\.]*),{0,1}(?<traceId>[A-Za-z0-9\-_\.]*),(?<spanId>[A-Za-z0-9\-_\.]*),([A-Za-z0-9\-_\.]*)\] ([0-9]*) --- \[%{GREEDYDATA:thread}\] %{NOTSPACE:class}[ ]+: %{GREEDYDATA:lmsg}",
+                  "(((?<brick>[a-zA-Z\-0-9]+)_(?<application>[a-zA-Z\-0-9]+)\s)|((?<appname>[a-zA-Z\-0-9]+)\s)|(.{0}))(?<datetime>%{YEAR}-%{MONTHNUM}-%{MONTHDAY} %{TIME}) \[(?<processId>[A-Za-z\-0-9]*),(?<solutionId>[A-Za-z0-9\-_\.]*),{0,1}(?<traceId>[A-Za-z0-9\-_\.]*),(?<spanId>[A-Za-z0-9\-_\.]*)\]\[%{GREEDYDATA:thread}\] %{LOGLEVEL:level}[ ]+%{NOTSPACE:class} - %{GREEDYDATA:lmsg}",
+                  "(((?<brick>[a-zA-Z\-0-9]+)_(?<application>[a-zA-Z\-0-9]+)\s)|((?<appname>[a-zA-Z\-0-9]+)\s)|(.{0}))(?<datetime>%{YEAR}-%{MONTHNUM}-%{MONTHDAY} %{TIME}) \[(?<transaction>[A-Za-z0-9\-_\.]*),{0,1}(?<traceId>[A-Za-z0-9\-_\.]*),(?<spanId>[A-Za-z0-9\-_\.]*)\]\[(?<thread>.*) (?<task>.*)\] %{LOGLEVEL:level}\s+%{NOTSPACE:class} - %{GREEDYDATA:lmsg}",
+                  "(?<event>([A-Z][0-9]{0,4})) %{TIME:time}%{SPACE}%{NUMBER:n} (?<appsrc>%{WORD}\.%{WORD}:\d{1,})\] %{GREEDYDATA:lmsg}"
+                 ]
+               }
+             }
+           }
+         }
+        mutate {
+          id => "mutate_log"
+          rename => { "log" => "original_log" }
+          rename => { "text" => "log" }
+          remove_field => ["time"]
+        }
+        if [lmsg] {
+        json {
+          id => "json_log"
+          source => "lmsg"
+          skip_on_invalid_json => true
+          target => "ljson"
+        }
+
+          if [ljson][duration] {
+            mutate {
+              id => "mutate_duration"
+              add_field => { "duration" => "%{[ljson][duration]}" }
+            }
+            mutate {
+              id => "convert_duration"
+              convert => { "duration" => "integer" }
+            }
+          }
+          if [ljson][uri] {
+            mutate {
+              id => "mutate_uri"
+              add_field => { "uri" => "%{[ljson][uri]}" }
+            }
+          }
+          if [ljson][type] {
+            mutate {
+              id => "mutate_direction"
+              add_field => { "direction" => "%{[ljson][type]}" }
+            }
+          }
+          if [ljson][origin] {
+            mutate {
+              id => "mutate_origin"
+              add_field => { "origin" => "%{[ljson][origin]}" }
+            }
+          }
+          if [ljson][status] {
+            mutate {
+              id => "mutate_status"
+              add_field => { "status" => "%{[ljson][status]}" }
+            }
+          }
+          if [ljson][correlation] {
+            mutate {
+              id => "mutate_correlation"
+              add_field => { "correlation" => "%{[ljson][correlation]}" }
+            }
+          }
+          if [ljson][request] {
+            mutate {
+              id => "mutate_request"
+              add_field => { "request" => "%{[ljson][request]}" }
+            }
+          }
+          if [ljson][requestMethod] {
+            mutate {
+              id => "mutate_method"
+              add_field => { "requestMethod" => "%{[ljson][requestMethod]}" }
+            }
+          }
+          if [ljson][body][orderId] {
+            mutate {
+              id => "mutate_orderid"
+              add_field => { "orderId" => "%{[ljson][body][orderId]}" }
+            }
+          }
+          if [ljson][body][storeId] {
+            mutate {
+                id => "mutate_storeid"
+                add_field => { "storeId" => "%{[ljson][body][storeId]}" }
+            }
+          }
+          if [ljson][body][amount] {
+            mutate {
+              id => "mutate_amount"
+              add_field => { "amount" => "%{[ljson][body][amount]}" }
+            }
+          }
+          if [ljson][body][channel] {
+            mutate {
+              id => "mutate_channel"
+              add_field => { "channel" => "%{[ljson][body][channel]}" }
+            }
+          }
+          if [ljson][body][status] {
+            mutate {
+              id => "mutate_orderstatus"
+              add_field => { "order-status" => "%{[ljson][body][status]}" }
+            }
+          }
+          if [ljson][body][ErrorMessage] {
+            mutate {
+              id => "mutate_errmessage"
+              add_field => { "errorMessage" => "%{[ljson][body][ErrorMessage]}" }
+            }
+          }
+          if [ljson][body][errorMessage] {
+            mutate {
+              id => "mutate_errmessage2"
+              add_field => { "errorMessage" => "%{[ljson][body][errorMessage]}" }
+            }
+          }
+          mutate {
+            id => "log_remove_field"
+            remove_field => [ "ljson" ]
+          }
+        }
+        if ![kubernetes][namespace] {
+          mutate {
+            id => "filebeat_index"
+            add_field => { "[@metadata][target_index]" => "filebeat" }
+          }
+        }
+        else {
+          grok {
+            id => "target_index"
+            match => { "[kubernetes][namespace]" => "(?<[@metadata][target_index]>^[^-]+(?:-[^-]+)?)" }
+          }
+          if [kubernetes][namespace] =~ /^cr-loyalty*/ {
+            mutate {
+              id => "target_index_cr_loyalty"
+              replace => { "[@metadata][target_index]" => "cr-loyalty-big" }
+            }
+          }
+        }
+        if [ingress][upstream_response_time] {
+          mutate {
+            id => "ingress_nginx_float"
+            convert => { "[ingress][upstream_response_time]" => "float" }
+          }
+        }
+      }

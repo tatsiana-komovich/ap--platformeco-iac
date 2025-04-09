@@ -1,0 +1,224 @@
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  name: application-nodes
+spec:
+  chaos:
+    mode: Disabled
+  cloudInstances:
+    classReference:
+      kind: VsphereInstanceClass
+      name: application-nodes
+    maxPerZone: 85
+    minPerZone: 35
+    standby: 1
+    zones:
+      - X2-A-Production
+  disruptions:
+    approvalMode: Automatic
+  nodeType: CloudEphemeral
+  nodeTemplate:
+    labels:
+      node-role.k8s.lmru.tech/application: ""
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  name: deckhouse
+spec:
+  chaos:
+    mode: Disabled
+  cloudInstances:
+    classReference:
+      kind: VsphereInstanceClass
+      name: deckhouse
+    maxPerZone: 3
+    minPerZone: 3
+    zones:
+      - X2-A-Production
+  disruptions:
+    approvalMode: Automatic
+  cri:
+    type: Containerd
+  nodeTemplate:
+    labels:
+      node-role.deckhouse.io/deckhouse: ""
+    taints:
+      - effect: NoExecute
+        key: dedicated.deckhouse.io
+        value: deckhouse
+  nodeType: CloudEphemeral
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  name: odfe-common
+spec:
+  chaos:
+    mode: Disabled
+  cloudInstances:
+    classReference:
+      kind: VsphereInstanceClass
+      name: odfe-common
+    maxPerZone: 5
+    minPerZone: 1
+    zones:
+      - X2-A-Production
+  disruptions:
+    approvalMode: Automatic
+  cri:
+    type: Containerd
+  nodeTemplate:
+    labels:
+      node-role/opendistro-common: ""
+    taints:
+      - effect: NoSchedule
+        key: dedicated
+        value: opendistro-common
+  nodeType: CloudEphemeral
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  name: loadbalancer
+spec:
+  chaos:
+    mode: Disabled
+  cloudInstances:
+    classReference:
+      kind: VsphereInstanceClass
+      name: loadbalancer
+    maxPerZone: 3
+    minPerZone: 3
+    zones:
+      - X2-A-Production
+  disruptions:
+    approvalMode: Manual
+  cri:
+    type: Containerd
+  nodeTemplate:
+    labels:
+      node-role/loadbalancer: ""
+      node-role/metallb-speaker: ""
+      threshold.extended-monitoring.deckhouse.io/load-average-per-core-warning: "1"
+      threshold.extended-monitoring.deckhouse.io/load-average-per-core-critical: "2"
+    taints:
+      - effect: NoExecute
+        key: node-role/loadbalancer
+        value: ""
+  nodeType: CloudEphemeral
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  name: d8-loadbalancer
+spec:
+  chaos:
+    mode: Disabled
+  cloudInstances:
+    classReference:
+      kind: VsphereInstanceClass
+      name: d8-loadbalancer
+    maxPerZone: 2
+    minPerZone: 2
+    zones:
+      - X2-A-Production
+  disruptions:
+    approvalMode: Manual
+  cri:
+    type: Containerd
+  nodeTemplate:
+    labels:
+      node-role/d8-loadbalancer: ""
+      node-role/metallb-speaker: ""
+    taints:
+      - effect: NoExecute
+        key: dedicated
+        value: d8-loadbalancer
+  nodeType: CloudEphemeral
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  name: system
+spec:
+  chaos:
+    mode: Disabled
+  cloudInstances:
+    classReference:
+      kind: VsphereInstanceClass
+      name: system
+    maxPerZone: 5
+    minPerZone: 3
+    zones:
+      - X2-A-Production
+  disruptions:
+    approvalMode: Automatic
+  cri:
+    type: Containerd
+  nodeTemplate:
+    labels:
+      node-role.deckhouse.io/system: ""
+      node-role/logging: ""
+    taints:
+      - effect: NoExecute
+        key: dedicated.deckhouse.io
+        value: system
+  nodeType: CloudEphemeral
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  name: awx-node
+spec:
+  chaos:
+    mode: Disabled
+  cloudInstances:
+    classReference:
+      kind: VsphereInstanceClass
+      name: awx-node
+    maxPerZone: 6
+    minPerZone: 1
+    standby: 1
+    zones:
+      - X2-A-Production
+  disruptions:
+    approvalMode: Automatic
+  nodeTemplate:
+    labels:
+      node-role/awx-node: ""
+      node-role.k8s.lmru.tech/application: ''
+    taints:
+      - effect: NoExecute
+        key: dedicated
+        value: awx-node
+  nodeType: CloudEphemeral
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  name: otel-system
+spec:
+  nodeType: CloudEphemeral
+  cloudInstances:
+    minPerZone: 1
+    maxPerZone: 4
+    zones:
+      - X2-A-Production
+    classReference:
+      kind: VsphereInstanceClass
+      name: otel-system
+  disruptions:
+    approvalMode: Automatic
+  cri:
+    type: Containerd
+  nodeTemplate:
+    labels:
+      node-role/otel-system: ""
+    taints:
+      - effect: NoSchedule
+        key: dedicated
+        value: otel-system
+  chaos:
+    mode: Disabled

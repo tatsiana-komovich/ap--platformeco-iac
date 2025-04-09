@@ -1,0 +1,28 @@
+---
+apiVersion: operator.victoriametrics.com/v1beta1
+kind: VMRule
+metadata:
+  name: vm-rule-k8s-machine-controller-manager
+  namespace: devops-core-victoria-alerts
+spec:
+  groups:
+    - name: kubernetes.d8-machine-controller-manager
+      rules:
+        - alert: D8MachineControllerManagerPodIsNotReady
+          expr: min by (k8s_cluster, pod) (kube_pod_status_ready{condition="false", namespace="d8-cloud-instance-manager", pod=~"machine-controller-manager-.*"}) > 0
+          for: 15m
+          labels:
+            severity: warning
+          annotations:
+            summary: "The {{ $labels.pod }} Pod is NOT Ready"
+        
+        - alert: D8MachineControllerManagerPodIsRestartingTooOften
+          expr: max by (k8s_cluster, pod) (increase(kube_pod_container_status_restarts_total{namespace="d8-cloud-instance-manager", pod=~"machine-controller-manager-.*"}[1h]) and kube_pod_container_status_restarts_total{namespace="d8-cloud-instance-manager", pod=~"machine-controller-manager-.*"}) > 5
+          labels:
+            severity: warning
+          annotations:
+            summary: The machine-controller-manager module restarts too often.
+            description: |
+              The number of restarts in the last hour: {{ $value }}.
+              Excessive machine-controller-manager restarts indicate that something is wrong. Normally, it should be up and running all the time.
+              Please, refer to the logs: "kubectl -n d8-cloud-instance-manager logs -f -l app=machine-controller-manager -c controller".

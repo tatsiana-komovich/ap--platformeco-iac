@@ -1,0 +1,170 @@
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  name: application-nodes
+spec:
+  nodeType: CloudEphemeral
+  cloudInstances:
+    minPerZone: 1
+    maxPerZone: 3
+    classReference:
+      kind: OpenStackInstanceClass
+      name: application-nodes
+  disruptions:
+    approvalMode: Automatic
+  chaos:
+    mode: Disabled
+  nodeTemplate:
+    labels:
+      node-role.k8s.lmru.tech/application: ''
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  name: odfe-common
+spec:
+  nodeType: CloudEphemeral
+  cloudInstances:
+    minPerZone: 1
+    maxPerZone: 2
+    classReference:
+      kind: OpenStackInstanceClass
+      name: odfe-common
+  disruptions:
+    approvalMode: Automatic
+  chaos:
+    mode: Disabled
+  nodeTemplate:
+    labels:
+      node-role/opendistro-common: ""
+    taints:
+      - effect: NoSchedule
+        key: dedicated
+        value: opendistro-common
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  name: opendistro
+spec:
+  nodeType: CloudEphemeral
+  cloudInstances:
+    minPerZone: 1
+    maxPerZone: 2
+    classReference:
+      kind: OpenStackInstanceClass
+      name: opendistro
+  disruptions:
+    approvalMode: Automatic
+  chaos:
+    mode: Disabled
+  nodeTemplate:
+    labels:
+      node-role/opendistro: ""
+    taints:
+      - effect: NoSchedule
+        key: dedicated
+        value: opendistro
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  name: system
+spec:
+  chaos:
+    mode: Disabled
+  cloudInstances:
+    classReference:
+      kind: OpenStackInstanceClass
+      name: system
+    maxPerZone: 2
+    minPerZone: 1
+  disruptions:
+    approvalMode: Automatic
+  nodeTemplate:
+    labels:
+      node-role.deckhouse.io/system: ""
+    taints:
+      - effect: NoExecute
+        key: dedicated.deckhouse.io
+        value: system
+  nodeType: CloudEphemeral
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  name: loadbalancer
+spec:
+  chaos:
+    mode: Disabled
+  cloudInstances:
+    classReference:
+      kind: OpenStackInstanceClass
+      name: loadbalancer
+    maxPerZone: 2
+    minPerZone: 1
+  disruptions:
+    approvalMode: Automatic
+  nodeTemplate:
+    labels:
+      node-role/loadbalancer: ""
+      node-role/metallb-speaker: ""
+      threshold.extended-monitoring.deckhouse.io/load-average-per-core-warning: "1"
+      threshold.extended-monitoring.deckhouse.io/load-average-per-core-critical: "2"
+    taints:
+      - effect: NoExecute
+        key: dedicated
+        value: loadbalancer
+  nodeType: CloudEphemeral
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  name: d8-loadbalancer
+spec:
+  chaos:
+    mode: Disabled
+  cloudInstances:
+    classReference:
+      kind: OpenStackInstanceClass
+      name: d8-loadbalancer
+    maxPerZone: 1
+    minPerZone: 1
+  disruptions:
+    approvalMode: Automatic
+  nodeTemplate:
+    labels:
+      node-role/d8-loadbalancer: ""
+      node-role/metallb-speaker: ""
+    taints:
+      - effect: NoExecute
+        key: dedicated
+        value: d8-loadbalancer
+  nodeType: CloudEphemeral
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  name: otel-system
+spec:
+  nodeType: CloudEphemeral
+  cloudInstances:
+    minPerZone: 1
+    maxPerZone: 4
+    zones:
+      - PROD_AZ_3
+    classReference:
+      kind: OpenStackInstanceClass
+      name: otel-system
+  disruptions:
+    approvalMode: Automatic
+  nodeTemplate:
+    labels:
+      node-role/otel-system: ""
+    taints:
+      - effect: NoSchedule
+        key: dedicated
+        value: otel-system
+  chaos:
+    mode: Disabled

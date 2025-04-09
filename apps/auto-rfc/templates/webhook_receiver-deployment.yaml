@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Chart.Name }}-webhook-receiver
+  labels:
+    helm.sh/chart: {{ .Chart.Name }}
+    name: {{ .Chart.Name }}-webhook-receiver
+spec:
+  selector:
+    matchLabels:
+      name: {{ .Chart.Name }}-webhook-receiver
+  replicas: {{ .Values.global.replicas }}
+  template:
+    metadata:
+      labels:
+        name: {{ .Chart.Name }}-webhook-receiver
+    spec:
+      affinity: {{ .Values.affinity | toYaml | nindent 8 }}
+      tolerations: {{ .Values.tolerations | toYaml | nindent 8 }}
+      initContainers:
+        - name: wait-rabbitmq
+          image: docker-remote-docker-io.art.lmru.tech/busybox:glibc@sha256:42279ede3600b4e63af075a5e27d68232ff837d9cdcaba74feffc7ab0dfec0dc
+          command:
+            - sh
+            - -c
+            - while ! nc -vz rabbitmq 5672; do echo waiting for rabbitmq; sleep 1; done
+      containers:
+        - name: {{ .Chart.Name }}-webhook-receiver
+          image: {{ .Values.webhook_receiver.image }}
+          envFrom:
+            - configMapRef:
+                name: {{ .Chart.Name }}
+            - secretRef:
+                name: rabbitmq-user-secret
+          env:
+            - name: AMQP_SERVER_URL
+              value: amqp://$(RABBITMQ_USER):$(RABBITMQ_PASSWORD)@rabbitmq:5672/
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Chart.Name }}-webhook-receiver
+spec:
+  selector:
+    name: {{ .Chart.Name }}-webhook-receiver
+  ports:
+    - name: web
+      protocol: TCP
+      port: 80
+      targetPort: 8080

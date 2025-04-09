@@ -1,0 +1,128 @@
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  name: application-nodes
+spec:
+  cloudInstances:
+    classReference:
+      kind: YandexInstanceClass
+      name: application-nodes
+    maxPerZone: 6
+    minPerZone: 6
+    standby: 2
+    standbyHolder:
+      overprovisioningRate: 50
+    zones:
+      - ru-central1-a
+  disruptions:
+    approvalMode: Automatic
+  kubelet:
+    containerLogMaxFiles: 4
+    containerLogMaxSize: 50Mi
+    maxPods: 130
+  nodeType: CloudEphemeral
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  name: application-nodes-a
+spec:
+  cloudInstances:
+    classReference:
+      kind: YandexInstanceClass
+      name: application-nodes-a
+    maxPerZone: 50
+    minPerZone: 34
+    standby: 2
+    standbyHolder:
+      overprovisioningRate: 50
+    zones:
+      - ru-central1-a
+  disruptions:
+    approvalMode: Automatic
+  kubelet:
+    containerLogMaxFiles: 4
+    containerLogMaxSize: 50Mi
+    maxPods: 130
+  nodeType: CloudEphemeral
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  name: otel-collector
+spec:
+  cloudInstances:
+    classReference:
+      kind: YandexInstanceClass
+      name: otel-collector
+    maxPerZone: 5
+    minPerZone: 3
+    zones:
+      - ru-central1-a
+  disruptions:
+    approvalMode: Automatic
+  kubelet:
+    containerLogMaxFiles: 4
+    containerLogMaxSize: 50Mi
+    maxPods: 130
+  nodeTemplate:
+    labels:
+      node-role.kubernetes.io/otel-collector: ""
+    taints:
+      - key: dedicated.kubernetes.io
+        value: otel-collector
+        effect: NoExecute
+  nodeType: CloudEphemeral
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  name: otel-collector-a
+spec:
+  cloudInstances:
+    classReference:
+      kind: YandexInstanceClass
+      name: otel-collector-a
+    maxPerZone: 5
+    minPerZone: 3
+    zones:
+      - ru-central1-a
+  disruptions:
+    approvalMode: Automatic
+  kubelet:
+    containerLogMaxFiles: 4
+    containerLogMaxSize: 50Mi
+    maxPods: 130
+  nodeTemplate:
+    labels:
+      node-role.kubernetes.io/otel-collector: ""
+    taints:
+      - key: dedicated.kubernetes.io
+        value: otel-collector
+        effect: NoExecute
+  nodeType: CloudEphemeral
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  name: otel-system
+spec:
+  cloudInstances:
+    classReference:
+      kind: YandexInstanceClass
+      name: otel-system
+    maxPerZone: 1
+    minPerZone: 1
+    zones:
+      - ru-central1-a
+  disruptions:
+    approvalMode: Automatic
+  nodeTemplate:
+    labels:
+      node-role/otel-system: ""
+    taints:
+      - key: dedicated
+        value: otel-system
+        effect: NoSchedule
+  nodeType: CloudEphemeral

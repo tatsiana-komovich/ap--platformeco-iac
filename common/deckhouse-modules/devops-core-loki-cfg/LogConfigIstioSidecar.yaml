@@ -1,0 +1,13 @@
+---
+apiVersion: deckhouse.io/v1alpha1
+kind: ClusterLoggingConfig
+metadata:
+  name: loki-devops-core-istio-containers
+spec:
+  destinationRefs:
+    - loki-devops-core-storage
+  type: KubernetesPods
+  labelFilter:
+    - field: container
+      operator: In
+      values: [istio-proxy]

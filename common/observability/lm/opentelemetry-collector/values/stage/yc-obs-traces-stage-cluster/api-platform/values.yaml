@@ -1,0 +1,42 @@
+---
+# Configuration for `opentelemetry-collector` helm chart for receiving traces from API-Platform product (P0198).
+#
+# Chart repository: https://github.lmru.tech/adeo/lmru--obs--otel--deployment/tree/master/collector
+#
+# This config contains only options with non-default values
+# See the rest in the original config file: https://github.lmru.tech/adeo/lmru--obs--otel--deployment/blob/master/collector/values.yaml
+opentelemetry-collector:
+  gateway:
+    ingress:
+      http:
+        enabled: true
+        host: otelcol-api-platform-http-traces-stage.obs.lmru.tech
+      grpc:
+        enabled: true
+        host: otelcol-api-platform-grpc-traces-stage.obs.lmru.tech
+
+    receiver:
+      grpc:
+        port: 4317
+      http:
+        port: 4318
+
+    config:
+      receivers:
+        # https://github.com/open-telemetry/opentelemetry-collector/blob/main/receiver/otlpreceiver/README.md
+        otlp:
+          protocols:
+            grpc: {}
+            http:
+              cors:
+                allowed_origins:
+                  - http://*
+                  - https://*
+      exporters:
+        otlp:
+          endpoint: "otel-tempo-distributor.otel-grafana-tempo:4317"
+          tls:
+            insecure: true
+
+  agent:
+    enabled: false

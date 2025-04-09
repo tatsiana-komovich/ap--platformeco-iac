@@ -1,0 +1,104 @@
+---
+opendistro:
+  logstash:
+    enabled: true
+    filter: |-
+      filter {
+        mutate {
+          id => "mutate_log"
+          rename => { "log" => "original_log" }
+          remove_field => ["time"]
+        }
+        date {
+          id => "date"
+          match => ["timestamp", "yyyy-MM-dd HH:mm:ss.SSS", "ISO8601"]
+        }
+        if ![kubernetes][namespace] {
+          if ![ext_index_name] {
+            mutate {
+              id => "filebeat_index"
+              add_field => { "[@metadata][target_index]" => "filebeat" }
+            }
+          } else if [ext_index_name] {
+            mutate {
+              id => "mutate_targetindex"
+              add_field => { "[@metadata][target_index]" => "%{[ext_index_name]}" }
+            }
+            if [dissect][DateTime] == "" {
+              mutate {
+                remove_field => "[dissect][DateTime]"
+              }
+            }
+            else if [dissect][DateTime] =~ ".*Date.*" {
+              mutate {
+                remove_field => "[dissect][DateTime]"
+              }
+            }
+            else if [dissect][DateTime] =~ ".*date.*" {
+              mutate {
+                remove_field => "[dissect][DateTime]"
+              }
+            }
+            else if [dissect][DateTime] =~ ".*date.*" {
+              mutate {
+                remove_field => "[dissect][DateTime]"
+              }
+            }
+            if [dissect][dateTime] == "" {
+              mutate {
+                remove_field => "[dissect][dateTime]"
+              }
+            }
+            else if [dissect][dateTime] =~ ".*Date.*" {
+              mutate {
+                remove_field => "[dissect][dateTime]"
+              }
+            }
+            else if [dissect][dateTime] =~ ".*date.*" {
+              mutate {
+                remove_field => "[dissect][dateTime]"
+              }
+            }
+            if [dissect][date-time] == "" {
+              mutate {
+                remove_field => "[dissect][date-time]"
+              }
+            }
+            else if [dissect][date-time] =~ ".*Date.*" {
+              mutate {
+                remove_field => "[dissect][date-time]"
+              }
+            }
+            else if [dissect][date-time] =~ ".*date.*" {
+              mutate {
+                remove_field => "[dissect][date-time]"
+              }
+            }
+            if [exception][Detail][ErrorDetails] {
+              mutate {
+                convert => {
+                  "[exception][Detail][ErrorDetails]" => "string"
+                }
+              }
+            }
+            if [exception][Detail][InnerFault][ErrorDetails] {
+              mutate {
+                convert => {
+                  "[exception][Detail][InnerFault][ErrorDetails]" => "string"
+                }
+              }
+            }
+          }
+        } else {
+          grok {
+            id => "grok_targetindex"
+            match => { "[kubernetes][namespace]" => "(?<[@metadata][target_index]>^[^-]+)" }
+          }
+        }
+        if [ingress][upstream_response_time] {
+          mutate {
+            id => "ingress_nginx_float"
+            convert => { "[ingress][upstream_response_time]" => "float" }
+          }
+        }
+      }

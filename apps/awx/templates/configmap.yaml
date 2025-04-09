@@ -1,0 +1,133 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: inventory-script
+data:
+  generate_inventory.sh: |
+    #!/bin/bash
+    # Функция для получения kubeconfig через API
+    get_kubeconfig() {
+      local api_url={{ .Values.app.api_url }}
+      local username="\"$USERNAME\""
+      local password="$PASSWORD"
+    
+      curl -s -X 'GET' "$api_url" \
+        -H 'accept: */*' \
+        | jq --arg username "$username" --arg password "$password" \
+          '.result.kubeconfig |= (sub("username: [^\n]+"; "username: \($username)") | sub("password: [^\n]+"; "password: \($password)"))' \
+        | jq -r '.result.kubeconfig' \
+        | yq eval -o=yaml - > /tmp/kubeconfig.yaml
+    }
+    
+    # Функция для получения списка кластеров
+    get_clusters() {
+      kubectl config get-contexts -o name
+    }
+    
+    # Функция для получения списка нод в кластере
+    get_nodes() {
+      local context=$1
+      kubectl --context=$context get nodes -o json
+    }
+    
+    # Функция для получения IP-адреса ноды
+    get_node_ip() {
+      local node_json=$1
+      local group=$2
+    
+      local external_ip_groups=("master" "router" "loadbalancer" "frontend")
+    
+      if [[ " ${external_ip_groups[*]} " =~ " ${group} " ]]; then
+        ip=$(echo "$node_json" | jq -r '.status.addresses[] | select(.type == "ExternalIP") | .address')
+        if [[ -z "$ip" ]]; then
+          ip=$(echo "$node_json" | jq -r '.status.addresses[] | select(.type == "InternalIP") | .address')
+        fi
+      else
+        ip=$(echo "$node_json" | jq -r '.status.addresses[] | select(.type == "InternalIP") | .address')
+      fi
+    
+      echo "$ip"
+    }
+    
+    # Функция для получения IP бастион-ноды (loadbalancer или frontend)
+    get_bastion_ip() {
+      local nodes=$1
+    
+      local loadbalancer_ip=$(echo "$nodes" | jq -r '.items[] | select(.metadata.labels["node.deckhouse.io/group"] == "loadbalancer") | .status.addresses[] | select(.type == "ExternalIP") | .address' | head -n 1)
+      if [[ -z "$loadbalancer_ip" ]]; then
+        loadbalancer_ip=$(echo "$nodes" | jq -r '.items[] | select(.metadata.labels["node.deckhouse.io/group"] == "loadbalancer") | .status.addresses[] | select(.type == "InternalIP") | .address' | head -n 1)
+      fi
+    
+      if [[ -z "$loadbalancer_ip" ]]; then
+        local frontend_ip=$(echo "$nodes" | jq -r '.items[] | select(.metadata.labels["node.deckhouse.io/group"] == "frontend") | .status.addresses[] | select(.type == "ExternalIP") | .address' | head -n 1)
+        if [[ -z "$frontend_ip" ]]; then
+          frontend_ip=$(echo "$nodes" | jq -r '.items[] | select(.metadata.labels["node.deckhouse.io/group"] == "frontend") | .status.addresses[] | select(.type == "InternalIP") | .address' | head -n 1)
+        fi
+        echo "$frontend_ip"
+      else
+        echo "$loadbalancer_ip"
+      fi
+    }
+    
+    # Функция для формирования inventory
+    generate_inventory() {
+      local inventory_dir="/tmp"
+      local inventory_file_stage="$inventory_dir/inventory_stage.yml"
+      local inventory_file_prod="$inventory_dir/inventory_prod.yml"
+    
+      echo "---" > $inventory_file_stage
+      echo "---" > $inventory_file_prod
+    
+      local ssh_private_key_file="${SSH_PRIVATE_KEY_FILE:-~/.ssh/ansible}"
+      
+      get_kubeconfig
+
+      for context in $(get_clusters); do
+        cluster_name=$(echo "$context" | tr '-' '_')
+    
+        if [[ "$context" == *"stage"* ]]; then
+          inventory_file=$inventory_file_stage
+        else
+          inventory_file=$inventory_file_prod
+        fi
+        echo "$cluster_name:" >> $inventory_file
+        echo "  vars:" >> $inventory_file
+        echo "    ansible_user: ansible" >> $inventory_file
+        echo "    ansible_ssh_private_key_file: $ssh_private_key_file" >> $inventory_file
+        echo "  hosts:" >> $inventory_file
+    
+        nodes=$(get_nodes $context)
+    
+        bastion_ip=$(get_bastion_ip "$nodes")
+    
+        groups=$(echo "$nodes" | jq -r '.items[].metadata.labels["node.deckhouse.io/group"]' | sort | uniq)
+    
+        for group in $groups; do
+          echo "$nodes" | jq -c '.items[] | select(.metadata.labels["node.deckhouse.io/group"] == "'$group'")' | while read -r node_json; do
+            node_name=$(echo "$node_json" | jq -r '.metadata.name')
+            ip=$(get_node_ip "$node_json" "$group")
+    
+            if [[ -n "$ip" ]]; then
+              echo "    $node_name:" >> $inventory_file
+              echo "      ansible_host: $ip" >> $inventory_file
+    
+              if [[ -n "$bastion_ip" && "$group" != "loadbalancer" && "$group" != "frontend" ]]; then
+                echo "      ansible_ssh_common_args: '-o ForwardAgent=yes -o StrictHostKeyChecking=no -J ansible@$bastion_ip'" >> $inventory_file
+              fi
+            else
+              echo "Warning: No IP address found for node $node_name in group $group (context: $context)" >&2
+            fi
+          done
+        done
+      done
+    }
+    
+    generate_inventory
+
+    git clone git@github.lmru.tech:adeo/lmru--devops--awx-k8s-project.git
+    cp -r /tmp/inventory* lmru--devops--awx-k8s-project/inventory/
+    cd lmru--devops--awx-k8s-project
+    git add .
+    git commit -m "Auto-generated inventory"
+    git push origin master

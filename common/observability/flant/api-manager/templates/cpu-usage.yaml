@@ -1,0 +1,50 @@
+apiVersion: deckhouse.io/v1
+kind: CustomPrometheusRules
+metadata:
+  labels:
+    component: rules
+    prometheus: main
+  name: cpu-usage-application-nodes
+spec:
+  groups:
+    - name: cpu-usage-application-nodes
+      rules:
+        - alert: CPUUsageUserSpaceHigh
+          for: 15m
+          expr: avg by(node) (sum by(cpu,node) (rate(node_cpu_seconds_total{mode="user",node!~".*master.*|.*front.*|.*loadbalancer.*|.*opendistro.*|.*opensearch.*|.*system.*|"}[15m]))*100) > 80
+          labels:
+            severity_level: "4"
+          annotations:
+            description: |
+              CPU usage on applications nodes is over than 80 %.
+              Current value {{`{{$value | humanize1024}}`}}
+            summary: |
+              CPU usage on applications nodes is over than 80 %.
+            plk_markup_format: markdown
+            plk_protocol_version: "1"
+        - alert: CPUUsageNonUserSpaceHigh
+          for: 15m
+          expr: avg by(node) (sum by(cpu,node) (rate(node_cpu_seconds_total{mode!~"user|iowait|idle",node!~".*master.*|.*front.*|.*loadbalancer.*|.*opendistro.*|.*opensearch.*|.*system.*|"}[15m]))*100) > 80
+          labels:
+            severity_level: "4"
+          annotations:
+            description: |
+              CPU usage on applications nodes is over than 80 %.
+              Current value {{`{{$value | humanize1024}}`}}
+            summary: |
+              CPU usage on applications nodes is over than 80 %.
+            plk_markup_format: markdown
+            plk_protocol_version: "1"
+        - alert: CPUIOWaitHigh
+          for: 5m
+          expr: avg by(node) (sum by(cpu,node) (rate(node_cpu_seconds_total{mode="iowait",node!~".*master.*|.*front.*|.*loadbalancer.*|.*opendistro.*|.*opensearch.*|.*system.*|"}[5m]))*100) > 20
+          labels:
+            severity_level: "4"
+          annotations:
+            description: |
+              CPU iowait on applications nodes is over than 20 %.
+              Current value {{`{{$value | humanize1024}}`}}
+            summary: |
+              CPU iowait on applications nodes is over than 20 %.
+            plk_markup_format: markdown
+            plk_protocol_version: "1"

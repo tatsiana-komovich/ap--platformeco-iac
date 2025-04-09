@@ -1,0 +1,81 @@
+---
+cluster_authorization:
+  defaults:
+    default_sa_permissions: &default
+      accessLevel: User
+      limitNamespaces:
+        - default
+      allowScale: true
+      allowAccessToSystemNamespaces: false
+      portForwarding: true
+  crowd:
+    groups:
+      crowd-spark-marts-load-admin:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - ^spark-marts-load-.*
+          - ^spark-marts-load$
+      crowd-spark-marts-load-rw:
+        <<: *default
+        accessLevel: Editor
+        limitNamespaces:
+          - ^spark-marts-load-.*
+          - ^spark-marts-load$
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+      crowd-spark-marts-load-ro:
+        <<: *default
+        accessLevel: User
+        limitNamespaces:
+          - ^spark-marts-load-.*
+          - ^spark-marts-load$
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+      crowd-sa-spark-marts-load:
+        <<: *default
+        accessLevel: SuperAdmin
+        limitNamespaces:
+          - ^spark-marts-load-.*
+          - ^spark-marts-load$
+      # keycloak
+      crowd-keycloak-ro:
+        <<: *default
+        accessLevel: User
+        portForwarding: false
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - keycloak
+          - keycloak-.*
+      crowd-keycloak-rw:
+        <<: *default
+        accessLevel: Editor
+        allowScale: true
+        portForwarding: true
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - keycloak
+          - keycloak-.*
+      crowd-keycloak-admin:
+        <<: *default
+        accessLevel: Admin
+        allowScale: true
+        portForwarding: true
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - keycloak
+          - keycloak-.*
+      crowd-sa-keycloak:
+        <<: *default
+        accessLevel: Admin
+        allowScale: true
+        portForwarding: true
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - keycloak
+          - keycloak-.*
+DexProvider:
+  clientID: k8s-argocd
+  clientSecret: crowd_app_k8s-argocd

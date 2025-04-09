@@ -1,0 +1,340 @@
+---
+opendistro:
+  curator:
+    enabled: true
+    s3_snapshots:
+      unit_count:
+        all: 60
+        unknown: 7
+    cron:
+      restore: 10 3 * * *
+      snapshot: 30 0 * * *
+    unknown:
+      days_count: 2
+      snapshot: false
+      schedule: 3 0 * * *
+    indices:
+      - kind: prefix
+        value: .kibana
+        system: true
+        days_count: 30
+        snapshot: true
+        snapshot_count_s3: 7
+        schedule: 40 13 * * *
+      - kind: prefix
+        value: lmru-p0376-nginx-common-error
+        system: false
+        days_count: 14
+        snapshot: true
+        snapshot_count_s3: 14
+        schedule: 50 12 * * *
+      - kind: prefix
+        value: lmru-p0376-nginx-platformeco-error
+        system: false
+        days_count: 14
+        snapshot: true
+        snapshot_count_s3: 14
+        schedule: 40 12 * * *
+      - kind: prefix
+        value: lmru-p0376-nginx-apigee-error
+        system: false
+        days_count: 14
+        snapshot: true
+        snapshot_count_s3: 14
+        schedule: 50 15 * * *
+      - kind: prefix
+        value: lmru-p0376-nginx-devops-error
+        system: false
+        monitoring: false
+        days_count: 14
+        snapshot: true
+        snapshot_count_s3: 14
+        schedule: 20 12 * * *
+      - kind: prefix
+        value: lmru-p0376-nginx-obs-error
+        system: false
+        days_count: 14
+        snapshot: true
+        snapshot_count_s3: 14
+        schedule: 50 14 * * *
+      - kind: prefix
+        value: lmru-p0376-nginx-kz-error
+        system: false
+        monitoring: false
+        days_count: 14
+        snapshot: true
+        snapshot_count_s3: 14
+        schedule: 0 16 * * *
+      - kind: prefix
+        value: lmru-p0376-nginx-oldssl-error
+        monitoring: false
+        system: false
+        days_count: 14
+        snapshot: true
+        snapshot_count_s3: 14
+        schedule: 10 15 * * *
+      - kind: prefix
+        value: lmru-p0376-nginx-test-error
+        monitoring: false
+        system: false
+        days_count: 14
+        snapshot: true
+        snapshot_count_s3: 14
+        schedule: 30 13 * * *
+      - kind: prefix
+        value: lmru-p0376-nginx-preprod-error
+        system: false
+        days_count: 14
+        snapshot: true
+        snapshot_count_s3: 14
+        schedule: 30 12 * * *
+      - kind: prefix
+        value: lmru-p0376-nginx-ext-error
+        system: false
+        monitoring: false
+        days_count: 14
+        snapshot: true
+        snapshot_count_s3: 14
+        schedule: 40 15 * * *
+      - kind: prefix
+        value: lmru-p0376-nginx-daoffice-error
+        system: false
+        days_count: 14
+        snapshot: true
+        snapshot_count_s3: 14
+        schedule: 30 14 * * *
+      - kind: prefix
+        value: lmru-p0376-nginx-nobgp-error
+        system: false
+        monitoring: false
+        days_count: 14
+        snapshot: true
+        snapshot_count_s3: 14
+        schedule: 20 15 * * *
+      - kind: prefix
+        value: lmru-p0376-nginx-clientproject-error
+        system: false
+        monitoring: false
+        days_count: 14
+        snapshot: true
+        snapshot_count_s3: 14
+        schedule: 10 14 * * *
+      - kind: prefix
+        value: lmru-p0376-nginx-magportal-error
+        system: false
+        days_count: 14
+        snapshot: true
+        snapshot_count_s3: 14
+        schedule: 5 14 * * *
+      - kind: prefix
+        monitoring: false
+        value: lmru-p0376-nginx-ad-error
+        system: false
+        days_count: 14
+        snapshot: true
+        snapshot_count_s3: 14
+        schedule: 10 16 * * *
+      - kind: prefix
+        value: lmru-p0376-nginx-payment-error
+        system: false
+        days_count: 14
+        snapshot: true
+        snapshot_count_s3: 14
+        schedule: 20 14 * * *
+      - kind: prefix
+        value: lmru-p0376-nginx-common-access
+        system: false
+        days_count: 7
+        snapshot: true
+        snapshot_count_s3: 14
+        schedule: 0 8 * * *
+      - kind: prefix
+        value: lmru-p0376-nginx-platformeco-access
+        system: false
+        days_count: 14
+        snapshot: true
+        snapshot_count_s3: 14
+        schedule: 15 4 * * *
+      - kind: prefix
+        value: lmru-p0376-nginx-apigee-access
+        system: false
+        days_count: 14
+        snapshot: true
+        snapshot_count_s3: 14
+        schedule: 5 1 * * *
+      - kind: prefix
+        value: lmru-p0376-nginx-devops-access
+        system: false
+        monitoring: false
+        days_count: 14
+        snapshot: true
+        snapshot_count_s3: 14
+        schedule: 15 10 * * *
+      - kind: prefix
+        value: lmru-p0376-nginx-obs-access
+        system: false
+        days_count: 14
+        snapshot: true
+        snapshot_count_s3: 14
+        schedule: 35 9 * * *
+      - kind: prefix
+        value: lmru-p0376-nginx-kz-access
+        system: false
+        monitoring: false
+        days_count: 14
+        snapshot: true
+        snapshot_count_s3: 14
+        schedule: 10 13 * * *
+      - kind: prefix
+        value: lmru-p0376-nginx-oldssl-access
+        system: false
+        days_count: 14
+        snapshot: true
+        snapshot_count_s3: 14
+        schedule: 20 13 * * *
+      - kind: prefix
+        value: lmru-p0376-nginx-test-access
+        system: false
+        days_count: 14
+        snapshot: true
+        snapshot_count_s3: 14
+        schedule: 10 12 * * *
+      - kind: prefix
+        value: lmru-p0376-nginx-preprod-access
+        system: false
+        days_count: 14
+        snapshot: true
+        snapshot_count_s3: 14
+        schedule: 0 12 * * *
+      - kind: prefix
+        value: lmru-p0376-nginx-ext-access
+        system: false
+        monitoring: false
+        days_count: 14
+        snapshot: true
+        snapshot_count_s3: 14
+        schedule: 55 10 * * *
+      - kind: prefix
+        value: lmru-p0376-nginx-daoffice-access
+        system: false
+        days_count: 14
+        snapshot: true
+        snapshot_count_s3: 14
+        schedule: 35 11 * * *
+      - kind: prefix
+        value: lmru-p0376-nginx-nobgp-access
+        system: false
+        days_count: 14
+        snapshot: true
+        snapshot_count_s3: 14
+        schedule: 50 11 * * *
+      - kind: prefix
+        value: lmru-p0376-nginx-clientproject-access
+        system: false
+        monitoring: false
+        days_count: 14
+        snapshot: true
+        snapshot_count_s3: 14
+        schedule: 35 10 * * *
+      - kind: prefix
+        value: lmru-p0376-nginx-magportal-access
+        system: false
+        days_count: 14
+        snapshot: true
+        snapshot_count_s3: 14
+        schedule: 5 9 * * *
+      - kind: prefix
+        monitoring: false
+        value: lmru-p0376-nginx-ad-access
+        system: false
+        days_count: 14
+        snapshot: true
+        snapshot_count_s3: 14
+        schedule: 25 7 * * *
+      - kind: prefix
+        value: lmru-p0376-nginx-payment-access
+        system: false
+        days_count: 14
+        snapshot: true
+        snapshot_count_s3: 14
+        schedule: 50 13 * * *
+      - kind: prefix
+        value: lmru-p0376-nginx-keycloak-access
+        system: false
+        monitoring: false
+        days_count: 14
+        snapshot: true
+        snapshot_count_s3: 14
+        schedule: 40 3 * * *
+      - kind: prefix
+        value: lmru-p0376-nginx-keycloak-error
+        system: false
+        monitoring: false
+        days_count: 14
+        snapshot: true
+        snapshot_count_s3: 14
+        schedule: 0 15 * * *
+      - kind: prefix
+        value: lmru-p0376-nginx-kz_ext-access
+        system: false
+        monitoring: false
+        days_count: 14
+        snapshot: true
+        snapshot_count_s3: 14
+        schedule: 20 16 * * *
+      - kind: prefix
+        value: lmru-p0376-nginx-kz_ext-error
+        system: false
+        monitoring: false
+        days_count: 14
+        snapshot: true
+        snapshot_count_s3: 14
+        schedule: 40 16 * * *
+      - kind: prefix
+        value: lmru-p0376-nginx-microfront-access
+        system: false
+        monitoring: false
+        days_count: 14
+        snapshot: true
+        snapshot_count_s3: 14
+        schedule: 55 9 * * *
+      - kind: prefix
+        value: lmru-p0376-nginx-microfront-error
+        system: false
+        monitoring: false
+        days_count: 14
+        snapshot: true
+        snapshot_count_s3: 14
+        schedule: 30 15 * * *
+      - kind: prefix
+        value: lmru-p0376-nginx-scdp-access
+        system: false
+        monitoring: false
+        days_count: 14
+        snapshot: true
+        snapshot_count_s3: 14
+        schedule: 15 11 * * *
+      - kind: prefix
+        value: lmru-p0376-nginx-scdp-error
+        system: false
+        monitoring: false
+        days_count: 14
+        snapshot: true
+        snapshot_count_s3: 14
+        schedule: 40 14 * * *
+      - kind: prefix
+        value: lmru-p0376-nginx-itsec-access
+        system: false
+        monitoring: false
+        days_count: 14
+        snapshot: true
+        snapshot_count_s3: 14
+        schedule: 0 13 * * *
+      - kind: prefix
+        value: lmru-p0376-nginx-itsec-error
+        system: false
+        monitoring: false
+        days_count: 14
+        snapshot: true
+        snapshot_count_s3: 14
+        schedule: 30 16 * * *

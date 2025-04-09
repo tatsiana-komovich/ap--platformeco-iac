@@ -1,0 +1,248 @@
+---
+cluster_authorization:
+  defaults:
+    default_sa_permissions: &default
+      accessLevel: User
+      limitNamespaces:
+        - default
+      allowScale: true
+      allowAccessToSystemNamespaces: false
+      portForwarding: true
+  crowd:
+    groups:
+      # del-oper
+      crowd-del-oper-admin:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - del-oper-.*
+      crowd-del-oper-ro:
+        <<: *default
+        accessLevel: User
+        limitNamespaces:
+          - del-oper-.*
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+      crowd-del-oper-rw:
+        <<: *default
+        accessLevel: Editor
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - del-oper-.*
+      crowd-sa-del-oper:
+        <<: *default
+        accessLevel: Admin
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - del-oper-.*
+      # del-repo
+      crowd-del-repo-admin:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - del-repo-.*
+      crowd-del-repo-ro:
+        <<: *default
+        accessLevel: User
+        limitNamespaces:
+          - del-repo-.*
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+      crowd-del-repo-rw:
+        <<: *default
+        accessLevel: Editor
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - del-repo-.*
+      crowd-sa-del-repo:
+        <<: *default
+        accessLevel: Admin
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - del-repo-.*
+      # pickup-point
+      crowd-pickup-point-admin:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - pickup-point-.*
+      crowd-pickup-point-ro:
+        <<: *default
+        accessLevel: User
+        limitNamespaces:
+          - pickup-point-.*
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+      crowd-pickup-point-rw:
+        <<: *default
+        accessLevel: Editor
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - pickup-point-.*
+      crowd-sa-pickup-point:
+        <<: *default
+        accessLevel: Admin
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - pickup-point-.*
+      # dnp
+      crowd-dnp-admin:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - ^dnp-test$
+          - repo-.*
+          - transptech-.*
+          - del-oper-.*
+          - del-sell-.*
+          - del-repo-.*
+          - pickup-point-.*
+      crowd-dnp-ro:
+        <<: *default
+        accessLevel: User
+        limitNamespaces:
+          - ^dnp-test$
+          - repo-.*
+          - transptech-.*
+          - del-oper-.*
+          - del-sell-.*
+          - del-repo-.*
+          - pickup-point-.*
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+      crowd-dnp-rw:
+        <<: *default
+        accessLevel: Editor
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - ^dnp-test$
+          - repo-.*
+          - transptech-.*
+          - del-oper-.*
+          - del-sell-.*
+          - del-repo-.*
+          - pickup-point-.*
+      crowd-sa-dnp:
+        <<: *default
+        accessLevel: Admin
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - ^dnp-test$
+          - repo-.*
+          - transptech-.*
+          - del-oper-.*
+          - del-sell-.*
+          - del-repo-.*
+          - pickup-point-.*
+      # PNR
+      crowd-cdsng-admin:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - planning-and-routing-.*
+          - pnr-.*
+      crowd-cdsng-ro:
+        <<: *default
+        accessLevel: User
+        limitNamespaces:
+          - planning-and-routing-.*
+          - pnr-.*
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+      crowd-cdsng-rw:
+        <<: *default
+        accessLevel: Editor
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - planning-and-routing-.*
+          - pnr-.*
+      crowd-sa-cdsng:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - planning-and-routing-.*
+          - pnr-.*
+      # GTS - Carrier Portal
+      crowd-sa-carrier-portal:
+        <<: *default
+        accessLevel: Admin
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - carrier-portal-.*
+      crowd-carrier-portal-rw:
+        <<: *default
+        accessLevel: Editor
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - carrier-portal-.*
+      crowd-carrier-portal-ro:
+        <<: *default
+        accessLevel: User
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - carrier-portal-.*
+      crowd-carrier-portal-admin:
+        <<: *default
+        accessLevel: Admin
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - carrier-portal-.*
+      # GTS TMS
+      crowd-sa-gts-tms:
+        <<: *default
+        accessLevel: Admin
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - gts-.*
+      crowd-gts-tms-rw:
+        <<: *default
+        accessLevel: Editor
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - gts-.*
+      crowd-gts-tms-ro:
+        <<: *default
+        accessLevel: User
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - gts-.*
+      crowd-gts-tms-admin:
+        <<: *default
+        accessLevel: Admin
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - gts-.*
+      # otel for tracing
+      crowd-otel-ro:
+        <<: *default
+        accessLevel: User
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+      crowd-otel-rw:
+        <<: *default
+        accessLevel: Editor
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - otel-.*
+      crowd-otel-admin:
+        <<: *default
+        accessLevel: Admin
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - otel-.*
+      crowd-sa-otel:
+        <<: *default
+        accessLevel: SuperAdmin
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - otel-.*
+
+DexProvider:
+  clientID: k8s-argocd
+  clientSecret: crowd_app_k8s-argocd

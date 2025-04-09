@@ -1,0 +1,15 @@
+{{- $instances := .Values.alertmanagers }}
+{{- range $instances }}
+{{- $fullPort := print ":" .port }}
+---
+apiVersion: deckhouse.io/v1alpha1
+kind: CustomAlertmanager
+metadata:
+  annotations:
+    gitrepo: https://github.lmru.tech/adeo/lmru--devops--argocd-apps/tree/master/common/monitoring/prometheus-custom-rules
+  name: {{ .hostname | replace "." "-" }}
+spec:
+  external:
+    address: {{ ternary "https://" "http://" (eq .https true) }}{{ ternary .fqdn .hostname (.fqdn | not | empty) }}{{ ternary $fullPort "" (.port | not | empty) }}
+  type: External
+{{- end }}

@@ -1,0 +1,112 @@
+---
+apiVersion: deckhouse.io/v1
+kind: VsphereInstanceClass
+metadata:
+  name: application-nodes
+spec:
+  datastore: 3par_1_Lun82
+  mainNetwork: DEVOPS_10
+  memory: 8192
+  numCPUs: 4
+  rootDiskSize: 50
+  template: Templates/ubuntu-jammy-22.04-packer
+---
+apiVersion: deckhouse.io/v1
+kind: VsphereInstanceClass
+metadata:
+  name: opendistro-nodes
+spec:
+  datastore: 3par_1_Lun82
+  mainNetwork: DEVOPS_10
+  memory: 12288
+  numCPUs: 4
+  rootDiskSize: 50
+  template: Templates/ubuntu-jammy-22.04-packer
+---
+apiVersion: deckhouse.io/v1
+kind: VsphereInstanceClass
+metadata:
+  name: odfe-common
+spec:
+  datastore: 3par_1_Lun82
+  mainNetwork: DEVOPS_10
+  memory: 12288
+  numCPUs: 4
+  rootDiskSize: 50
+  template: Templates/ubuntu-jammy-22.04-packer
+---
+apiVersion: deckhouse.io/v1
+kind: VsphereInstanceClass
+metadata:
+  name: sentry
+spec:
+  datastore: 3par_1_Lun82
+  mainNetwork: DEVOPS_10
+  memory: 12288
+  numCPUs: 4
+  rootDiskSize: 50
+  template: Templates/ubuntu-jammy-22.04-packer
+---
+apiVersion: deckhouse.io/v1
+kind: VsphereInstanceClass
+metadata:
+  name: system
+spec:
+  datastore: 3par_1_Lun82
+  mainNetwork: DEVOPS_10
+  memory: 12288
+  numCPUs: 4
+  rootDiskSize: 50
+  template: Templates/ubuntu-jammy-22.04-packer
+---
+apiVersion: deckhouse.io/v1
+kind: VsphereInstanceClass
+metadata:
+  name: d8-loki
+spec:
+  datastore: 3par_1_Lun82
+  mainNetwork: DEVOPS_10
+  memory: 8192
+  numCPUs: 4
+  rootDiskSize: 50
+  template: Templates/ubuntu-jammy-22.04-packer
+---
+apiVersion: deckhouse.io/v1
+kind: VsphereInstanceClass
+metadata:
+  name: loadbalancer
+spec:
+  additionalNetworks:
+    - DEVOPS_10
+  datastore: 3par_1_Lun82
+  mainNetwork: msk1-k8s-p-3893-215
+  memory: 8192
+  numCPUs: 2
+  rootDiskSize: 30
+  template: Templates/ubuntu-jammy-22.04-packer
+---
+apiVersion: deckhouse.io/v1
+kind: VsphereInstanceClass
+metadata:
+  name: d8-loadbalancer
+spec:
+  additionalNetworks:
+    - DEVOPS_10
+  datastore: 3par_1_Lun82
+  mainNetwork: msk1-k8s-p-3893-215
+  memory: 4096
+  numCPUs: 2
+  rootDiskSize: 30
+  template: Templates/ubuntu-jammy-22.04-packer
+---
+apiVersion: deckhouse.io/v1
+kind: VsphereInstanceClass
+metadata:
+  name: deckhouse
+spec:
+  datastore: 3par_1_Lun82
+  mainNetwork: DEVOPS_10
+  memory: 8192
+  numCPUs: 4
+  rootDiskSize: 50
+  template: Templates/ubuntu-jammy-22.04-packer

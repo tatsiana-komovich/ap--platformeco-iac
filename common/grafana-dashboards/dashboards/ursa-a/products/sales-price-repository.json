@@ -1,0 +1,4114 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": {
+          "type": "grafana",
+          "uid": "-- Grafana --"
+        },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "target": {
+          "limit": 100,
+          "matchAny": false,
+          "tags": [],
+          "type": "dashboard"
+        },
+        "type": "dashboard"
+      },
+      {
+        "datasource": {
+          "type": "prometheus",
+          "uid": "P0D6E4079E36703EB"
+        },
+        "enable": true,
+        "expr": "kube_deployment_labels{namespace=\"vspspr-$environment\"} unless (kube_deployment_labels{namespace=\"vspspr-$environment\"} offset $__interval)",
+        "hide": true,
+        "iconColor": "green",
+        "name": "Releases",
+        "tagKeys": "release",
+        "textFormat": "Version: {{label_app_kubernetes_io_version}}",
+        "titleFormat": "🚀 Released {{label_app_kubernetes_io_name}}"
+      },
+      {
+        "datasource": {
+          "type": "prometheus",
+          "uid": "P0D6E4079E36703EB"
+        },
+        "enable": true,
+        "expr": "group by (container, alertname) (ALERTS{namespace=\"vspspr-$environment\", container=~\".+\", tier=\"\", alertstate=\"firing\"})",
+        "hide": true,
+        "iconColor": "red",
+        "name": "Alerts",
+        "tagKeys": "alert",
+        "textFormat": "{{container}}",
+        "titleFormat": "🚨 {{alertname}}"
+      }
+    ]
+  },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "id": 59,
+  "iteration": 1718979088159,
+  "links": [],
+  "liveNow": false,
+  "panels": [
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "id": 58,
+      "panels": [],
+      "title": "Totals",
+      "type": "row"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "P0D6E4079E36703EB"
+      },
+      "description": "Total number of prices that came to the repository",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "noValue": "0",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 3,
+        "x": 0,
+        "y": 1
+      },
+      "hideTimeOverride": true,
+      "id": 36,
+      "interval": "$period",
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "sum"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "text": {},
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "10.4.5",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P0D6E4079E36703EB"
+          },
+          "expr": "sum (\r\n    increase(\r\n      prices_repository_transitions_total{namespace=\"vspspr-${environment}\", status=\"proposed\"}[$period]\r\n)\r\n) or vector(0)",
+          "hide": false,
+          "refId": "B"
+        }
+      ],
+      "timeShift": "$period",
+      "title": "Proposed Prices",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "P0D6E4079E36703EB"
+      },
+      "description": "Newly created prices",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "noValue": "0",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 3,
+        "x": 3,
+        "y": 1
+      },
+      "hideTimeOverride": true,
+      "id": 75,
+      "interval": "$period",
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "sum"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "10.4.5",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P0D6E4079E36703EB"
+          },
+          "editorMode": "code",
+          "expr": "sum (\r\n    increase(\r\n      prices_repository_transitions_total{namespace=\"vspspr-${environment}\", status=\"created\"}[$period]\r\n)\r\n) or vector(0)",
+          "format": "time_series",
+          "hide": false,
+          "range": true,
+          "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P0D6E4079E36703EB"
+          },
+          "expr": "sum(\r\n    increase(prices_repository_transitions_total{namespace=\"vspspr-${environment}\", status=\"created\"}[$__range])\r\n)",
+          "hide": true,
+          "refId": "B"
+        }
+      ],
+      "timeShift": "$period",
+      "title": "Created Prices",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "P0D6E4079E36703EB"
+      },
+      "description": "Updates of the existing prices",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "noValue": "0",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 3,
+        "x": 6,
+        "y": 1
+      },
+      "hideTimeOverride": true,
+      "id": 41,
+      "interval": "$period",
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "sum"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "10.4.5",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P0D6E4079E36703EB"
+          },
+          "editorMode": "code",
+          "expr": "sum (\r\n    increase(\r\n      prices_repository_transitions_total{namespace=\"vspspr-${environment}\", status=\"updated\"}[$period]\r\n)\r\n) or vector(0)",
+          "hide": false,
+          "legendFormat": "",
+          "range": true,
+          "refId": "B"
+        }
+      ],
+      "timeShift": "$period",
+      "title": "Updated Prices",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "P0D6E4079E36703EB"
+      },
+      "description": "Prices that the repository automatically filtered out and didn't insert",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "decimals": 0,
+          "mappings": [],
+          "noValue": "0",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "orange",
+                "value": null
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 3,
+        "x": 9,
+        "y": 1
+      },
+      "hideTimeOverride": true,
+      "id": 38,
+      "interval": "$period",
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "sum"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "10.4.5",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P0D6E4079E36703EB"
+          },
+          "expr": "sum (\r\n    increase(\r\n      prices_repository_transitions_total{namespace=\"vspspr-${environment}\", status=\"discarded\"}[$period]\r\n)\r\n) or vector(0)",
+          "hide": false,
+          "refId": "B"
+        }
+      ],
+      "timeShift": "$period",
+      "title": "Discarded Prices",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "P0D6E4079E36703EB"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "decimals": 0,
+          "mappings": [],
+          "noValue": "No Data",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "#EAB839",
+                "value": 100
+              },
+              {
+                "color": "red",
+                "value": 150
+              }
+            ]
+          },
+          "unit": "ms"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 6,
+        "x": 12,
+        "y": 1
+      },
+      "hideTimeOverride": true,
+      "id": 60,
+      "interval": "$period",
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "mean"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "10.4.5",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P0D6E4079E36703EB"
+          },
+          "editorMode": "code",
+          "exemplar": false,
+          "expr": "  histogram_quantile(\r\n    0.95,\r\n    sum(\r\n      rate(\r\n        ingress_nginx_detail_request_seconds_bucket{\r\n          namespace=\"vspspr-${environment}\", service=\"prices-mashup-balancer\", location=\"/prices-mashup/(.*)\"}[$__interval]\r\n        )\r\n    ) by (le)\r\n) * 1000",
+          "instant": false,
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "timeShift": "$period",
+      "title": "Search Latency 95% [$period]",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "P0D6E4079E36703EB"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "decimals": 0,
+          "mappings": [],
+          "noValue": "No Data",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          },
+          "unit": "reqps"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 6,
+        "x": 18,
+        "y": 1
+      },
+      "hideTimeOverride": true,
+      "id": 62,
+      "interval": "$period",
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "max"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "10.4.5",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P0D6E4079E36703EB"
+          },
+          "expr": "sum(\r\n    irate(\r\n        ingress_nginx_detail_responses_total{namespace=\"vspspr-${environment}\", service=\"prices-mashup-balancer\", status=~\"2..\", location=~\"/prices-mashup/(.*)|/pricerepository/(.*)\"}[$__interval]\r\n    )\r\n)\r\n\r\n\r\n",
+          "refId": "A"
+        }
+      ],
+      "timeShift": "$period",
+      "title": "Max Search Throughput [$period]",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "P0D6E4079E36703EB"
+      },
+      "description": "Price changes that have been announced asynchronously",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "noValue": "0",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 3,
+        "x": 0,
+        "y": 5
+      },
+      "hideTimeOverride": true,
+      "id": 108,
+      "interval": "$period",
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "sum"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "10.4.5",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P0D6E4079E36703EB"
+          },
+          "expr": "sum(increase(prices_announcer_announced_total{namespace=\"vspspr-${environment}\", container=\"price-changes-announcer\"}[$period])) or vector(0)",
+          "refId": "A"
+        }
+      ],
+      "timeShift": "$period",
+      "title": "Announced Prices",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "P0D6E4079E36703EB"
+      },
+      "description": "Prices waiting to be inserted into the repository",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "noValue": "0",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "orange",
+                "value": 100000
+              },
+              {
+                "color": "#6ED0E0",
+                "value": 300000
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 3,
+        "x": 3,
+        "y": 5
+      },
+      "hideTimeOverride": true,
+      "id": 76,
+      "interval": "$period",
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "last"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "10.4.5",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P0D6E4079E36703EB"
+          },
+          "editorMode": "code",
+          "exemplar": false,
+          "expr": "sum(\r\n        kafka_consumer_fetch_manager_records_lag {\r\n                client_id!~\".*retry.*\",\r\n                container=\"prices-uploader\",\r\n                namespace=\"vspspr-${environment}\"\r\n        }\r\n) or vector(0)",
+          "format": "time_series",
+          "instant": true,
+          "interval": "",
+          "legendFormat": "",
+          "range": false,
+          "refId": "A"
+        }
+      ],
+      "timeShift": "$period",
+      "title": "Pending Prices",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "P0D6E4079E36703EB"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "decimals": 0,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          },
+          "unit": "prices/s"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 3,
+        "x": 6,
+        "y": 5
+      },
+      "hideTimeOverride": true,
+      "id": 65,
+      "interval": "$period",
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "max"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "10.4.5",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P0D6E4079E36703EB"
+          },
+          "editorMode": "code",
+          "exemplar": false,
+          "expr": "\r\n    sum (\r\n      rate(\r\n         prices_repository_transitions_total { namespace=\"vspspr-${environment}\", container=\"price-changes-api\", status=~\"created|updated|discarded\" }    [$period]\r\n)\r\n    )\r\n",
+          "instant": false,
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "timeShift": "$period",
+      "title": "Max Insertion Speed",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "P0D6E4079E36703EB"
+      },
+      "description": "Prices for which the repository experienced an error during the insertion process",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "red",
+            "mode": "thresholds"
+          },
+          "decimals": 1,
+          "mappings": [],
+          "noValue": "0",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "orange",
+                "value": 1000
+              },
+              {
+                "color": "red",
+                "value": 5000
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 3,
+        "x": 9,
+        "y": 5
+      },
+      "hideTimeOverride": true,
+      "id": 43,
+      "interval": "$period",
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "sum"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "text": {},
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "10.4.5",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P0D6E4079E36703EB"
+          },
+          "editorMode": "code",
+          "expr": "sum (\r\n    increase(\r\n      prices_repository_transitions_total{namespace=\"vspspr-${environment}\", status=\"stuck\"}[$period]\r\n)\r\n) or vector(0)",
+          "hide": true,
+          "legendFormat": "Total",
+          "range": true,
+          "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P0D6E4079E36703EB"
+          },
+          "editorMode": "code",
+          "exemplar": false,
+          "expr": "sum (\r\n        kafka_consumer_fetch_manager_records_lag {\r\n                client_id=~\".*retry.*\",\r\n                container=\"prices-uploader\",\r\n                namespace=\"vspspr-${environment}\"\r\n        }\r\n) or vector(0)",
+          "hide": false,
+          "instant": true,
+          "legendFormat": "Remaining To Process",
+          "range": false,
+          "refId": "B"
+        }
+      ],
+      "timeShift": "$period",
+      "title": "Stuck Prices",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "P0D6E4079E36703EB"
+      },
+      "description": "% of the search requests that received a response from the repository",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "noValue": "No Data",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "red",
+                "value": null
+              },
+              {
+                "color": "orange",
+                "value": 0.95
+              },
+              {
+                "color": "green",
+                "value": 0.98
+              }
+            ]
+          },
+          "unit": "percentunit"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 12,
+        "y": 5
+      },
+      "hideTimeOverride": true,
+      "id": 61,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "last"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "10.4.5",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P0D6E4079E36703EB"
+          },
+          "editorMode": "code",
+          "exemplar": false,
+          "expr": "sum(\r\n  increase(\r\n    ingress_nginx_detail_responses_total{namespace=\"vspspr-${environment}\", service=\"prices-mashup-balancer\", content_kind!=\"served-without-upstream\"}[$__range])\r\n)\r\n/\r\nsum(\r\n  increase(\r\n    ingress_nginx_detail_responses_total{namespace=\"vspspr-${environment}\", service=\"prices-mashup-balancer\"}[$__range]\r\n    )\r\n)",
+          "instant": false,
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "timeShift": "$period",
+      "title": "Search Availability",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "P0D6E4079E36703EB"
+      },
+      "description": "% of successful queries",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "noValue": "No Data",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "red",
+                "value": null
+              },
+              {
+                "color": "orange",
+                "value": 0.9
+              },
+              {
+                "color": "green",
+                "value": 0.95
+              }
+            ]
+          },
+          "unit": "percentunit"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 16,
+        "y": 5
+      },
+      "hideTimeOverride": true,
+      "id": 64,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "last"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "10.4.5",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P0D6E4079E36703EB"
+          },
+          "expr": "sum(\r\n    irate(\r\n        ingress_nginx_detail_responses_total{namespace=\"vspspr-${environment}\", service=\"prices-mashup-balancer\", location=~\"/prices-mashup/(.*)|/pricerepository/(.*)\", status=~\"2..\"}[$__range]\r\n    )\r\n)\r\n/\r\nsum(\r\n    irate(\r\n        ingress_nginx_detail_responses_total{namespace=\"vspspr-${environment}\", service=\"prices-mashup-balancer\", location=~\"/prices-mashup/(.*)|/pricerepository/(.*)\"}[$__range]\r\n    )\r\n)",
+          "refId": "A"
+        }
+      ],
+      "timeShift": "$period",
+      "title": "Search Correctness",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "P0D6E4079E36703EB"
+      },
+      "description": "% of fulfilled searches where the repository found a price for the requested (item, location) pair",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "noValue": "No Data",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "red",
+                "value": null
+              },
+              {
+                "color": "orange",
+                "value": 0.4
+              },
+              {
+                "color": "green",
+                "value": 0.6
+              }
+            ]
+          },
+          "unit": "percentunit"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 20,
+        "y": 5
+      },
+      "hideTimeOverride": true,
+      "id": 63,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "last"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "10.4.5",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P0D6E4079E36703EB"
+          },
+          "expr": "sum (\r\n    increase(\r\n        prices_repository_search_products_total{namespace=\"vspspr-${environment}\", container=\"prices-api\", status=\"found\"}[$__range]\r\n    )\r\n)/\r\nsum (\r\n    increase(\r\n        prices_repository_search_products_total{namespace=\"vspspr-${environment}\", container=\"prices-api\"}[$__range]\r\n    )\r\n)",
+          "refId": "A"
+        }
+      ],
+      "timeShift": "$period",
+      "title": "Search Еfficiency",
+      "type": "stat"
+    },
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 9
+      },
+      "id": 33,
+      "panels": [],
+      "title": "Prices Uploading",
+      "type": "row"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "P0D6E4079E36703EB"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "axisSoftMin": 0,
+            "barAlignment": 0,
+            "drawStyle": "bars",
+            "fillOpacity": 100,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "normal"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "decimals": 0,
+          "mappings": [],
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          },
+          "unit": "none"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 12,
+        "x": 0,
+        "y": 10
+      },
+      "hideTimeOverride": true,
+      "id": 25,
+      "interval": "$period",
+      "options": {
+        "legend": {
+          "calcs": [
+            "sum"
+          ],
+          "displayMode": "table",
+          "placement": "right",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P0D6E4079E36703EB"
+          },
+          "editorMode": "code",
+          "expr": "sum (\r\n    increase(\r\n      prices_repository_transitions_total{namespace=\"vspspr-${environment}\", status=\"created\"}[$period]\r\n)\r\n) or vector(0)",
+          "legendFormat": "created",
+          "range": true,
+          "refId": "Created"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P0D6E4079E36703EB"
+          },
+          "editorMode": "code",
+          "expr": "sum (\r\n    increase(\r\n      prices_repository_transitions_total{namespace=\"vspspr-${environment}\", status=\"updated\"}[$period]\r\n)\r\n) or vector(0)",
+          "hide": false,
+          "legendFormat": "updated",
+          "range": true,
+          "refId": "Updated"
+        }
+      ],
+      "timeShift": "$period",
+      "title": "Inserted Prices [$period]",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "P0D6E4079E36703EB"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "axisSoftMin": 0,
+            "barAlignment": 0,
+            "drawStyle": "bars",
+            "fillOpacity": 100,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 4,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "normal"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "decimals": 0,
+          "mappings": [],
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 12,
+        "x": 12,
+        "y": 10
+      },
+      "hideTimeOverride": true,
+      "id": 40,
+      "interval": "$period",
+      "options": {
+        "legend": {
+          "calcs": [
+            "sum"
+          ],
+          "displayMode": "table",
+          "placement": "right",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P0D6E4079E36703EB"
+          },
+          "editorMode": "code",
+          "expr": "sum by (cause) (\r\n      increase(\r\n         prices_repository_transitions_total { namespace=\"vspspr-${environment}\", status=\"discarded\" }[$period]\r\n)\r\n)",
+          "hide": false,
+          "legendFormat": "{{cause}}",
+          "range": true,
+          "refId": "Invalid"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P0D6E4079E36703EB"
+          },
+          "editorMode": "code",
+          "expr": "sum (\r\n      increase(\r\n            prices_repository_transitions_total {namespace=\"vspspr-${environment}\", status=\"stuck\"}[$period]\r\n        )\r\n)",
+          "hide": false,
+          "legendFormat": "stuck",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "timeShift": "$period",
+      "title": "Discarded and Stuck Prices [$period]",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "P0D6E4079E36703EB"
+      },
+      "description": "",
+      "gridPos": {
+        "h": 12,
+        "w": 5,
+        "x": 0,
+        "y": 19
+      },
+      "id": 122,
+      "options": {
+        "code": {
+          "language": "plaintext",
+          "showLineNumbers": false,
+          "showMiniMap": false
+        },
+        "content": "<table>\n  <tr>\n    <td style=\"width:113px\">🔈 <b>Proposed</b></td>\n    <td>Received for uploading</td>\n  </tr>\n  <tr>\n    <td>✔️ <b>Created</b></td>\n    <td>Created new price</td>\n  </tr>\n  <tr>\n    <td>✔️ <b>Updated</b></td>\n    <td>Updated existing price</td>\n  </tr>\n  <tr>\n    <td>⚠️ <b>Stuck</b></td>\n    <td>Faced an error at uploading</td>\n  </tr>\n  <tr>\n    <td>❌ <b>Invalid</b></td>\n    <td>Discared due to invalid parameters</td>\n  </tr>\n  <tr>\n    <td>❌ <b>Equivalent</b></td>\n    <td>Ignored as exact copy of existing</td>\n  </tr>\n  <tr>\n    <td>❌ <b>Duplicate</b></td>\n    <td>Ignored as copy of other proposed</td>\n  </tr>\n  <tr>\n    <td>❌ <b>Outdated</b></td>\n    <td>Ignored as old update of existing</td>\n  </tr>\n  <tr>\n    <td>❌ <b>Uneditable</b></td>\n    <td>Ignored as forbidden update of immutable fields OR statuses</td>\n  </tr>\n  <tr>\n    <td>📣 <b>Announced</b></td>\n    <td>Available for async consumption</td>\n  </tr>\n</table>\n",
+        "mode": "html"
+      },
+      "pluginVersion": "10.4.5",
+      "title": "Price Upload Outcomes",
+      "type": "text"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "P0D6E4079E36703EB"
+      },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "align": "auto",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "filterable": false,
+            "inspect": false,
+            "minWidth": 50
+          },
+          "decimals": 0,
+          "mappings": [],
+          "noValue": "0",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "#ebeeea",
+                "value": null
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "🏠 Location"
+            },
+            "properties": [
+              {
+                "id": "custom.filterable",
+                "value": true
+              },
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "mode": "basic",
+                  "type": "color-background"
+                }
+              },
+              {
+                "id": "custom.align",
+                "value": "center"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 12,
+        "w": 19,
+        "x": 5,
+        "y": 19
+      },
+      "hideTimeOverride": true,
+      "id": 44,
+      "interval": "$period",
+      "options": {
+        "cellHeight": "sm",
+        "footer": {
+          "countRows": false,
+          "fields": [
+            "Value #Proposed (sum)",
+            "Value #Created (sum)",
+            "Value #Updated (sum)",
+            "Value #Stuck (sum)",
+            "Value #Discarded - invalid (sum)",
+            "Value #Discarded - equivalent exists (sum)",
+            "Value #Discarded - duplicate at request (sum)",
+            "Value #Discarded - outdated (sum)",
+            "Value #Discarded - uneditable (sum)",
+            "Value #Announced (sum)"
+          ],
+          "reducer": [
+            "sum"
+          ],
+          "show": true
+        },
+        "frameIndex": 2,
+        "showHeader": true,
+        "sortBy": []
+      },
+      "pluginVersion": "10.4.5",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P0D6E4079E36703EB"
+          },
+          "editorMode": "code",
+          "exemplar": false,
+          "expr": "sum by (location) (\r\n  increase(\r\n    prices_repository_transitions_total{namespace=\"vspspr-${environment}\", status=\"proposed\"}[$period]\r\n) or vector(0)\r\n)",
+          "format": "table",
+          "hide": false,
+          "instant": false,
+          "range": true,
+          "refId": "Proposed"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P0D6E4079E36703EB"
+          },
+          "editorMode": "code",
+          "exemplar": false,
+          "expr": " sum by (location) (\r\n  increase(\r\n    prices_repository_transitions_total{namespace=\"vspspr-${environment}\", status=\"created\"}[$period]\r\n) or vector(0)\r\n)",
+          "format": "table",
+          "hide": false,
+          "instant": false,
+          "range": true,
+          "refId": "Created"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P0D6E4079E36703EB"
+          },
+          "editorMode": "code",
+          "exemplar": false,
+          "expr": " sum by (location) (\r\n  increase(\r\n    prices_repository_transitions_total{namespace=\"vspspr-${environment}\", status=\"updated\"}[$period]\r\n) or vector(0)\r\n)",
+          "format": "table",
+          "hide": false,
+          "instant": false,
+          "range": true,
+          "refId": "Updated"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P0D6E4079E36703EB"
+          },
+          "editorMode": "code",
+          "exemplar": false,
+          "expr": "sum by (location) (\r\n  increase(\r\n    prices_repository_transitions_total{namespace=\"vspspr-${environment}\", status=\"stuck\"}[$period]\r\n) or vector(0)\r\n)",
+          "format": "table",
+          "hide": false,
+          "instant": false,
+          "range": true,
+          "refId": "Stuck"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P0D6E4079E36703EB"
+          },
+          "editorMode": "code",
+          "exemplar": false,
+          "expr": "sum by (location) (\r\n  increase(\r\n    prices_repository_transitions_total{namespace=\"vspspr-${environment}\", status=\"discarded\", cause=\"invalid\"}[$period]\r\n) or vector(0)\r\n)",
+          "format": "table",
+          "hide": false,
+          "instant": false,
+          "range": true,
+          "refId": "Discarded - invalid"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P0D6E4079E36703EB"
+          },
+          "editorMode": "code",
+          "exemplar": false,
+          "expr": " sum by (location) (\r\n  increase(\r\n    prices_repository_transitions_total{namespace=\"vspspr-${environment}\", status=\"discarded\", cause=\"equivalent_exists\"}[$period]\r\n) or vector(0)\r\n)",
+          "format": "table",
+          "hide": false,
+          "instant": false,
+          "range": true,
+          "refId": "Discarded - equivalent exists"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P0D6E4079E36703EB"
+          },
+          "editorMode": "code",
+          "exemplar": false,
+          "expr": "sum by (location) (\r\n  increase(\r\n    prices_repository_transitions_total{namespace=\"vspspr-${environment}\", status=\"discarded\", cause=\"duplicate_at_request\"}[$period]\r\n) or vector(0)\r\n)",
+          "format": "table",
+          "hide": false,
+          "instant": false,
+          "range": true,
+          "refId": "Discarded - duplicate at request"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P0D6E4079E36703EB"
+          },
+          "editorMode": "code",
+          "exemplar": false,
+          "expr": "sum by (location) (\r\n  increase(\r\n    prices_repository_transitions_total{namespace=\"vspspr-${environment}\", status=\"discarded\", cause=\"outdated\"}[$period]\r\n) or vector(0)\r\n)",
+          "format": "table",
+          "hide": false,
+          "instant": false,
+          "range": true,
+          "refId": "Discarded - outdated"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P0D6E4079E36703EB"
+          },
+          "editorMode": "code",
+          "exemplar": false,
+          "expr": "sum by (location) (\r\n  increase(\r\n    prices_repository_transitions_total{namespace=\"vspspr-${environment}\", status=\"discarded\", cause=\"uneditable\"}[$period]\r\n) or vector(0)\r\n)",
+          "format": "table",
+          "hide": false,
+          "instant": true,
+          "legendFormat": "",
+          "range": false,
+          "refId": "Discarded - uneditable"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P0D6E4079E36703EB"
+          },
+          "editorMode": "code",
+          "expr": "sum by (location) (\r\n  increase(\r\n    prices_announcer_announced_total{namespace=\"vspspr-${environment}\"}[$period]\r\n) or vector(0)\r\n)",
+          "format": "table",
+          "hide": false,
+          "range": true,
+          "refId": "Announced"
+        }
+      ],
+      "timeShift": "$period",
+      "title": "Upload Statistics By Location",
+      "transformations": [
+        {
+          "id": "merge",
+          "options": {}
+        },
+        {
+          "id": "convertFieldType",
+          "options": {
+            "conversions": [
+              {
+                "destinationType": "number",
+                "targetField": "location"
+              }
+            ],
+            "fields": {}
+          }
+        },
+        {
+          "id": "filterByValue",
+          "options": {
+            "filters": [
+              {
+                "config": {
+                  "id": "greater",
+                  "options": {
+                    "value": 0
+                  }
+                },
+                "fieldName": "Value #Proposed"
+              },
+              {
+                "config": {
+                  "id": "greater",
+                  "options": {
+                    "value": 0
+                  }
+                },
+                "fieldName": "Value #Created"
+              },
+              {
+                "config": {
+                  "id": "greater",
+                  "options": {
+                    "value": 0
+                  }
+                },
+                "fieldName": "Value #Updated"
+              },
+              {
+                "config": {
+                  "id": "greater",
+                  "options": {
+                    "value": 0
+                  }
+                },
+                "fieldName": "Value #Stuck"
+              },
+              {
+                "config": {
+                  "id": "greater",
+                  "options": {
+                    "value": 0
+                  }
+                },
+                "fieldName": "Value #Discarded - invalid"
+              },
+              {
+                "config": {
+                  "id": "greater",
+                  "options": {
+                    "value": 0
+                  }
+                },
+                "fieldName": "Value #Discarded - equivalent exists"
+              },
+              {
+                "config": {
+                  "id": "greater",
+                  "options": {
+                    "value": 0
+                  }
+                },
+                "fieldName": "Value #Discarded - duplicate at request"
+              },
+              {
+                "config": {
+                  "id": "greater",
+                  "options": {
+                    "value": 0
+                  }
+                },
+                "fieldName": "Value #Discarded - outdated"
+              },
+              {
+                "config": {
+                  "id": "greater",
+                  "options": {
+                    "value": 0
+                  }
+                },
+                "fieldName": "Value #Discarded - uneditable"
+              },
+              {
+                "config": {
+                  "id": "greater",
+                  "options": {
+                    "value": 0
+                  }
+                },
+                "fieldName": "Value #Announced"
+              }
+            ],
+            "match": "any",
+            "type": "include"
+          }
+        },
+        {
+          "id": "groupBy",
+          "options": {
+            "fields": {
+              "Value #Announced": {
+                "aggregations": [
+                  "sum"
+                ],
+                "operation": "aggregate"
+              },
+              "Value #Created": {
+                "aggregations": [
+                  "sum"
+                ],
+                "operation": "aggregate"
+              },
+              "Value #Discarded - duplicate at request": {
+                "aggregations": [
+                  "sum"
+                ],
+                "operation": "aggregate"
+              },
+              "Value #Discarded - equivalent exists": {
+                "aggregations": [
+                  "sum"
+                ],
+                "operation": "aggregate"
+              },
+              "Value #Discarded - invalid": {
+                "aggregations": [
+                  "sum"
+                ],
+                "operation": "aggregate"
+              },
+              "Value #Discarded - outdated": {
+                "aggregations": [
+                  "sum"
+                ],
+                "operation": "aggregate"
+              },
+              "Value #Discarded - uneditable": {
+                "aggregations": [
+                  "sum"
+                ],
+                "operation": "aggregate"
+              },
+              "Value #Proposed": {
+                "aggregations": [
+                  "sum"
+                ],
+                "operation": "aggregate"
+              },
+              "Value #Stuck": {
+                "aggregations": [
+                  "sum"
+                ],
+                "operation": "aggregate"
+              },
+              "Value #Updated": {
+                "aggregations": [
+                  "sum"
+                ],
+                "operation": "aggregate"
+              },
+              "location": {
+                "aggregations": [],
+                "operation": "groupby"
+              },
+              "✅ Created": {
+                "aggregations": [
+                  "sum"
+                ],
+                "operation": "aggregate"
+              },
+              "🏠 Location": {
+                "aggregations": [],
+                "operation": "groupby"
+              },
+              "📢 Proposed": {
+                "aggregations": [
+                  "sum"
+                ],
+                "operation": "aggregate"
+              }
+            }
+          }
+        },
+        {
+          "id": "sortBy",
+          "options": {
+            "fields": {},
+            "sort": [
+              {
+                "field": "location"
+              }
+            ]
+          }
+        },
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "Time": true,
+              "{location=\"257\"}": false
+            },
+            "indexByName": {},
+            "renameByName": {
+              "Time": "",
+              "Value #Announced (sum)": "📣 Announced",
+              "Value #Created": "✅ Created",
+              "Value #Created (sum)": "✔️ Created",
+              "Value #Discarded - duplicate at request": "⛔ Duplicate",
+              "Value #Discarded - duplicate at request (sum)": "❌ Duplicate",
+              "Value #Discarded - equivalent exists": "⛔ Equivalent",
+              "Value #Discarded - equivalent exists (sum)": "❌ Equivalent",
+              "Value #Discarded - invalid": "⛔ Invalid",
+              "Value #Discarded - invalid (sum)": "❌ Invalid",
+              "Value #Discarded - outdated": "⛔ Outdated",
+              "Value #Discarded - outdated (sum)": "❌ Outdated",
+              "Value #Discarded - uneditable": "⛔ Uneditable",
+              "Value #Discarded - uneditable (sum)": "❌ Uneditable",
+              "Value #Proposed": "📢 Proposed",
+              "Value #Proposed (sum)": "🔈 Proposed",
+              "Value #Stuck": "⚠️ Stuck",
+              "Value #Stuck (sum)": "⚠️ Stuck",
+              "Value #Updated": "✅ Updated",
+              "Value #Updated (sum)": "✔️ Updated",
+              "location": "🏠 Location"
+            }
+          }
+        }
+      ],
+      "type": "table"
+    },
+    {
+      "datasource": {
+        "type": "loki",
+        "uid": "d8-loki"
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 24,
+        "x": 0,
+        "y": 31
+      },
+      "id": 47,
+      "options": {
+        "dedupStrategy": "exact",
+        "enableLogDetails": true,
+        "prettifyLogMessage": false,
+        "showCommonLabels": false,
+        "showLabels": false,
+        "showTime": true,
+        "sortOrder": "Descending",
+        "wrapLogMessage": false
+      },
+      "pluginVersion": "8.5.13",
+      "targets": [
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "d8-loki"
+          },
+          "expr": "{namespace=\"vspspr-${environment}\"} | pod_labels_app_kubernetes_io_name=~\"price-changes-api|prices-uploader|price-changes-announcer\" | json | level=~\"ERROR|WARN\"| line_format \"| {{ printf \\\"%-3.3s\\\" .origin }} | {{.message | replace \\\"\\\\n\\\" \\\" \\\" }}\"",
+          "queryType": "range",
+          "refId": "A"
+        }
+      ],
+      "title": "Application Logs",
+      "type": "logs"
+    },
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 40
+      },
+      "id": 148,
+      "panels": [],
+      "title": "Prices Lifecycle",
+      "type": "row"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "P0D6E4079E36703EB"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "axisSoftMin": 0,
+            "barAlignment": 0,
+            "drawStyle": "bars",
+            "fillOpacity": 100,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 4,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "normal"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "decimals": 0,
+          "mappings": [],
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 41
+      },
+      "id": 174,
+      "interval": "$period",
+      "options": {
+        "legend": {
+          "calcs": [
+            "sum"
+          ],
+          "displayMode": "table",
+          "placement": "right",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P0D6E4079E36703EB"
+          },
+          "editorMode": "code",
+          "expr": "sum (\r\n      increase(\r\n         prices_repository_transitions_total { namespace=\"vspspr-${environment}\", status=\"activated\" }[$period]\r\n      )\r\n)",
+          "legendFormat": "activated",
+          "range": true,
+          "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P0D6E4079E36703EB"
+          },
+          "editorMode": "code",
+          "expr": "sum (\r\n      increase(\r\n         prices_repository_transitions_total { namespace=\"vspspr-${environment}\", status=\"deactivated\" }[$period]\r\n      )\r\n)",
+          "hide": false,
+          "legendFormat": "deactivated",
+          "range": true,
+          "refId": "B"
+        }
+      ],
+      "title": "Activated/deactivated prices [$period]",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "P0D6E4079E36703EB"
+      },
+      "description": "",
+      "gridPos": {
+        "h": 8,
+        "w": 5,
+        "x": 12,
+        "y": 41
+      },
+      "id": 225,
+      "options": {
+        "code": {
+          "language": "plaintext",
+          "showLineNumbers": false,
+          "showMiniMap": false
+        },
+        "content": "<table>\n  <tr>\n    <td style=\"width:116px\">🚀 <b>Activated</b></td>\n    <td> Reached start date, became available for consumers</td>\n  </tr>\n  <tr>\n    <td> 🗑️ <b>Deactivated</b></td>\n    <td>Substituted by other price, moved to archive</td>\n  </tr>\n</table>\n",
+        "mode": "html"
+      },
+      "pluginVersion": "10.4.5",
+      "title": "Prices Lifecycle",
+      "type": "text"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "P0D6E4079E36703EB"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "align": "auto",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "inspect": false,
+            "minWidth": 50
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "#d7d7d770",
+                "value": null
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "🏠Location"
+            },
+            "properties": [
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "mode": "basic",
+                  "type": "color-background"
+                }
+              },
+              {
+                "id": "custom.align",
+                "value": "center"
+              },
+              {
+                "id": "custom.width",
+                "value": 110
+              },
+              {
+                "id": "custom.filterable",
+                "value": true
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 7,
+        "x": 17,
+        "y": 41
+      },
+      "id": 200,
+      "options": {
+        "cellHeight": "sm",
+        "footer": {
+          "countRows": false,
+          "fields": [
+            "Value #Activated (sum)",
+            "Value #Deactivated (sum)"
+          ],
+          "reducer": [
+            "sum"
+          ],
+          "show": true
+        },
+        "showHeader": true,
+        "sortBy": [
+          {
+            "desc": false,
+            "displayName": "🏠Location"
+          }
+        ]
+      },
+      "pluginVersion": "10.4.5",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P0D6E4079E36703EB"
+          },
+          "editorMode": "code",
+          "expr": "sum by (location) (\r\n  increase(\r\n    prices_repository_transitions_total{namespace=\"vspspr-${environment}\", status=\"activated\"}[$period]\r\n) or vector(0)\r\n)",
+          "format": "table",
+          "range": true,
+          "refId": "Activated"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P0D6E4079E36703EB"
+          },
+          "editorMode": "code",
+          "expr": "sum by (location) (\r\n  increase(\r\n    prices_repository_transitions_total{namespace=\"vspspr-${environment}\", status=\"deactivated\"}[$period]\r\n) or vector(0)\r\n)",
+          "format": "table",
+          "hide": false,
+          "range": true,
+          "refId": "Deactivated"
+        }
+      ],
+      "title": "LIfecycle Statistics by Location",
+      "transformations": [
+        {
+          "id": "merge",
+          "options": {}
+        },
+        {
+          "id": "convertFieldType",
+          "options": {
+            "conversions": [
+              {
+                "destinationType": "number",
+                "targetField": "location"
+              }
+            ],
+            "fields": {}
+          }
+        },
+        {
+          "id": "filterByValue",
+          "options": {
+            "filters": [
+              {
+                "config": {
+                  "id": "greater",
+                  "options": {
+                    "value": 0
+                  }
+                },
+                "fieldName": "Value #Activated"
+              },
+              {
+                "config": {
+                  "id": "greater",
+                  "options": {
+                    "value": 0
+                  }
+                },
+                "fieldName": "Value #Deactivated"
+              }
+            ],
+            "match": "any",
+            "type": "include"
+          }
+        },
+        {
+          "id": "groupBy",
+          "options": {
+            "fields": {
+              "Value #Activated": {
+                "aggregations": [
+                  "sum"
+                ],
+                "operation": "aggregate"
+              },
+              "Value #Deactivated": {
+                "aggregations": [
+                  "sum"
+                ],
+                "operation": "aggregate"
+              },
+              "location": {
+                "aggregations": [],
+                "operation": "groupby"
+              }
+            }
+          }
+        },
+        {
+          "id": "sortBy",
+          "options": {
+            "fields": {},
+            "sort": [
+              {
+                "desc": true,
+                "field": "location"
+              }
+            ]
+          }
+        },
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {},
+            "indexByName": {},
+            "renameByName": {
+              "Value #Activated (sum)": "🚀 Activated",
+              "Value #Deactivated (sum)": " 🗑️ Deactivated",
+              "location": "🏠Location"
+            }
+          }
+        }
+      ],
+      "type": "table"
+    },
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 49
+      },
+      "id": 2,
+      "panels": [],
+      "title": "Prices Search",
+      "type": "row"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "P0D6E4079E36703EB"
+      },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "hue",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "smooth",
+            "lineStyle": {
+              "fill": "solid"
+            },
+            "lineWidth": 2,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          },
+          "unit": "reqps"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 50
+      },
+      "hideTimeOverride": true,
+      "id": 88,
+      "interval": "$period",
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P0D6E4079E36703EB"
+          },
+          "editorMode": "code",
+          "expr": "sum(\r\n    rate(\r\n        ingress_nginx_detail_responses_total{namespace=\"vspspr-${environment}\", service=\"prices-mashup-balancer\", status=~\"2..\", location=\"/prices-mashup/(.*)\"}[$__rate_interval]\r\n    )\r\n)\r\n",
+          "legendFormat": "Canonical API",
+          "range": true,
+          "refId": "Canonical"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P0D6E4079E36703EB"
+          },
+          "editorMode": "code",
+          "expr": "sum(\r\n    rate(\r\n        ingress_nginx_detail_responses_total{namespace=\"vspspr-${environment}\", service=\"prices-mashup-balancer\", status=~\"2..\", location=\"/pricerepository/(.*)\"}[$__rate_interval]\r\n    )\r\n)",
+          "hide": false,
+          "legendFormat": "Old LOPUS API",
+          "range": true,
+          "refId": "LOPUS"
+        }
+      ],
+      "timeShift": "$period",
+      "title": "Successful Searches Rate 2xx [$period]",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "P0D6E4079E36703EB"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 9,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "smooth",
+            "lineWidth": 1,
+            "pointSize": 0,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "always",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "ms"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 50
+      },
+      "hideTimeOverride": true,
+      "id": 90,
+      "interval": "$period",
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P0D6E4079E36703EB"
+          },
+          "editorMode": "code",
+          "exemplar": false,
+          "expr": "histogram_quantile(\r\n  0.50,\r\n  sum(\r\n    rate(\r\n      ingress_nginx_detail_request_seconds_bucket{\r\n        namespace=\"vspspr-${environment}\", service=\"prices-mashup-balancer\", location=\"/prices-mashup/(.*)\"}[$__interval]\r\n      )\r\n  ) by (le)\r\n) * 1000",
+          "instant": false,
+          "interval": "",
+          "legendFormat": "50% of requests",
+          "range": true,
+          "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P0D6E4079E36703EB"
+          },
+          "editorMode": "code",
+          "expr": "histogram_quantile(\r\n  0.75,\r\n  sum(\r\n    rate(\r\n      ingress_nginx_detail_request_seconds_bucket{\r\n        namespace=\"vspspr-${environment}\", service=\"prices-mashup-balancer\", location=\"/prices-mashup/(.*)\"}[$__interval]\r\n      )\r\n  ) by (le)\r\n) * 1000",
+          "hide": false,
+          "legendFormat": "75% of requests",
+          "range": true,
+          "refId": "B"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P0D6E4079E36703EB"
+          },
+          "editorMode": "code",
+          "expr": "histogram_quantile(\r\n  0.95,\r\n  sum(\r\n    rate(\r\n      ingress_nginx_detail_request_seconds_bucket{\r\n        namespace=\"vspspr-${environment}\", service=\"prices-mashup-balancer\", location=\"/prices-mashup/(.*)\"}[$__interval]\r\n      )\r\n  ) by (le)\r\n) * 1000",
+          "hide": false,
+          "legendFormat": "95% of requests",
+          "range": true,
+          "refId": "C"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P0D6E4079E36703EB"
+          },
+          "editorMode": "code",
+          "expr": "histogram_quantile(\r\n  0.99,\r\n  sum(\r\n    rate(\r\n      ingress_nginx_detail_request_seconds_bucket{\r\n        namespace=\"vspspr-${environment}\", service=\"prices-mashup-balancer\", location=\"/prices-mashup/(.*)\"}[$__interval]\r\n      )\r\n  ) by (le)\r\n) * 1000",
+          "hide": false,
+          "legendFormat": "99% of requests",
+          "range": true,
+          "refId": "D"
+        }
+      ],
+      "timeShift": "$period",
+      "title": "Search Latency [$period]",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "P0D6E4079E36703EB"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "axisSoftMin": 0,
+            "barAlignment": 0,
+            "drawStyle": "bars",
+            "fillOpacity": 100,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 4,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "normal"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "decimals": 0,
+          "mappings": [],
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "orange",
+                "value": null
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 58
+      },
+      "hideTimeOverride": true,
+      "id": 94,
+      "interval": "$period",
+      "options": {
+        "legend": {
+          "calcs": [
+            "sum"
+          ],
+          "displayMode": "table",
+          "placement": "right",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "pluginVersion": "8.5.13",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P0D6E4079E36703EB"
+          },
+          "editorMode": "code",
+          "exemplar": false,
+          "expr": "sum(\r\n    increase(\r\n    \tingress_nginx_detail_responses_total{namespace=\"vspspr-${environment}\", service=\"prices-mashup-balancer\", status=~\"4..\", location=\"/prices-mashup/(.*)\"}[$__interval]\r\n    )\r\n) or vector (0)",
+          "instant": false,
+          "legendFormat": "Canonical API",
+          "range": true,
+          "refId": "Canonical"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P0D6E4079E36703EB"
+          },
+          "editorMode": "code",
+          "expr": "sum(\r\n    increase(\r\n    \tingress_nginx_detail_responses_total{namespace=\"vspspr-${environment}\", service=\"prices-mashup-balancer\", status=~\"4..\", location=\"/pricerepository/(.*)\"}[$__interval]\r\n    )\r\n) or vector(0)",
+          "hide": false,
+          "legendFormat": "Old LOPUS API",
+          "range": true,
+          "refId": "LOPUS"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P0D6E4079E36703EB"
+          },
+          "editorMode": "code",
+          "expr": "sum(\r\n    increase(\r\n    \thttp_client_requests_seconds_count{namespace=\"vspspr-${environment}\",  container=\"prices-mashup\", pod=~\".*\", uri= \"none\", outcome=\"CLIENT_ERROR\"}[$__interval]\r\n    )\r\n) or vector(0)",
+          "hide": false,
+          "legendFormat": "Prices API",
+          "range": true,
+          "refId": "Requests to Prices API"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P0D6E4079E36703EB"
+          },
+          "editorMode": "code",
+          "expr": "sum(\r\n    increase(\r\n    \thttp_client_requests_seconds_count{namespace=\"vspspr-${environment}\",  container=\"prices-mashup\", pod=~\".*\", uri=\"/sales-price-history:search\", outcome=\"CLIENT_ERROR\"}[$__interval]\r\n    )\r\n) or vector(0)",
+          "hide": false,
+          "legendFormat": "Prices History API",
+          "range": true,
+          "refId": "Requests to Prices History API"
+        }
+      ],
+      "timeShift": "$period",
+      "title": "Client Errors 4xx [$period]",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "P0D6E4079E36703EB"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "axisSoftMin": 0,
+            "barAlignment": 0,
+            "drawStyle": "bars",
+            "fillOpacity": 100,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 4,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "normal"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "decimals": 0,
+          "mappings": [],
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 58
+      },
+      "hideTimeOverride": true,
+      "id": 92,
+      "interval": "$period",
+      "options": {
+        "legend": {
+          "calcs": [
+            "sum"
+          ],
+          "displayMode": "table",
+          "placement": "right",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "pluginVersion": "8.5.13",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P0D6E4079E36703EB"
+          },
+          "editorMode": "code",
+          "expr": "sum(\r\n    increase(\r\n    \tingress_nginx_detail_responses_total{namespace=\"vspspr-${environment}\", service=\"prices-mashup-balancer\", status=~\"5..\", location=\"/prices-mashup/(.*)\"}[$__interval]\r\n    )\r\n) or vector(0)",
+          "hide": false,
+          "legendFormat": "Canonical API",
+          "range": true,
+          "refId": "Canonical"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P0D6E4079E36703EB"
+          },
+          "editorMode": "code",
+          "expr": "sum(\r\n    increase(\r\n    \tingress_nginx_detail_responses_total{namespace=\"vspspr-${environment}\", service=\"prices-mashup-balancer\", status=~\"5..\", location=\"/pricerepository/(.*)\"}[$__interval]\r\n    )\r\n) or vector(0)",
+          "hide": false,
+          "legendFormat": "Old LOPUS API",
+          "range": true,
+          "refId": "LOPUS"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P0D6E4079E36703EB"
+          },
+          "editorMode": "code",
+          "expr": "sum(\r\n    increase(\r\n    \thttp_client_requests_seconds_count{namespace=\"vspspr-${environment}\",  container=\"prices-mashup\", pod=~\".*\", uri= \"none\", outcome=\"SERVER_ERROR\"}[$__interval]\r\n    )\r\n) or vector(0)",
+          "hide": false,
+          "legendFormat": "Prices API",
+          "range": true,
+          "refId": "Requests to Prices API"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P0D6E4079E36703EB"
+          },
+          "editorMode": "code",
+          "expr": "sum(\r\n    increase(\r\n    \thttp_client_requests_seconds_count{namespace=\"vspspr-${environment}\",  container=\"prices-mashup\", pod=~\".*\", uri=\"/sales-price-history:search\", outcome=\"SERVER_ERROR\"}[$__interval]\r\n    )\r\n) or vector(0)",
+          "hide": false,
+          "legendFormat": "Prices History API",
+          "range": true,
+          "refId": "Requests to Prices History API"
+        }
+      ],
+      "timeShift": "$period",
+      "title": "Server Errors 5xx [$period]",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "P0D6E4079E36703EB"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "align": "auto",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "filterable": false,
+            "inspect": false,
+            "minWidth": 50
+          },
+          "decimals": 0,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "#ebeeea",
+                "value": null
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "📈 Efficiency"
+            },
+            "properties": [
+              {
+                "id": "thresholds",
+                "value": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "red",
+                      "value": null
+                    },
+                    {
+                      "color": "orange",
+                      "value": 0.4
+                    },
+                    {
+                      "color": "green",
+                      "value": 0.6
+                    }
+                  ]
+                }
+              },
+              {
+                "id": "unit",
+                "value": "percentunit"
+              },
+              {
+                "id": "decimals",
+                "value": 1
+              },
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "mode": "gradient",
+                  "type": "gauge"
+                }
+              },
+              {
+                "id": "min",
+                "value": 0
+              },
+              {
+                "id": "max",
+                "value": 1
+              },
+              {
+                "id": "custom.minWidth",
+                "value": 400
+              },
+              {
+                "id": "custom.align",
+                "value": "center"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "🏠 Location"
+            },
+            "properties": [
+              {
+                "id": "custom.filterable",
+                "value": true
+              },
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "mode": "basic",
+                  "type": "color-background"
+                }
+              },
+              {
+                "id": "unit"
+              },
+              {
+                "id": "custom.align",
+                "value": "center"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 11,
+        "w": 24,
+        "x": 0,
+        "y": 66
+      },
+      "id": 21,
+      "maxDataPoints": 500,
+      "options": {
+        "cellHeight": "sm",
+        "footer": {
+          "countRows": false,
+          "enablePagination": false,
+          "fields": [
+            "Searched products",
+            "Value #Found",
+            "Value #Absent"
+          ],
+          "reducer": [
+            "sum"
+          ],
+          "show": true
+        },
+        "frameIndex": 0,
+        "showHeader": true,
+        "sortBy": []
+      },
+      "pluginVersion": "10.4.5",
+      "targets": [
+        {
+          "$$hashKey": "object:56",
+          "aggregation": "Last",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P0D6E4079E36703EB"
+          },
+          "decimals": 2,
+          "displayAliasType": "Warning / Critical",
+          "displayType": "Regular",
+          "displayValueWithAlias": "Never",
+          "editorMode": "code",
+          "exemplar": false,
+          "expr": "sum by (location) (\r\n    increase(\r\n        prices_repository_search_products_total{namespace=\"vspspr-${environment}\", container=\"prices-api\", status=\"found\"}[$__range]\r\n    )\r\n)",
+          "format": "table",
+          "instant": true,
+          "range": false,
+          "refId": "Found",
+          "units": "none",
+          "valueHandler": "Number Threshold"
+        },
+        {
+          "$$hashKey": "object:56",
+          "aggregation": "Last",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P0D6E4079E36703EB"
+          },
+          "decimals": 2,
+          "displayAliasType": "Warning / Critical",
+          "displayType": "Regular",
+          "displayValueWithAlias": "Never",
+          "editorMode": "code",
+          "exemplar": false,
+          "expr": "sum by (location) (\r\n    increase(\r\n        prices_repository_search_products_total{namespace=\"vspspr-${environment}\", container=\"prices-api\", status=\"absent\"}[$__range]\r\n    )\r\n)",
+          "format": "table",
+          "hide": false,
+          "instant": true,
+          "range": false,
+          "refId": "Absent",
+          "units": "none",
+          "valueHandler": "Number Threshold"
+        }
+      ],
+      "title": "Search Efficiency",
+      "transformations": [
+        {
+          "id": "merge",
+          "options": {}
+        },
+        {
+          "id": "convertFieldType",
+          "options": {
+            "conversions": [
+              {
+                "destinationType": "number",
+                "targetField": "location"
+              }
+            ],
+            "fields": {}
+          }
+        },
+        {
+          "id": "calculateField",
+          "options": {
+            "alias": "Searched products",
+            "binary": {
+              "left": "Value #Found",
+              "reducer": "sum",
+              "right": "Value #Absent"
+            },
+            "mode": "binary",
+            "reduce": {
+              "reducer": "sum"
+            }
+          }
+        },
+        {
+          "id": "calculateField",
+          "options": {
+            "alias": "Efficiency",
+            "binary": {
+              "left": "Value #Found",
+              "operator": "/",
+              "reducer": "sum",
+              "right": "Searched products"
+            },
+            "mode": "binary",
+            "reduce": {
+              "reducer": "sum"
+            }
+          }
+        },
+        {
+          "id": "convertFieldType",
+          "options": {
+            "conversions": [
+              {
+                "destinationType": "number",
+                "targetField": "Efficiency"
+              }
+            ],
+            "fields": {}
+          }
+        },
+        {
+          "id": "filterByValue",
+          "options": {
+            "filters": [
+              {
+                "config": {
+                  "id": "greater",
+                  "options": {
+                    "value": 0
+                  }
+                },
+                "fieldName": "Searched products"
+              }
+            ],
+            "match": "any",
+            "type": "include"
+          }
+        },
+        {
+          "id": "sortBy",
+          "options": {
+            "fields": {},
+            "sort": [
+              {
+                "field": "location"
+              }
+            ]
+          }
+        },
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "Last *": true,
+              "Time": true,
+              "Value #Absent": false
+            },
+            "indexByName": {
+              "Efficiency": 6,
+              "Searched products": 2,
+              "Time": 0,
+              "Value #Absent": 4,
+              "Value #Found": 3,
+              "found_to_total_relation": 5,
+              "location": 1
+            },
+            "renameByName": {
+              "Efficiency": "📈 Efficiency",
+              "Last *": "",
+              "Searched products": "🔍 Searched Prices",
+              "Value #Absent": "❌ Absent Prices",
+              "Value #Found": "✔️ Found Prices",
+              "found_to_total_relation": "",
+              "location": "🏠 Location",
+              "sort_desc(\r\n    sum by (location) (\r\n        increase(\r\n            prices_repository_search_products_total{namespace=\"vspspr-test\", container=\"prices-api\", status=\"found\"}[21600s]\r\n        )\r\n    )\r\n) or vector(0)\r\n": "",
+              "sort_desc(\r\n    sum by (location) (\r\n        increase(\r\n            prices_repository_search_products_total{namespace=\"vspspr-test\", container=\"prices-api\"}[21600s]\r\n        )\r\n    )\r\n) or vector(0)\r\n": ""
+            }
+          }
+        }
+      ],
+      "type": "table"
+    },
+    {
+      "datasource": {
+        "type": "loki",
+        "uid": "d8-loki"
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 24,
+        "x": 0,
+        "y": 77
+      },
+      "id": 10,
+      "options": {
+        "dedupStrategy": "exact",
+        "enableLogDetails": true,
+        "prettifyLogMessage": false,
+        "showCommonLabels": false,
+        "showLabels": false,
+        "showTime": true,
+        "sortOrder": "Descending",
+        "wrapLogMessage": false
+      },
+      "pluginVersion": "8.5.13",
+      "targets": [
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "d8-loki"
+          },
+          "expr": "{namespace=\"vspspr-${environment}\"} | pod_labels_app_kubernetes_io_name=~\"prices-api|prices-mashup\" | json | level=~\"ERROR|WARN\"| line_format \"| {{.message | replace \\\"\\\\n\\\" \\\" \\\" }}}}\"",
+          "queryType": "range",
+          "refId": "A"
+        }
+      ],
+      "title": "Application Logs",
+      "type": "logs"
+    },
+    {
+      "collapsed": true,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 86
+      },
+      "id": 46,
+      "panels": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P0D6E4079E36703EB"
+          },
+          "description": "Total number of prices that were read from the integration source",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "mappings": [],
+              "noValue": "0",
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  }
+                ]
+              },
+              "unit": "short"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 4,
+            "w": 3,
+            "x": 0,
+            "y": 87
+          },
+          "hideTimeOverride": true,
+          "id": 48,
+          "interval": "$period",
+          "options": {
+            "colorMode": "value",
+            "graphMode": "none",
+            "justifyMode": "auto",
+            "orientation": "auto",
+            "reduceOptions": {
+              "calcs": [
+                "sum"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "showPercentChange": false,
+            "text": {},
+            "textMode": "auto",
+            "wideLayout": true
+          },
+          "pluginVersion": "10.4.5",
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "P0D6E4079E36703EB"
+              },
+              "expr": "sum (\r\n    increase(\r\n      prices_repository_transitions_total{namespace=\"vspspr-${environment}\", status=\"received\", origin=\"${origin}\"}[$period]\r\n)\r\n) or vector(0)",
+              "refId": "A"
+            }
+          ],
+          "timeShift": "$period",
+          "title": "Received Prices",
+          "type": "stat"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P0D6E4079E36703EB"
+          },
+          "description": "Total number of prices that came to the repository",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "mappings": [],
+              "noValue": "0",
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  }
+                ]
+              },
+              "unit": "short"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 4,
+            "w": 3,
+            "x": 3,
+            "y": 87
+          },
+          "hideTimeOverride": true,
+          "id": 78,
+          "interval": "$period",
+          "options": {
+            "colorMode": "value",
+            "graphMode": "none",
+            "justifyMode": "auto",
+            "orientation": "auto",
+            "reduceOptions": {
+              "calcs": [
+                "sum"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "showPercentChange": false,
+            "text": {},
+            "textMode": "auto",
+            "wideLayout": true
+          },
+          "pluginVersion": "10.4.5",
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "P0D6E4079E36703EB"
+              },
+              "expr": "sum (\r\n    increase(\r\n      prices_repository_transitions_total{namespace=\"vspspr-${environment}\", status=\"proposed\", origin=\"${origin}\"}[$period]\r\n)\r\n) or vector(0)",
+              "refId": "A"
+            }
+          ],
+          "timeShift": "$period",
+          "title": "Proposed Prices",
+          "type": "stat"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P0D6E4079E36703EB"
+          },
+          "description": "Newly created prices",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "mappings": [],
+              "noValue": "0",
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  }
+                ]
+              },
+              "unit": "short"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 2,
+            "w": 3,
+            "x": 6,
+            "y": 87
+          },
+          "hideTimeOverride": true,
+          "id": 79,
+          "interval": "$period",
+          "options": {
+            "colorMode": "value",
+            "graphMode": "none",
+            "justifyMode": "auto",
+            "orientation": "auto",
+            "reduceOptions": {
+              "calcs": [
+                "sum"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "showPercentChange": false,
+            "text": {},
+            "textMode": "auto",
+            "wideLayout": true
+          },
+          "pluginVersion": "10.4.5",
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "P0D6E4079E36703EB"
+              },
+              "expr": "sum (\r\n    increase(\r\n      prices_repository_transitions_total{namespace=\"vspspr-${environment}\", status=\"created\", origin=\"${origin}\"}[$period]\r\n)\r\n) or vector(0)",
+              "refId": "A"
+            }
+          ],
+          "timeShift": "$period",
+          "title": "Created Prices",
+          "type": "stat"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P0D6E4079E36703EB"
+          },
+          "description": "Prices that the repository automatically filtered out and didn't insert",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "decimals": 0,
+              "mappings": [],
+              "noValue": "0",
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "orange",
+                    "value": null
+                  }
+                ]
+              },
+              "unit": "short"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 2,
+            "w": 3,
+            "x": 9,
+            "y": 87
+          },
+          "hideTimeOverride": true,
+          "id": 81,
+          "interval": "$period",
+          "options": {
+            "colorMode": "value",
+            "graphMode": "none",
+            "justifyMode": "auto",
+            "orientation": "auto",
+            "reduceOptions": {
+              "calcs": [
+                "sum"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "showPercentChange": false,
+            "textMode": "auto",
+            "wideLayout": true
+          },
+          "pluginVersion": "10.4.5",
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "P0D6E4079E36703EB"
+              },
+              "expr": "sum (\r\n    increase(\r\n      prices_repository_transitions_total{namespace=\"vspspr-${environment}\", status=\"discarded\", origin=\"${origin}\"}[$period]\r\n)\r\n) or vector(0)",
+              "hide": false,
+              "refId": "B"
+            }
+          ],
+          "timeShift": "$period",
+          "title": "Discarded Prices",
+          "type": "stat"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P0D6E4079E36703EB"
+          },
+          "description": "Prices waiting to be inserted into the repository",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "mappings": [],
+              "noValue": "0",
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  },
+                  {
+                    "color": "orange",
+                    "value": 100000
+                  },
+                  {
+                    "color": "#6ED0E0",
+                    "value": 300000
+                  }
+                ]
+              }
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 4,
+            "w": 3,
+            "x": 12,
+            "y": 87
+          },
+          "hideTimeOverride": true,
+          "id": 82,
+          "interval": "$period",
+          "options": {
+            "colorMode": "value",
+            "graphMode": "none",
+            "justifyMode": "auto",
+            "orientation": "auto",
+            "reduceOptions": {
+              "calcs": [
+                "last"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "showPercentChange": false,
+            "textMode": "auto",
+            "wideLayout": true
+          },
+          "pluginVersion": "10.4.5",
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "P0D6E4079E36703EB"
+              },
+              "editorMode": "code",
+              "exemplar": false,
+              "expr": "sum (\r\n    kafka_consumer_fetch_manager_records_lag {\r\n        client_id=~\".*${origin}.*\",\r\n        client_id!~\".*retry.*\",\r\n        container=\"prices-uploader\",\r\n        namespace=\"vspspr-${environment}\"\r\n    }\r\n)",
+              "format": "time_series",
+              "instant": true,
+              "interval": "",
+              "legendFormat": "",
+              "range": false,
+              "refId": "A"
+            }
+          ],
+          "timeShift": "$period",
+          "title": "Pending Prices",
+          "type": "stat"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P0D6E4079E36703EB"
+          },
+          "description": "Prices for which the repository experienced an error during the insertion process",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "fixedColor": "red",
+                "mode": "thresholds"
+              },
+              "decimals": 1,
+              "mappings": [],
+              "noValue": "0",
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  },
+                  {
+                    "color": "orange",
+                    "value": 1000
+                  },
+                  {
+                    "color": "red",
+                    "value": 5000
+                  }
+                ]
+              },
+              "unit": "short"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 4,
+            "w": 6,
+            "x": 15,
+            "y": 87
+          },
+          "hideTimeOverride": true,
+          "id": 84,
+          "interval": "$period",
+          "options": {
+            "colorMode": "value",
+            "graphMode": "none",
+            "justifyMode": "auto",
+            "orientation": "auto",
+            "reduceOptions": {
+              "calcs": [
+                "sum"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "showPercentChange": false,
+            "text": {},
+            "textMode": "auto",
+            "wideLayout": true
+          },
+          "pluginVersion": "10.4.5",
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "P0D6E4079E36703EB"
+              },
+              "editorMode": "code",
+              "expr": "sum (\r\n    increase(\r\n      prices_repository_transitions_total{namespace=\"vspspr-${environment}\", status=\"stuck\", origin=\"${origin}\"}[$period]\r\n)\r\n) or vector(0)",
+              "legendFormat": "Total",
+              "range": true,
+              "refId": "A"
+            },
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "P0D6E4079E36703EB"
+              },
+              "editorMode": "code",
+              "exemplar": false,
+              "expr": "sum (\r\n        kafka_consumer_fetch_manager_records_lag {\r\n                client_id=~\".*retry.*\",\r\n                client_id=~\".*${origin}.*\",\r\n                container=\"prices-uploader\",\r\n                namespace=\"vspspr-${environment}\"\r\n        }\r\n) or vector(0)",
+              "hide": false,
+              "instant": true,
+              "legendFormat": "Remaining To Process",
+              "range": false,
+              "refId": "B"
+            }
+          ],
+          "timeShift": "$period",
+          "title": "Stuck Prices",
+          "type": "stat"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P0D6E4079E36703EB"
+          },
+          "description": "Prices that have an unreadable format and can't be handled by the repository",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "decimals": 0,
+              "mappings": [],
+              "noValue": "0",
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  },
+                  {
+                    "color": "orange",
+                    "value": 1
+                  },
+                  {
+                    "color": "red",
+                    "value": 20
+                  }
+                ]
+              },
+              "unit": "short"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 4,
+            "w": 3,
+            "x": 21,
+            "y": 87
+          },
+          "hideTimeOverride": true,
+          "id": 83,
+          "interval": "$period",
+          "options": {
+            "colorMode": "value",
+            "graphMode": "none",
+            "justifyMode": "auto",
+            "orientation": "auto",
+            "reduceOptions": {
+              "calcs": [
+                "sum"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "showPercentChange": false,
+            "textMode": "auto",
+            "wideLayout": true
+          },
+          "pluginVersion": "10.4.5",
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "P0D6E4079E36703EB"
+              },
+              "expr": "sum (\r\n    increase(\r\n      prices_repository_transitions_total{namespace=\"vspspr-${environment}\", status=\"unreadable\", origin=\"${origin}\"}[$period]\r\n)\r\n) or vector(0)",
+              "hide": false,
+              "refId": "B"
+            }
+          ],
+          "timeShift": "$period",
+          "title": "Unreadable Prices",
+          "type": "stat"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P0D6E4079E36703EB"
+          },
+          "description": "Updates of the existing prices",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "mappings": [],
+              "noValue": "0",
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  }
+                ]
+              },
+              "unit": "short"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 2,
+            "w": 3,
+            "x": 6,
+            "y": 89
+          },
+          "hideTimeOverride": true,
+          "id": 80,
+          "interval": "$period",
+          "options": {
+            "colorMode": "value",
+            "graphMode": "none",
+            "justifyMode": "auto",
+            "orientation": "auto",
+            "reduceOptions": {
+              "calcs": [
+                "sum"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "showPercentChange": false,
+            "text": {},
+            "textMode": "auto",
+            "wideLayout": true
+          },
+          "pluginVersion": "10.4.5",
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "P0D6E4079E36703EB"
+              },
+              "expr": "sum (\r\n    increase(\r\n      prices_repository_transitions_total{namespace=\"vspspr-${environment}\", status=\"updated\", origin=\"${origin}\"}[$period]\r\n)\r\n) or vector(0)",
+              "refId": "A"
+            }
+          ],
+          "timeShift": "$period",
+          "title": "Updated Prices",
+          "type": "stat"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P0D6E4079E36703EB"
+          },
+          "description": "Prices that exists in the integration source, but are irrelevant to the price repository (e.g. inactive prices)",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "decimals": 0,
+              "mappings": [],
+              "noValue": "0",
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  }
+                ]
+              },
+              "unit": "short"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 2,
+            "w": 3,
+            "x": 9,
+            "y": 89
+          },
+          "hideTimeOverride": true,
+          "id": 85,
+          "interval": "$period",
+          "options": {
+            "colorMode": "value",
+            "graphMode": "none",
+            "justifyMode": "auto",
+            "orientation": "auto",
+            "reduceOptions": {
+              "calcs": [
+                "sum"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "showPercentChange": false,
+            "textMode": "auto",
+            "wideLayout": true
+          },
+          "pluginVersion": "10.4.5",
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "P0D6E4079E36703EB"
+              },
+              "expr": "sum (\r\n    increase(\r\n      prices_repository_transitions_total{namespace=\"vspspr-${environment}\", status=\"excess\", origin=\"${origin}\"}[$period]\r\n)\r\n) or vector(0)",
+              "hide": false,
+              "refId": "B"
+            }
+          ],
+          "timeShift": "$period",
+          "title": "Excess Prices",
+          "type": "stat"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P0D6E4079E36703EB"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisBorderShow": false,
+                "axisCenteredZero": false,
+                "axisColorMode": "text",
+                "axisLabel": "",
+                "axisPlacement": "auto",
+                "axisSoftMin": 0,
+                "barAlignment": 0,
+                "drawStyle": "bars",
+                "fillOpacity": 100,
+                "gradientMode": "none",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "insertNulls": false,
+                "lineInterpolation": "linear",
+                "lineWidth": 4,
+                "pointSize": 5,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "showPoints": "auto",
+                "spanNulls": false,
+                "stacking": {
+                  "group": "A",
+                  "mode": "normal"
+                },
+                "thresholdsStyle": {
+                  "mode": "off"
+                }
+              },
+              "mappings": [],
+              "min": 0,
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  }
+                ]
+              }
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 9,
+            "w": 12,
+            "x": 0,
+            "y": 91
+          },
+          "hideTimeOverride": true,
+          "id": 71,
+          "interval": "$period",
+          "options": {
+            "legend": {
+              "calcs": [
+                "sum"
+              ],
+              "displayMode": "table",
+              "placement": "right",
+              "showLegend": true
+            },
+            "tooltip": {
+              "mode": "multi",
+              "sort": "desc"
+            }
+          },
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "P0D6E4079E36703EB"
+              },
+              "editorMode": "code",
+              "expr": "sum (\r\n    increase(\r\n      prices_repository_transitions_total{namespace=\"vspspr-${environment}\", status=\"created\", origin=\"${origin}\"}[$period]\r\n)\r\n) or vector(0)",
+              "legendFormat": "created",
+              "range": true,
+              "refId": "Created"
+            },
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "P0D6E4079E36703EB"
+              },
+              "editorMode": "code",
+              "expr": "sum (\r\n    increase(\r\n      prices_repository_transitions_total{namespace=\"vspspr-${environment}\", status=\"updated\", origin=\"${origin}\"}[$period]\r\n)\r\n) or vector(0)",
+              "hide": false,
+              "legendFormat": "updated",
+              "range": true,
+              "refId": "Updated"
+            }
+          ],
+          "timeShift": "$period",
+          "title": "Inserted Prices [$period]",
+          "transformations": [
+            {
+              "disabled": true,
+              "id": "calculateField",
+              "options": {}
+            }
+          ],
+          "type": "timeseries"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P0D6E4079E36703EB"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisBorderShow": false,
+                "axisCenteredZero": false,
+                "axisColorMode": "text",
+                "axisLabel": "",
+                "axisPlacement": "auto",
+                "axisSoftMin": -1,
+                "barAlignment": 0,
+                "drawStyle": "bars",
+                "fillOpacity": 100,
+                "gradientMode": "none",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "insertNulls": false,
+                "lineInterpolation": "linear",
+                "lineWidth": 4,
+                "pointSize": 5,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "showPoints": "auto",
+                "spanNulls": false,
+                "stacking": {
+                  "group": "A",
+                  "mode": "normal"
+                },
+                "thresholdsStyle": {
+                  "mode": "off"
+                }
+              },
+              "decimals": 0,
+              "mappings": [],
+              "min": 0,
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  }
+                ]
+              }
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 9,
+            "w": 12,
+            "x": 12,
+            "y": 91
+          },
+          "hideTimeOverride": true,
+          "id": 86,
+          "interval": "$period",
+          "options": {
+            "legend": {
+              "calcs": [
+                "sum"
+              ],
+              "displayMode": "table",
+              "placement": "right",
+              "showLegend": true
+            },
+            "tooltip": {
+              "mode": "multi",
+              "sort": "desc"
+            }
+          },
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "P0D6E4079E36703EB"
+              },
+              "editorMode": "code",
+              "expr": "sum by (cause) (\r\n      increase(\r\n         prices_repository_transitions_total { namespace=\"vspspr-${environment}\", status=\"discarded\", origin=\"${origin}\" }[$period]\r\n)\r\n)",
+              "legendFormat": "{{cause}}",
+              "range": true,
+              "refId": "Invalid"
+            },
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "P0D6E4079E36703EB"
+              },
+              "editorMode": "code",
+              "expr": "sum (\r\n      increase(\r\n            prices_repository_transitions_total {namespace=\"vspspr-${environment}\", status=\"stuck\", origin=\"${origin}\"}[$period]\r\n        )\r\n)",
+              "hide": false,
+              "legendFormat": "stuck",
+              "range": true,
+              "refId": "A"
+            }
+          ],
+          "timeShift": "$period",
+          "title": "Discarded and Stuck Prices [$period]",
+          "transformations": [],
+          "type": "timeseries"
+        }
+      ],
+      "repeat": "origin",
+      "title": "Prices Uploading - ${origin}",
+      "type": "row"
+    }
+  ],
+  "refresh": false,
+  "schemaVersion": 36,
+  "style": "dark",
+  "tags": [],
+  "templating": {
+    "list": [
+      {
+        "current": {
+          "selected": true,
+          "text": "preprod",
+          "value": "preprod"
+        },
+        "datasource": {
+          "type": "prometheus",
+          "uid": "P0D6E4079E36703EB"
+        },
+        "definition": "query_result(group (prices_repository_transitions_total{status=\"received\"}) by (namespace))",
+        "hide": 0,
+        "includeAll": false,
+        "label": "Environment",
+        "multi": false,
+        "name": "environment",
+        "options": [],
+        "query": {
+          "query": "query_result(group (prices_repository_transitions_total{status=\"received\"}) by (namespace))",
+          "refId": "StandardVariableQuery"
+        },
+        "refresh": 1,
+        "regex": "/{namespace=\"vspspr-(?<value>.*)\"}/",
+        "skipUrlSync": false,
+        "sort": 0,
+        "type": "query"
+      },
+      {
+        "current": {
+          "selected": true,
+          "text": [
+            "mas",
+            "price_calculator",
+            "rms"
+          ],
+          "value": [
+            "mas",
+            "price_calculator",
+            "rms"
+          ]
+        },
+        "datasource": {
+          "type": "prometheus",
+          "uid": "P0D6E4079E36703EB"
+        },
+        "definition": "query_result(group (prices_repository_transitions_total{status=\"received\"}) by (origin))",
+        "hide": 2,
+        "includeAll": false,
+        "multi": true,
+        "name": "origin",
+        "options": [],
+        "query": {
+          "query": "query_result(group (prices_repository_transitions_total{status=\"received\"}) by (origin))",
+          "refId": "StandardVariableQuery"
+        },
+        "refresh": 2,
+        "regex": "/{origin=\"(?<value>.*)\"}/",
+        "skipUrlSync": false,
+        "sort": 0,
+        "type": "query"
+      },
+      {
+        "auto": true,
+        "auto_count": 100,
+        "auto_min": "2m",
+        "current": {
+          "selected": false,
+          "text": "auto",
+          "value": "$__auto_interval_period"
+        },
+        "hide": 0,
+        "label": "Period",
+        "name": "period",
+        "options": [
+          {
+            "selected": true,
+            "text": "auto",
+            "value": "$__auto_interval_period"
+          },
+          {
+            "selected": false,
+            "text": "2m",
+            "value": "2m"
+          },
+          {
+            "selected": false,
+            "text": "5m",
+            "value": "5m"
+          },
+          {
+            "selected": false,
+            "text": "10m",
+            "value": "10m"
+          },
+          {
+            "selected": false,
+            "text": "15m",
+            "value": "15m"
+          },
+          {
+            "selected": false,
+            "text": "30m",
+            "value": "30m"
+          },
+          {
+            "selected": false,
+            "text": "1h",
+            "value": "1h"
+          },
+          {
+            "selected": false,
+            "text": "2h",
+            "value": "2h"
+          },
+          {
+            "selected": false,
+            "text": "3h",
+            "value": "3h"
+          },
+          {
+            "selected": false,
+            "text": "6h",
+            "value": "6h"
+          },
+          {
+            "selected": false,
+            "text": "12h",
+            "value": "12h"
+          }
+        ],
+        "query": "2m,5m,10m,15m,30m,1h,2h,3h,6h,12h",
+        "queryValue": "",
+        "refresh": 2,
+        "skipUrlSync": false,
+        "type": "interval"
+      }
+    ]
+  },
+  "time": {
+    "from": "now/d",
+    "to": "now"
+  },
+  "timepicker": {},
+  "timezone": "",
+  "title": "Sales Price Repository",
+  "uid": "vspspr",
+  "version": 4,
+  "weekStart": ""
+}

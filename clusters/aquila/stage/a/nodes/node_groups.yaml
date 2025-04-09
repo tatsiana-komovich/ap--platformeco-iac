@@ -1,0 +1,153 @@
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  name: application-nodes
+spec:
+  nodeType: CloudEphemeral
+  cloudInstances:
+    minPerZone: 20
+    maxPerZone: 25
+    zones:
+      - ru-central1-b
+    classReference:
+      kind: YandexInstanceClass
+      name: application-nodes
+  disruptions:
+    approvalMode: Automatic
+  chaos:
+    mode: Disabled
+  nodeTemplate:
+    labels:
+      node-role.k8s.lmru.tech/application: ''
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  name: odfe-common
+spec:
+  nodeType: CloudEphemeral
+  cloudInstances:
+    minPerZone: 1
+    maxPerZone: 4
+    zones:
+      - ru-central1-b
+    classReference:
+      kind: YandexInstanceClass
+      name: odfe-common
+  disruptions:
+    approvalMode: Automatic
+  chaos:
+    mode: Disabled
+  nodeTemplate:
+    labels:
+      node-role/opendistro-common: ""
+    taints:
+      - effect: NoSchedule
+        key: dedicated
+        value: opendistro-common
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  name: opendistro
+spec:
+  nodeType: CloudEphemeral
+  cloudInstances:
+    minPerZone: 1
+    maxPerZone: 4
+    zones:
+      - ru-central1-b
+    classReference:
+      kind: YandexInstanceClass
+      name: opendistro
+  disruptions:
+    approvalMode: Automatic
+  chaos:
+    mode: Disabled
+  nodeTemplate:
+    labels:
+      node-role/opendistro: ""
+    taints:
+      - effect: NoSchedule
+        key: dedicated
+        value: opendistro
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  name: d8-loki
+spec:
+  nodeType: CloudEphemeral
+  cloudInstances:
+    minPerZone: 1
+    maxPerZone: 1
+    zones:
+      - ru-central1-b
+    classReference:
+      kind: YandexInstanceClass
+      name: d8-loki
+  disruptions:
+    approvalMode: Automatic
+  chaos:
+    mode: Disabled
+  nodeTemplate:
+    labels:
+      node-role/d8-loki: ""
+    taints:
+      - effect: NoExecute
+        key: dedicated
+        value: d8-loki
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  name: dam
+spec:
+  nodeType: CloudEphemeral
+  cloudInstances:
+    minPerZone: 1
+    maxPerZone: 8
+    zones:
+      - ru-central1-b
+    classReference:
+      kind: YandexInstanceClass
+      name: d8-loki
+  disruptions:
+    approvalMode: Automatic
+  chaos:
+    mode: Disabled
+  nodeTemplate:
+    labels:
+      node-role/dam: ""
+      node-role.k8s.lmru.tech/application: ''
+    taints:
+      - effect: NoExecute
+        key: dedicated
+        value: dam
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  name: system
+spec:
+  chaos:
+    mode: Disabled
+  cloudInstances:
+    classReference:
+      kind: YandexInstanceClass
+      name: system
+    maxPerZone: 2
+    minPerZone: 1
+    zones:
+      - ru-central1-b
+  disruptions:
+    approvalMode: Automatic
+  nodeTemplate:
+    labels:
+      node-role.deckhouse.io/system: ""
+    taints:
+      - effect: NoExecute
+        key: dedicated.deckhouse.io
+        value: system
+  nodeType: CloudEphemeral

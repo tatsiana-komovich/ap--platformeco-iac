@@ -1,0 +1,386 @@
+---
+cluster_authorization:
+  defaults:
+    default_sa_permissions: &default
+      accessLevel: User
+      limitNamespaces:
+        - default
+      allowScale: true
+      allowAccessToSystemNamespaces: true
+      portForwarding: true
+  crowd:
+    groups:
+      crowd-intraru-admin:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - intraru-.*
+          - dam-.*
+          - dampro-.*
+          - damint-.*
+          - trips-.*
+          - cafe-.*
+      crowd-intraru-ro:
+        <<: *default
+        accessLevel: User
+        limitNamespaces:
+          - intraru-.*
+          - dam-.*
+          - dampro-.*
+          - damint-.*
+          - trips-.*
+          - cafe-.*
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: true
+      crowd-intraru-rw:
+        <<: *default
+        accessLevel: Editor
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - intraru-.*
+          - dam-.*
+          - dampro-.*
+          - damint-.*
+          - trips-.*
+          - cafe-.*
+      crowd-sa-intraru:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - intraru-.*
+          - dam-.*
+          - dampro-.*
+          - damint-.*
+          - trips-.*
+          - cafe-.*
+      crowd-obs-ro:
+        <<: *default
+        accessLevel: User
+        limitNamespaces:
+          - .*
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+      crowd-flant-bravo-admin:
+        accessLevel: SuperAdmin
+        allowAccessToSystemNamespaces: true
+        allowScale: true
+        portForwarding: true
+      crowd-flant-charlie-admin:
+        accessLevel: SuperAdmin
+        allowAccessToSystemNamespaces: true
+        allowScale: true
+        portForwarding: true
+      crowd-flant-alfa-admin:
+        accessLevel: SuperAdmin
+        allowAccessToSystemNamespaces: true
+        allowScale: true
+        portForwarding: true
+      crowd-flant-echo-admin:
+        accessLevel: SuperAdmin
+        allowAccessToSystemNamespaces: true
+        allowScale: true
+        portForwarding: true
+      crowd-flant-rnd-admin:
+        accessLevel: SuperAdmin
+        allowAccessToSystemNamespaces: true
+        allowScale: true
+        portForwarding: true
+      # MyDev
+      crowd-mydev-admin:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - mydev-.*
+          - mydev
+          - mycareer-.*
+          - mycareer
+      crowd-mydev-ro:
+        <<: *default
+        accessLevel: User
+        limitNamespaces:
+          - mydev-.*
+          - mydev
+          - mycareer-.*
+          - mycareer
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: true
+      crowd-mydev-rw:
+        <<: *default
+        accessLevel: Editor
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - mydev-.*
+          - mydev
+          - mycareer-.*
+          - mycareer
+      crowd-sa-mydev:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - mydev-.*
+          - mydev
+          - mycareer-.*
+          - mycareer
+      #my-way-2
+      crowd-my-way-2-admin:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - my-way-2-.*
+          - my-way-2
+      crowd-my-way-2-ro:
+        <<: *default
+        accessLevel: User
+        limitNamespaces:
+          - my-way-2-.*
+          - my-way-2
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+      crowd-my-way-2-rw:
+        <<: *default
+        accessLevel: Editor
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - my-way-2-.*
+          - my-way-2
+      crowd-sa-my-way-2:
+        <<: *default
+        accessLevel: Admin
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - my-way-2-.*
+          - my-way-2
+      # Projector
+      crowd-projector-admin:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - projector-.*
+          - projector
+      crowd-projector-ro:
+        <<: *default
+        accessLevel: User
+        limitNamespaces:
+          - projector-.*
+          - projector
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: true
+      crowd-projector-rw:
+        <<: *default
+        accessLevel: Editor
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - projector-.*
+          - projector
+      crowd-sa-projector:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - projector-.*
+          - projector
+      # Flexstaff
+      crowd-flexstaff-admin:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - flexstaff-.*
+          - flexstaff
+      crowd-flexstaff-ro:
+        <<: *default
+        accessLevel: User
+        limitNamespaces:
+          - flexstaff-.*
+          - flexstaff
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: true
+      crowd-flexstaff-rw:
+        <<: *default
+        accessLevel: Editor
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - flexstaff-.*
+          - flexstaff
+      crowd-sa-flexstaff:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - flexstaff-.*
+          - flexstaff
+      #Leroymerlin-tech
+      crowd-leroymerlin-tech-admin:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - leroymerlin-tech-.*
+          - leroymerlin-tech
+      crowd-leroymerlin-tech-ro:
+        <<: *default
+        accessLevel: User
+        limitNamespaces:
+          - leroymerlin-tech-.*
+          - leroymerlin-tech
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: true
+      crowd-leroymerlin-tech-rw:
+        <<: *default
+        accessLevel: Editor
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - leroymerlin-tech-.*
+          - leroymerlin-tech
+      crowd-sa-leroymerlin-tech:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - leroymerlin-tech-.*
+          - leroymerlin-tech
+      #cafe
+      crowd-sa-cafe:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - vacations-.*
+          - finances-.*
+          - trips-.*
+          - cafe-.*
+          - intraru-.*
+      crowd-cafe-admin:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - vacations-.*
+          - finances-.*
+          - trips-.*
+          - cafe-.*
+          - intraru-.*
+      crowd-cafe-ro:
+        <<: *default
+        accessLevel: User
+        limitNamespaces:
+          - vacations-.*
+          - finances-.*
+          - trips-.*
+          - cafe-.*
+          - intraru-.*
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: true
+      crowd-cafe-rw:
+        <<: *default
+        accessLevel: Editor
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - vacations-.*
+          - finances-.*
+          - trips-.*
+          - cafe-.*
+          - intraru-.*
+      #rabotalm
+      crowd-sa-rabotalm:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - rabotalm-.*
+          - rabotalm
+      crowd-rabotalm-admin:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - rabotalm-.*
+          - rabotalm
+      crowd-rabotalm-ro:
+        <<: *default
+        accessLevel: User
+        limitNamespaces:
+          - rabotalm-.*
+          - rabotalm
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+      crowd-rabotalm-rw:
+        <<: *default
+        accessLevel: Editor
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - rabotalm-.*
+          - rabotalm
+      # TeamCo
+      crowd-teamco2-admin:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - teamco2-.*
+          - teamco2
+      crowd-teamco2-ro:
+        <<: *default
+        accessLevel: User
+        limitNamespaces:
+          - teamco2-.*
+          - teamco2
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: true
+      crowd-teamco2-rw:
+        <<: *default
+        accessLevel: Editor
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - teamco2-.*
+          - teamco2
+      crowd-sa-teamco2:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - teamco2-.*
+          - teamco2
+      #simpleoffice
+      crowd-simpleoffice-admin:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - simpleoffice-.*
+      crowd-simpleoffice-ro:
+        <<: *default
+        accessLevel: User
+        limitNamespaces:
+          - simpleoffice-.*
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: true
+      crowd-simpleoffice-rw:
+        <<: *default
+        accessLevel: Editor
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - simpleoffice-.*
+      crowd-sa-simpleoffice:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - simpleoffice-.*
+
+ClusterRole:
+  event-creator:
+    metadata:
+      annotations:
+        user-authz.deckhouse.io/access-level: Admin
+      name: kubernetes-event-creator:admin
+    rules:
+      - apiGroups:
+          - ""
+          - "events.k8s.io"
+        resources:
+          - events
+        verbs:
+          - create
+
+DexProvider:
+  clientID: k8s-intraru-prod
+  clientSecret: crowd_app_k8s-intraru-prod

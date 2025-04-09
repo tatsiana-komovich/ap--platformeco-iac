@@ -1,0 +1,30 @@
+{{- if hasKey .Values "alerts" }}
+{{- if hasKey .Values.alerts "disk_write_latency" }}
+{{- if .Values.alerts.disk_write_latency.enabled }}
+---
+apiVersion: deckhouse.io/v1
+kind: CustomPrometheusRules
+metadata:
+  labels:
+    component: rules
+    prometheus: main
+  name: disk-write-latency
+spec:
+  groups:
+    - name: disk-write-latency
+      rules:
+      - alert: HighDiskWriteLatency
+        annotations:
+          description: |
+            The average time {{`{{ $value }}`}}s on node {{`{{ $labels.node }}`}} device {{`{{ $labels.device }}`}} for write requests to high
+          plk_markup_format: markdown
+          plk_protocol_version: "1"
+          summary: |
+            The average time {{`{{ $value }}`}}s on node {{`{{ $labels.node }}`}} device {{`{{ $labels.device }}`}} for write requests to high
+        expr: rate(node_disk_write_time_seconds_total{node!~".*(master|system).*",device!="vda"}[2m]) / rate(node_disk_writes_completed_total{}[2m]) > {{ $.Values.alerts.disk_write_latency.limit }}
+        for: 2m
+        labels:
+          severity_level: "{{ $.Values.alerts.disk_write_latency.severity_level }}"
+{{- end }}
+{{- end }}
+{{- end }}

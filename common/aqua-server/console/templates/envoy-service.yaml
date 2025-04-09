@@ -1,0 +1,53 @@
+{{- if .Values.envoy.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  {{- if eq .Values.envoy.service.type "LoadBalancer" }}
+  finalizers:
+    - service.kubernetes.io/load-balancer-cleanup
+  {{- end }}
+  name: aqua-lb
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: {{ .Release.Name }}-envoy
+    aqua.component: envoy
+{{ include "aqua.labels" . | indent 4 }}
+{{- if .Values.envoy.service.annotations }}
+  annotations:
+{{ toYaml .Values.envoy.service.annotations | indent 4 }}
+{{- end }}
+spec:
+  type: {{ .Values.envoy.service.type }}
+  {{- if eq .Values.global.platform "aks" }}
+  loadBalancerIP: {{ .Values.envoy.service.loadbalancerIP }}
+  {{- end }}
+  selector:
+    app: {{ .Release.Name }}-envoy
+  ports:
+  {{- if eq .Values.global.platform "k3s"}}
+  {{- range $port := .Values.envoy.service.k3sPorts }}
+    - name: {{ $port.name }}
+      port: {{ $port.port }}
+      targetPort: {{ $port.targetPort }}
+      {{- if $port.nodePort }}
+      nodePort: {{ $port.nodePort }}
+      {{- end }}
+      {{- if $port.protocol }}
+      protocol: {{ $port.protocol }}
+      {{- end }}
+  {{- end }}
+  {{- else }}
+  {{- range $port := .Values.envoy.service.ports }}
+    - name: {{ $port.name }}
+      port: {{ $port.port }}
+      targetPort: {{ $port.targetPort }}
+      {{- if $port.nodePort }}
+      nodePort: {{ $port.nodePort }}
+      {{- end }}
+      {{- if $port.protocol }}
+      protocol: {{ $port.protocol }}
+      {{- end }}
+  {{- end }}
+
+{{- end }}
+{{- end }}

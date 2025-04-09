@@ -1,0 +1,98 @@
+---
+extended_monitoring_enable_on_all_ns: {}
+
+products:
+  - product-id: P0471
+    namespace_pattern:
+      - ^devops-core-vector$
+
+  - product-id: P0164
+    namespace_pattern:
+      - ^billing-.*
+      - ^billing$
+  - product-id: P1042
+    namespace_pattern:
+      - ^cashoffice-.*
+      - ^cashoffice$
+  - product-id: P0510
+    namespace_pattern:
+      - ^payment-pdm-.*
+      - ^payment-pdm$
+  - product-id: P0165
+    namespace_pattern:
+      - ^payment-pb-.*
+      - ^payment-pb$
+  - product-id: P0445
+    namespace_pattern:
+      - ^payment-ptm-.*
+      - ^payment-ptm$
+  - product-id: P0405
+    namespace_pattern:
+      - ^payment-wallet-.*
+      - ^payment-wallet$
+  - product-id: P0444
+    namespace_pattern:
+      - ^payment-amc-.*
+      - ^payment-amc$
+  - product-id: P0636
+    namespace_pattern:
+      - ^payment-credit-.*
+      - ^payment-credit$
+  - product-id: P0171
+    namespace_pattern:
+      - ^payment-wfm-.*
+      - ^payment-wfm$
+  - product-id: P0339
+    namespace_pattern:
+      - ^payment-sre-.*
+      - ^payment-sre$
+      - ^payment-devops-.*
+      - ^payment-devops$
+      - ^payment-monitoring-.*
+      - ^payment-monitoring$
+  - product-id: P0717
+    namespace_pattern:
+      - ^payment-pon-.*
+      - ^payment-pon$
+  - product-id: P0084
+    namespace_pattern:
+      - ^pbb-.*
+      - ^pbb$
+  - product-id: P0709
+    namespace_pattern:
+      - ^payment-pof-.*
+      - ^payment-pof$
+  - product-id: P0406
+    namespace_pattern:
+      - ^payment-rf-.*
+      - ^payment-rf$
+  - product-id: P0551
+    namespace_pattern:
+      - ^payment-mtools-.*
+
+  - product-id: P0471
+    namespace_pattern:
+      - ^node-group-exporter$
+
+istio:
+  - istio-injection: enabled
+    namespace_pattern:
+      - ^payment-pof-prod$
+      - ^payment-pb-prod$
+      - ^payment-pon-prod$
+      - ^payment-ptm-prod$
+      - ^payment-pdm-prod$
+      - ^pbb-prod$
+  - istio.deckhouse.io/auto-upgrade: "true"
+    namespace_pattern:
+      - ^payment-pof-prod$
+      - ^payment-pb-prod$
+      - ^payment-pon-prod$
+      - ^payment-ptm-prod$
+      - ^payment-pdm-prod$
+      - ^pbb-prod$
+
+devops-core-vector:
+  - security.deckhouse.io/pod-policy-action: warn
+    namespace_pattern:
+      - ^devops-core-vector$

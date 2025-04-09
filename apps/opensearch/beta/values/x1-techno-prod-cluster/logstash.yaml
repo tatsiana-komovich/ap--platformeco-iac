@@ -1,0 +1,132 @@
+---
+opendistro:
+  logstash:
+    enabled: true
+    filter: |-
+      filter {
+        if ![kubernetes][namespace] {
+          mutate {
+            add_field => { "[@metadata][target_index]" => "filebeat" }
+          }
+        } else {
+          if [message] =~ /^{.*}$/ {
+             mutate {
+              id => "mutate_log_1"
+              rename => { "log" => "original_log" }
+             }
+             json {
+               id => "json_message"
+               source => "message"
+               target => "json"
+               skip_on_invalid_json => true
+             }
+             if [json][status] {
+                mutate {
+                  id => "rm_json_status"
+                  remove_field => ["[json][status]"]
+                }
+             }
+             if [json][response_body] {
+                mutate {
+                  id => "rm_json_response_body"
+                  remove_field => ["[json][response_body]"]
+                }
+             }
+             if [json][event][metadata][managedFields] {
+                mutate {
+                  id => "rm_managedFields"
+                  remove_field => ["[json][event][metadata][managedFields]"]
+                }
+             }
+          } else {
+            grok {
+              id => "main_grok_parser"
+              match => {
+                "message" => [
+                  "(((?<brick>[a-zA-Z\-0-9]+)_(?<application>[a-zA-Z\-0-9]+)\s)|((?<application>[a-zA-Z\-0-9]+)\s)|(.{0}))(?<timestamp>%{YEAR}-%{MONTHNUM}-%{MONTHDAY} %{TIME}) \[(?<transaction>[A-Za-z0-9\-_\.]*),{0,1}(?<traceId>[A-Za-z0-9\-_\.]*),(?<spanId>[A-Za-z0-9\-_\.]*)\]\[%{GREEDYDATA:thread}\] %{LOGLEVEL:level}[ ]+%{NOTSPACE:class} - %{GREEDYDATA:text}",
+                  "(((?<brick>[a-zA-Z\-0-9]+)_(?<application>[a-zA-Z\-0-9]+)\s)|((?<application>[a-zA-Z\-0-9]+)\s)|(.{0}))(?<timestamp>%{YEAR}-%{MONTHNUM}-%{MONTHDAY} %{TIME}) %{LOGLEVEL:level} \[(?<transaction>[A-Za-z0-9\-_\.]*),{0,1}(?<traceId>[A-Za-z0-9\-_\.]*),(?<spanId>[A-Za-z0-9\-_\.]*),([A-Za-z0-9\-_\.]*)\] ([0-9]*) --- \[%{GREEDYDATA:thread}\] %{NOTSPACE:class}[ ]+: %{GREEDYDATA:text}",
+                  "(((?<brick>[a-zA-Z\-0-9]+)_(?<application>[a-zA-Z\-0-9]+)\s)|((?<application>[a-zA-Z\-0-9]+)\s)|(.{0}))(?<timestamp>%{YEAR}-%{MONTHNUM}-%{MONTHDAY} %{TIME}) \[(?<processId>[A-Za-z\-0-9]*),(?<solutionId>[A-Za-z0-9\-_\.]*),{0,1}(?<traceId>[A-Za-z0-9\-_\.]*),(?<spanId>[A-Za-z0-9\-_\.]*)\]\[%{GREEDYDATA:thread}\] %{LOGLEVEL:level}[ ]+%{NOTSPACE:class} - %{GREEDYDATA:text}",
+                  "(?<event>([A-Z][0-9]{0,4})) %{TIME:time}%{SPACE}%{NUMBER:n} (?<appsrc>%{WORD}\.%{WORD}:\d{1,})\] %{GREEDYDATA:msg}"
+                ]
+              }
+            }
+
+            mutate {
+              rename => { "log" => "original_log" }
+              rename => { "text" => "log" }
+              remove_field => ["time"]
+            }
+
+            json {
+              source => "log"
+              skip_on_invalid_json => true
+              target => "jsonLog"
+            }
+
+            if [message] =~ "\tat" {
+              grok {
+                id => "grok_stacktrace"
+                match => ["message", "^(\tat)"]
+                add_tag => ["stacktrace"]
+              }
+            }
+
+            if [log] {
+              mutate {
+                remove_field => [ "message" ]
+              }
+            }
+
+            # https://flant.slack.com/archives/C02EF9VCYTY/p1715848904209889
+            if [kubernetes][namespace] == "ausweis-next-prod" and [kubernetes][labels][app] == "client" and [kubernetes][container][name] == "client" {
+              mutate {
+                id => "log_remove_body_ausweis1"
+                remove_field => "[jsonLog][body]"
+              }
+            }
+            if [kubernetes][namespace] == "ausweis-next-prod" and [kubernetes][labels][app] == "adapter" and [kubernetes][container][name] == "adapter" {
+              mutate {
+                id => "log_remove_body_ausweis2"
+                remove_field => "[jsonLog][body]"
+              }
+            }
+            if [kubernetes][namespace] == "keycloak-partner-account-manager-prod" and [kubernetes][labels][app] == "partner-account-manager" {
+              mutate {
+                id => "log_remove_body_keycloak"
+                remove_field => "[jsonLog][body]"
+              }
+            }
+          }
+          date {
+            match => ["timestamp", "yyyy-MM-dd HH:mm:ss.SSS", "ISO8601"]
+          }
+          mutate {
+            id => "add_cluster"
+            add_field => { "cluster" => "x1-techno.prod" }
+          }
+          if [kubernetes][namespace] =~ /keycloak.*/ {
+            mutate {
+              id => "kc_index"
+              add_field => { "[@metadata][target_index]" => "%{[kubernetes][namespace]}" }
+            }
+          } else {
+            grok {
+              id => "grok_targetindex"
+              match => { "[kubernetes][namespace]" => "(?<[@metadata][target_index]>^[^-]+)" }
+            }
+          }
+          mutate {
+            id => "copy_prod_id"
+            copy => { "[kubernetes][namespace_labels][product-id]" => "product_id" }
+          }
+          mutate {
+            id => "lowercase_prod_id"
+            lowercase => [ "product_id" ]
+          }
+        }
+        if [ingress][upstream_response_time] {
+          mutate {
+            convert => { "[ingress][upstream_response_time]" => "float" }
+          }
+        }
+      }

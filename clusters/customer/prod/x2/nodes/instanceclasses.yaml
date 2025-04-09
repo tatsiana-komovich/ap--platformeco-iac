@@ -1,0 +1,86 @@
+---
+apiVersion: deckhouse.io/v1
+kind: VsphereInstanceClass
+metadata:
+  name: elastic
+spec:
+  datastore: 3par_4_Lun102
+  mainNetwork: DEVOPS_41
+  memory: 10240
+  numCPUs: 4
+  rootDiskSize: 30
+  template: Templates/ubuntu-jammy-22.04-packer
+---
+apiVersion: deckhouse.io/v1
+kind: VsphereInstanceClass
+metadata:
+  name: odfe-common
+spec:
+  datastore: 3par_4_Lun103
+  mainNetwork: DEVOPS_41
+  memory: 12288
+  numCPUs: 4
+  rootDiskSize: 30
+  template: Templates/ubuntu-jammy-22.04-packer
+---
+apiVersion: deckhouse.io/v1
+kind: VsphereInstanceClass
+metadata:
+  name: application-nodes
+spec:
+  datastore: 3par_4_Lun102
+  mainNetwork: DEVOPS_41
+  memory: 16384
+  numCPUs: 8
+  rootDiskSize: 50
+  template: Templates/ubuntu-jammy-22.04-packer
+---
+apiVersion: deckhouse.io/v1
+kind: VsphereInstanceClass
+metadata:
+  name: sentry
+spec:
+  datastore: 3par_4_Lun103
+  mainNetwork: DEVOPS_41
+  memory: 12288
+  numCPUs: 4
+  rootDiskSize: 30
+  template: Templates/ubuntu-jammy-22.04-packer
+---
+apiVersion: deckhouse.io/v1
+kind: VsphereInstanceClass
+metadata:
+  name: d8-loadbalancer
+spec:
+  additionalNetworks:
+    - DEVOPS_41
+  datastore: 3par_4_Lun103
+  mainNetwork: devops_3893
+  memory: 4096
+  numCPUs: 2
+  rootDiskSize: 30
+  template: Templates/ubuntu-jammy-22.04-packer
+---
+apiVersion: deckhouse.io/v1
+kind: VsphereInstanceClass
+metadata:
+  name: system
+spec:
+  datastore: 3par_4_Lun103
+  mainNetwork: DEVOPS_41
+  memory: 20480
+  numCPUs: 4
+  rootDiskSize: 30
+  template: Templates/ubuntu-jammy-22.04-packer
+---
+apiVersion: deckhouse.io/v1
+kind: VsphereInstanceClass
+metadata:
+  name: otel-system
+spec:
+  datastore: 3par_4_Lun102
+  mainNetwork: DEVOPS_41
+  memory: 16384
+  numCPUs: 8
+  rootDiskSize: 50
+  template: Templates/ubuntu-jammy-22.04-packer

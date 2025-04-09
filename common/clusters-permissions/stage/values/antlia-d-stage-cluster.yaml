@@ -1,0 +1,32 @@
+---
+cluster_authorization:
+  defaults:
+    default_sa_permissions: &default
+      accessLevel: User
+      limitNamespaces:
+        - default
+      allowScale: true
+      allowAccessToSystemNamespaces: true
+      portForwarding: true
+  crowd:
+    groups:
+      crowd-apiinfra-admin:
+        <<: *default
+        accessLevel: SuperAdmin
+        allowAccessToSystemNamespaces: true
+        allowScale: true
+        portForwarding: true
+        limitNamespaces:
+          - .*
+      crowd-platfomeco-admin:
+        <<: *default
+        accessLevel: SuperAdmin
+        allowAccessToSystemNamespaces: true
+        allowScale: true
+        portForwarding: true
+        limitNamespaces:
+          - .*
+
+DexProvider:
+  clientID: k8s-argocd
+  clientSecret: crowd_app_k8s-argocd

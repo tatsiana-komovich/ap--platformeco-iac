@@ -1,0 +1,123 @@
+---
+kube-prometheus-stack:
+  global:
+    rbac:
+      create: true
+    imageRegistry: 'docker.art.lmru.tech'
+
+  fullnameOverride: 'promaas'
+
+  prometheusOperator:
+    enabled: true
+    namespaces:
+      releaseNamespace: false
+      additional:
+        - promaas-prometheus-test
+        - promaas-prometheus-kong
+        - promaas-prometheus-itopsw
+    # denyNamespaces:
+    #   - d8-monitoring
+
+    prometheusDefaultBaseImageRegistry: 'docker.art.lmru.tech'
+    prometheusDefaultBaseImage: prometheus/prometheus
+    alertmanagerDefaultBaseImageRegistry: 'docker.art.lmru.tech'
+    alertmanagerDefaultBaseImage: prometheus/alertmanager
+
+    image:
+      registry: 'docker.art.lmru.tech'
+      repository: prometheus-operator/prometheus-operator
+      # if not set appVersion field from Chart.yaml is  used
+      tag: ''
+      sha: ''
+      pullPolicy: IfNotPresent
+
+    resources:
+      limits:
+        memory: 1G
+      requests:
+        cpu: 500m
+        memory: 512Mi
+
+    prometheusConfigReloader:
+      image:
+        registry: 'docker.art.lmru.tech'
+        repository: prometheus-operator/prometheus-config-reloader
+        # if not set appVersion field from Chart.yaml is used
+        tag: ''
+        sha: ''
+
+      resources:
+        requests:
+          cpu: 300m
+          memory: 200Mi
+        limits:
+          memory: 500Mi
+
+    tls:
+      enabled: false
+
+    clusterDomain: 'yc-obs-metrics.s.mesh'
+
+    serviceAccount:
+      create: true
+      name: 'promaas'
+
+    priorityClassName: 'production-high'
+
+    logFormat: json
+    logLevel: debug
+
+    kubeletService:
+      enabled: false
+
+    serviceMonitor:
+      additionalLabels:
+        prometheus: main
+
+    nodeSelector:
+      node-role/prometheus-common: ''
+
+    tolerations:
+      - effect: NoSchedule
+        key: dedicated
+        operator: Equal
+        value: prometheus
+
+## Deactivated components by default
+
+  crds:
+    enabled: false
+  defaultRules:
+    create: false
+  windowsMonitoring:
+    enabled: false
+  prometheus-windows-exporter:
+    prometheus:
+      monitor:
+        enabled: false
+  alertmanager:
+    enabled: false
+  grafana:
+    enabled: false
+  kubernetesServiceMonitors:
+    enabled: false
+  kubeApiServer:
+    enabled: false
+  kubelet:
+    enabled: false
+  kubeControllerManager:
+    enabled: false
+  coreDns:
+    enabled: false
+  kubeEtcd:
+    enabled: false
+  kubeScheduler:
+    enabled: false
+  kubeProxy:
+    enabled: false
+  kubeStateMetrics:
+    enabled: false
+  nodeExporter:
+    enabled: false
+  prometheus:
+    enabled: false

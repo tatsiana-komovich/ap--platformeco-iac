@@ -1,0 +1,395 @@
+---
+logShipper:
+  enabled: "true"
+  settings:
+    debug: false
+
+logDestination:
+  enabled: "true"
+  custom:
+    - name: d8-admission-policy-engine
+      spec:
+        type: Logstash
+        logstash:
+          endpoint: logstash.infra-elklogs:9045
+        extraLabels:
+          product-id: p0471
+    - name: d8-ingress-nginx
+      spec:
+        type: Logstash
+        logstash:
+          endpoint: logstash.infra-elklogs:9045
+        extraLabels:
+          product-id: p0471
+    - name: devops-core-k8s-blender-exporter
+      spec:
+        type: Logstash
+        logstash:
+          endpoint: logstash.infra-elklogs:9045
+        extraLabels:
+          product-id: p0675
+    - name: infra-elklogs
+      spec:
+        type: Logstash
+        logstash:
+          endpoint: logstash.infra-elklogs:9045
+        extraLabels:
+          product-id: p0471
+    - name: lmru-devops-k8s-backup
+      spec:
+        type: Logstash
+        logstash:
+          endpoint: logstash.infra-elklogs:9045
+        extraLabels:
+          product-id: p0471
+    - name: lmru-devops-k8s-configuration
+      spec:
+        type: Logstash
+        logstash:
+          endpoint: logstash.infra-elklogs:9045
+        extraLabels:
+          product-id: p0471
+    - name: obs-alertmanager
+      spec:
+        type: Logstash
+        logstash:
+          endpoint: logstash.infra-elklogs:9045
+        extraLabels:
+          product-id: p0395
+    - name: payment-pof-prod
+      spec:
+        type: Logstash
+        logstash:
+          endpoint: logstash.infra-elklogs:9045
+        extraLabels:
+          product-id: p0709
+    - name: payment-ptm-prod
+      spec:
+        type: Logstash
+        logstash:
+          endpoint: logstash.infra-elklogs:9045
+        extraLabels:
+          product-id: p0445
+    - name: payment-sre-tools
+      spec:
+        type: Logstash
+        logstash:
+          endpoint: logstash.infra-elklogs:9045
+        extraLabels:
+          product-id: p0339
+    - name: payment-pon-prod
+      spec:
+        type: Logstash
+        logstash:
+          endpoint: logstash.infra-elklogs:9045
+        extraLabels:
+          product-id: p0717
+    - name: payment-pb-prod
+      spec:
+        type: Logstash
+        logstash:
+          endpoint: logstash.infra-elklogs:9045
+        extraLabels:
+          product-id: p0165
+    - name: payment-pdm-prod
+      spec:
+        type: Logstash
+        logstash:
+          endpoint: logstash.infra-elklogs:9045
+        extraLabels:
+          product-id: p0510
+    - name: b2bm-prod
+      spec:
+        type: Logstash
+        logstash:
+          endpoint: logstash.infra-elklogs:9045
+        extraLabels:
+          product-id: P1169
+    - name: payment-wallet-prod
+      spec:
+        type: Logstash
+        logstash:
+          endpoint: logstash.infra-elklogs:9045
+        extraLabels:
+          product-id: p0405
+    - name: pbb-prod
+      spec:
+        type: Logstash
+        logstash:
+          endpoint: logstash.infra-elklogs:9045
+        extraLabels:
+          product-id: p0084
+    - name: b2bm-prod
+      spec:
+        type: Logstash
+        logstash:
+          endpoint: logstash.infra-elklogs:9045
+        extraLabels:
+          product-id: p1169
+    - name: psp-prod
+      spec:
+        type: Logstash
+        logstash:
+          endpoint: logstash.infra-elklogs:9045
+        extraLabels:
+          product-id: p0948
+    - name: rap-prod
+      spec:
+        type: Logstash
+        logstash:
+          endpoint: logstash.infra-elklogs:9045
+        extraLabels:
+          product-id: p0949
+    - name: src-prod
+      spec:
+        type: Logstash
+        logstash:
+          endpoint: logstash.infra-elklogs:9045
+        extraLabels:
+          product-id: p0950
+    - name: cashoffice-prod
+      spec:
+        type: Logstash
+        logstash:
+          endpoint: logstash.infra-elklogs:9045
+        extraLabels:
+          product-id: p1042
+
+loggingConfig:
+  enabled: "true"
+  custom:
+    - name: d8-admission-policy-engine
+      spec:
+        type: KubernetesPods
+        kubernetesPods:
+          namespaceSelector:
+            matchNames:
+              - d8-admission-policy-engine
+        destinationRefs:
+          - d8-admission-policy-engine
+    - name: d8-ingress-nginx
+      spec:
+        type: KubernetesPods
+        kubernetesPods:
+          namespaceSelector:
+            matchNames:
+              - d8-ingress-nginx
+        destinationRefs:
+          - d8-ingress-nginx
+    - name: devops-core-k8s-blender-exporter
+      spec:
+        type: KubernetesPods
+        kubernetesPods:
+          namespaceSelector:
+            matchNames:
+              - devops-core-k8s-blender-exporter
+        destinationRefs:
+          - devops-core-k8s-blender-exporter
+    - name: infra-elklogs
+      spec:
+        type: KubernetesPods
+        kubernetesPods:
+          namespaceSelector:
+            matchNames:
+              - infra-elklogs
+        destinationRefs:
+          - infra-elklogs
+    - name: lmru-devops-k8s-backup
+      spec:
+        type: KubernetesPods
+        kubernetesPods:
+          namespaceSelector:
+            matchNames:
+              - lmru-devops-k8s-backup
+        destinationRefs:
+          - lmru-devops-k8s-backup
+    - name: lmru-devops-k8s-configuration
+      spec:
+        type: KubernetesPods
+        kubernetesPods:
+          namespaceSelector:
+            matchNames:
+              - lmru-devops-k8s-configuration
+        destinationRefs:
+          - lmru-devops-k8s-configuration
+    - name: obs-alertmanager
+      spec:
+        type: KubernetesPods
+        kubernetesPods:
+          namespaceSelector:
+            matchNames:
+              - obs-alertmanager
+        destinationRefs:
+          - obs-alertmanager
+    - name: payment-pof-prod
+      spec:
+        type: KubernetesPods
+        kubernetesPods:
+          namespaceSelector:
+            matchNames:
+              - payment-pof-prod
+        destinationRefs:
+          - payment-pof-prod
+    - name: payment-ptm-dev
+      spec:
+        type: KubernetesPods
+        kubernetesPods:
+          namespaceSelector:
+            matchNames:
+              - payment-ptm-prod
+        multilineParser:
+          type: Custom
+          custom:
+            startsWhen:
+              regex: ^(((([a-zA-Z\-0-9]+)_([a-zA-Z\-0-9]+)\s)|(([a-zA-Z\-0-9]+)\s)|(.{0}))(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\.\d{3}) \[)|^(\{\s{0,1}\")|^(\d{2}-\w{3}-\d{4}\s\d{2}:\d{2}:\d{2}\.{0,1}\d{2,3})\s(\w+)|^([A-Z][0-9]{0,4}\s\d{2}:\d{2}:\d{2}\.\d{0,6})|^(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}:\s\w{2}\d{1,})|^(\d{2}.\d{2}.\d{2},\s\d{2}:\d{2})|(\d{4}\/\d{2}\/\d{2} \d{2}:\d{2}:\d{2}\ \[\w{0,8}\])
+        destinationRefs:
+          - payment-ptm-prod
+    - name: payment-sre-tools
+      spec:
+        type: KubernetesPods
+        kubernetesPods:
+          namespaceSelector:
+            matchNames:
+              - payment-sre-tools
+        destinationRefs:
+          - payment-sre-tools
+    - name: payment-pon-prod
+      spec:
+        type: KubernetesPods
+        kubernetesPods:
+          namespaceSelector:
+            matchNames:
+              - payment-pon-prod
+        multilineParser:
+          type: Custom
+          custom:
+            startsWhen:
+              regex: ^(((([a-zA-Z\-0-9]+)_([a-zA-Z\-0-9]+)\s)|(([a-zA-Z\-0-9]+)\s)|(.{0}))(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\.\d{3}) \[)|^(\{\s{0,1}\")|^(\d{2}-\w{3}-\d{4}\s\d{2}:\d{2}:\d{2}\.{0,1}\d{2,3})\s(\w+)|^([A-Z][0-9]{0,4}\s\d{2}:\d{2}:\d{2}\.\d{0,6})|^(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}:\s\w{2}\d{1,})|^(\d{2}.\d{2}.\d{2},\s\d{2}:\d{2})|(\d{4}\/\d{2}\/\d{2} \d{2}:\d{2}:\d{2}\ \[\w{0,8}\])
+        destinationRefs:
+          - payment-pon-prod
+    - name: payment-pb-prod
+      spec:
+        type: KubernetesPods
+        kubernetesPods:
+          namespaceSelector:
+            matchNames:
+              - payment-pb-prod
+        multilineParser:
+          type: Custom
+          custom:
+            startsWhen:
+              regex: ^(((([a-zA-Z\-0-9]+)_([a-zA-Z\-0-9]+)\s)|(([a-zA-Z\-0-9]+)\s)|(.{0}))(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\.\d{3}) \[)|^(\{\s{0,1}\")|^(\d{2}-\w{3}-\d{4}\s\d{2}:\d{2}:\d{2}\.{0,1}\d{2,3})\s(\w+)|^([A-Z][0-9]{0,4}\s\d{2}:\d{2}:\d{2}\.\d{0,6})|^(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}:\s\w{2}\d{1,})|^(\d{2}.\d{2}.\d{2},\s\d{2}:\d{2})|(\d{4}\/\d{2}\/\d{2} \d{2}:\d{2}:\d{2}\ \[\w{0,8}\])
+        destinationRefs:
+          - payment-pb-prod
+    - name: payment-pdm-prod
+      spec:
+        type: KubernetesPods
+        kubernetesPods:
+          namespaceSelector:
+            matchNames:
+              - payment-pdm-prod
+        multilineParser:
+          type: Custom
+          custom:
+            startsWhen:
+              regex: ^(((([a-zA-Z\-0-9]+)_([a-zA-Z\-0-9]+)\s)|(([a-zA-Z\-0-9]+)\s)|(.{0}))(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\.\d{3}) \[)|^(\{\s{0,1}\")|^(\d{2}-\w{3}-\d{4}\s\d{2}:\d{2}:\d{2}\.{0,1}\d{2,3})\s(\w+)|^([A-Z][0-9]{0,4}\s\d{2}:\d{2}:\d{2}\.\d{0,6})|^(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}:\s\w{2}\d{1,})|^(\d{2}.\d{2}.\d{2},\s\d{2}:\d{2})|(\d{4}\/\d{2}\/\d{2} \d{2}:\d{2}:\d{2}\ \[\w{0,8}\])
+        destinationRefs:
+          - payment-pdm-prod
+    - name: b2bm-prod
+      spec:
+        type: KubernetesPods
+        kubernetesPods:
+          namespaceSelector:
+            matchNames:
+              - b2bm-prod
+        multilineParser:
+          type: Custom
+          custom:
+            startsWhen:
+              regex: ^(((([a-zA-Z\-0-9]+)_([a-zA-Z\-0-9]+)\s)|(([a-zA-Z\-0-9]+)\s)|(.{0}))(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\.\d{3}) \[)|^(\{\s{0,1}\")|^(\d{2}-\w{3}-\d{4}\s\d{2}:\d{2}:\d{2}\.{0,1}\d{2,3})\s(\w+)|^([A-Z][0-9]{0,4}\s\d{2}:\d{2}:\d{2}\.\d{0,6})|^(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}:\s\w{2}\d{1,})|^(\d{2}.\d{2}.\d{2},\s\d{2}:\d{2})|(\d{4}\/\d{2}\/\d{2} \d{2}:\d{2}:\d{2}\ \[\w{0,8}\])
+        destinationRefs:
+          - b2bm-prod
+    - name: rap-prod
+      spec:
+        type: KubernetesPods
+        kubernetesPods:
+          namespaceSelector:
+            matchNames:
+              - rap-prod
+        multilineParser:
+          type: Custom
+          custom:
+            startsWhen:
+              regex: ^(((([a-zA-Z\-0-9]+)_([a-zA-Z\-0-9]+)\s)|(([a-zA-Z\-0-9]+)\s)|(.{0}))(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\.\d{3}) \[)|^(\{\s{0,1}\")|^(\d{2}-\w{3}-\d{4}\s\d{2}:\d{2}:\d{2}\.{0,1}\d{2,3})\s(\w+)|^([A-Z][0-9]{0,4}\s\d{2}:\d{2}:\d{2}\.\d{0,6})|^(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}:\s\w{2}\d{1,})|^(\d{2}.\d{2}.\d{2},\s\d{2}:\d{2})|(\d{4}\/\d{2}\/\d{2} \d{2}:\d{2}:\d{2}\ \[\w{0,8}\])
+        destinationRefs:
+          - rap-prod
+    - name: src-prod
+      spec:
+        type: KubernetesPods
+        kubernetesPods:
+          namespaceSelector:
+            matchNames:
+              - src-prod
+        multilineParser:
+          type: Custom
+          custom:
+            startsWhen:
+              regex: ^(((([a-zA-Z\-0-9]+)_([a-zA-Z\-0-9]+)\s)|(([a-zA-Z\-0-9]+)\s)|(.{0}))(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\.\d{3}) \[)|^(\{\s{0,1}\")|^(\d{2}-\w{3}-\d{4}\s\d{2}:\d{2}:\d{2}\.{0,1}\d{2,3})\s(\w+)|^([A-Z][0-9]{0,4}\s\d{2}:\d{2}:\d{2}\.\d{0,6})|^(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}:\s\w{2}\d{1,})|^(\d{2}.\d{2}.\d{2},\s\d{2}:\d{2})|(\d{4}\/\d{2}\/\d{2} \d{2}:\d{2}:\d{2}\ \[\w{0,8}\])
+        destinationRefs:
+          - src-prod
+    - name: psp-prod
+      spec:
+        type: KubernetesPods
+        kubernetesPods:
+          namespaceSelector:
+            matchNames:
+              - psp-prod
+        multilineParser:
+          type: Custom
+          custom:
+            startsWhen:
+              regex: ^(((([a-zA-Z\-0-9]+)_([a-zA-Z\-0-9]+)\s)|(([a-zA-Z\-0-9]+)\s)|(.{0}))(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\.\d{3}) \[)|^(\{\s{0,1}\")|^(\d{2}-\w{3}-\d{4}\s\d{2}:\d{2}:\d{2}\.{0,1}\d{2,3})\s(\w+)|^([A-Z][0-9]{0,4}\s\d{2}:\d{2}:\d{2}\.\d{0,6})|^(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}:\s\w{2}\d{1,})|^(\d{2}.\d{2}.\d{2},\s\d{2}:\d{2})|(\d{4}\/\d{2}\/\d{2} \d{2}:\d{2}:\d{2}\ \[\w{0,8}\])
+        destinationRefs:
+          - psp-prod
+    - name: pbb-prod
+      spec:
+        type: KubernetesPods
+        kubernetesPods:
+          namespaceSelector:
+            matchNames:
+              - pbb-prod
+        multilineParser:
+          type: Custom
+          custom:
+            startsWhen:
+              regex: ^(((([a-zA-Z\-0-9]+)_([a-zA-Z\-0-9]+)\s)|(([a-zA-Z\-0-9]+)\s)|(.{0}))(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\.\d{3}) \[)|^(\{\s{0,1}\")|^(\d{2}-\w{3}-\d{4}\s\d{2}:\d{2}:\d{2}\.{0,1}\d{2,3})\s(\w+)|^([A-Z][0-9]{0,4}\s\d{2}:\d{2}:\d{2}\.\d{0,6})|^(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}:\s\w{2}\d{1,})|^(\d{2}.\d{2}.\d{2},\s\d{2}:\d{2})|(\d{4}\/\d{2}\/\d{2} \d{2}:\d{2}:\d{2}\ \[\w{0,8}\])
+        destinationRefs:
+          - pbb-prod
+    - name: payment-wallet-prod
+      spec:
+        type: KubernetesPods
+        kubernetesPods:
+          namespaceSelector:
+            matchNames:
+              - payment-wallet-prod
+        multilineParser:
+          type: Custom
+          custom:
+            startsWhen:
+              regex: ^(((([a-zA-Z\-0-9]+)_([a-zA-Z\-0-9]+)\s)|(([a-zA-Z\-0-9]+)\s)|(.{0}))(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\.\d{3}) \[)|^(\{\s{0,1}\")|^(\d{2}-\w{3}-\d{4}\s\d{2}:\d{2}:\d{2}\.{0,1}\d{2,3})\s(\w+)|^([A-Z][0-9]{0,4}\s\d{2}:\d{2}:\d{2}\.\d{0,6})|^(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}:\s\w{2}\d{1,})|^(\d{2}.\d{2}.\d{2},\s\d{2}:\d{2})|(\d{4}\/\d{2}\/\d{2} \d{2}:\d{2}:\d{2}\ \[\w{0,8}\])
+        destinationRefs:
+          - payment-wallet-prod
+    - name: cashoffice-prod
+      spec:
+        type: KubernetesPods
+        kubernetesPods:
+          namespaceSelector:
+            matchNames:
+              - cashoffice-prod
+        multilineParser:
+          type: Custom
+          custom:
+            startsWhen:
+              regex: ^(((([a-zA-Z\-0-9]+)_([a-zA-Z\-0-9]+)\s)|(([a-zA-Z\-0-9]+)\s)|(.{0}))(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\.\d{3}) \[)|^(\{\s{0,1}\")|^(\d{2}-\w{3}-\d{4}\s\d{2}:\d{2}:\d{2}\.{0,1}\d{2,3})\s(\w+)|^([A-Z][0-9]{0,4}\s\d{2}:\d{2}:\d{2}\.\d{0,6})|^(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}:\s\w{2}\d{1,})|^(\d{2}.\d{2}.\d{2},\s\d{2}:\d{2})|(\d{4}\/\d{2}\/\d{2} \d{2}:\d{2}:\d{2}\ \[\w{0,8}\])
+        destinationRefs:
+          - cashoffice-prod

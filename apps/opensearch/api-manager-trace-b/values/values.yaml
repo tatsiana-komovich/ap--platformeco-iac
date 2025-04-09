@@ -1,0 +1,276 @@
+---
+opendistro:
+
+  alerts:
+    check_record:
+      enabled: true
+    check_status:
+      enabled: true
+      red:
+        severity_level: 4
+      yellow:
+        severity_level: 5
+    fields_limit:
+      enabled: true
+      severity_level: 4
+    ro_index:
+      enabled: true
+      for: "1m"
+      severity_level: 3
+
+  clusterSettings:
+    persistent:
+      "cluster.routing.allocation.disk.threshold_enabled": true
+      "cluster.routing.allocation.disk.watermark.low": 90%
+      "cluster.routing.allocation.disk.watermark.high": 92%
+      "cluster.routing.allocation.disk.watermark.flood_stage": 94%
+      "cluster.routing.allocation.node_concurrent_incoming_recoveries": 15
+      "cluster.routing.allocation.node_concurrent_outgoing_recoveries": 15
+      "cluster.routing.allocation.cluster_concurrent_rebalance": 15
+      "cluster.routing.allocation.node_concurrent_recoveries": 15
+      "indices.recovery.max_bytes_per_sec": 250mb
+    transient:
+      "cluster.routing.allocation.disk.threshold_enabled": true
+      "cluster.routing.allocation.disk.watermark.low": 90%
+      "cluster.routing.allocation.disk.watermark.high": 92%
+      "cluster.routing.allocation.disk.watermark.flood_stage": 94%
+      "cluster.routing.allocation.node_concurrent_incoming_recoveries": 15
+      "cluster.routing.allocation.node_concurrent_outgoing_recoveries": 15
+      "cluster.routing.allocation.cluster_concurrent_rebalance": 15
+      "cluster.routing.allocation.node_concurrent_recoveries": 15
+      "indices.recovery.max_bytes_per_sec": 250mb
+
+  project: api-manager
+  platform: yandex
+
+  cluster: trace-b
+  cluster_env: prod
+
+  node_pref: p
+
+  userlist:
+    services: ["admin", "kibana", "trace"]
+
+  common:
+    nodegroup: opensearch-com-b
+
+  init:
+    image:
+      repo: "docker-flant.art.lmru.tech/lmru/devops/opensearch--"
+      name: "init-image"
+      tag: "0.0.2"
+
+  os_masters:
+    enabled: true
+    phase: "2"
+    replicas: "3"
+    pv_storageclass: network-ssd
+    pv_size: 10Gi
+    limits:
+      memory: 10Gi
+    requests:
+      cpu: "3"
+      memory: 10Gi
+
+  opendistro:
+    image:
+      repo: "docker-flant.art.lmru.tech/lmru/devops/opensearch--"
+      name: "opensearch"
+      tag: "2.16.0"
+    # custom - самодельные сертификаты только для старых серверов
+    # cluster - выписываются при помощи k8s
+    certificates: "custom"
+    disk_threshold_critical: 90
+    disk_threshold_warning: 86
+    external:
+      enabled: "yes"
+      security_ssl_http_clientauth_mode: OPTIONAL
+      anonymous_auth_enabled: "false"
+    loadbalancer:
+      type: Internal
+      traffic_policy: Local
+      listener_subnet_id: e2lroavpiulqeqd8atp1
+      sourceRanges:
+        - 0.0.0.0/0
+      nodePort: 32067
+    bauth: '<path:services/data/opensearch#api-manager.trace-b.elk-external.password.prod>'
+    host: "elastic-trace-b-logs-a.platformeco.lmru.tech"
+    nodegroup: opensearch-trace-b
+    port_http: "9200"
+    port_transport: "9300"
+    port_metrics: "9600"
+    localstorage: false
+    pv_storageclass: network-ssd-io-m3
+    pv_size: 4092Gi
+    replicas: "10"
+    limits:
+      memory: 60Gi
+    requests:
+      cpu: "3"
+      memory: 60Gi
+    s3_backup:
+      enabled: false
+    internal:
+      cookiePassword: '<path:services/data/opensearch#opendistro.internal.cookiepassword>'
+
+  exporter:
+    enabled: true
+    image:
+      repo: "docker-flant.art.lmru.tech/lmru/devops/opensearch--"
+      name: "os-exporter"
+      tag: "0.0.2"
+    version: 1.1.0
+    samplelimit: "300000"
+    uri: https://opendistro:9200
+    all: true
+    indices: true
+    indices_settings: true
+    shards: true
+    snapshots: false
+    cluster_settings: true
+    timeout: 5s
+    sslSkipVerify: true
+    resources:
+      requests:
+        cpu: 100m
+        memory: 2Gi
+      limits:
+        memory: 2Gi
+
+  snapshot_exporter:
+    enabled: false
+
+  oneday_exporter:
+    enabled: true
+    image:
+      repo: "docker-flant.art.lmru.tech/lmru/devops/opensearch--"
+      name: "os-oneday-exporter"
+      tag: "0.0.2"
+    date_pattern: "2006-01-02"
+    resources:
+      requests:
+        cpu: 10m
+        memory: 256Mi
+      limits:
+        memory: 256Mi
+
+  coldCluster:
+    enabled: false
+
+  csi:
+    enabled: false
+
+  recoverer:
+    enabled: false
+
+  filebeat:
+    enabled: false
+
+  admin:
+    elasticsearch:
+      password: '<path:services/data/opensearch#api-manager.trace-b.admin.password.prod>'
+      username: admin
+      roles:
+        - admin
+  trace:
+    elasticsearch:
+      password: '<path:services/data/opensearch#api-manager.trace-b.elk-external.password.prod>'
+      username: trace
+      roles:
+        - admin
+
+  kibana:
+    enabled: true
+    image:
+      repo: "docker-flant.art.lmru.tech/lmru/devops/opensearch--"
+      name: "opensearch-dashboards"
+      tag: "2.16.0"
+    index_patterns:
+      enabled: false
+    resources:
+      limits:
+        memory: 2Gi
+      requests:
+        cpu: 500m
+        memory: 1Gi
+    maxpayloadbytes: 1572864
+    # must be < resources.request.memory : if resources.request.memory=1024M than maxoldspacesize = 1000Mb
+    maxoldspacesize: 1000
+    host: kibana-elk-trace-b-logs-a.platformeco.lmru.tech
+    connecturl: dex-logs-a.platformeco.lmru.tech
+    auth: '<path:services/data/opensearch#api-manager.trace-b.kibana.auth.prod>'
+    elasticsearch:
+      username: kibanaserver
+      password: '<path:services/data/opensearch#api-manager.trace-b.kibana.password.prod>'
+      roles: [""]
+
+  pv_retain_operator:
+    enabled: false
+
+  cerebro:
+    image:
+      repo: "docker-flant.art.lmru.tech/lmru/devops/opensearch--"
+      name: "cerebro"
+      tag: "0.0.1"
+    enabled: true
+    host: cerebro-trace-b-logs-a.platformeco.lmru.tech
+    secret: '<path:services/data/opensearch#trace-logs-a.cerebro.secret.prod>'
+    auth: '<path:services/data/opensearch#trace-logs-a.cerebro.auth.prod>'
+
+  xtractor:
+    enabled: false
+
+  xkibana:
+    enabled: false
+
+  curator:
+    image:
+      repo: "docker-flant.art.lmru.tech/lmru/devops/opensearch--"
+      name: "os-curator"
+      tag: "0.0.1"
+
+  shell_operator:
+    image:
+      repo: "docker-flant.art.lmru.tech/lmru/devops/opensearch--"
+      name: "shell-operator"
+      tag: "0.0.1"
+
+  node_updater:
+    enabled: false
+    image:
+      repo: "docker-flant.art.lmru.tech/lmru/devops/opensearch--"
+      name: "node-updater"
+      tag: "0.0.1"
+
+  retention:
+    enabled: false
+
+  dereplicator:
+    enabled: false
+
+  sheet_reporter:
+    enabled: true
+    image:
+      repo: "docker-flant.art.lmru.tech/lmru/devops/opensearch--"
+      name: "sheet-reporter"
+      tag: "0.1.6"
+    job:
+      schedule: "35 22 * * *"
+    app:
+      server:
+        port: "17700"
+      spreadSheet:
+        range: "I1:H1"
+
+  osecurity_extend:
+    permission: |-
+      - "*"
+    groups: |-
+      - crowd-sa-ausweis
+      - crowd-sa-devops-examples
+      - crowd-sa-keycloak
+      - crowd-sa-obs
+      - crowd-apiinfra-admin
+
+billing-resource:
+  resourceName: opendistro

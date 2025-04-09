@@ -1,0 +1,14 @@
+{{- range $key, $value := .Values.namespace }}
+---
+apiVersion: networking.istio.io/v1beta1
+kind: Sidecar
+metadata:
+  name: {{ $value.name }}-sidecar
+  namespace: {{ $value.name }}
+spec:
+  egress:
+  - hosts:
+    {{- range .hosts }}
+    - {{ . }}
+    {{- end }}
+{{- end }}

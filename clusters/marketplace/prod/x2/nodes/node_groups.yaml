@@ -1,0 +1,226 @@
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  name: node-big-ubuntu-22
+spec:
+  chaos:
+    mode: Disabled
+  cloudInstances:
+    classReference:
+      kind: VsphereInstanceClass
+      name: node-big-ubuntu-22
+    maxPerZone: 25
+    minPerZone: 21
+    zones:
+      - X1-A-Production
+  disruptions:
+    approvalMode: Automatic
+  nodeType: CloudEphemeral
+  cri:
+    type: Containerd
+  nodeTemplate:
+    labels:
+      node-role.k8s.lmru.tech/application: ''
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  name: odfe-common
+spec:
+  chaos:
+    mode: Disabled
+  cloudInstances:
+    classReference:
+      kind: VsphereInstanceClass
+      name: odfe-common
+    maxPerZone: 6
+    minPerZone: 2
+    zones:
+      - X1-A-Production
+  disruptions:
+    approvalMode: Automatic
+  nodeTemplate:
+    labels:
+      node-role/opendistro-common: ""
+    taints:
+      - effect: NoSchedule
+        key: dedicated
+        value: opendistro-common
+  nodeType: CloudEphemeral
+  cri:
+    type: Containerd
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  name: opensearch
+spec:
+  chaos:
+    mode: Disabled
+  cloudInstances:
+    classReference:
+      kind: VsphereInstanceClass
+      name: opensearch
+    maxPerZone: 5
+    minPerZone: 3
+    zones:
+      - X1-A-Production
+  disruptions:
+    approvalMode: Automatic
+  nodeTemplate:
+    labels:
+      node-role/opendistro: ""
+    taints:
+      - effect: NoSchedule
+        key: dedicated
+        value: opendistro
+  nodeType: CloudEphemeral
+  cri:
+    type: Containerd
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  name: rabbitmq-ng
+spec:
+  chaos:
+    mode: Disabled
+  cloudInstances:
+    classReference:
+      kind: VsphereInstanceClass
+      name: rabbitmq-ng
+    maxPerZone: 4
+    minPerZone: 3
+    zones:
+      - X1-A-Production
+  disruptions:
+    approvalMode: Manual
+  nodeTemplate:
+    annotations:
+      node.deckhouse.io/nodeport-bind-internal-ip: "false"
+    labels:
+      dedicated: rabbitmq
+    taints:
+      - effect: NoExecute
+        key: dedicated
+        value: rabbitmq
+  nodeType: CloudEphemeral
+  cri:
+    type: Containerd
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  name: system-power
+spec:
+  chaos:
+    mode: Disabled
+  cloudInstances:
+    classReference:
+      kind: VsphereInstanceClass
+      name: system-power
+    maxPerZone: 3
+    minPerZone: 3
+    zones:
+      - X1-A-Production
+  disruptions:
+    approvalMode: Manual
+  nodeTemplate:
+    labels:
+      node-role.deckhouse.io/system: ""
+      node-role/logging: ""
+      node-role/monitoring: ""
+    taints:
+      - effect: NoExecute
+        key: dedicated.deckhouse.io
+        value: system
+  nodeType: CloudEphemeral
+  cri:
+    type: Containerd
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  name: node-lc-ubuntu-22
+spec:
+  chaos:
+    mode: Disabled
+  cloudInstances:
+    classReference:
+      kind: VsphereInstanceClass
+      name: node-lc-ubuntu-22
+    maxPerZone: 6
+    minPerZone: 6
+    zones:
+      - X1-A-Production
+  disruptions:
+    approvalMode: Manual
+  nodeTemplate:
+    labels:
+      dedicated: node-lc
+      node-role.k8s.lmru.tech/application: ''
+    taints:
+      - effect: NoExecute
+        key: dedicated
+        value: node-lc
+  nodeType: CloudEphemeral
+  cri:
+    type: Containerd
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  name: cassandra-jaeger
+spec:
+  chaos:
+    mode: Disabled
+  cloudInstances:
+    classReference:
+      kind: VsphereInstanceClass
+      name: cassandra-jaeger
+    maxPerZone: 0
+    minPerZone: 0
+    zones:
+      - X1-A-Production
+  disruptions:
+    approvalMode: Manual
+  nodeTemplate:
+    labels:
+      dedicated: cassandra
+    taints:
+      - effect: NoExecute
+        key: dedicated
+        value: cassandra
+  nodeType: CloudEphemeral
+  cri:
+    type: Containerd
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  name: opensearch-jaeger
+spec:
+  chaos:
+    mode: Disabled
+  cloudInstances:
+    classReference:
+      kind: VsphereInstanceClass
+      name: opensearch-jaeger
+    maxPerZone: 8
+    minPerZone: 8
+    zones:
+      - X1-A-Production
+  disruptions:
+    approvalMode: Manual
+  nodeTemplate:
+    labels:
+      dedicated: opensearch-jaeger
+      node-role/opensearch-jaeger: ""
+    taints:
+      - effect: NoExecute
+        key: dedicated
+        value: opensearch-jaeger
+  nodeType: CloudEphemeral
+  cri:
+    type: Containerd

@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: basic-auth-prom-api
+  namespace: d8-monitoring
+  annotations:
+    avp.kubernetes.io/path: "services/data/argocd-secrets"
+type: Opaque
+data:
+  auth: <basic-auth-prom-api | base64encode>

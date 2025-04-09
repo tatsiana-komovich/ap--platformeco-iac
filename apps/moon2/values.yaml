@@ -1,0 +1,672 @@
+---
+moon2:
+  defaults:
+    default_capabilities_permissions: &capabilities
+      securityContext:
+        capabilities:
+          drop:
+            - ALL
+  ##
+  ## Custom Ingress settings. Overrides default Nginx Ingress configuration.
+  ##
+  customIngress:
+    enabled: true
+    annotations:
+      nginx.ingress.kubernetes.io/proxy-connect-timeout: "108000"
+      nginx.ingress.kubernetes.io/proxy-send-timeout: "108000"
+      nginx.ingress.kubernetes.io/proxy-read-timeout: "108000"
+      nginx.ingress.kubernetes.io/proxy-body-size: "128m"
+    ingressClassName: nginx
+    host: moon-e2e.apps.lmru.tech
+    tls: []
+    #- secretName: moon-tls
+    #  hosts:
+    #  - moon.aerokube.local
+    paths:
+      - path: /wd/hub
+        port: 4444
+      - path: /cypress
+        port: 4444
+      - path: /playwright
+        port: 4444
+      - path: /devtools
+        port: 4444
+      - path: /metrics
+        port: 4444
+      - path: /api
+        port: 9090
+      - path: /ui
+        port: 9090
+      - path: /
+        port: 8080
+
+  ##
+  ## Ingress settings. This chart is using Nginx Ingress. By default, Ingress listens only on port 80 (HTTP).
+  ## Port 443 (HTTPS) is enabled only if TLS certificate and private key are provided in the fields below.
+  ##
+  ingress:
+    ##
+    ## To be able to disable ingress.
+    ##
+    enabled: true
+
+    ##
+    ## Ingress host. Replace this with your domain name.
+    ##
+    host: moon2-e2e.apps.lmru.tech
+
+    ##
+    ## Ingress class name
+    ##
+    ingressClassName: nginx
+
+    ##
+    ## Files with TLS certificate and TLS key. When provided Ingress switches to HTTPS-only mode.
+    ## Set to empty files if you need HTTPS, but do not need to provide key and cert manually(i.g. use cert-manager)
+    ##
+    tlsCert:
+    tlsKey:
+
+    ##
+    ## TLS Secret name. If exists will not be generated.
+    ##
+    tlsSecretName:
+
+    ##
+    ## Ingress proxy timeout settings.
+    ##
+    proxyConnectTimeout: 1900
+    proxySendTimeout: 1900
+    proxyReadTimeout: 1900
+
+    ##
+    ## Maximum request body size.
+    ##
+    proxyBodySize: 128m
+
+    ##
+    ## Set to true in Openshift.
+    ##
+    openshift:
+
+    ##
+    ## Add custom annotations to ingress
+    ##
+    customAnnotations: {}
+  ##
+  ## Moon scc annotations.
+  ##
+  sccAnnotations: {kubernetes.io/description: 'Like the restricted SCC, but with the seccompProfiles turn off'}
+
+  ##
+  ## Moon service account annotations.
+  ##
+  serviceAccountAnnotations: {}
+
+  ##
+  ## Moon service annotations.
+  ##
+  serviceAnnotations:
+    prometheus.deckhouse.io/sample-limit: "5000"
+    prometheus.deckhouse.io/query-param-format: "prometheus"
+    prometheus.deckhouse.io/port: "4444"
+
+  ##
+  ## Moon service labels.
+  ##
+  serviceLabels:
+    prometheus.deckhouse.io/custom-target: moon
+
+  ##
+  ## Moon service to customize without ingress.
+  ##
+  service:
+    ##
+    ## Service type e.g. NodePort, LoadBalancer.
+    ##
+    type:
+
+    ##
+    ## Load balancer IP address.
+    ##
+    loadBalancerIP:
+
+    ##
+    ## List of external IP addresses.
+    ##
+    externalIPs: []
+
+  ##
+  ## Moon deployment settings.
+  ##
+  deployment:
+
+    ##
+    ## Custom deployment annotations.
+    ##
+    annotations: {}
+
+    ##
+    ## Custom pod annotations.
+    ##
+    podAnnotations: {}
+
+    ##
+    ## Total number of Moon pods. Default is 2.
+    ##
+    replicas:
+
+    ##
+    ## Moon pods graceful shutdown timeout. Default is 360 seconds.
+    ##
+    terminationGracePeriodSeconds:
+
+    ##
+    ## Moon pods topologySpreadConstraints.
+    ##
+    topologySpreadConstraints:
+
+    ##
+    ## Moon container image repository. Default is docker-remote-quay-io.art.lmru.tech/aerokube/moon.
+    ##
+    moonRepo: "docker-remote-quay-io.art.lmru.tech/aerokube/moon"
+
+    ##
+    ## Moon container image tag. Default equals to chart app version.
+    ##
+    moonTag:
+
+    ##
+    ## Moon container CPU limit. Default is 0.5.
+    ##
+    moonCPULimit:
+
+    ##
+    ## Moon container CPU request. Default is 0.2.
+    ##
+    moonCPURequest:
+
+    ##
+    ## Moon container memory limit. Default is 256Mi.
+    ## We recommend setting the same value for memory request and limit.
+    ##
+    moonMemoryLimit: 512Mi
+
+    ##
+    ## Moon container memory request. Default is 256Mi.
+    ##
+    moonMemoryRequest:
+
+    ##
+    ## Moon callback url. In case of using Moon without ingress or with custom ingress as AWS alb.
+    ##
+    moonCallbackURL:
+
+    ##
+  ## Moon browser limit. Use it in case you need to lower browser limit than license key allows. Default unset.
+  ##
+    moonBrowserLimit:
+
+    ##
+    ## Moon-conf image repository. Default is docker-remote-quay-io.art.lmru.tech/aerokube/moon-conf.
+    ##
+    moonConfRepo: "docker-remote-quay-io.art.lmru.tech/aerokube/moon-conf"
+
+    ##
+    ## Moon-conf container image tag. Default equals to chart app version.
+    ##
+    moonConfTag:
+
+    ##
+    ## Moon-conf container CPU limit. Default is 0.25.
+    ##
+    moonConfCPULimit: 2
+
+    ##
+    ## Moon-conf container CPU request. Default is 0.05.
+    ##
+    moonConfCPURequest:
+
+    ##
+    ## Moon-conf container memory limit. Default is 128Mi.
+    ## We recommend setting the same value for memory request and limit.
+    ##
+    moonConfMemoryLimit:
+
+    ##
+    ## Moon-conf container memory request. Default is 128Mi.
+    ##
+    moonConfMemoryRequest:
+
+    ##
+    ## Moon-basic-auth container image repository. Default is docker-remote-quay-io.art.lmru.tech/aerokube/moon-basic-auth.
+    ##
+    moonBasicAuthRepo:
+
+    ##
+    ## Moon-basic-auth container image tag. Default equals to chart app version.
+    ##
+    moonBasicAuthTag:
+
+    ##
+    ## Moon-basic-auth container CPU limit. Default is 0.5.
+    ##
+    moonBasicAuthCPULimit:
+
+    ##
+    ## Moon-basic-auth container CPU request. Default is 0.2.
+    ##
+    moonBasicAuthCPURequest:
+
+    ##
+    ## Moon-basic-auth container memory limit. Default is 256Mi.
+    ## We recommend setting the same value for memory request and limit.
+    ##
+    moonBasicAuthMemoryLimit:
+
+    ##
+    ## Moon-basic-auth container memory request. Default is 256Mi.
+    ##
+    moonBasicAuthMemoryRequest:
+
+    ##
+    ## Moon-ui image repository. Default is docker-remote-quay-io.art.lmru.tech/aerokube/moon-ui.
+    ##
+    moonUIRepo: "docker-remote-quay-io.art.lmru.tech/aerokube/moon-ui"
+
+    ##
+    ## Moon-ui container image tag. Default equals to chart app version.
+    ##
+    moonUITag:
+
+    ##
+    ## Moon-ui container CPU limit. Default is 0.25.
+    ##
+    moonUICPULimit:
+
+    ##
+    ## Moon-ui container CPU request. Default is 0.05.
+    ##
+    moonUICPURequest:
+
+    ##
+    ## Moon-ui container memory limit. Default is 64Mi.
+    ## We recommend setting the same value for memory request and limit.
+    ##
+    moonUIMemoryLimit:
+
+    ##
+    ## Moon-ui container memory request. Default is 64Mi.
+    ##
+    moonUIMemoryRequest:
+
+    ##
+    ## Enable Moon experimental UI.
+    ##
+    experimentalUI: true
+
+    ## If specified, the pod's security policies.
+    ## ref: https://kubernetes.io/docs/concepts/policy/pod-security-policy/
+    ##
+    securityContext:
+      runAsUser: 1000
+
+    ##
+    ## Security context for containers running in Moon pod.
+    ##
+    containerSecurityContext:
+      allowPrivilegeEscalation: false
+      privileged: false
+      runAsNonRoot: true
+      runAsGroup: 1000
+      runAsUser: 1000
+      seccompProfile:
+        type: RuntimeDefault
+      capabilities:
+        drop:
+          - ALL
+    ##
+    ## Optional fields that specifies the maximum number of pods that can be created over the desired number of pods
+    ## and that can be unavailable during the update. You can use both int and percent values.
+    ##
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+
+    ##
+    ## Node Selector for Moon pods
+    ##
+    nodeSelector: {}
+    #  kubernetes.io/os: linux
+
+    ## Assign custom affinity rules to the instance
+    ## ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/
+    ##
+    affinity: {}
+    #  nodeAffinity:
+    #    requiredDuringSchedulingIgnoredDuringExecution:
+    #      nodeSelectorTerms:
+    #      - matchExpressions:
+    #        - key: kubernetes.io/e2e-az-name
+    #          operator: In
+    #          values:
+    #          - e2e-az1
+    #          - e2e-az2
+
+    #  ## If specified, the pod's priorityClassName.
+    #  ## ref: https://kubernetes.io/docs/concepts/scheduling-eviction/pod-priority-preemption/#priorityclass
+    #  ##
+    # priorityClassName: default
+
+    ## If specified, the pod's tolerations.
+    ## ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
+    ##
+    tolerations: []
+    #- key: "key"
+    #  operator: "Equal"
+    #  value: "value"
+    #  effect: "NoSchedule"
+
+  ##
+  ## Available configuration objects.
+  ##
+  configs:
+    ##
+    ## Default configuration object. Detailed description of the fields can be found
+    ## in documentation: https://aerokube.com/moon/latest/#configuration-object.
+    ##
+    default:
+      serviceAccountName: default
+      sessionTimeout: 5m
+      user:
+        id: 4096
+        name: user
+      group:
+        id: 4096
+        name: user
+      containers:
+        browser:
+          <<: *capabilities
+          resources:
+            limits:
+              cpu: 2
+              memory: 3Gi
+            requests:
+              cpu: null
+              memory: 2Gi
+        ca-certs:
+          <<: *capabilities
+          repository: docker-remote-quay-io.art.lmru.tech/aerokube/ca-certs
+          resources:
+            limits:
+              cpu: null
+              memory: 128Mi
+            requests:
+              memory: 128Mi
+        proxy:
+          <<: *capabilities
+          repository: docker-remote-quay-io.art.lmru.tech/aerokube/tinyproxy
+          resources:
+            limits:
+              memory: 128Mi
+            requests:
+              memory: 128Mi
+        defender:
+          <<: *capabilities
+          repository: docker-remote-quay-io.art.lmru.tech/aerokube/defender
+          resources:
+            limits:
+              memory: 256Mi
+            requests:
+              memory: 128Mi
+        video-recorder:
+          <<: *capabilities
+          repository: docker-remote-quay-io.art.lmru.tech/aerokube/video-recorder
+          resources:
+            limits:
+              memory: 2Gi
+            requests:
+              memory: 2Gi
+        vnc-server:
+          <<: *capabilities
+          repository: docker-remote-quay-io.art.lmru.tech/aerokube/x11vnc
+          version: 0.9.16
+          resources:
+            limits:
+              memory: 256Mi
+            requests:
+              cpu: null
+              memory: 128Mi
+        x-server:
+          <<: *capabilities
+          repository: docker-remote-quay-io.art.lmru.tech/aerokube/xvfb
+          version: "21.1"
+          resources:
+            limits:
+              memory: 256Mi
+            requests:
+              memory: 128Mi
+        window-manager:
+          <<: *capabilities
+          repository: docker-remote-quay-io.art.lmru.tech/aerokube/openbox
+          version: 3.6.1
+          resources:
+            limits:
+              cpu: 200m
+              memory: 128Mi
+            requests:
+              cpu: null
+              memory: 128Mi
+        additional-fonts:
+          <<: *capabilities
+          repository: docker-remote-quay-io.art.lmru.tech/aerokube/fonts
+          version: 1.0.0
+          resources:
+            limits:
+              cpu: 200m
+              memory: 32Mi
+            requests:
+              cpu: null
+              memory: 32Mi
+        har:
+          <<: *capabilities
+          repository: docker-remote-quay-io.art.lmru.tech/aerokube/har
+          resources:
+            limits:
+              cpu: 200m
+              memory: 128Mi
+            requests:
+              cpu: null
+              memory: 128Mi
+      storage:
+        accessKey: ""
+        bucket: ""
+        endpoint: ""
+        filename: ""
+        pattern: ""
+        secretKey: ""
+        noProxy: ""
+        httpProxy: ""
+        httpsProxy: ""
+
+  ##
+  ## Available browsers set objects.
+  ##
+  browsers:
+    ##
+    ## Default browsers set object. Detailed description of the fields can be found
+    ## in documentation: https://aerokube.com/moon/latest/#browsers-set.
+    ##
+    default:
+      selenium:
+        # MicrosoftEdge:
+        #   repository: docker-remote-quay-io.art.lmru.tech/browser/microsoft-edge-stable
+        #   default: 114.0.1823.51-5
+        #   nodeSelector:
+        #     node-role/moonNodes: ""
+        #   tolerations:
+        #     - effect: NoExecute
+        #       key: dedicated
+        #       value: moonNodes
+        chrome:
+          repository: docker-remote-quay-io.art.lmru.tech/browser/google-chrome-stable
+          default: 129.0.6668.70-6
+          nodeSelector:
+            node-role/moonNodes: ""
+          tolerations:
+            - effect: NoExecute
+              key: dedicated
+              value: moonNodes
+        chrome-mobile:
+          repository: docker-remote-docker-io.art.lmru.tech/selenoid/chrome-mobile
+          default: "84.0"
+          nodeSelector:
+            node-role/moonNodes: ""
+          tolerations:
+            - effect: NoExecute
+              key: dedicated
+              value: moonNodes
+        firefox:
+          repository: docker-remote-quay-io.art.lmru.tech/browser/firefox-mozilla-build
+          default: 130.0.1-5
+          nodeSelector:
+            node-role/moonNodes: ""
+          tolerations:
+            - effect: NoExecute
+              key: dedicated
+              value: moonNodes
+        # opera:
+        #   repository: docker-remote-quay-io.art.lmru.tech/browser/opera-stable
+        #   default: 98.0.4759.39-6
+        #   nodeSelector:
+        #     node-role/moonNodes: ""
+        #   tolerations:
+        #     - effect: NoExecute
+        #       key: dedicated
+        #       value: moonNodes
+        safari:
+          repository: docker-remote-quay-io.art.lmru.tech/browser/safari
+          default: 15.0-0
+          nodeSelector:
+            node-role/moonNodes: ""
+          tolerations:
+            - effect: NoExecute
+              key: dedicated
+              value: moonNodes
+      cypress:
+        electron:
+          repository: docker-remote-quay-io.art.lmru.tech/browsers/cypress-electron
+          nodeSelector:
+            node-role/moonNodes: ""
+          tolerations:
+            - effect: NoExecute
+              key: dedicated
+              value: moonNodes
+        chromium:
+          repository: docker-remote-quay-io.art.lmru.tech/browsers/cypress-chromium
+          nodeSelector:
+            node-role/moonNodes: ""
+          tolerations:
+            - effect: NoExecute
+              key: dedicated
+              value: moonNodes
+        chrome:
+          repository: docker-remote-quay-io.art.lmru.tech/browsers/cypress-chrome
+          nodeSelector:
+            node-role/moonNodes: ""
+          tolerations:
+            - effect: NoExecute
+              key: dedicated
+              value: moonNodes
+        firefox:
+          repository: docker-remote-quay-io.art.lmru.tech/browsers/cypress-firefox
+          nodeSelector:
+            node-role/moonNodes: ""
+          tolerations:
+            - effect: NoExecute
+              key: dedicated
+              value: moonNodes
+        # edge:
+        #   repository: docker-remote-quay-io.art.lmru.tech/browsers/cypress-edge
+        #   nodeSelector:
+        #     node-role/moonMobile: ""
+        #   tolerations:
+        #     - effect: NoExecute
+        #       key: dedicated
+        #       value: moonMobile
+      playwright:
+        chrome:
+          repository: docker-remote-quay-io.art.lmru.tech/browser/playwright-chrome
+          nodeSelector:
+            node-role/moonNodes: ""
+          tolerations:
+            - effect: NoExecute
+              key: dedicated
+              value: moonNodes
+        chromium:
+          repository: docker-remote-quay-io.art.lmru.tech/browser/playwright-chromium
+          nodeSelector:
+            node-role/moonNodes: ""
+          tolerations:
+            - effect: NoExecute
+              key: dedicated
+              value: moonNodes
+        firefox:
+          repository: docker-remote-quay-io.art.lmru.tech/browser/playwright-firefox
+          nodeSelector:
+            node-role/moonNodes: ""
+          tolerations:
+            - effect: NoExecute
+              key: dedicated
+              value: moonNodes
+        webkit:
+          repository: docker-remote-quay-io.art.lmru.tech/browser/playwright-webkit
+          nodeSelector:
+            node-role/moonNodes: ""
+          tolerations:
+            - effect: NoExecute
+              key: dedicated
+              value: moonNodes
+      devtools:
+        chrome:
+          repository: docker-remote-quay-io.art.lmru.tech/browser/devtools-google-chrome-stable
+          nodeSelector:
+            node-role/moonNodes: ""
+          tolerations:
+            - effect: NoExecute
+              key: dedicated
+              value: moonNodes
+
+  ##
+  ## Available quotas. If you need to have multiple quota objects - simply add them below:
+  ##
+  ## quota:
+  ##   moon: null
+  ##   alfa-team:
+  ##     namespace: alfa
+  ##     serviceAccountName: custom
+  ##     serviceAccountAnnotations: {}
+  ##   beta-team:
+  ##     namespace: beta
+  ##
+  quota:
+    ##
+    ## Default quota. Detailed description of the fields can be found
+    ## in documentation: https://aerokube.com/moon/latest/#quotas. Set it
+    ## to null when having multiple quota objects.
+    ##
+    moon:
+      namespace: moon
+
+  ##
+  ## License key. When empty default free license key is automatically used.
+  ##
+  license: '<path:services/data/moon#license.key>'
+
+  ##
+  ## License key secret name. License data will loaded from secret, overrides license field.
+  ##
+  licenseSecretName:
+
+  rbac:
+    enabled: true

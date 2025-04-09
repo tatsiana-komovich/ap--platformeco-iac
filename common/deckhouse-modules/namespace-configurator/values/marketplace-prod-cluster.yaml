@@ -1,0 +1,41 @@
+---
+extended_monitoring_enable_on_all_ns: {}
+
+products:
+  - product-id: P0591
+    namespace_pattern:
+      - ^returns-prod$
+
+  - product-id: TBD
+    namespace_pattern:
+      - ^jaeger.*
+
+  - product-id: P0355
+    namespace_pattern:
+      - ^market-radar-.*
+
+  - product-id: P0680
+    namespace_pattern:
+      - ^sentry-.*
+
+  - product-id: TBD
+    namespace_pattern:
+      - ^redis-.*
+
+  - product-id: P0718
+    namespace_pattern:
+      - ^scdp-ofl-ot-prod$
+
+  - product-id: P0716
+    namespace_pattern:
+      - ^scdp-ofl-mo-prod$
+
+coroot:
+  - security.deckhouse.io/pod-policy: privileged
+    namespace_pattern:
+      - ^coroot$
+
+devops-core-vector:
+  - security.deckhouse.io/pod-policy-action: warn
+    namespace_pattern:
+      - ^devops-core-vector$

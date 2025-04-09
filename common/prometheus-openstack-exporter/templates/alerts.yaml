@@ -1,0 +1,63 @@
+---
+apiVersion: deckhouse.io/v1alpha1
+kind: CustomPrometheusRules
+metadata:
+  name: openstack-limits-cpu
+spec:
+  groups:
+  - name: openstack.limits
+    rules:
+    - alert: CpuQuotaNotEnough
+      annotations:
+        description: |
+          This alert indicates that the CPU quota has exceeded
+        plk_markup_format: markdown
+        plk_protocol_version: "1"
+        summary: |
+          There are not enough Cpu Quota in cluster.
+      expr: openstack_nova_limits_vcpus_used / on() openstack_nova_limits_vcpus_max * 100 > 90
+      for: 20m
+      labels:
+        severity_level: "4"
+---
+apiVersion: deckhouse.io/v1alpha1
+kind: CustomPrometheusRules
+metadata:
+  name: openstack-limits-memory
+spec:
+  groups:
+  - name: openstack.limits
+    rules:
+    - alert: MemoryQuotaNotEnough
+      annotations:
+        description: |
+          This alert indicates that the Memory quota has exceeded
+        plk_markup_format: markdown
+        plk_protocol_version: "1"
+        summary: |
+          There are not enough Memory Quota in cluster.
+      expr: openstack_nova_limits_memory_used / on() openstack_nova_limits_memory_max * 100 > 90
+      for: 20m
+      labels:
+        severity_level: "4"
+---
+apiVersion: deckhouse.io/v1alpha1
+kind: CustomPrometheusRules
+metadata:
+  name: openstack-limits-volume
+spec:
+  groups:
+  - name: openstack.limits
+    rules:
+    - alert: VolumeQuotaNotEnough
+      annotations:
+        description: |
+          This alert indicates that the Volume quota has exceeded
+        plk_markup_format: markdown
+        plk_protocol_version: "1"
+        summary: |
+          There are not enough Volume Quota in cluster.
+      expr: openstack_cinder_limits_volume_used_gb / on() openstack_cinder_limits_volume_max_gb * 100  > 90
+      for: 20m
+      labels:
+        severity_level: "4"

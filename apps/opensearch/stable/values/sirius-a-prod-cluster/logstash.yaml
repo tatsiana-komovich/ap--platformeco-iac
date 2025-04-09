@@ -1,0 +1,378 @@
+---
+opendistro:
+  logstash:
+    enabled: true
+    filter: |-
+      filter {
+        grok {
+          id => "grok_multi"
+          match => {
+            "message" => [
+              "(((?<brick>[a-zA-Z\-0-9]+)_(?<application>[a-zA-Z\-0-9]+)\s)|((?<application>[a-zA-Z\-0-9]+)\s)|(.{0}))(?<logtime>%{YEAR}-%{MONTHNUM}-%{MONTHDAY} %{TIME}) \[(?<transaction>[A-Za-z0-9\-_\.]*),{0,1}(?<traceId>[A-Za-z0-9\-_\.]*),(?<spanId>[A-Za-z0-9\-_\.]*)\]\[%{GREEDYDATA:thread}\] %{LOGLEVEL:level}[ ]+%{NOTSPACE:class} - %{GREEDYDATA:text}",
+              "(((?<brick>[a-zA-Z\-0-9]+)_(?<application>[a-zA-Z\-0-9]+)\s)|((?<application>[a-zA-Z\-0-9]+)\s)|(.{0}))(?<logtime>%{YEAR}-%{MONTHNUM}-%{MONTHDAY} %{TIME}) %{LOGLEVEL:level} \[(?<transaction>[A-Za-z0-9\-_\.]*),{0,1}(?<traceId>[A-Za-z0-9\-_\.]*),(?<spanId>[A-Za-z0-9\-_\.]*),([A-Za-z0-9\-_\.]*)\] ([0-9]*) --- \[%{GREEDYDATA:thread}\] %{NOTSPACE:class}[ ]+: %{GREEDYDATA:text}",
+              "(((?<brick>[a-zA-Z\-0-9]+)_(?<application>[a-zA-Z\-0-9]+)\s)|((?<application>[a-zA-Z\-0-9]+)\s)|(.{0}))(?<logtime>%{YEAR}-%{MONTHNUM}-%{MONTHDAY} %{TIME}) \[(?<processId>[A-Za-z\-0-9]*),(?<solutionId>[A-Za-z0-9\-_\.]*),{0,1}(?<traceId>[A-Za-z0-9\-_\.]*),(?<spanId>[A-Za-z0-9\-_\.]*)\]\[%{GREEDYDATA:thread}\] %{LOGLEVEL:level}[ ]+%{NOTSPACE:class} - %{GREEDYDATA:text}",
+              "(?<event>([A-Z][0-9]{0,4})) %{TIME:time}%{SPACE}%{NUMBER:n} (?<appsrc>%{WORD}\.%{WORD}:\d{1,})\] %{GREEDYDATA:msg}",
+              "((?<brick>[a-zA-Z\-0-9]+)_(?<application>[a-zA-Z\-0-9]+))\s(?<timestamp>%{YEAR}-%{MONTHNUM}-%{MONTHDAY} %{TIME})\s\[(?<processId>[A-Za-z\-0-9]*),(?<solutionId>[A-Za-z0-9\-_\.]*),{0,1}(?<traceId>[A-Za-z0-9\-_\.]*),(?<spanId>[A-Za-z0-9\-_\.]*)\]\[(?<thread>.*)\]\s(?<level>[a-zA-Z\-0-9]+) message - (?<text>.*)"
+            ]
+          }
+        }
+        mutate {
+          id => "mutate_log"
+          rename => { "log" => "original_log" }
+          rename => { "text" => "log" }
+        }
+        mutate {
+          id => "add_cluster_field"
+          add_field => { "cluster" => "sirius_a.prod" }
+        }
+        json {
+          id => "json_log"
+          source => "log"
+          skip_on_invalid_json => true
+          target => "jsonLog"
+        }
+        if [jsonLog][duration] {
+          mutate {
+            id => "mutate_duration"
+            add_field => { "duration" => "%{[jsonLog][duration]}" }
+          }
+          mutate {
+            id => "convert_duration"
+            convert => { "duration" => "integer" }
+          }
+        }
+        if [jsonLog][uri] {
+          mutate {
+            id => "mutate_uri"
+            add_field => { "uri" => "%{[jsonLog][uri]}" }
+          }
+        }
+        if [jsonLog][type] {
+          mutate {
+            id => "mutate_direction"
+            add_field => { "direction" => "%{[jsonLog][type]}" }
+          }
+        }
+        if [jsonLog][origin] {
+          mutate {
+            id => "mutate_origin"
+            add_field => { "origin" => "%{[jsonLog][origin]}" }
+          }
+        }
+        if [jsonLog][status] {
+          mutate {
+            id => "mutate_status"
+            add_field => { "status" => "%{[jsonLog][status]}" }
+          }
+        }
+        if [jsonLog][correlation] {
+          mutate {
+            id => "mutate_correlation"
+            add_field => { "correlation" => "%{[jsonLog][correlation]}" }
+          }
+        }
+        if [jsonLog][request] {
+          mutate {
+            id => "mutate_request"
+            add_field => { "request" => "%{[jsonLog][request]}" }
+          }
+        }
+        if [jsonLog][requestMethod] {
+          mutate {
+            id => "mutate_methodrequest"
+            add_field => { "requestMethod" => "%{[jsonLog][requestMethod]}" }
+          }
+        }
+        if [jsonLog][body][orderId] {
+          mutate {
+            id => "mutate_orderid"
+            add_field => { "orderId" => "%{[jsonLog][body][orderId]}" }
+          }
+        }
+        if [jsonLog][body][storeId] {
+          mutate {
+              id => "mutate_storeid"
+              add_field => { "storeId" => "%{[jsonLog][body][storeId]}" }
+          }
+        }
+        if [jsonLog][body][amount] {
+          mutate {
+            id => "mutate_amount"
+            add_field => { "amount" => "%{[jsonLog][body][amount]}" }
+          }
+        }
+        if [jsonLog][body][channel] {
+          mutate {
+            id => "mutate_channel"
+            add_field => { "channel" => "%{[jsonLog][body][channel]}" }
+          }
+        }
+        if [jsonLog][body][status] {
+          mutate {
+            id => "mutate_orderstatus"
+            add_field => { "order-status" => "%{[jsonLog][body][status]}" }
+          }
+        }
+        if [jsonLog][body][ErrorMessage] {
+          mutate {
+            id => "mutate_errmessage"
+            add_field => { "errorMessage" => "%{[jsonLog][body][ErrorMessage]}" }
+          }
+        }
+        if [jsonLog][body][errorMessage] {
+          mutate {
+            id => "mutate_errmessage2"
+            add_field => { "errorMessage" => "%{[jsonLog][body][errorMessage]}" }
+          }
+        }
+        if [jsonLog][body][amount] {
+          mutate {
+            id => "mutate_amount_fl"
+            add_field => { "amount_float" => "%{[jsonLog][body][amount]}" }
+          }
+          mutate {
+            id => "mutate_convert_amount_fl"
+            convert => { "amount_float" => "float" }
+          }
+        }
+        mutate {
+          id => "log_remove_field"
+          remove_field => [ "jsonLog" ]
+        }
+        grok {
+          id => "grok_count"
+          match => {"message" => ".?number: %{NUMBER:count:int}.?"}
+        }
+        grok {
+          id => "grok_mills"
+          match => {"message" => ".?\(millis\) = %{NUMBER:millis:int}.?"}
+        }
+        grok {
+          id => "grok_duration"
+          match => {"message" => ".?Duration: %{NUMBER:duration:int}.?"}
+        }
+        grok {
+          id => "grok_value"
+          match => {"message" => ".?value: '%{WORD:value}'.?"}
+        }
+        grok {
+          id => "grok_value2"
+          match => {"message" => ".?value2: '%{WORD:value2}'.?"}
+        }
+        grok {
+          id => "grok_username"
+          match => {"message" => "^\/logs\/%{USERNAME:application}\.log$"}
+        }
+        grok {
+          id => "grok_eventsource"
+          match => {"message" => ".?eventSource: '%{DATA:eventSource}'.?"}
+        }
+        grok {
+          id => "grok_event"
+          match => {"message" => ".?event: '%{DATA:event}'.?"}
+        }
+        grok {
+          id => "grok_storeid"
+          match => {"message" => ".?storeId: '%{WORD:storeId}'.?"}
+        }
+        grok {
+          id => "grok_param"
+          match => {"message" => ".?type parameter: %{WORD:parameter}.?"}
+        }
+        grok {
+          id => "grok_status"
+          match => {"message" => ".?status: '%{WORD:status}'.?"}
+        }
+        grok {
+          id => "grok_entities"
+          match => {"message" => ".?contains %{NUMBER:entities:int}.?"}
+        }
+        if [message] =~ "\tat" {
+          grok {
+            id => "grok_tat"
+            match => ["message", "^(\tat)"]
+            add_tag => ["stacktrace"]
+          }
+        }
+        if [message] =~ "Non-zero metrics" {
+          drop {}
+        }
+        if [message] =~ "Hibernate:" {
+          drop {}
+        }
+        if [log] {
+          mutate {
+            id => "log_remove_field2"
+            remove_field => [ "message" ]
+          }
+        }
+        date {
+          id => "date"
+          match => ["timestamp", "yyyy-MM-dd HH:mm:ss.SSS", "ISO8601"]
+        }
+        mutate {
+          id => "log_remove_field3"
+          remove_field => [ "container" ]
+          remove_field => [ "timestamp" ]
+          remove_field => [ "host" ]
+        }
+        if ![namespace] {
+          if ![team] or [team] != "wfm" {
+            mutate {
+              id => "filebeat_index"
+              add_field => { "[@metadata][target_index]" => "filebeat" }
+            }
+          }
+          else {
+            mutate {
+              id => "mutate_wfm"
+              add_field => { "[@metadata][target_index]" => "wfm" }
+            }
+            grok {
+              id => "grok_multi2"
+              match => {
+                "message" => ["%{IPORHOST:clientip} - %{USER:username} \[%{HTTPDATE:timestamp}\] \"(?:%{WORD:method} ((%{URIPATH:request}(%{URIPARAM:requestparam}))|(%{URIPATH:request}))(?: HTTP/%{NUMBER:httpversion}))\" %{NUMBER:status} (?:%{NUMBER:bytes}|-) %{QS:referrer} %{QS:agent} %{QS:gzip}reqtime=%{NUMBER:reqtime} uct=\"%{DATA:uct}\" urt=\"%{DATA:urt}\""]
+              }
+            }
+          }
+        }
+        else {
+          grok {
+            id => "target_index"
+            match => { "[namespace]" => "(?<[@metadata][target_index]>^[^-]+(?:-[^-]+)?)" }
+          }
+        }
+
+        if [namespace] {
+          mutate {
+            id => "copy_namespace"
+            copy => { "[namespace]" => "[kubernetes][namespace]" }
+          }
+        }
+        if [pod] {
+          mutate {
+            id => "copy_pod_name"
+            copy => { "[pod]" => "[kubernetes][pod][name]" }
+          }
+          mutate {
+            id => "rm_pod"
+            remove_field => ["pod"]
+          }
+          mutate {
+            id => "copy_pod_name_final"
+            copy => { "[kubernetes][pod][name]" => "[pod][name]" }
+          }
+        }
+        if [pod_ip] {
+          mutate {
+            id => "copy_pod_ip"
+            copy => { "[pod_ip]" => "[pod][ip]" }
+          }
+        }
+        if [pod_labels][image-tag] {
+          mutate {
+            id => "copy_image_tag"
+            copy => { "[pod_labels][image-tag]" => "[kubernetes][labels][image-tag]" }
+          }
+        }
+        if [pod_labels][tier] {
+          mutate {
+            id => "copy_tier"
+            copy => { "[pod_labels][tier]" => "[kubernetes][labels][tier]" }
+          }
+        }
+        if [pod_labels][profile] {
+          mutate {
+            id => "copy_profile"
+            copy => { "[pod_labels][profile]" => "[kubernetes][labels][profile]" }
+          }
+        }
+        if [pod_labels][release] {
+          mutate {
+            id => "copy_release"
+            copy => { "[pod_labels][release]" => "[kubernetes][labels][release]" }
+          }
+        }
+        if [pod_labels][domain] {
+          mutate {
+            id => "copy_domain"
+            copy => { "[pod_labels][domain]" => "[kubernetes][labels][domain]" }
+          }
+        }
+        if [image] {
+          mutate {
+            id => "copy_image"
+            copy => { "[image]" => "[kubernetes][container][image]" }
+          }
+        }
+        if [node] {
+          mutate {
+            id => "copy_node_name"
+            copy => { "[node]" => "[kubernetes][node][name]" }
+          }
+          mutate {
+            id => "rm_node"
+            remove_field => ["node"]
+          }
+          mutate {
+            id => "copy_node_name_final"
+            copy => { "[kubernetes][node][name]" => "[node][name]" }
+          }
+        }
+        if [pod_labels][app] {
+          mutate {
+            id => "copy_app"
+            copy => { "[pod_labels][app]" => "[kubernetes][labels][app]" }
+          }
+        }
+        if ![product-id] {
+          mutate {
+            id => "product_id"
+            add_field => { "[product_id]" => "none" }
+          }
+        }
+        mutate {
+          id => "copy_id_k8s"
+          copy => { "[product-id]" => "[namespace_labels][product-id]" }
+        }
+        mutate {
+          id => "copy_product_id"
+          copy => { "[product-id]" => "[product_id]" }
+        }
+        if [kubernetes][namespace] == "d8-ingress-nginx" and [cluster] == "sirius_a.prod" {
+          json {
+            id => "json_message_2_ingress"
+            source => "message"
+            skip_on_invalid_json => true
+            target => "ingress"
+          }
+        }
+        if [ingress][time] {
+          mutate {
+            id => "ingress_time_to_logtime"
+            copy => { "[ingress][time]" => "[logtime]" }
+          }
+        }
+        if [ingress][upstream_response_time] {
+          mutate {
+            id => "ingress_nginx_float"
+            convert => { "[ingress][upstream_response_time]" => "float" }
+          }
+        }
+        if [ext_index_name] {
+          mutate {
+            id => "mutate_ext_target_index"
+            add_field => { "[@metadata][target_index]" => "%{[ext_index_name]}" }
+          }
+        }
+        else {
+          mutate {
+            id => "mutate_target_index_name"
+            add_field => { "[target_index_prefix]" => "lmru-%{[product_id]}-%{[@metadata][target_index]}-prod" }
+          }
+          mutate {
+            id => "set_target_index_name"
+            copy => { "[target_index_prefix]" => "[@metadata][target_index]" }
+          }
+        }
+      }

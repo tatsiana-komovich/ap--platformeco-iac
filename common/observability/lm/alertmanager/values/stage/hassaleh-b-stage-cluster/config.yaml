@@ -1,0 +1,67 @@
+---
+alertmanager:
+  templates:
+    alertmanager.tmpl: |-
+      '{{ define "generator.url" }} {{ (index .Alerts 0).GeneratorURL | reReplaceAll "&g0.tab=1$" "&g0.tab=0" }} {{ end }}'
+
+  config:
+    global:
+      smtp_from: 'alertmanager@leroy-merlin.ru'
+      smtp_smarthost: 'massmail.hq.ru.corp.leroymerlin.com:25'
+      smtp_require_tls: false
+
+    templates:
+      - '/etc/alertmanager/*.tmpl'
+
+    route:
+      group_by: ['alertname', 'namespace', 'product_id', 'environment']
+      receiver: 'void'
+      repeat_interval: 4h
+
+  ## Add your Alertmanager configuration below
+      routes:
+      # LMRU Registration and onboarding: Partner Portal
+        - matchers:
+            - product_id="P0812"
+          receiver: 'rao-grafana-oncall-pp'
+
+      # LMRU Storage and Management of Partner Data: Partner and Contacts Storage
+        - matchers:
+            - product_id="P0813"
+          receiver: 'smpd-grafana-oncall-pcs'
+
+      # LMRU Development of Pricing and Quality of Product Suppliers: Purchase Price Management
+        - matchers:
+            - product_id="P0803"
+          receiver: 'dpqps-grafana-oncall-ppm'
+
+      # LMRU Product Suppliers Experience Development: Partner Tender Management
+        - matchers:
+            - product_id="P1026"
+          receiver: 'psed-grafana-oncall-tender'
+
+    receivers:
+      - name: 'void'
+      # LMRU Registration and onboarding: Partner Portal
+      - name: 'rao-grafana-oncall-pp'
+        webhook_configs:
+          - url: 'https://obs-grafana-oncall-yc-techno.apps.lmru.tech/107/integrations/v1/alertmanager/bUoFGJaztgMacxZJLXbZdumvM/'
+            send_resolved: true
+
+      # LMRU Storage and Management of Partner Data: Partner and Contacts Storage
+      - name: 'smpd-grafana-oncall-pcs'
+        webhook_configs:
+          - url: 'https://obs-grafana-oncall-yc-techno.apps.lmru.tech/107/integrations/v1/alertmanager/IPrDyCRQqTR4GTaP0Y1o2WCSu/'
+            send_resolved: true
+
+      # LMRU Development of Pricing and Quality of Product Suppliers: Purchase Price Management
+      - name: 'dpqps-grafana-oncall-ppm'
+        webhook_configs:
+          - url: 'https://obs-grafana-oncall-yc-techno.apps.lmru.tech/13/integrations/v1/alertmanager/9efhJ2iN73oQKBHz6r6Ui6BVs/'
+            send_resolved: true
+
+      # LMRU Product Suppliers Experience Development: Partner Tender Management
+      - name: 'psed-grafana-oncall-tender'
+        webhook_configs:
+          - url: 'https://obs-grafana-oncall-yc-techno.apps.lmru.tech/24/integrations/v1/alertmanager/IbZwIUtObftfa6VkiZzQ2cOCM/'
+            send_resolved: true

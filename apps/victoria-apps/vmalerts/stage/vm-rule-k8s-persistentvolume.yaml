@@ -1,0 +1,32 @@
+---
+apiVersion: operator.victoriametrics.com/v1beta1
+kind: VMRule
+metadata:
+  name: vm-rule-k8s-persistentvolume
+  namespace: devops-core-victoria-alerts
+spec:
+  groups:
+    - name: kubernetes.persistentvolume
+      rules:
+        - alert: KubePersistentVolumeFillingUp
+          expr: |
+                ( kubelet_volume_stats_available_bytes{job="kubelet", persistentvolumeclaim!~"prometheus-main-db-prometheus-main.*|prometheus-longterm-db-prometheus-longterm.*"}
+                  /
+                  kubelet_volume_stats_capacity_bytes{job="kubelet", persistentvolumeclaim!~"prometheus-main-db-prometheus-main.*|prometheus-longterm-db-prometheus-longterm.*"} )
+                  < 0.1
+          for: 15m
+          labels:
+            severity: warning
+          annotations:
+            summary: "The PersistentVolume claimed by {{ $labels.persistentvolumeclaim }} in Namespace {{ $labels.namespace }} has only {{ $value | humanizePercentage }} free"
+            description: https://runbooks.prometheus-operator.dev/runbooks/kubernetes/kubepersistentvolumefillingup
+
+        - alert: KubePersistentVolumeErrors
+          expr: |
+                kube_persistentvolume_status_phase{phase="Failed|Pending",job="kube-state-metrics"} > 0
+          for: 5m
+          labels:
+            severity: warning
+          annotations:
+            summary: "The persistent volume {{ $labels.persistentvolume }} is {{ $labels.phase }}"
+            description: https://runbooks.prometheus-operator.dev/runbooks/kubernetes/kubepersistentvolumeerrors

@@ -1,0 +1,224 @@
+---
+opendistro:
+  curator:
+    enabled: true
+    s3_snapshots:
+      unit_count:
+        all: 60
+        unknown: 7
+    cron:
+      restore: 50 8 * * *
+      snapshot: 30 0 * * *
+    unknown:
+      days_count: 7
+      snapshot: true
+      schedule: 30 4 * * *
+    indices:
+      - kind: prefix
+        value: filebeat
+        system: false
+        days_count: 14
+        snapshot: true
+        schedule: 50 4 * * *
+      - kind: prefix
+        value: .opendistro_security
+        system: true
+        days_count: 30
+        snapshot: true
+        schedule: 55 4 * * *
+      - kind: prefix
+        value: .kibana
+        system: true
+        days_count: 30
+        snapshot: true
+        schedule: 0 4 * * *
+      - kind: prefix
+        value: dostovernost
+        system: false
+        days_count: 7
+        snapshot: true
+        schedule: 5 4 * * *
+      - kind: prefix
+        value: infra-elklogs
+        system: false
+        days_count: 30
+        snapshot: false
+        schedule: 10 4 * * *
+      - kind: prefix
+        value: d8-ingress-fix
+        system: false
+        days_count: 7
+        snapshot: true
+        snapshot_count_s3: 7
+        schedule: 15 4 * * *
+      - kind: prefix
+        value: eventrouter
+        system: false
+        days_count: 7
+        snapshot: false
+        schedule: 20 2 * * *
+      - kind: prefix
+        value: tax-monitoring
+        system: false
+        monitoring: false
+        days_count: 7
+        snapshot: true
+        snapshot_count_s3: 180
+        schedule: 25 4 * * *
+      - kind: prefix
+        value: cp-b2b-fix
+        monitoring: false
+        system: false
+        days_count: 14
+        snapshot: true
+        schedule: 30 2 * * *
+      - kind: prefix
+        value: cp-basic
+        system: false
+        monitoring: false
+        days_count: 14
+        snapshot: true
+        schedule: 5 5 * * *
+      - kind: prefix
+        value: cp-data
+        system: false
+        monitoring: false
+        days_count: 14
+        snapshot: true
+        schedule: 10 5 * * *
+      - kind: prefix
+        value: cp-kitchen
+        system: false
+        monitoring: false
+        days_count: 14
+        snapshot: true
+        schedule: 15 4 * * *
+      - kind: prefix
+        value: cp-leads-fix
+        monitoring: false
+        system: false
+        days_count: 14
+        snapshot: true
+        schedule: 20 5 * * *
+      - kind: prefix
+        value: cp-login-fix
+        system: false
+        days_count: 14
+        snapshot: true
+        schedule: 25 3 * * *
+      - kind: prefix
+        value: cp-project-fix
+        system: false
+        monitoring: false
+        days_count: 14
+        snapshot: true
+        schedule: 15 2 * * *
+      - kind: prefix
+        value: cp-quotation-fix
+        monitoring: false
+        system: false
+        days_count: 14
+        snapshot: true
+        schedule: 35 5 * * *
+      - kind: prefix
+        value: cp-reference-fix
+        system: false
+        monitoring: false
+        days_count: 14
+        snapshot: true
+        schedule: 40 5 * * *
+      - kind: prefix
+        value: cp-user-fix
+        system: false
+        days_count: 14
+        snapshot: true
+        schedule: 45 6 * * *
+      - kind: prefix
+        value: fin-parser
+        system: false
+        monitoring: false
+        days_count: 14
+        snapshot: true
+        schedule: 50 7 * * *
+      - kind: prefix
+        value: lmru-pilot
+        system: false
+        days_count: 14
+        snapshot: true
+        schedule: 55 7 * * *
+      - kind: prefix
+        value: ois-cloud
+        system: false
+        monitoring: false
+        days_count: 14
+        snapshot: true
+        schedule: 0 8 * * *
+      - kind: prefix
+        value: psc-quota
+        system: false
+        days_count: 14
+        snapshot: true
+        schedule: 5 8 * * *
+      - kind: prefix
+        value: winmom
+        system: false
+        days_count: 14
+        snapshot: true
+        schedule: 10 8 * * *
+      - kind: prefix
+        value: balisage-prod
+        system: false
+        monitoring: false
+        days_count: 14
+        snapshot: true
+        schedule: 15 8 * * *
+      - kind: prefix
+        value: confmd
+        system: false
+        days_count: 14
+        snapshot: true
+        schedule: 20 8 * * *
+      - kind: prefix
+        value: equeue
+        system: false
+        days_count: 14
+        snapshot: true
+        schedule: 25 8 * * *
+      - kind: prefix
+        value: rehsch
+        system: false
+        monitoring: false
+        days_count: 14
+        snapshot: true
+        schedule: 30 8 * * *
+      - kind: prefix
+        value: mp-book
+        system: false
+        days_count: 14
+        snapshot: true
+        schedule: 35 8 * * *
+      - kind: prefix
+        value: orient-letter
+        system: false
+        monitoring: false
+        days_count: 14
+        snapshot: true
+        schedule: 40 8 * * *
+      - kind: prefix
+        value: bcless-cat
+        system: false
+        days_count: 14
+        snapshot: true
+        schedule: 45 8 * * *
+      - kind: prefix
+        value: infra-bpm
+        system: false
+        days_count: 32
+        snapshot: true
+        schedule: 50 8 * * *
+      - kind: prefix
+        value: infra-exchange
+        system: false
+        days_count: 32
+        snapshot: true
+        schedule: 0 9 * * *

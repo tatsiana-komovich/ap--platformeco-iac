@@ -1,0 +1,125 @@
+---
+clusterName: x1-techno
+clusterDomain: x1-techno.p.mesh
+
+admission-policy-engine:
+  spec:
+    version: 1
+    enabled: true
+  artifactory-repos:
+    enforcementAction: deny
+
+global:
+  settings:
+    modules:
+      ingressClass: nginx-d8s
+
+istio:
+  enabled: true
+  settings:
+    dataPlane:
+      trafficRedirectionSetupMode: CNIPlugin
+    globalVersion: "1.19"
+    sidecar:
+      resourcesManagement:
+        mode: Static
+        static:
+          limits:
+            cpu: "10"
+            memory: 10Gi
+          requests:
+            cpu: 100m
+            memory: 128Mi
+    alliance:
+      ingressGateway:
+        inlet: LoadBalancer
+        nodeSelector:
+          node-role/loadbalancer: ""
+        tolerations:
+          - operator: Exists
+    federation:
+      enabled: true
+    multicluster:
+      enabled: true
+  version: 2
+
+prometheus:
+  enabled: true
+  settings:
+    externalLabels:
+      k8s_cluster: x1-techno
+      project_name: techno
+      datacenter: x1
+      environment: prod
+      platform: openstack
+  version: 2
+
+okmeter:
+  enabled: true
+  settings:
+    apiKey: cc8793ea-5f11-462a-98a6-9994ab9fa3ea
+    nodeSelector:
+      node-role.kubernetes.io/control-plane: ""
+    tolerations:
+      - key: node-role.kubernetes.io/control-plane
+        operator: Exists
+      - key: node-role.kubernetes.io/master
+        operator: Exists
+      - key: dedicated
+        operator: Equal
+        value: router
+  version: 1
+
+user-authn:
+  enabled: true
+  settings:
+    publishAPI:
+      enable: true
+      https:
+        global:
+          kubeconfigGeneratorMasterCA: ""
+        mode: Global
+  version: 1
+
+cert-manager:
+  enabled: true
+  settings:
+    enableCAInjector: true
+  version: 1
+
+control-plane-manager:
+  enabled: true
+  settings:
+    apiserver:
+      auditPolicyEnabled: true
+      certSANs:
+        - kubernetes.default.svc.x1-techno.p.mesh
+        - kubernetes.default.svc.techno.p.mesh
+  version: 1
+
+chrony:
+  enabled: true
+  settings:
+    ntpServers:
+      - time.lmru.tech
+  version: 1
+
+logShipper:
+  enabled: false
+  version: 1
+
+extended-monitoring:
+  enabled: true
+  settings:
+    events:
+      exporterEnabled: true
+      severityLevel: All
+  version: 1
+
+deckhouse:
+  updateMode: Auto
+  windows:
+    - from: "19:30"
+      to: "20:30"
+      days:
+        - Wed

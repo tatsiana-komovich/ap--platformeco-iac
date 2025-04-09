@@ -1,0 +1,59 @@
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  name: application-nodes
+spec:
+  chaos:
+    mode: Disabled
+  cloudInstances:
+    classReference:
+      kind: VsphereInstanceClass
+      name: application-nodes
+    maxPerZone: 30
+    minPerZone: 1
+    standby: 2
+    standbyHolder:
+      notHeldResources:
+        cpu: 300m
+        memory: 2000Mi
+    zones:
+      - X2-A-Production
+  disruptions:
+    approvalMode: Automatic
+  cri:
+    type: Containerd
+  nodeTemplate:
+    annotations:
+      node.deckhouse.io/nodeport-bind-internal-ip: "false"
+    labels:
+      node-role.k8s.lmru.tech/application: ''
+  nodeType: CloudEphemeral
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  name: system
+spec:
+  chaos:
+    mode: Disabled
+  cloudInstances:
+    classReference:
+      kind: VsphereInstanceClass
+      name: system
+    maxPerZone: 3
+    minPerZone: 2
+    zones:
+      - X2-A-Production
+  disruptions:
+    approvalMode: Manual
+  nodeTemplate:
+    annotations:
+      node.deckhouse.io/nodeport-bind-internal-ip: "false"
+    labels:
+      node-role.deckhouse.io/system: ''
+    taints:
+      - effect: NoExecute
+        key: dedicated.deckhouse.io
+        value: system
+  nodeType: CloudEphemeral

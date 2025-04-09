@@ -1,0 +1,16 @@
+---
+app:
+  name: allure-crowd-sync
+cronjob:
+  schedule: "*/5 * * * *"
+  image: docker.art.lmru.tech/eroshenkoam/allure-testops-utils:1.14.0
+  args: "sync-crowd-groups"
+imagePullSecret: docker-hub
+secrets:
+  ALLURE_ENDPOINT: https://allure-yc-techno.apps.lmru.tech/
+  ALLURE_USERNAME: admin
+  ALLURE_PASSWORD: '<path:services/data/allure#admin_password>'
+  CROWD_ENDPOINT: https://crowd.lmru.tech/crowd/
+  CROWD_USERNAME: allure
+  CROWD_PASSWORD: '<path:services/data/allure#CROWD_PASSWORD>'
+  CROWD_GROUP_FILTER: "crowd-.*"

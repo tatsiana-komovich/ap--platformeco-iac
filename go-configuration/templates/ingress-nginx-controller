@@ -1,0 +1,49 @@
+{{- if eq .Datacenter "yc" -}}
+---
+IngressNginxController:
+  main-hp:
+    apiVersion: deckhouse.io/v1
+    name: main-hp
+    acceptRequestsFrom: {}
+    spec:
+      chaosMonkey: false
+      disableHTTP2: false
+      hsts: false
+      maxReplicas: 1
+      minReplicas: 1
+      underscoresInHeaders: false
+      validationEnabled: true
+      ingressClass: nginx
+      inlet: HostPort
+      enableIstioSidecar: true
+    hostPort:
+      behindL7Proxy: true
+      httpPort: 30080
+      httpsPort: 30443
+{{- else -}}
+---
+IngressNginxController:
+  main:
+    name: main
+    spec:
+      chaosMonkey: false
+      disableHTTP2: false
+      hsts: false
+      ingressClass: nginx
+      inlet: LoadBalancer
+      maxReplicas: 1
+      minReplicas: 1
+      underscoresInHeaders: false
+      validationEnabled: true
+      enableIstioSidecar: true
+    loadBalancer:
+      behindL7Proxy: true
+      realIPHeader: X-Forwarded-For
+    nodeSelector:
+      node-role/loadbalancer: ""
+    tolerations:
+      - effect: NoExecute
+        key: dedicated
+        operator: Equal
+        value: loadbalancer
+{{- end }}

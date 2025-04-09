@@ -1,0 +1,70 @@
+---
+IngressNginxController:
+  nginx-a:
+    apiVersion: deckhouse.io/v1
+    name: nginx-a
+    acceptRequestsFrom: {}
+    spec:
+      chaosMonkey: false
+      disableHTTP2: false
+      hsts: false
+      ingressClass: nginx
+      inlet: LoadBalancer
+      maxReplicas: 1
+      minReplicas: 1
+      enableIstioSidecar: true
+      validationEnabled: true
+      waitLoadBalancerOnTerminating: 60
+    loadBalancer:
+      annotations:
+        yandex.cloud/load-balancer-type: Internal
+        yandex.cpi.flant.com/listener-subnet-id: e9b32nfb02j9aa1b0kk6
+        yandex.cpi.flant.com/target-group-network-id: enpofm2o1fd0e01e2rfb
+      realIPHeader: X-Forwarded-For
+      behindL7Proxy: true
+
+  sentry-web-a:
+    apiVersion: deckhouse.io/v1
+    name: sentry-a
+    acceptRequestsFrom: {}
+    spec:
+      chaosMonkey: false
+      disableHTTP2: false
+      hsts: false
+      ingressClass: nginx
+      inlet: LoadBalancer
+      maxReplicas: 1
+      minReplicas: 1
+      enableIstioSidecar: true
+      validationEnabled: true
+      waitLoadBalancerOnTerminating: 60
+    loadBalancer:
+      annotations:
+        yandex.cloud/load-balancer-type: Internal
+        yandex.cpi.flant.com/listener-subnet-id: e9b32nfb02j9aa1b0kk6
+        yandex.cpi.flant.com/target-group-network-id: enpofm2o1fd0e01e2rfb
+      realIPHeader: X-Forwarded-For
+      behindL7Proxy: true
+
+  d8-main:
+    apiVersion: deckhouse.io/v1
+    name: d8-main
+    acceptRequestsFrom: {}
+    spec:
+      chaosMonkey: false
+      disableHTTP2: false
+      hsts: false
+      ingressClass: nginx-d8s
+      inlet: LoadBalancer
+      maxReplicas: 1
+      minReplicas: 1
+      enableIstioSidecar: true
+      validationEnabled: true
+      waitLoadBalancerOnTerminating: 60
+    loadBalancer:
+      annotations:
+        yandex.cloud/load-balancer-type: Internal
+        yandex.cpi.flant.com/listener-subnet-id: e9b32nfb02j9aa1b0kk6
+        yandex.cpi.flant.com/target-group-network-id: enpofm2o1fd0e01e2rfb
+      realIPHeader: X-Forwarded-For
+      behindL7Proxy: true

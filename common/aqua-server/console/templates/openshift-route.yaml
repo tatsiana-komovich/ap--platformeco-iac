@@ -1,0 +1,46 @@
+{{- if not .Values.global.platform -}}
+{{ template "platform" . }}
+{{- else if and ( .Values.openshift_route.create ) (eq .Values.global.platform "openshift" ) }}
+---
+##webroute
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: {{ .Release.Name }}-web
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: {{ .Release.Name }}-console
+{{ include "aqua.labels" . | indent 4 }}
+spec:
+  to:
+    kind: Service
+    name: {{ .Release.Name }}-console-svc
+    weight: 100
+  port:
+    targetPort: aqua-web-ssl
+  tls:
+    termination: passthrough
+    insecureEdgeTerminationPolicy: Redirect
+  wildcardPolicy: None
+---
+##Gateway-route
+kind: Route
+apiVersion: route.openshift.io/v1
+metadata:
+  name: {{ .Release.Name }}-gateway
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: {{ .Release.Name }}-gateway
+{{ include "aqua.labels" . | indent 4 }}
+spec:
+  to:
+    kind: Service
+    name: {{ .Release.Name }}-gateway-svc
+    weight: 100
+  port:
+    targetPort: aqua-gate-ssl
+  tls:
+    termination: passthrough
+    insecureEdgeTerminationPolicy: None
+  wildcardPolicy: None
+{{- end }}

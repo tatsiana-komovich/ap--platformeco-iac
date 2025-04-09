@@ -1,0 +1,107 @@
+---
+prometheus:
+  prometheus:
+    enabled: true
+
+    serviceAccount:
+      create: true
+      name: 'promaas-itopsw'
+
+    service:
+      sessionAffinity: ClientIP
+      sessionAffinityConfig:
+        clientIP:
+          timeoutSeconds: 10800
+
+    ingress:
+      enabled: true
+      annotations:
+        nginx.ingress.kubernetes.io/use-regex: 'true'
+        nginx.ingress.kubernetes.io/affinity: 'cookie'
+        nginx.ingress.kubernetes.io/affinity-mode: 'persistent'
+        nginx.ingress.kubernetes.io/session-cookie-name: 'PROMETHEUSAFFINITY'
+        nginx.ingress.kubernetes.io/session-cookie-path: '/prometheus'
+        nginx.ingress.kubernetes.io/session-cookie-expires: '10800'
+        nginx.ingress.kubernetes.io/session-cookie-max-age: '10800'
+        nginx.ingress.kubernetes.io/rewrite-target: /$2
+      hosts:
+        - itopsw-metrics-stage.obs.lmru.tech
+      paths:
+        - /prometheus(/|$)(.*)
+      pathType: ImplementationSpecific
+      tls:
+        - hosts:
+            - 'itopsw-metrics-stage.obs.lmru.tech'
+
+    podDisruptionBudget:
+      enabled: true
+      minAvailable: 1
+
+    serviceMonitor:
+      selfMonitor: false
+      additionalLabels:
+        prometheus: main
+
+    prometheusSpec:
+
+      ruleNamespaceSelector:
+        matchLabels:
+          promaas-customer-name: itopsw
+
+      scrapeInterval: '30s'
+      scrapeTimeout: '10s'
+      evaluationInterval: '30s'
+      enableAdminAPI: false
+      retention: 7d
+      retentionSize: 80GB
+      disableCompaction: true
+      enableRemoteWriteReceiver: true
+      externalUrl: 'https://itopsw-metrics-stage.obs.lmru.tech/prometheus/'
+      logLevel: debug
+      logFormat: json
+      ruleSelectorNilUsesHelmValues: false
+
+      ## The remote_write spec configuration for Prometheus.
+      ## ref: https://github.com/prometheus-operator/prometheus-operator/blob/main/Documentation/api.md#remotewritespec
+      remoteWrite: []
+      # - url: http://remote1/push
+      ## additionalRemoteWrite is appended to remoteWrite
+      additionalRemoteWrite: []
+
+      ## Allow out-of-order/out-of-bounds samples ingested into Prometheus for a specified duration
+      ## See https://prometheus.io/docs/prometheus/lakong/configuration/configuration/#tsdb
+      tsdb:
+        outOfOrderTimeWindow: 30m
+
+      image:
+        registry: docker.art.lmru.tech
+        repository: prometheus/prometheus
+      # if not set appVersion field from Chart.yaml is  used
+        tag: v2.55.1
+
+      replicas: 1
+
+      resources:
+        requests:
+          cpu: 2
+          memory: 4Gi
+
+      storageSpec:
+        volumeClaimTemplate:
+          spec:
+            storageClassName: network-ssd
+            accessModes: ['ReadWriteOnce']
+            resources:
+              requests:
+                storage: 80Gi
+
+      priorityClassName: 'production-high'
+
+      nodeSelector:
+        node-role/prometheus-common: ''
+
+      tolerations:
+        - effect: NoSchedule
+          key: dedicated
+          operator: Equal
+          value: prometheus

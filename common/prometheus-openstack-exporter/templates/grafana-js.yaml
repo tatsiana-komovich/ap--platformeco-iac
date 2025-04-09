@@ -1,0 +1,8 @@
+apiVersion: deckhouse.io/v1alpha1
+kind: GrafanaDashboardDefinition
+metadata:
+  name: openstack-limits
+spec:
+  folder: Applications
+  definition: |
+{{ .Files.Get (printf "files/openstack-limits.json") | indent 4 }}

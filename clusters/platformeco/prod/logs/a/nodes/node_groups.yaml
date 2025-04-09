@@ -1,0 +1,459 @@
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  name: application-nodes
+spec:
+  cloudInstances:
+    classReference:
+      kind: YandexInstanceClass
+      name: application-nodes
+    maxPerZone: 6
+    minPerZone: 1
+    standby: 3
+    standbyHolder:
+      overprovisioningRate: 80
+    zones:
+      - ru-central1-a
+  disruptions:
+    approvalMode: Manual
+  kubelet:
+    containerLogMaxFiles: 4
+    containerLogMaxSize: 50Mi
+    maxPods: 130
+    resourceReservation:
+      mode: "Auto"
+  nodeTemplate:
+    labels:
+      environment: prod
+      threshold.extended-monitoring.deckhouse.io/load-average-per-core-critical: "100"
+      threshold.extended-monitoring.deckhouse.io/load-average-per-core-warning: "100"
+  nodeType: CloudEphemeral
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  name: opensearch-hf
+spec:
+  chaos:
+    mode: Disabled
+  nodeType: CloudEphemeral
+  cloudInstances:
+    classReference:
+      kind: YandexInstanceClass
+      name: opensearch-hf
+    maxPerZone: 15
+    minPerZone: 2
+    zones:
+      - ru-central1-b
+      - ru-central1-a
+  disruptions:
+    approvalMode: Manual
+  nodeTemplate:
+    labels:
+      node-role/opensearch-hf: ""
+    taints:
+      - effect: NoSchedule
+        key: dedicated
+        value: opensearch-hf
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  name: opensearch-pdp
+spec:
+  chaos:
+    mode: Disabled
+  cloudInstances:
+    classReference:
+      kind: YandexInstanceClass
+      name: opensearch-pdp
+    maxPerZone: 25
+    minPerZone: 2
+    zones:
+      - ru-central1-b
+      - ru-central1-a
+  disruptions:
+    approvalMode: Manual
+  kubelet:
+    containerLogMaxFiles: 4
+    containerLogMaxSize: 50Mi
+    resourceReservation:
+      mode: "Off"
+  nodeTemplate:
+    labels:
+      node-role/opensearch-pdp: ""
+    taints:
+      - effect: NoSchedule
+        key: dedicated
+        value: opensearch-pdp
+  nodeType: CloudEphemeral
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  name: opensearch-mobileapp
+spec:
+  chaos:
+    mode: Disabled
+  cloudInstances:
+    classReference:
+      kind: YandexInstanceClass
+      name: opensearch-mobileapp
+    maxPerZone: 22
+    minPerZone: 21
+    zones:
+      - ru-central1-b
+      - ru-central1-a
+  disruptions:
+    approvalMode: Manual
+  kubelet:
+    containerLogMaxFiles: 4
+    containerLogMaxSize: 50Mi
+    resourceReservation:
+      mode: "Off"
+  nodeTemplate:
+    labels:
+      node-role/opensearch-mobileapp: ""
+    taints:
+      - effect: NoSchedule
+        key: dedicated
+        value: opensearch-mobileapp
+  nodeType: CloudEphemeral
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  name: opensearch-common
+spec:
+  chaos:
+    mode: Disabled
+  cloudInstances:
+    classReference:
+      kind: YandexInstanceClass
+      name: opensearch-common
+    maxPerZone: 3
+    minPerZone: 1
+    zones:
+      - ru-central1-b
+      - ru-central1-a
+  disruptions:
+    approvalMode: Automatic
+  kubelet:
+    containerLogMaxFiles: 4
+    containerLogMaxSize: 50Mi
+    resourceReservation:
+      mode: "Off"
+  nodeTemplate:
+    labels:
+      node-role/opensearch-common: ""
+    taints:
+      - effect: NoSchedule
+        key: dedicated
+        value: opensearch-common
+  nodeType: CloudEphemeral
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  name: opensearch-trace-a
+spec:
+  chaos:
+    mode: Disabled
+  cloudInstances:
+    classReference:
+      kind: YandexInstanceClass
+      name: opensearch-trace
+    maxPerZone: 70
+    minPerZone: 68
+    zones:
+      - ru-central1-a
+  disruptions:
+    approvalMode: Manual
+  kubelet:
+    containerLogMaxFiles: 4
+    containerLogMaxSize: 50Mi
+    resourceReservation:
+      mode: "Off"
+  nodeTemplate:
+    labels:
+      node-role/opensearch-trace: ""
+    taints:
+      - effect: NoSchedule
+        key: dedicated
+        value: opensearch-trace
+  nodeType: CloudEphemeral
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  name: opensearch-hybrid
+spec:
+  chaos:
+    mode: Disabled
+  cloudInstances:
+    classReference:
+      kind: YandexInstanceClass
+      name: opensearch-hybrid
+    maxPerZone: 18
+    minPerZone: 2
+    zones:
+      - ru-central1-b
+      - ru-central1-a
+  disruptions:
+    approvalMode: Manual
+  kubelet:
+    containerLogMaxFiles: 4
+    containerLogMaxSize: 50Mi
+    resourceReservation:
+      mode: "Off"
+  nodeTemplate:
+    labels:
+      node-role/opensearch-hybrid: ""
+    taints:
+      - effect: NoSchedule
+        key: dedicated
+        value: opensearch-hybrid
+  nodeType: CloudEphemeral
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  name: d8-loki
+spec:
+  chaos:
+    mode: Disabled
+  cloudInstances:
+    classReference:
+      kind: YandexInstanceClass
+      name: d8-loki
+    maxPerZone: 1
+    minPerZone: 1
+    zones:
+      - ru-central1-a
+  disruptions:
+    approvalMode: Automatic
+  kubelet:
+    containerLogMaxFiles: 4
+    containerLogMaxSize: 50Mi
+    resourceReservation:
+      mode: "Off"
+  nodeTemplate:
+    labels:
+      node-role/d8-loki: ""
+    taints:
+      - effect: NoExecute
+        key: dedicated
+        value: d8-loki
+  nodeType: CloudEphemeral
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  name: master
+spec:
+  disruptions:
+    approvalMode: Manual
+  kubelet:
+    containerLogMaxFiles: 4
+    containerLogMaxSize: 50Mi
+    resourceReservation:
+      mode: "Off"
+  nodeTemplate:
+    labels:
+      node-role.kubernetes.io/control-plane: ""
+      node-role.kubernetes.io/master: ""
+      okmeter.io/enabled: ""
+    taints:
+      - effect: NoSchedule
+        key: node-role.kubernetes.io/control-plane
+  nodeType: CloudPermanent
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  name: system
+spec:
+  chaos:
+    mode: Disabled
+  cloudInstances:
+    classReference:
+      kind: YandexInstanceClass
+      name: system
+    maxPerZone: 4
+    minPerZone: 4
+    zones:
+      - ru-central1-a
+  disruptions:
+    approvalMode: Automatic
+  kubelet:
+    containerLogMaxFiles: 4
+    containerLogMaxSize: 50Mi
+    resourceReservation:
+      mode: "Off"
+  nodeTemplate:
+    labels:
+      node-role.deckhouse.io/system: ""
+      okmeter.io/enabled: ""
+    taints:
+      - effect: NoExecute
+        key: dedicated.deckhouse.io
+        value: system
+  nodeType: CloudEphemeral
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  name: opensearch-trace-s
+spec:
+  chaos:
+    mode: Disabled
+  cloudInstances:
+    classReference:
+      kind: YandexInstanceClass
+      name: opensearch-trace-stage
+    maxPerZone: 6
+    minPerZone: 6
+    zones:
+      - ru-central1-a
+  disruptions:
+    approvalMode: Automatic
+  kubelet:
+    containerLogMaxFiles: 4
+    containerLogMaxSize: 50Mi
+    resourceReservation:
+      mode: "Off"
+  nodeTemplate:
+    labels:
+      node-role/opensearch-trace-s: ""
+    taints:
+      - effect: NoSchedule
+        key: dedicated
+        value: opensearch-trace-s
+  nodeType: CloudEphemeral
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  name: opensearch-crsel
+spec:
+  chaos:
+    mode: Disabled
+  cloudInstances:
+    classReference:
+      kind: YandexInstanceClass
+      name: opensearch-carousel
+    maxPerZone: 4
+    minPerZone: 2
+    zones:
+      - ru-central1-a
+      - ru-central1-b
+  disruptions:
+    approvalMode: Manual
+  kubelet:
+    containerLogMaxFiles: 4
+    containerLogMaxSize: 50Mi
+    resourceReservation:
+      mode: "Off"
+  nodeTemplate:
+    labels:
+      node-role/opensearch-carousel: ""
+    taints:
+      - effect: NoSchedule
+        key: dedicated
+        value: opensearch-carousel
+  nodeType: CloudEphemeral
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  name: opensearch-infra
+spec:
+  chaos:
+    mode: Disabled
+  cloudInstances:
+    classReference:
+      kind: YandexInstanceClass
+      name: opensearch-platformeco
+    maxPerZone: 5
+    minPerZone: 2
+    zones:
+      - ru-central1-b
+      - ru-central1-a
+  disruptions:
+    approvalMode: Manual
+  kubelet:
+    containerLogMaxFiles: 4
+    containerLogMaxSize: 50Mi
+    resourceReservation:
+      mode: "Off"
+  nodeTemplate:
+    labels:
+      node-role/opensearch-infra: ""
+    taints:
+      - effect: NoSchedule
+        key: dedicated
+        value: opensearch-infra
+  nodeType: CloudEphemeral
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  name: opensearch-trace-b
+spec:
+  chaos:
+    mode: Disabled
+  cloudInstances:
+    classReference:
+      kind: YandexInstanceClass
+      name: opensearch-trace-b
+    maxPerZone: 15
+    minPerZone: 13
+    zones:
+      - ru-central1-b
+  disruptions:
+    approvalMode: Manual
+  kubelet:
+    containerLogMaxFiles: 4
+    containerLogMaxSize: 50Mi
+    resourceReservation:
+      mode: "Off"
+  nodeTemplate:
+    labels:
+      node-role/opensearch-trace-b: ""
+    taints:
+      - effect: NoSchedule
+        key: dedicated
+        value: opensearch-trace-b
+  nodeType: CloudEphemeral
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  name: opensearch-com-b
+spec:
+  chaos:
+    mode: Disabled
+  cloudInstances:
+    classReference:
+      kind: YandexInstanceClass
+      name: opensearch-com-b
+    maxPerZone: 3
+    minPerZone: 1
+    zones:
+      - ru-central1-b
+  disruptions:
+    approvalMode: Automatic
+  kubelet:
+    containerLogMaxFiles: 4
+    containerLogMaxSize: 50Mi
+    resourceReservation:
+      mode: "Off"
+  nodeTemplate:
+    labels:
+      node-role/opensearch-com-b: ""
+    taints:
+      - effect: NoSchedule
+        key: dedicated
+        value: opensearch-com-b
+  nodeType: CloudEphemeral

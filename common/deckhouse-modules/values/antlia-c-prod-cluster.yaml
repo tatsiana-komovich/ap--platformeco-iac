@@ -1,0 +1,246 @@
+---
+chrony:
+  enabled: true
+  settings:
+    ntpServers:
+      - time.lmru.tech
+  version: 1
+
+cni-flannel:
+  enabled: true
+  settings:
+    podNetworkMode: VXLAN
+  version: 1
+
+dashboard:
+  enabled: true
+  version: 3
+
+deckhouseSpec:
+  enabled: true
+  settings:
+    bundle: Default
+    logLevel: Info
+    releaseChannel: RockSolid
+    update:
+      mode: Auto
+      windows:
+        - from: "01:00"
+          to: "02:00"
+          days:
+            - Tue
+  version: 1
+
+deckhouse-tools:
+  enabled: false
+
+descheduler:
+  enabled: false
+
+flant-integration:
+  enabled: true
+  settings:
+    kubeall:
+      host: lm-kong.p-yc-kafka-ha-master-0
+      kubeconfig: /etc/kubernetes/admin.conf
+    madisonAuthKey: 7f3c236b5cf1f7822fc1787f35339836c0f099af8ef1ac3385d9e8ba414d7b45
+  version: 1
+
+global:
+  settings:
+    modules:
+      https:
+        certManager:
+          clusterIssuerName: selfsigned
+        mode: CertManager
+      ingressClass: nginx-d8s
+      placement:
+        customTolerationKeys:
+          - dedicated.kubernetes.io
+      publicDomainTemplate: '%s-kafka.apim.lmru.tech'
+  version: 2
+
+node-manager:
+  enabled: true
+  settings:
+    earlyOomEnabled: false
+  version: 2
+
+prometheus:
+  enabled: true
+  settings:
+    externalLabels:
+      k8s_cluster: antlia-c-prod
+      project_name: kafka-ha
+      environment: prod
+    highAvailability: true
+    vpa:
+      longtermMaxMemory: 4Gi
+      maxMemory: 4Gi
+      updateMode: "Off"
+    longtermStorageClass: csi-cinder-sc-delete-x1
+    storageClass: network-ssd-yca
+  version: 2
+
+snapshot-controller:
+  enabled: false
+
+upmeter:
+  enabled: true
+  settings:
+    smokeMiniDisabled: true
+    storageClass: localpath
+  version: 3
+
+user-authn:
+  enabled: true
+  settings:
+    controlPlaneConfigurator:
+      dexCAMode: DoNotNeed
+    idTokenTTL: 12h
+    publishAPI:
+      enabled: true
+      https:
+        global:
+          kubeconfigGeneratorMasterCA: ""
+        mode: Global
+  version: 2
+
+user-authz:
+  enabled: true
+  settings:
+    enableMultiTenancy: true
+  version: 1
+
+okmeter:
+  enabled: true
+  settings:
+    apiKey: 87cfac8a-2a20-4b69-abe5-70c950347c52
+  version: 1
+
+monitoring-ping:
+  enabled: true
+  settings:
+    externalTargets:
+      - host: 10.203.118.154
+        name: x1-master-0
+      - host: 10.203.118.148
+        name: x1-master-1
+      - host: 10.203.118.149
+        name: x1-master-2
+      - host: 10.203.107.151
+        name: x2-master-0
+      - host: 10.203.107.132
+        name: x2-master-1
+      - host: 10.203.107.137
+        name: x2-master-2
+      - host: 10.203.5.77
+        name: yc-master-0
+      - host: 10.203.21.68
+        name: yc-master-1
+      - host: 10.203.5.82
+        name: yc-master-2
+      - host: 10.203.252.202
+        name: s-kafka-a-master-0
+      - host: 10.203.77.13
+        name: s-kafka-b-master-1
+      - host: api.internal.lemanapro.ru
+        name: api.internal.lemanapro.ru
+  version: 1
+
+modulesource-flant-team-alfa:
+  registry:
+    ca: ""
+    dockerCfg: eyJhdXRocyI6IHsgImRvY2tlci1yZW1vdGUtZmxhbnQuYXJ0LmxtcnUudGVjaCI6IHt9fX0=
+    repo: docker-remote-flant.art.lmru.tech/team/alfa/d8-modules/monitoring-service-latency
+    scheme: HTTPS
+
+mup-flant-team-alfa:
+  releaseChannel: Stable
+  update:
+    mode: Auto
+
+monitoring-service-latency:
+  enabled: true
+  updatePolicy: flant-team-alfa
+  settings:
+    period: 3
+    config:
+      - dsn: https://api-x1-kong.apim.lmru.tech
+        name: api-x1-kong.apim.lmru.tech
+        type: http
+      - dsn: https://api-yc-kong.apim.lmru.tech
+        name: api-yc-kong.apim.lmru.tech
+        type: http
+      - dsn: https://api-x2-kong.apim.lmru.tech
+        name: api-x2-kong.apim.lmru.tech
+        type: http
+      - dsn: https://api-kafka-a-stage.apim.lmru.tech
+        name: api-kafka-a-stage.apim.lmru.tech
+        type: http
+      - dsn: https://api-kafka-b-stage.apim.lmru.tech
+        name: api-kafka-b-stage.apim.lmru.tech
+        type: http
+      - dsn: https://api-kafka.apim.lmru.tech
+        name: api-kafka.apim.lmru.tech
+        type: http
+      - dsn: https://api-yc-kong-a-stage.apim.lmru.tech
+        name: api-yc-kong-a-stage.apim.lmru.tech
+        type: http
+      - dsn: pilot-kafka-pilot-kafka-pool-broker-x1-lb-1000.pilot-kafka.svc:9094
+        name: kafka-pool-broker-x1-lb-1000
+        type: tcp
+      - dsn: pilot-kafka-pilot-kafka-pool-broker-x1-lb-1001.pilot-kafka.svc:9094
+        name: kafka-pool-broker-x1-lb-1001
+        type: tcp
+      - dsn: pilot-kafka-pilot-kafka-pool-broker-x1-lb-1002.pilot-kafka.svc:9094
+        name: kafka-pool-broker-x1-lb-1002
+        type: tcp
+      - dsn: pilot-kafka-pilot-kafka-pool-broker-yca-lb-2000.pilot-kafka.svc:9094
+        name: kafka-pool-broker-yca-lb-2000
+        type: tcp
+      - dsn: pilot-kafka-pilot-kafka-pool-broker-yca-lb-2001.pilot-kafka.svc:9094
+        name: kafka-pool-broker-yca-lb-2001
+        type: tcp
+      - dsn: pilot-kafka-pilot-kafka-pool-broker-yca-lb-2002.pilot-kafka.svc:9094
+        name: kafka-pool-broker-yca-lb-2002
+        type: tcp
+      - dsn: tls-0.preprod-kafka-a-stage.kafka.apim.lmru.tech:9094
+        name: external-tcp-antlia-a-preprod-kafka-0-9094
+        type: tcp
+      - dsn: tls-1.preprod-kafka-a-stage.kafka.apim.lmru.tech:9094
+        name: external-tcp-antlia-a-preprod-kafka-1-9094
+        type: tcp
+      - dsn: tls-2.preprod-kafka-a-stage.kafka.apim.lmru.tech:9094
+        name: external-tcp-antlia-a-preprod-kafka-2-9094
+        type: tcp
+      - dsn: tls-0.preprod-kafka-b-stage.kafka.apim.lmru.tech:9094
+        name: external-tcp-antlia-b-preprod-kafka-0-9094
+        type: tcp
+      - dsn: tls-1.preprod-kafka-b-stage.kafka.apim.lmru.tech:9094
+        name: external-tcp-antlia-b-preprod-kafka-1-9094
+        type: tcp
+      - dsn: tls-2.preprod-kafka-b-stage.kafka.apim.lmru.tech:9094
+        name: external-tcp-antlia-b-preprod-kafka-2-9094
+        type: tcp
+    nodeSelector:
+      node-role.deckhouse.io/system: ""
+  version: 1
+
+cert-manager:
+  enabled: true
+  settings:
+    enableCAInjector: true
+  version: 1
+
+logShipper:
+  enabled: true
+  version: 1
+
+extended-monitoring:
+  enabled: true
+  settings:
+    events:
+      exporterEnabled: true
+      severityLevel: All
+  version: 2

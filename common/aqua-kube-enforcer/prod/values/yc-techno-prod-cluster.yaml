@@ -1,0 +1,53 @@
+clusterName: "k8s-yc-techno-prod"
+image:
+  tag: "2022.4.721"
+
+aquaSecret:
+  kubeEnforcerToken: enforcer-yc-techno-k8s
+
+enforcer:
+  enforcerToken: enforcer-yc-techno
+  nodeSelector:
+    node-role.k8s.lmru.tech/application: ''
+  tolerations:
+    - key: dedicated
+      operator: Equal
+      effect: "NoExecute"
+      value: ist-perf-test-app
+    - key: dedicated
+      operator: Equal
+      effect: "NoExecute"
+      value: ist-perf-test-client
+    - key: node-role/jenkins-slave
+      operator: Equal
+      effect: "NoExecute"
+      value: ""
+    - key: dedicated
+      operator: Equal
+      effect: "NoSchedule"
+      value: keycloak-employee
+    - key: dedicated
+      operator: Equal
+      effect: "NoSchedule"
+      value: keycloak-partner
+    - key: dedicated
+      operator: Equal
+      effect: "NoSchedule"
+      value: keycloak-customer
+    - key: dedicated
+      operator: Equal
+      effect: "NoSchedule"
+      value: legoauth
+    - key: dedicated
+      operator: Equal
+      effect: "NoSchedule"
+      value: argocd
+    - key: dedicated
+      operator: Equal
+      effect: "NoSchedule"
+      value: ghe-runners
+  image:
+    tag: "2022.4.721"
+
+microEnforcerImage:
+  tag: "2022.4.721"

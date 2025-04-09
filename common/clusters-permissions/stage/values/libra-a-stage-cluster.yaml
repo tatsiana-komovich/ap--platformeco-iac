@@ -1,0 +1,217 @@
+---
+cluster_authorization:
+  defaults:
+    default_sa_permissions: &default
+      accessLevel: User
+      limitNamespaces:
+        - default
+      allowScale: true
+      allowAccessToSystemNamespaces: false
+      portForwarding: true
+  crowd:
+    groups:
+      gitlab-runner-deploy:
+        <<: *default
+        accessLevel: SuperAdmin
+        limitNamespaces:
+          - .*
+        allowAccessToSystemNamespaces: true
+        allowScale: false
+        portForwarding: false
+        kind: ServiceAccount
+        namespace: d8-service-accounts
+      crowd-flant-charlie:
+        <<: *default
+        accessLevel: SuperAdmin
+        allowAccessToSystemNamespaces: true
+        allowScale: true
+        portForwarding: true
+      crowd-marketplace-ro:
+        <<: *default
+        accessLevel: User
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - mplpartner.*
+          - masdev.*
+          - stage
+          - test
+        allowScale: false
+        portForwarding: true
+      crowd-marketplace-rw:
+        <<: *default
+        accessLevel: Editor
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - mplpartner.*
+          - masdev.*
+          - stage
+          - test
+        allowScale: true
+        portForwarding: true
+      crowd-marketplace-admin:
+        <<: *default
+        accessLevel: Admin
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - mplpartner.*
+          - masdev.*
+          - stage
+          - test
+        allowScale: true
+        portForwarding: true
+      crowd-sa-returns:
+        <<: *default
+        accessLevel: Admin
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - returns-.*
+          - feature-.*
+          - stage
+          - test
+      crowd-returns-ro:
+        <<: *default
+        accessLevel: User
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - returns-.*
+          - feature-.*
+          - stage
+          - test
+        allowScale: false
+        portForwarding: true
+      crowd-returns-rw:
+        <<: *default
+        accessLevel: Editor
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - returns-.*
+          - feature-.*
+          - stage
+          - test
+        allowScale: true
+        portForwarding: true
+      crowd-returns-admin:
+        <<: *default
+        accessLevel: Admin
+        allowAccessToSystemNamespaces: false
+        allowScale: true
+        portForwarding: true
+      crowd-sa-mpordertracking:
+        <<: *default
+        accessLevel: Admin
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - scdp-ofl-ot-.*
+      crowd-mpordertracking-ro:
+        <<: *default
+        accessLevel: User
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - scdp-ofl-ot-.*
+        allowScale: true
+        portForwarding: true
+      crowd-mpordertracking-rw:
+        <<: *default
+        accessLevel: Editor
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - scdp-ofl-ot-.*
+        allowScale: true
+        portForwarding: true
+      crowd-mpordertracking-admin:
+        <<: *default
+        accessLevel: Admin
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - scdp-ofl-ot-.*
+        allowScale: true
+        portForwarding: true
+      crowd-sa-mp-logcalc:
+        <<: *default
+        accessLevel: Admin
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - scdp-ofl-lc-.*
+      crowd-mp-logcalc-ro:
+        <<: *default
+        accessLevel: User
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - scdp-ofl-lc-.*
+        allowScale: true
+        portForwarding: true
+      crowd-mp-logcalc-rw:
+        <<: *default
+        accessLevel: Editor
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - scdp-ofl-lc-.*
+        allowScale: true
+        portForwarding: true
+      crowd-mp-logcalc-admin:
+        <<: *default
+        accessLevel: Admin
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - scdp-ofl-lc-.*
+        allowScale: true
+        portForwarding: true
+      crowd-obs-ro:
+        <<: *default
+        accessLevel: User
+        limitNamespaces:
+          - .*
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+      # <-- start pimakeneo -->
+      crowd-pimakeneo-admin:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - akeneo-.*
+          - feature-.*
+          - pdss-.*
+          - stage
+          - test
+          - md-akeneo-.*
+      crowd-pimakeneo-ro:
+        <<: *default
+        accessLevel: User
+        limitNamespaces:
+          - akeneo-.*
+          - feature-.*
+          - pdss-.*
+          - stage
+          - test
+          - md-akeneo-.*
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+      crowd-pimakeneo-rw:
+        <<: *default
+        accessLevel: Editor
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - akeneo-.*
+          - feature-.*
+          - pdss-.*
+          - stage
+          - test
+          - md-akeneo-.*
+      crowd-sa-pimakeneo:
+        <<: *default
+        accessLevel: Admin
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - akeneo-.*
+          - feature-.*
+          - pdss-.*
+          - stage
+          - test
+          - md-akeneo-.*
+      # <--- end pimakeneo --->
+
+DexProvider:
+  clientID: k8s-argocd
+  clientSecret: crowd_app_k8s-argocd

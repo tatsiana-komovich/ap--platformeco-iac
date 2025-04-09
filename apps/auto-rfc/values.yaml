@@ -1,0 +1,130 @@
+---
+global:
+  imagePullSecrets:
+    _default: registrysecret
+
+webhook_receiver:
+  image: docker-devops.art.lmru.tech/webhook_receiver:v0.1.0
+  replicas: 1
+  affinity:
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+          - matchExpressions:
+              - key: node-role.deckhouse.io/system
+                operator: In
+                values:
+                  - ""
+    podAntiAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        - labelSelector:
+            matchLabels:
+              app: rabbitmq
+          topologyKey: kubernetes.io/hostname
+
+  tolerations:
+    - key: "dedicated.deckhouse.io"
+      value: "system"
+      operator: "Equal"
+      effect: "NoExecute"
+
+issue_creator:
+  image: docker-devops.art.lmru.tech/issue_creator:v0.1.0
+  replicas: 1
+  yt_queue: '<path:services/data/auto-rfc#YANDEX_TRACKER_QUEUE>'
+  yt_sa_id: '<path:services/data/auto-rfc#YANDEX_SERVICE_ACCOUNT_ID>'
+  yt_sa_key_id: '<path:services/data/auto-rfc#YANDEX_SERVICE_ACCOUNT_KEY_ID>'
+  yt_cloud_org_id: '<path:services/data/auto-rfc#CLOUD_ORG_ID>'
+  public_key: '<path:services/data/auto-rfc#YANDEX_SERVICE_ACCOUNT_PUBLIC_KEY>'
+  private_key: '<path:services/data/auto-rfc#YANDEX_SERVICE_ACCOUNT_PRIVATE_KEY>'
+  affinity:
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+          - matchExpressions:
+              - key: node-role.deckhouse.io/system
+                operator: In
+                values:
+                  - ""
+    podAntiAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        - labelSelector:
+            matchLabels:
+              app: rabbitmq
+          topologyKey: kubernetes.io/hostname
+
+  tolerations:
+    - key: "dedicated.deckhouse.io"
+      value: "system"
+      operator: "Equal"
+      effect: "NoExecute"
+
+rabbitmq:
+  enabled: true
+  imagePullSecrets:
+    - name: registrysecret
+
+  replicas: 1
+
+  ingress:
+    enabled: false
+    host: rfc-rabbitmq-yc-techno.apps.lmru.tech
+    class: nginx
+    certificate:
+      letsencrypt: false
+      issuer: letsencrypt
+
+  affinity:
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+          - matchExpressions:
+              - key: node-role.deckhouse.io/system
+                operator: In
+                values:
+                  - ""
+    podAntiAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        - labelSelector:
+            matchLabels:
+              app: rabbitmq
+          topologyKey: kubernetes.io/hostname
+
+  tolerations:
+    - key: "dedicated.deckhouse.io"
+      value: "system"
+      operator: "Equal"
+      effect: "NoExecute"
+
+  config:
+    username: admin
+    password: '<path:services/data/auto-rfc#RABBIT_PASSWORD>'
+    erlang_cookie: '<path:services/data/auto-rfc#RABBITMQ_ERLANG_COOKIE>'
+    commonVhosts:
+      - /
+    adminVhost:
+      - /
+
+    mqUsers:
+      rfc:
+        tag: administrator
+        password: '<path:services/data/auto-rfc#RABBITMQ_PASSWORD>'
+
+  high_watermark:
+    absolute: 200MiB
+
+  storage:
+    accessModes: ReadWriteOnce
+    size: 1Gi
+
+
+  resources:
+    limits:
+      memory: 256Mi
+    requests:
+      cpu: 10m
+      memory: 256Mi
+
+  exporter: false # ????
+  prometheus:
+    return_per_object_metrics: false # ???

@@ -1,0 +1,28 @@
+---
+extended_monitoring_enable_on_all_ns: {}
+
+products:
+  - product-id: P0471
+    namespace_pattern:
+      - ^devops-core-vector$
+
+  - product-id: P0179
+    namespace_pattern:
+      - ^services-platform-.*
+
+  - product-id: P0680
+    namespace_pattern:
+      - ^infra-sentry.*
+
+istio:
+  - istio-injection: enabled
+    namespace_pattern:
+      - ^services-platform-prod$
+  - istio.deckhouse.io/auto-upgrade: "true"
+    namespace_pattern:
+      - ^services-platform-prod$
+
+devops-core-vector:
+  - security.deckhouse.io/pod-policy-action: warn
+    namespace_pattern:
+      - ^devops-core-vector$

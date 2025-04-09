@@ -1,0 +1,70 @@
+---
+alertmanager:
+  templates:
+    alertmanager.tmpl: |-
+      '{{ define "generator.url" }} {{ (index .Alerts 0).GeneratorURL | reReplaceAll "&g0.tab=1$" "&g0.tab=0" }} {{ end }}'
+
+  config:
+    global:
+      smtp_from: 'alertmanager@leroy-merlin.ru'
+      smtp_smarthost: 'massmail.hq.ru.corp.leroymerlin.com:25'
+      smtp_require_tls: false
+
+    templates:
+      - '/etc/alertmanager/*.tmpl'
+
+    route:
+      group_by: ['alertname', 'job']
+      receiver: 'void'
+      repeat_interval: 4h
+
+  ## Add your Alertmanager configuration below
+
+      routes:
+        - matchers:
+            - product_id="P0486"
+          receiver: 'wms-reception'
+        - matchers:
+            - product_id=~"P0665|P0666"
+          receiver: 'gtsst-grafana-oncall-gts'
+          group_by: ['alertname', 'job', 'namespace']
+        - matchers:
+            - product_id="P0767"
+          receiver: 'repl-grafana-oncall'
+          group_by: ['alertname', 'job', 'namespace']
+        - matchers:
+            - product_id=~"P0844|P0174"
+          receiver: 'import-grafana-oncall-ries'
+          group_by: ['alertname', 'job', 'namespace']
+        - matchers:
+            - namespace="bpmsved-prod"
+          receiver: 'import-grafana-oncall-ries'
+          group_by: ['alertname', 'job', 'namespace']
+        - matchers:
+            - namespace="quota-prod"
+          receiver: 'quota-grafana-oncall'
+          group_by: ['alertname', 'job', 'namespace']
+
+    receivers:
+      - name: 'void'
+
+      - name: 'wms-reception'
+        webhook_configs:
+          - url: https://obs-grafana-oncall-yc-techno.apps.lmru.tech/44/integrations/v1/alertmanager/tk5GRZP35Jh8SEuOmYvO1GTsw/
+            send_resolved: true
+      - name: 'gtsst-grafana-oncall-gts'
+        webhook_configs:
+          - url: https://obs-grafana-oncall-yc-techno.apps.lmru.tech/87/integrations/v1/alertmanager/ZmqL2OPI29Ap1i8Lb4pnltwp4/
+            send_resolved: true
+      - name: 'repl-grafana-oncall'
+        webhook_configs:
+          - url: https://obs-grafana-oncall-yc-techno.apps.lmru.tech/17/integrations/v1/alertmanager/432O6XcULn78v7eeDXGdxDQen/
+            send_resolved: true
+      - name: 'import-grafana-oncall-ries'
+        webhook_configs:
+          - url: https://obs-grafana-oncall-yc-techno.apps.lmru.tech/78/integrations/v1/alertmanager/2URztawlnOKICeICwd9uB1FvD/
+            send_resolved: true
+      - name: 'quota-grafana-oncall'
+        webhook_configs:
+          - url: https://obs-grafana-oncall-yc-techno.apps.lmru.tech/17/integrations/v1/alertmanager/pNBck7fVYSnXhNwriJ6EZ2cTE/
+            send_resolved: true

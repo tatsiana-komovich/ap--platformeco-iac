@@ -1,0 +1,21 @@
+---
+apiVersion: deckhouse.io/v1alpha1
+kind: NodeGroupConfiguration
+metadata:
+  name: container-registry-mirror.sh
+spec:
+  bundles:
+    - '*'
+  content: |-
+    mkdir -p /etc/containerd/conf.d
+    bb-sync-file /etc/containerd/conf.d/mirror.toml - << "EOF"
+    [plugins]
+     [plugins."io.containerd.grpc.v1.cri"]
+      [plugins."io.containerd.grpc.v1.cri".registry]
+       [plugins."io.containerd.grpc.v1.cri".registry.mirrors]
+        [plugins."io.containerd.grpc.v1.cri".registry.mirrors."docker.io"]
+         endpoint = ["https://mirror.gcr.io", "https://docker.art.lmru.tech"]
+    EOF
+  nodeGroups:
+    - '*'
+  weight: 31

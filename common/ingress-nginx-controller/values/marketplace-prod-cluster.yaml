@@ -1,0 +1,35 @@
+---
+# Default values for IngressNginxController.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+IngressNginxController:
+  main:
+    blacklist: false
+    name: main
+    spec:
+      chaosMonkey: false
+      disableHTTP2: false
+      hsts: false
+      ingressClass: nginx
+      inlet: LoadBalancer
+      maxReplicas: 1
+      minReplicas: 1
+      underscoresInHeaders: false
+      validationEnabled: true
+      waitLoadBalancerOnTerminating: 60
+      enableIstioSidecar: true
+    controllerVersion: "1.9"
+    loadBalancer:
+      annotations:
+        metallb.universe.tf/loadBalancerIPs: 10.80.214.32
+      behindL7Proxy: true
+      realIPHeader: X-Forwarded-For
+    # sourceRanges: append default files files/range.yaml
+    #     - 10.203.107.128/27
+    nodeSelector:
+      node-role/loadbalancer: ""
+    tolerations:
+      - effect: NoExecute
+        key: node-role/loadbalancer
+        operator: Equal
+        value: ""

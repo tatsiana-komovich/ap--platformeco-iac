@@ -1,0 +1,164 @@
+---
+apiVersion: operator.victoriametrics.com/v1beta1
+kind: VMCluster
+metadata:
+  name: vm-cluster-main
+spec:
+  #Это значит что данные будут хранится 3 месяца - https://docs.victoriametrics.com/single-server-victoriametrics/#retention
+  retentionPeriod: "24"
+  replicationFactor: 2
+  vmstorage:
+    containers:
+      - name: vmbackup
+        image: docker-devops.art.lmru.tech/vm-backup-utils:v2.0.0-v1.103.0
+        imagePullPolicy: IfNotPresent
+        env:
+          - name: MODE
+            value: 'backup'
+          - name: AWS_ACCESS_KEY_ID
+            value: '<path:services/data/victoriametrics#backup_s3_accesskey>'
+          - name: AWS_SECRET_ACCESS_KEY
+            value: '<path:services/data/victoriametrics#backup_s3_secretkey>'
+          - name: S3_BUCKET
+            value: 'devops-core-vm-capacity-backups'
+          - name: SCHEDULE
+            value: '00 4 * * *'
+          - name: VM_STORAGE_PATH
+            value: '/vm-data'
+        volumeMounts:
+          - mountPath: /vm-data
+            name: vmstorage-db
+    replicaCount: 3
+    logFormat: json
+    logLevel: "INFO"
+    extraArgs:
+      dedup.minScrapeInterval: "1h"
+    image:
+      repository: docker-remote-docker-io.art.lmru.tech/victoriametrics/vmstorage
+      tag: v1.103.0-cluster
+      pullPolicy: IfNotPresent
+    storageDataPath: "/vm-data"
+    topologySpreadConstraints:
+    - maxSkew: 1
+      topologyKey: "topology.kubernetes.io/zone"
+      whenUnsatisfiable: DoNotSchedule
+    affinity:
+      podAntiAffinity:
+        requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+                - key: "app.kubernetes.io/name"
+                  operator: In
+                  values:
+                    - "vmstorage"
+            topologyKey: "kubernetes.io/hostname"
+    tolerations:
+      - effect: NoExecute
+        key: dedicated
+        value: victoria-metrics
+    nodeSelector:
+      node-role/victoria-metrics: ""
+    podDisruptionBudget:
+      minAvailable: 2
+    storage:
+      volumeClaimTemplate:
+        spec:
+          storageClassName: network-ssd
+          resources:
+            requests:
+              storage: 300Gi
+    resources:
+      limits:
+        memory: 4Gi
+      requests:
+        memory: 512Mi
+        cpu: 1
+  vmselect:
+    replicaCount: 3
+    logFormat: json
+    logLevel: "INFO"
+    extraArgs:
+      memory.allowedPercent: "100"
+      memory.allowedBytes: "2GB"
+      search.maxQueryDuration: "50m"
+      dedup.minScrapeInterval: "1h"
+      search.maxSeries: "1000000"
+      search.maxUniqueTimeseries: "1000000"
+    image:
+      repository: docker-remote-docker-io.art.lmru.tech/victoriametrics/vmselect
+      tag: v1.103.0-cluster
+      pullPolicy: IfNotPresent
+    cacheMountPath: "/select-cache"
+    topologySpreadConstraints:
+      - maxSkew: 1
+        topologyKey: "topology.kubernetes.io/zone"
+        whenUnsatisfiable: DoNotSchedule
+    affinity:
+      podAntiAffinity:
+        requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+                - key: "app.kubernetes.io/name"
+                  operator: In
+                  values:
+                    - "vmselect"
+            topologyKey: "kubernetes.io/hostname"
+    tolerations:
+      - effect: NoExecute
+        key: dedicated
+        value: victoria-metrics
+    nodeSelector:
+      node-role/victoria-metrics: ""
+    podDisruptionBudget:
+      minAvailable: 2
+    storage:
+      volumeClaimTemplate:
+        spec:
+          storageClassName: network-ssd
+          resources:
+            requests:
+              storage: 10Gi
+    resources:
+      limits:
+        memory: "2048Mi"
+      requests:
+        memory: 512Mi
+        cpu: 200m
+
+  #https://docs.victoriametrics.com/operator/api/#vminsert
+  vminsert:
+    replicaCount: 3
+    image:
+      repository: docker-remote-docker-io.art.lmru.tech/victoriametrics/vminsert
+      tag: v1.103.0-cluster
+      pullPolicy: IfNotPresent
+    logFormat: json
+    logLevel: "INFO"
+    topologySpreadConstraints:
+    - maxSkew: 1
+      topologyKey: "topology.kubernetes.io/zone"
+      whenUnsatisfiable: DoNotSchedule
+    affinity:
+      podAntiAffinity:
+        requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+                - key: "app.kubernetes.io/name"
+                  operator: In
+                  values:
+                    - "vminsert"
+            topologyKey: "kubernetes.io/hostname"
+    tolerations:
+      - effect: NoExecute
+        key: dedicated
+        value: victoria-metrics
+    nodeSelector:
+      node-role/victoria-metrics: ""
+    podDisruptionBudget:
+      minAvailable: 2
+    resources:
+      limits:
+        memory: "1Gi"
+      requests:
+          memory: "256Mi"
+          cpu: 1

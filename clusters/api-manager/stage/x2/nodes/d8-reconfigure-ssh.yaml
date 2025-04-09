@@ -1,0 +1,14 @@
+---
+apiVersion: deckhouse.io/v1alpha1
+kind: NodeGroupConfiguration
+metadata:
+  name: d8-reconfigure-ssh.sh
+spec:
+  weight: 200
+  nodeGroups: ["*"]
+  bundles: ["*"]
+  content: |
+    if head -n 2 /etc/ssh/sshd_config | grep -zvq '^PasswordAuthentication no\sPermitRootLogin no\s'; then
+      sed -i '1s/^/PasswordAuthentication no\nPermitRootLogin no\n/' /etc/ssh/sshd_config
+      systemctl restart sshd || true
+    fi

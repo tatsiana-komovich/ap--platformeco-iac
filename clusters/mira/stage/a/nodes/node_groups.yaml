@@ -1,0 +1,224 @@
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  name: application-nodes
+spec:
+  nodeType: CloudEphemeral
+  cloudInstances:
+    minPerZone: 1
+    maxPerZone: 20
+    standby: "1"
+    zones:
+      - ru-central1-a
+    classReference:
+      kind: YandexInstanceClass
+      name: application-nodes
+  disruptions:
+    approvalMode: Automatic
+  chaos:
+    mode: Disabled
+  nodeTemplate:
+    labels:
+      node-role.k8s.lmru.tech/application: ''
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  name: system
+spec:
+  chaos:
+    mode: Disabled
+  cloudInstances:
+    classReference:
+      kind: YandexInstanceClass
+      name: system
+    maxPerZone: 2
+    minPerZone: 2
+    zones:
+      - ru-central1-a
+  disruptions:
+    approvalMode: Automatic
+  nodeTemplate:
+    labels:
+      node-role.deckhouse.io/system: ""
+    taints:
+      - effect: NoExecute
+        key: dedicated.deckhouse.io
+        value: system
+  nodeType: CloudEphemeral
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  name: jenkins-slaves
+spec:
+  chaos:
+    mode: Disabled
+  cloudInstances:
+    classReference:
+      kind: YandexInstanceClass
+      name: jenkins-slaves
+    minPerZone: 1
+    maxPerZone: 2
+    zones:
+      - ru-central1-a
+  cri:
+    containerd:
+      maxConcurrentDownloads: 10
+    type: Containerd
+  disruptions:
+    approvalMode: Automatic
+  nodeTemplate:
+    labels:
+      node-role/jenkins-slave: ""
+      node-role.k8s.lmru.tech/application: ''
+    taints:
+      - effect: NoExecute
+        key: node-role/jenkins-slave
+        value: ""
+  nodeType: CloudEphemeral
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  name: opendistro
+spec:
+  chaos:
+    mode: Disabled
+  cloudInstances:
+    classReference:
+      kind: YandexInstanceClass
+      name: elastic
+    maxPerZone: 4
+    minPerZone: 3
+    priority: 90
+    zones:
+      - ru-central1-a
+  disruptions:
+    approvalMode: Automatic
+  cri:
+    type: Containerd
+  nodeTemplate:
+    labels:
+      node-role/opendistro: ""
+    taints:
+      - effect: NoSchedule
+        key: dedicated
+        value: opendistro
+  nodeType: CloudEphemeral
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  name: odfe-common
+spec:
+  chaos:
+    mode: Disabled
+  cloudInstances:
+    classReference:
+      kind: YandexInstanceClass
+      name: odfe-common
+    maxPerZone: 4
+    minPerZone: 1
+    zones:
+      - ru-central1-a
+  disruptions:
+    approvalMode: Automatic
+  cri:
+    type: Containerd
+  nodeTemplate:
+    labels:
+      node-role/opendistro-common: ""
+    taints:
+      - effect: NoSchedule
+        key: dedicated
+        value: opendistro-common
+  nodeType: CloudEphemeral
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  name: node-ml
+spec:
+  chaos:
+    mode: Disabled
+  cloudInstances:
+    classReference:
+      kind: YandexInstanceClass
+      name: node-ml
+    maxPerZone: 5
+    minPerZone: 1
+    zones:
+      - ru-central1-a
+  disruptions:
+    approvalMode: Automatic
+  cri:
+    type: Containerd
+  nodeTemplate:
+    labels:
+      node-role.flant.com/node-ml: ""
+      node-role.k8s.lmru.tech/application: ''
+    taints:
+      - effect: NoSchedule
+        key: dedicated
+        value: node-ml
+  nodeType: CloudEphemeral
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  name: redis
+spec:
+  chaos:
+    mode: Disabled
+  cloudInstances:
+    classReference:
+      kind: YandexInstanceClass
+      name: redis
+    maxPerZone: 4
+    minPerZone: 1
+    zones:
+      - ru-central1-a
+  disruptions:
+    approvalMode: Automatic
+  cri:
+    type: Containerd
+  nodeTemplate:
+    labels:
+      node-role.flant.com/redis: ""
+    taints:
+      - effect: NoSchedule
+        key: dedicated
+        value: redis
+  nodeType: CloudEphemeral
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  name: custom-sorts
+spec:
+  chaos:
+    mode: Disabled
+  cloudInstances:
+    classReference:
+      kind: YandexInstanceClass
+      name: custom-sorts
+    maxPerZone: 2
+    minPerZone: 1
+    zones:
+      - ru-central1-a
+    standby: "1"
+  disruptions:
+    approvalMode: Automatic
+  cri:
+    type: Containerd
+  nodeTemplate:
+    labels:
+      node-role/custom-sorts: ""
+      node-role.k8s.lmru.tech/application: ''
+    taints:
+      - effect: NoExecute
+        key: dedicated
+        value: custom-sorts
+  nodeType: CloudEphemeral

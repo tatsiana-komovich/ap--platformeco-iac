@@ -1,0 +1,249 @@
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  name: application-nodes
+spec:
+  chaos:
+    mode: Disabled
+  cloudInstances:
+    classReference:
+      kind: VsphereInstanceClass
+      name: application-nodes
+    maxPerZone: 20
+    minPerZone: 5
+    standby: 4
+    standbyHolder:
+      notHeldResources:
+        cpu: 200m
+        memory: 1500Mi
+    zones:
+      - X1-A-Production
+  disruptions:
+    approvalMode: Automatic
+  nodeType: CloudEphemeral
+  nodeTemplate:
+    labels:
+      node-role.k8s.lmru.tech/application: ''
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  name: opendistro
+spec:
+  chaos:
+    mode: Disabled
+  cloudInstances:
+    classReference:
+      kind: VsphereInstanceClass
+      name: opendistro-nodes
+    maxPerZone: 21
+    minPerZone: 3
+    standby: "0"
+    zones:
+      - X1-A-Production
+  disruptions:
+    approvalMode: Manual
+  nodeTemplate:
+    labels:
+      node-role/opendistro: ""
+    taints:
+      - effect: NoSchedule
+        key: dedicated
+        value: opendistro
+  nodeType: CloudEphemeral
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  name: odfe-common
+spec:
+  chaos:
+    mode: Disabled
+  cloudInstances:
+    classReference:
+      kind: VsphereInstanceClass
+      name: odfe-common
+    maxPerZone: 3
+    minPerZone: 1
+    standby: "0"
+    zones:
+      - X1-A-Production
+  disruptions:
+    approvalMode: Automatic
+  nodeTemplate:
+    labels:
+      node-role/opendistro-common: ""
+    taints:
+      - effect: NoSchedule
+        key: dedicated
+        value: opendistro-common
+  nodeType: CloudEphemeral
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  name: sentry
+spec:
+  chaos:
+    mode: Disabled
+  cloudInstances:
+    classReference:
+      kind: VsphereInstanceClass
+      name: sentry
+    maxPerZone: 5
+    minPerZone: 2
+    standby: "0"
+    zones:
+      - X1-A-Production
+  disruptions:
+    approvalMode: Manual
+  nodeTemplate:
+    labels:
+      node-role/sentry: ""
+    taints:
+      - effect: NoSchedule
+        key: dedicated
+        value: sentry
+  nodeType: CloudEphemeral
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  name: system
+spec:
+  chaos:
+    mode: Disabled
+  cloudInstances:
+    classReference:
+      kind: VsphereInstanceClass
+      name: system
+    maxPerZone: 5
+    minPerZone: 2
+    zones:
+      - X1-A-Production
+  disruptions:
+    approvalMode: Automatic
+  nodeTemplate:
+    labels:
+      node-role.deckhouse.io/system: ""
+    taints:
+      - effect: NoExecute
+        key: dedicated.deckhouse.io
+        value: system
+  nodeType: CloudEphemeral
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  name: d8-loki
+spec:
+  chaos:
+    mode: Disabled
+  cloudInstances:
+    classReference:
+      kind: VsphereInstanceClass
+      name: d8-loki
+    maxPerZone: 1
+    minPerZone: 1
+    zones:
+      - X1-A-Production
+  disruptions:
+    approvalMode: Automatic
+  nodeTemplate:
+    labels:
+      node-role/d8-loki: ""
+    taints:
+      - effect: NoExecute
+        key: dedicated
+        value: d8-loki
+  nodeType: CloudEphemeral
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  name: d8-loadbalancer
+spec:
+  chaos:
+    mode: Disabled
+  cloudInstances:
+    classReference:
+      kind: VsphereInstanceClass
+      name: d8-loadbalancer
+    maxPerZone: 2
+    minPerZone: 2
+    zones:
+      - X1-A-Production
+  disruptions:
+    approvalMode: Automatic
+  cri:
+    type: Containerd
+  nodeTemplate:
+    labels:
+      node-role/d8-loadbalancer: ""
+      node-role/metallb-speaker: ""
+    taints:
+      - effect: NoExecute
+        key: dedicated
+        value: d8-loadbalancer
+  nodeType: CloudEphemeral
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  name: loadbalancer
+spec:
+  chaos:
+    mode: Disabled
+  cloudInstances:
+    classReference:
+      kind: VsphereInstanceClass
+      name: loadbalancer
+    maxPerZone: 3
+    minPerZone: 3
+    zones:
+      - X1-A-Production
+  disruptions:
+    approvalMode: Manual
+  kubelet:
+    containerLogMaxFiles: 4
+    containerLogMaxSize: 50Mi
+    resourceReservation:
+      mode: "Off"
+  nodeTemplate:
+    labels:
+      node-role/loadbalancer: ""
+      node-role/metallb-speaker: ""
+      threshold.extended-monitoring.deckhouse.io/load-average-per-core-warning: "1"
+      threshold.extended-monitoring.deckhouse.io/load-average-per-core-critical: "2"
+    taints:
+      - effect: NoExecute
+        key: dedicated
+        value: loadbalancer
+  nodeType: CloudEphemeral
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  name: deckhouse
+spec:
+  chaos:
+    mode: Disabled
+  cloudInstances:
+    classReference:
+      kind: VsphereInstanceClass
+      name: deckhouse
+    maxPerZone: 3
+    minPerZone: 3
+    zones:
+      - X1-A-Production
+  disruptions:
+    approvalMode: Automatic
+  nodeTemplate:
+    labels:
+      node-role.deckhouse.io/deckhouse: ""
+    taints:
+      - effect: NoExecute
+        key: dedicated.deckhouse.io
+        value: deckhouse
+  nodeType: CloudEphemeral

@@ -1,0 +1,90 @@
+{{- if hasKey .Values "alerts" }}
+{{- if hasKey .Values.alerts "high_ping_rtt_between_dc" }}
+{{- if .Values.alerts.high_ping_rtt_between_dc.enabled }}
+---
+apiVersion: deckhouse.io/v1
+kind: CustomPrometheusRules
+metadata:
+  labels:
+    component: rules
+    prometheus: main
+  name: ping-rtt-between-dc
+spec:
+  groups:
+    - name: ping-rtt-between-dc
+      rules:
+      - alert: HighPingRttBetween-X1-YC
+        annotations:
+          description: |-
+            The average round-trip time (RTT) for ICMP pings between nodes X1 and YC exceeds {{ $.Values.alerts.high_ping_rtt_between_dc.limit }} milliseconds over the last minute.
+          plk_protocol_version: "1"
+          plk_markup_format: markdown
+          summary: High network latency detected between nodes X1 and YC
+        expr: avg by (label_topology_kubernetes_io_region) (increase(kube_node_ping_rtt_milliseconds_total{node=~".*-x1-.*", destination_node=~".*-yc-.*"}[1m]) * on (node) group_left(label_topology_kubernetes_io_region) kube_node_labels)/avg by (label_topology_kubernetes_io_region) (increase(kube_node_ping_packets_received_total{}[1m]) * on (node) group_left(label_topology_kubernetes_io_region) kube_node_labels) > {{ $.Values.alerts.high_ping_rtt_between_dc.limit }}
+        for: {{ $.Values.alerts.high_ping_rtt_between_dc.pending }}
+        labels:
+          severity_level: "{{ $.Values.alerts.high_ping_rtt_between_dc.severity_level }}"
+          tier: cluster
+      - alert: HighPingRttBetween-X1-X2
+        annotations:
+          description: |-
+            The average round-trip time (RTT) for ICMP pings between nodes X1 and X2 exceeds {{ $.Values.alerts.high_ping_rtt_between_dc.limit }} milliseconds over the last minute
+          plk_protocol_version: "1"
+          plk_markup_format: markdown
+          summary: High network latency detected between nodes X1 and X2
+        expr: avg by (label_topology_kubernetes_io_region) (increase(kube_node_ping_rtt_milliseconds_total{node=~".*-x1-.*", destination_node=~".*-x2-.*"}[1m]) * on (node) group_left(label_topology_kubernetes_io_region) kube_node_labels)/avg by (label_topology_kubernetes_io_region) (increase(kube_node_ping_packets_received_total{}[1m]) * on (node) group_left(label_topology_kubernetes_io_region) kube_node_labels) > {{ $.Values.alerts.high_ping_rtt_between_dc.limit }}
+        for: {{ $.Values.alerts.high_ping_rtt_between_dc.pending }}
+        labels:
+          severity_level: "{{ $.Values.alerts.high_ping_rtt_between_dc.severity_level }}"
+          tier: cluster
+      - alert: HighPingRttBetween-YC-X1
+        annotations:
+          description: |-
+            The average round-trip time (RTT) for ICMP pings between nodes YC and X1 exceeds {{ $.Values.alerts.high_ping_rtt_between_dc.limit }} milliseconds over the last minute.
+          plk_protocol_version: "1"
+          plk_markup_format: markdown
+          summary: High network latency detected between nodes YC and X1
+        expr: avg by (label_topology_kubernetes_io_region) (increase(kube_node_ping_rtt_milliseconds_total{node=~".*-yc-.*", destination_node=~".*-x1-.*"}[1m]) * on (node) group_left(label_topology_kubernetes_io_region) kube_node_labels)/avg by (label_topology_kubernetes_io_region) (increase(kube_node_ping_packets_received_total{}[1m]) * on (node) group_left(label_topology_kubernetes_io_region) kube_node_labels) > {{ $.Values.alerts.high_ping_rtt_between_dc.limit }}
+        for: {{ $.Values.alerts.high_ping_rtt_between_dc.pending }}
+        labels:
+          severity_level: "{{ $.Values.alerts.high_ping_rtt_between_dc.severity_level }}"
+          tier: cluster
+      - alert: HighPingRttBetween-YC-X2
+        annotations:
+          description: |-
+            The average round-trip time (RTT) for ICMP pings between nodes YC and X2 exceeds {{ $.Values.alerts.high_ping_rtt_between_dc.limit }} milliseconds over the last minute.
+          plk_protocol_version: "1"
+          plk_markup_format: markdown
+          summary: High network latency detected between nodes YC and X2
+        expr: avg by (label_topology_kubernetes_io_region) (increase(kube_node_ping_rtt_milliseconds_total{node=~".*-yc-.*", destination_node=~".*-x2-.*"}[1m]) * on (node) group_left(label_topology_kubernetes_io_region) kube_node_labels)/avg by (label_topology_kubernetes_io_region) (increase(kube_node_ping_packets_received_total{}[1m]) * on (node) group_left(label_topology_kubernetes_io_region) kube_node_labels) > {{ $.Values.alerts.high_ping_rtt_between_dc.limit }}
+        for: {{ $.Values.alerts.high_ping_rtt_between_dc.pending }}
+        labels:
+          severity_level: "{{ $.Values.alerts.high_ping_rtt_between_dc.severity_level }}"
+          tier: cluster
+      - alert: HighPingRttBetween-X2-X1
+        annotations:
+          description: |-
+            The average round-trip time (RTT) for ICMP pings between nodes X1 and X2 exceeds {{ $.Values.alerts.high_ping_rtt_between_dc.limit }} milliseconds over the last minute
+          plk_protocol_version: "1"
+          plk_markup_format: markdown
+          summary: High network latency detected between nodes X2 and X1
+        expr: avg by (label_topology_kubernetes_io_region) (increase(kube_node_ping_rtt_milliseconds_total{node=~".*-x2-.*", destination_node=~".*-x1-.*"}[1m]) * on (node) group_left(label_topology_kubernetes_io_region) kube_node_labels)/avg by (label_topology_kubernetes_io_region) (increase(kube_node_ping_packets_received_total{}[1m]) * on (node) group_left(label_topology_kubernetes_io_region) kube_node_labels) > {{ $.Values.alerts.high_ping_rtt_between_dc.limit }}
+        for: {{ $.Values.alerts.high_ping_rtt_between_dc.pending }}
+        labels:
+          severity_level: "{{ $.Values.alerts.high_ping_rtt_between_dc.severity_level }}"
+          tier: cluster
+      - alert: HighPingRttBetween-X2-YC
+        annotations:
+          description: |-
+            The average round-trip time (RTT) for ICMP pings between nodes X2 and YC exceeds {{ $.Values.alerts.high_ping_rtt_between_dc.limit }} milliseconds over the last minute
+          plk_protocol_version: "1"
+          plk_markup_format: markdown
+          summary: High network latency detected between nodes X2 and YC
+        expr: avg by (label_topology_kubernetes_io_region) (increase(kube_node_ping_rtt_milliseconds_total{node=~".*-x2-.*", destination_node=~".*-yc-.*"}[1m]) * on (node) group_left(label_topology_kubernetes_io_region) kube_node_labels)/avg by (label_topology_kubernetes_io_region) (increase(kube_node_ping_packets_received_total{}[1m]) * on (node) group_left(label_topology_kubernetes_io_region) kube_node_labels) > {{ $.Values.alerts.high_ping_rtt_between_dc.limit }}
+        for: {{ $.Values.alerts.high_ping_rtt_between_dc.pending }}
+        labels:
+          severity_level: "{{ $.Values.alerts.high_ping_rtt_between_dc.severity_level }}"
+          tier: cluster
+{{- end }}
+{{- end }}
+{{- end }}

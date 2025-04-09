@@ -1,0 +1,14 @@
+{{ with .Values.spec }}
+{{- range $cluster := . }}
+---
+apiVersion: deckhouse.io/v1alpha1
+kind: IstioMulticluster
+metadata:
+  name: {{ include "mutlicluster.name" $cluster.metadataEndpoint }}
+spec:
+  {{- range $key, $value := $cluster }}
+  {{ $key }}: {{ $value -}}
+  {{ end }}
+{{ end }}
+{{ end }}
+

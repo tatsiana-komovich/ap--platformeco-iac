@@ -1,0 +1,38 @@
+clusterName: "k8s-ursa-a-stage"
+
+aquaSecret:
+  kubeEnforcerToken: enforcer-ursa-a-stage-k8s
+
+nodeSelector:
+  node-role.k8s.lmru.tech/application: ''
+tolerations:
+  - key: dedicated.deckhouse.io
+    operator: Equal
+    effect: "NoExecute"
+    value: lb-services
+  - key: dedicated.deckhouse.io
+    operator: Equal
+    effect: "NoExecute"
+    value: mr-crawler
+  - key: dedicated.deckhouse.io
+    operator: Equal
+    effect: "NoExecute"
+    value: mr-matcher
+
+enforcer:
+  enforcerToken: enforcer-ursa-a-stage
+  nodeSelector:
+    node-role.k8s.lmru.tech/application: ''
+  tolerations:
+    - key: dedicated.deckhouse.io
+      operator: Equal
+      effect: "NoExecute"
+      value: lb-services
+    - key: dedicated.deckhouse.io
+      operator: Equal
+      effect: "NoExecute"
+      value: mr-crawler
+    - key: dedicated.deckhouse.io
+      operator: Equal
+      effect: "NoExecute"
+      value: mr-matcher

@@ -1,0 +1,30 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: argocd-infra-devops-core-apps
+  namespace: devops-core-argocd
+  annotations:
+    argocd.argoproj.io/manifest-generate-paths: /argocd-crd
+spec:
+  destination:
+    namespace: devops-core-argocd
+    server: https://kubernetes.default.svc
+  project: argocd-infra
+  source:
+    path: argocd-crd
+    helm:
+      releaseName: "argocd-infra-devops-core-apps"
+      valueFiles:
+        - "values/prod/devops-core.yaml"
+    repoURL: https://github.lmru.tech/adeo/lmru--devops--argocd.git
+    targetRevision: master
+  syncPolicy:
+    automated:
+      selfHeal: true
+    retry:
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m0s
+      limit: 2

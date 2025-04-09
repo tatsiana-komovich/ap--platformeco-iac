@@ -1,0 +1,111 @@
+---
+alertmanager:
+  templates:
+    alertmanager.tmpl: |-
+      '{{ define "generator.url" }} {{ (index .Alerts 0).GeneratorURL | reReplaceAll "&g0.tab=1$" "&g0.tab=0" }} {{ end }}'
+
+  config:
+    global:
+      smtp_from: 'alertmanager@leroy-merlin.ru'
+      smtp_smarthost: 'massmail.hq.ru.corp.leroymerlin.com:25'
+      smtp_require_tls: false
+
+    templates:
+      - '/etc/alertmanager/*.tmpl'
+
+    route:
+      group_by: ['alertname', 'job']
+      receiver: 'void'
+      repeat_interval: 4h
+
+  ## Add your Alertmanager configuration below
+
+      routes:
+        - matchers:
+            - product_id="P0860"
+          receiver: 'qltp-grafana-oncall-P0860'
+        - matchers:
+            - product_id="P1030"
+          receiver: 'qltp-grafana-oncall-P1030'
+        - matchers:
+            - product_id="P0112"
+          receiver: 'pocmn-grafana-oncall-P0112'
+        - matchers:
+            - product_id="P0802"
+          receiver: 'rsse-grafana-oncall-P0802'
+        - matchers:
+            - product_id="P0602"
+          receiver: 'epd-grafana-oncall-P0602'
+        - matchers:
+            - product_id="P0881"
+          receiver: 'epd-grafana-oncall-P0881'
+        - matchers:
+            - product_id="P1148"
+          receiver: 'omptm-grafana-oncall-P1148'
+        - matchers:
+            - product_id="P1155"
+          receiver: 'omptm-grafana-oncall-P1155'
+        - matchers:
+            - product_id="P1149"
+          receiver: 'ppr-grafana-oncall-P1149'
+        - matchers:
+            - product_id="P1074"
+          receiver: 'poa-grafana-oncall-P1074'
+        - matchers:
+            - product_id="P0692"
+          receiver: 'pes-grafana-oncall-P0692'
+        - matchers:
+            - product_id="P1182"
+          receiver: 'ppa-grafana-oncall-P1182'
+
+    receivers:
+      - name: 'void'
+
+      - name: 'qltp-grafana-oncall-P0860'
+        webhook_configs:
+          - url: 'https://obs-grafana-oncall-yc-techno.apps.lmru.tech/117/integrations/v1/alertmanager/1WIovvvBTUcWtZTOI11T3wGF0/'
+            send_resolved: true
+      - name: 'qltp-grafana-oncall-P1030'
+        webhook_configs:
+          - url: 'https://obs-grafana-oncall-yc-techno.apps.lmru.tech/117/integrations/v1/alertmanager/DpqhC6XvQ6C8RWlBjYcCscKKK/'
+            send_resolved: true
+      - name: 'pocmn-grafana-oncall-P0112'
+        webhook_configs:
+          - url: 'https://obs-grafana-oncall-yc-techno.apps.lmru.tech/79/integrations/v1/alertmanager/xgaJm7AB6mXq1WVJ8wrvL2IbZ/'
+            send_resolved: true
+      - name: 'rsse-grafana-oncall-P0802'
+        webhook_configs:
+          - url: 'https://obs-grafana-oncall-yc-techno.apps.lmru.tech/12/integrations/v1/alertmanager/iUGbwpqdyCJ6aXtyHJyNE5c6V/'
+            send_resolved: true
+      - name: 'epd-grafana-oncall-P0602'
+        webhook_configs:
+          - url: 'https://obs-grafana-oncall-yc-techno.apps.lmru.tech/109/integrations/v1/alertmanager/obbg2wCPx96hEgUQgBuJrZmW1/'
+            send_resolved: true
+      - name: 'epd-grafana-oncall-P0881'
+        webhook_configs:
+          - url: 'https://obs-grafana-oncall-yc-techno.apps.lmru.tech/109/integrations/v1/alertmanager/obbg2wCPx96hEgUQgBuJrZmW1/'
+            send_resolved: true
+      - name: 'omptm-grafana-oncall-P1148'
+        webhook_configs:
+          - url: 'https://obs-grafana-oncall-yc-techno.apps.lmru.tech/116/integrations/v1/alertmanager/8yK2FuNj3ODN6VVv9mZ7iu7uW/'
+            send_resolved: true
+      - name: 'omptm-grafana-oncall-P1155'
+        webhook_configs:
+          - url: 'https://obs-grafana-oncall-yc-techno.apps.lmru.tech/116/integrations/v1/alertmanager/wstPBcRO10nTu45Bb4S1ktyQY/'
+            send_resolved: true
+      - name: 'ppr-grafana-oncall-P1149'
+        webhook_configs:
+          - url: 'https://obs-grafana-oncall-yc-techno.apps.lmru.tech/116/integrations/v1/alertmanager/tcKTRpzu41NtfUFnBRK7iqVSX/'
+            send_resolved: true
+      - name: 'poa-grafana-oncall-P1074'
+        webhook_configs:
+          - url: 'https://obs-grafana-oncall-yc-techno.apps.lmru.tech/116/integrations/v1/alertmanager/ls0r9WpQhRRtJS4vpLZuX1hGr/'
+            send_resolved: true
+      - name: 'pes-grafana-oncall-P0692'
+        webhook_configs:
+          - url: 'https://obs-grafana-oncall-yc-techno.apps.lmru.tech/116/integrations/v1/alertmanager/ZBRcoautptgAZQQWvwLJC0pSp/'
+            send_resolved: true
+      - name: 'ppa-grafana-oncall-P1182'
+        webhook_configs:
+          - url: 'https://obs-grafana-oncall-yc-techno.apps.lmru.tech/116/integrations/v1/alertmanager/ufOuiz8VjZK5td2sUOY11jVQZ/'
+            send_resolved: true

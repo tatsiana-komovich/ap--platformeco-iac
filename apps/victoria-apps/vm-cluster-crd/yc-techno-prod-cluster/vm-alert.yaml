@@ -1,0 +1,44 @@
+apiVersion: operator.victoriametrics.com/v1beta1
+kind: VMAlert
+metadata:
+  name: vm-alert
+spec:
+  replicaCount: 2
+  logFormat: json
+  logLevel: "INFO"
+  evaluationInterval: 1h
+  extraArgs:
+    remoteWrite.maxQueueSize: "1000000"
+  ruleNamespaceSelector:
+    matchLabels:
+      kubernetes.io/metadata.name: devops-core-victoriametrics
+  datasource:
+    url: http://vmselect-vm-cluster-main.devops-core-victoriametrics.svc:8481/select/0/prometheus
+  remoteWrite:
+    url: http://vminsert-vm-cluster-main.devops-core-victoriametrics.svc:8480/insert/0/prometheus
+  image:
+    repository: docker-remote-docker-io.art.lmru.tech/victoriametrics/vmalert
+    tag: v1.103.0
+    pullPolicy: IfNotPresent
+  affinity:
+    podAntiAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        - labelSelector:
+            matchExpressions:
+              - key: "app.kubernetes.io/name"
+                operator: In
+                values:
+                  - "vmselect"
+          topologyKey: "kubernetes.io/hostname"
+    tolerations:
+      - effect: NoExecute
+        key: dedicated
+        value: victoria-metrics
+    nodeSelector:
+      node-role/victoria-metrics: ""
+  resources:
+    limits:
+      memory: 1024Mi
+    requests:
+      memory: 1024Mi
+      cpu: 200m

@@ -1,0 +1,208 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": {
+          "type": "grafana",
+          "uid": "-- Grafana --"
+        },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "target": {
+          "limit": 100,
+          "matchAny": false,
+          "tags": [],
+          "type": "dashboard"
+        },
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": false,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "id": 61,
+  "iteration": 1695042751737,
+  "links": [],
+  "liveNow": false,
+  "panels": [
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "P0D6E4079E36703EB"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "align": "auto",
+            "displayMode": "auto",
+            "inspect": false
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 23,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "id": 2,
+      "options": {
+        "footer": {
+          "fields": "",
+          "reducer": [
+            "sum"
+          ],
+          "show": false
+        },
+        "showHeader": true,
+        "sortBy": [
+          {
+            "desc": false,
+            "displayName": "helm_release_namespace"
+          }
+        ]
+      },
+      "pluginVersion": "8.5.13",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P0D6E4079E36703EB"
+          },
+          "editorMode": "code",
+          "expr": "max without(instance, pod, hook, job, tier, module) (resource_versions_compatibility{helm_release_namespace=~\"$Namespace\"}) == 1",
+          "format": "table",
+          "legendFormat": "__auto",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "Resources list",
+      "transformations": [
+        {
+          "id": "groupBy",
+          "options": {
+            "fields": {
+              "api_version": {
+                "aggregations": [],
+                "operation": "groupby"
+              },
+              "helm_release_name": {
+                "aggregations": [],
+                "operation": "groupby"
+              },
+              "helm_release_namespace": {
+                "aggregations": [],
+                "operation": "groupby"
+              },
+              "helm_version": {
+                "aggregations": [],
+                "operation": "groupby"
+              },
+              "kind": {
+                "aggregations": [],
+                "operation": "groupby"
+              },
+              "resource_name": {
+                "aggregations": [],
+                "operation": "groupby"
+              },
+              "scrape_source": {
+                "aggregations": []
+              }
+            }
+          }
+        },
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {},
+            "indexByName": {
+              "api_version": 3,
+              "helm_release_name": 2,
+              "helm_release_namespace": 0,
+              "helm_version": 5,
+              "kind": 4,
+              "resource_name": 1
+            },
+            "renameByName": {
+              "api_version": "Api version",
+              "helm_release_name": "Release name",
+              "helm_release_namespace": "Namespace",
+              "helm_version": "Helm version",
+              "kind": "Kind",
+              "resource_name": "Resource name"
+            }
+          }
+        }
+      ],
+      "type": "table"
+    }
+  ],
+  "refresh": "30s",
+  "schemaVersion": 36,
+  "style": "dark",
+  "tags": [],
+  "templating": {
+    "list": [
+      {
+        "current": {
+          "selected": false,
+          "text": "All",
+          "value": "$__all"
+        },
+        "datasource": {
+          "type": "prometheus",
+          "uid": "P0D6E4079E36703EB"
+        },
+        "definition": "label_values(resource_versions_compatibility, helm_release_namespace)",
+        "hide": 0,
+        "includeAll": true,
+        "multi": false,
+        "name": "Namespace",
+        "options": [],
+        "query": {
+          "query": "label_values(resource_versions_compatibility, helm_release_namespace)",
+          "refId": "StandardVariableQuery"
+        },
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
+        "type": "query"
+      }
+    ]
+  },
+  "time": {
+    "from": "now-3h",
+    "to": "now"
+  },
+  "timepicker": {},
+  "timezone": "",
+  "title": "Deprecated resources",
+  "uid": "UGOR3EmIz",
+  "version": 2,
+  "weekStart": ""
+}

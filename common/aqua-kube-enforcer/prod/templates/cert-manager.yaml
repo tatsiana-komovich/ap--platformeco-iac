@@ -1,0 +1,18 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: {{ .Values.certsSecret.name }}
+  namespace: {{ .Release.Namespace }}
+spec:
+  commonName: admission_ca
+  secretName: {{ .Values.certsSecret.name }}
+  issuerRef:
+    name: selfsigned-no-trust
+    kind: ClusterIssuer
+    group: cert-manager.io
+  commonName: aqua-kube-enforcer.aqua.svc
+  dnsNames:
+  - aqua-kube-enforcer.aqua.svc
+  - aqua-kube-enforcer.aqua.svc.cluster.local
+  duration: 26280h0m0s
+  renewBefore: 720h0m0s

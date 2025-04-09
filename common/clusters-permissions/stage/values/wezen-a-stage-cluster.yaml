@@ -1,0 +1,572 @@
+---
+cluster_authorization:
+  defaults:
+    default_sa_permissions: &default
+      accessLevel: User
+      limitNamespaces:
+        - default
+      allowScale: true
+      allowAccessToSystemNamespaces: false
+      portForwarding: true
+  crowd:
+    groups:
+      # wms
+      crowd-wms-ro:
+        <<: *default
+        accessLevel: User
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - scdp-whs-.*
+      crowd-wms-admin:
+        <<: *default
+        accessLevel: Admin
+        allowAccessToSystemNamespaces: true
+        limitNamespaces:
+          - .*
+      crowd-wms-rw:
+        <<: *default
+        accessLevel: Editor
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - scdp-whs-.*
+      crowd-sa-wms:
+        <<: *default
+        accessLevel: Admin
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - scdp-whs-.*
+      # wms-reception
+      crowd-sa-wms-reception:
+        <<: *default
+        accessLevel: Admin
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - scdp-whs-receiveit-.*
+      crowd-wms-reception-ro:
+        <<: *default
+        accessLevel: User
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - scdp-whs-receiveit-.*
+      crowd-wms-reception-admin:
+        <<: *default
+        accessLevel: Admin
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - scdp-whs-receiveit-.*
+      crowd-wms-reception-rw:
+        <<: *default
+        accessLevel: Editor
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - scdp-whs-receiveit-.*
+      # wms-stock
+      crowd-sa-wms-stock:
+        <<: *default
+        accessLevel: Admin
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - scdp-whs-stockiteasy-.*
+      crowd-wms-stock-admin:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - scdp-whs-stockiteasy-.*
+      crowd-wms-stock-ro:
+        <<: *default
+        accessLevel: User
+        limitNamespaces:
+          - scdp-whs-stockiteasy-.*
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+      crowd-wms-stock-rw:
+        <<: *default
+        accessLevel: Editor
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - scdp-whs-stockiteasy-.*
+      # wms-packman
+      crowd-sa-packman:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - scdp-whs-packman-.*
+      crowd-packman-admin:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - scdp-whs-packman-.*
+      crowd-packman-ro:
+        <<: *default
+        accessLevel: User
+        limitNamespaces:
+          - scdp-whs-packman-.*
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+      crowd-packman-rw:
+        <<: *default
+        accessLevel: Editor
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - scdp-whs-packman-.*
+      # tis
+      crowd-tis-admin:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - scdp-whs-tis(-.*)?
+      crowd-tis-ro:
+        <<: *default
+        accessLevel: User
+        limitNamespaces:
+          - scdp-whs-tis(-.*)?
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+      crowd-tis-rw:
+        <<: *default
+        accessLevel: Editor
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - scdp-whs-tis(-.*)?
+      crowd-sa-tis:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - scdp-whs-tis(-.*)?
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+      # lmdb
+      crowd-lmdb-ro:
+        <<: *default
+        accessLevel: User
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - scdp-whs-lmdb-.*
+      crowd-lmdb-admin:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - scdp-whs-lmdb-.*
+      crowd-lmdb-rw:
+        <<: *default
+        accessLevel: Editor
+        limitNamespaces:
+          - scdp-whs-lmdb-.*
+      crowd-sa-lmdb:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - scdp-whs-lmdb-.*
+      # ruptures
+      crowd-ruptures-web-admin:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - scdp-whs-ruptures-.*
+      crowd-ruptures-web-ro:
+        <<: *default
+        accessLevel: User
+        limitNamespaces:
+          - scdp-whs-ruptures-.*
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+      crowd-ruptures-web-rw:
+        <<: *default
+        accessLevel: Editor
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - scdp-whs-ruptures-.*
+      crowd-sa-ruptures-web:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - scdp-whs-ruptures-.*
+      # ls-address
+      crowd-ls-address-admin:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - (scdp-whs-)?ls-address-.*
+          - (scdp-whs-)?ls-address
+      crowd-ls-address-ro:
+        <<: *default
+        accessLevel: User
+        limitNamespaces:
+          - (scdp-whs-)?ls-address-.*
+          - (scdp-whs-)?ls-address
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+      crowd-ls-address-rw:
+        <<: *default
+        accessLevel: Editor
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - (scdp-whs-)?ls-address-.*
+          - (scdp-whs-)?ls-address
+      crowd-sa-ls-address:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - (scdp-whs-)?ls-address-.*
+          - (scdp-whs-)?ls-address
+      # dostovernost
+      crowd-dostovernost-admin:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - (scdp-whs-)?dostovernost-.*
+          - (scdp-whs-)?dostovernost
+      crowd-dostovernost-ro:
+        <<: *default
+        accessLevel: User
+        limitNamespaces:
+          - (scdp-whs-)?dostovernost-.*
+          - (scdp-whs-)?dostovernost
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+      crowd-dostovernost-rw:
+        <<: *default
+        accessLevel: Editor
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - (scdp-whs-)?dostovernost-.*
+          - (scdp-whs-)?dostovernost
+      crowd-sa-dostovernost:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - (scdp-whs-)?dostovernost-.*
+          - (scdp-whs-)?dostovernost
+      # c3
+      crowd-c3-admin:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - (scdp-whs-)?c3-.*
+          - (scdp-whs-)?c3
+      crowd-c3-ro:
+        <<: *default
+        accessLevel: User
+        limitNamespaces:
+          - (scdp-whs-)?c3-.*
+          - (scdp-whs-)?c3
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+      crowd-c3-rw:
+        <<: *default
+        accessLevel: Editor
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - (scdp-whs-)?c3-.*
+          - (scdp-whs-)?c3
+      crowd-sa-c3:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - (scdp-whs-)?c3-.*
+          - (scdp-whs-)?c3
+      # stockanom
+      crowd-stockanom-admin:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - (scdp-whs-)?stockanom-.*
+          - (scdp-whs-)?stockanom
+      crowd-stockanom-ro:
+        <<: *default
+        accessLevel: User
+        limitNamespaces:
+          - (scdp-whs-)?stockanom-.*
+          - (scdp-whs-)?stockanom
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+      crowd-stockanom-rw:
+        <<: *default
+        accessLevel: Editor
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - (scdp-whs-)?stockanom-.*
+          - (scdp-whs-)?stockanom
+      crowd-sa-stockanom:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - (scdp-whs-)?stockanom-.*
+          - (scdp-whs-)?stockanom
+      #virtual-count
+      crowd-virtualcount-admin:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - (scdp-whs-)?virtual-count-.*
+          - (scdp-whs-)?virtual-count
+      crowd-virtualcount-ro:
+        <<: *default
+        accessLevel: User
+        limitNamespaces:
+          - (scdp-whs-)?virtual-count-.*
+          - (scdp-whs-)?virtual-count
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+      crowd-virtualcount-rw:
+        <<: *default
+        accessLevel: Editor
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - (scdp-whs-)?virtual-count-.*
+          - (scdp-whs-)?virtual-count
+      crowd-sa-virtualcount:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - (scdp-whs-)?virtual-count-.*
+          - (scdp-whs-)?virtual-count
+      # yms-lm
+      crowd-yms-lm-admin:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - (scdp-whs-)?yms-lm-.*
+          - (scdp-whs-)?yms-lm
+      crowd-yms-lm-ro:
+        <<: *default
+        accessLevel: User
+        limitNamespaces:
+          - (scdp-whs-)?yms-lm-.*
+          - (scdp-whs-)?yms-lm
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+      crowd-yms-lm-rw:
+        <<: *default
+        accessLevel: Editor
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - (scdp-whs-)?yms-lm-.*
+          - (scdp-whs-)?yms-lm
+      crowd-sa-yms-lm:
+        <<: *default
+        accessLevel: Admin
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - (scdp-whs-)?yms-lm-.*
+          - (scdp-whs-)?yms-lm
+      # Domain Warehousing
+      # ProductShortName StockCounting
+      # ProductId P0901
+      crowd-sa-stockcounting:
+        <<: *default
+        accessLevel: Admin
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - (scdp-whs-)?stockcounting-.*
+          - (scdp-whs-)?stockcounting
+      crowd-stockcounting-ro:
+        <<: *default
+        accessLevel: User
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - (scdp-whs-)?stockcounting-.*
+          - (scdp-whs-)?stockcounting
+      crowd-stockcounting-admin:
+        <<: *default
+        accessLevel: Admin
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - (scdp-whs-)?stockcounting-.*
+          - (scdp-whs-)?stockcounting
+      crowd-stockcounting-rw:
+        <<: *default
+        accessLevel: Editor
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - (scdp-whs-)?stockcounting-.*
+          - (scdp-whs-)?stockcounting
+      # dwh
+      crowd-dwh-ro:
+        <<: *default
+        accessLevel: User
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - scdp-whs-dwh-.*
+      crowd-dwh-admin:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - scdp-whs-dwh-.*
+      crowd-dwh-rw:
+        <<: *default
+        accessLevel: Editor
+        limitNamespaces:
+          - scdp-whs-dwh-.*
+      crowd-sa-dwh:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - scdp-whs-dwh-.*
+      # ldq
+      crowd-ldq-ro:
+        <<: *default
+        accessLevel: User
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - scdp-whs-ldq-.*
+      crowd-ldq-admin:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - scdp-whs-ldq-.*
+      crowd-ldq-rw:
+        <<: *default
+        accessLevel: Editor
+        limitNamespaces:
+          - scdp-whs-ldq-.*
+      crowd-sa-ldq:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - scdp-whs-ldq-.*
+      # sqc
+      crowd-sqc-ro:
+        <<: *default
+        accessLevel: User
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - scdp-whs-sqc-.*
+      crowd-sqc-admin:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - scdp-whs-sqc-.*
+      crowd-sqc-rw:
+        <<: *default
+        accessLevel: Editor
+        limitNamespaces:
+          - scdp-whs-sqc-.*
+      crowd-sa-sqc:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - scdp-whs-sqc-.*
+      # svetofor2
+      crowd-svetofor2-ro:
+        <<: *default
+        accessLevel: User
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - scdp-whs-svetofor2-.*
+      crowd-svetofor2-admin:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - scdp-whs-svetofor2-.*
+      crowd-svetofor2-rw:
+        <<: *default
+        accessLevel: Editor
+        limitNamespaces:
+          - scdp-whs-svetofor2-.*
+      crowd-sa-svetofor2:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - scdp-whs-svetofor2-.*
+      # svetofor3
+      crowd-svetofor3-ro:
+        <<: *default
+        accessLevel: User
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - scdp-whs-svetofor3-.*
+      crowd-svetofor3-admin:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - scdp-whs-svetofor3-.*
+      crowd-svetofor3-rw:
+        <<: *default
+        accessLevel: Editor
+        limitNamespaces:
+          - scdp-whs-svetofor3-.*
+      crowd-sa-svetofor3:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - scdp-whs-svetofor3-.*
+      # carrier-appointment
+      crowd-sa-carrier-appointment:
+        <<: *default
+        accessLevel: Admin
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - scdp-whs-carrier-appointment-.*
+          - scdp-whs-ca-.*
+      crowd-carrier-appointment-rw:
+        <<: *default
+        accessLevel: Editor
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - scdp-whs-carrier-appointment-.*
+          - scdp-whs-ca-.*
+      crowd-carrier-appointment-ro:
+        <<: *default
+        accessLevel: User
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - scdp-whs-carrier-appointment-.*
+          - scdp-whs-ca-.*
+      crowd-carrier-appointment-admin:
+        <<: *default
+        accessLevel: Admin
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - scdp-whs-carrier-appointment-.*
+          - scdp-whs-ca-.*
+      # ruptures
+      # DBSSA for Redis monitoring
+      crowd-middleware-rw:
+        <<: *default
+        accessLevel: Editor
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - scdp-whs-stockiteasy-.*
+          - scdp-whs-receiveit-.*
+          - scdp-whs-lmdb-.*
+      # otel for tracing
+      crowd-otel-ro:
+        <<: *default
+        accessLevel: User
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+      crowd-otel-rw:
+        <<: *default
+        accessLevel: Editor
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - otel-.*
+      crowd-otel-admin:
+        <<: *default
+        accessLevel: Admin
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - otel-.*
+      crowd-sa-otel:
+        <<: *default
+        accessLevel: SuperAdmin
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - otel-.*
+
+DexProvider:
+  clientID: k8s-argocd
+  clientSecret: crowd_app_k8s-argocd

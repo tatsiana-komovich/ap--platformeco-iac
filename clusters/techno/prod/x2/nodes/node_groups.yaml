@@ -1,0 +1,586 @@
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  name: application-nodes
+spec:
+  chaos:
+    mode: Disabled
+  cloudInstances:
+    classReference:
+      kind: OpenStackInstanceClass
+      name: application-nodes
+    maxPerZone: 10
+    minPerZone: 1
+    standby: 1
+  disruptions:
+    approvalMode: Automatic
+  nodeType: CloudEphemeral
+  nodeTemplate:
+    labels:
+      node-role.k8s.lmru.tech/application: ''
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  name: system
+spec:
+  chaos:
+    mode: Disabled
+  cloudInstances:
+    classReference:
+      kind: OpenStackInstanceClass
+      name: system
+    maxPerZone: 2
+    minPerZone: 1
+    zones:
+      - PROD_AZ_1
+      - PROD_AZ_2
+      - PROD_AZ_3
+  cri:
+    type: Containerd
+  disruptions:
+    approvalMode: Automatic
+  nodeTemplate:
+    labels:
+      node-role.deckhouse.io/system: ""
+    taints:
+      - effect: NoExecute
+        key: dedicated.deckhouse.io
+        value: system
+  nodeType: CloudEphemeral
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  name: elastic
+spec:
+  chaos:
+    mode: Disabled
+  cloudInstances:
+    classReference:
+      kind: OpenStackInstanceClass
+      name: elastic
+    maxPerZone: 3
+    minPerZone: 1
+    zones:
+      - PROD_AZ_1
+      - PROD_AZ_2
+      - PROD_AZ_3
+  disruptions:
+    approvalMode: Manual
+  cri:
+    type: Containerd
+  nodeTemplate:
+    labels:
+      node-role/opendistro: ""
+    taints:
+      - effect: NoSchedule
+        key: dedicated
+        value: opendistro
+  nodeType: CloudEphemeral
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  name: ist-perf-test-app
+spec:
+  chaos:
+    mode: Disabled
+  cloudInstances:
+    classReference:
+      kind: OpenStackInstanceClass
+      name: ist-perf-test
+    maxPerZone: 0
+    minPerZone: 0
+    zones:
+      - PROD_AZ_1
+  disruptions:
+    approvalMode: Automatic
+  cri:
+    type: Containerd
+  nodeTemplate:
+    taints:
+      - effect: NoExecute
+        key: dedicated
+        value: ist-perf-test-app
+    labels:
+      node-role.k8s.lmru.tech/application: ''
+  nodeType: CloudEphemeral
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  name: ist-perf-test-client
+spec:
+  chaos:
+    mode: Disabled
+  cloudInstances:
+    classReference:
+      kind: OpenStackInstanceClass
+      name: ist-perf-test
+    maxPerZone: 0
+    minPerZone: 0
+    zones:
+      - PROD_AZ_2
+  disruptions:
+    approvalMode: Automatic
+  cri:
+    type: Containerd
+  nodeTemplate:
+    taints:
+      - effect: NoExecute
+        key: dedicated
+        value: ist-perf-test-client
+    labels:
+      node-role.k8s.lmru.tech/application: ''
+  nodeType: CloudEphemeral
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  name: jenkins-slaves
+spec:
+  chaos:
+    mode: Disabled
+  cloudInstances:
+    classReference:
+      kind: OpenStackInstanceClass
+      name: jenkins-slaves
+    maxPerZone: 2
+    minPerZone: 1
+    zones:
+      - PROD_AZ_1
+      - PROD_AZ_2
+      - PROD_AZ_3
+  cri:
+    type: Containerd
+  disruptions:
+    approvalMode: Automatic
+  nodeTemplate:
+    labels:
+      node-role/jenkins-slave: ""
+      node-role.k8s.lmru.tech/application: ''
+    taints:
+      - effect: NoExecute
+        key: node-role/jenkins-slave
+        value: ""
+  nodeType: CloudEphemeral
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  name: large-nodes
+spec:
+  chaos:
+    mode: Disabled
+  cloudInstances:
+    classReference:
+      kind: OpenStackInstanceClass
+      name: large-nodes
+    maxPerZone: 1
+    minPerZone: 0
+    zones:
+      - PROD_AZ_1
+      - PROD_AZ_2
+      - PROD_AZ_3
+  cri:
+    type: Containerd
+  disruptions:
+    approvalMode: Automatic
+  nodeType: CloudEphemeral
+  nodeTemplate:
+    labels:
+      node-role.k8s.lmru.tech/application: ''
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  name: node
+spec:
+  chaos:
+    mode: Disabled
+  cloudInstances:
+    classReference:
+      kind: OpenStackInstanceClass
+      name: node
+    maxPerZone: 3
+    minPerZone: 0
+    zones:
+      - PROD_AZ_1
+      - PROD_AZ_2
+      - PROD_AZ_3
+  disruptions:
+    approvalMode: Automatic
+  cri:
+    type: Containerd
+  nodeType: CloudEphemeral
+  nodeTemplate:
+    labels:
+      node-role.k8s.lmru.tech/application: ''
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  name: odfe-common
+spec:
+  chaos:
+    mode: Disabled
+  cloudInstances:
+    classReference:
+      kind: OpenStackInstanceClass
+      name: odfe-common
+    maxPerZone: 2
+    minPerZone: 1
+    zones:
+      - PROD_AZ_1
+      - PROD_AZ_2
+      - PROD_AZ_3
+  disruptions:
+    approvalMode: Automatic
+  cri:
+    type: Containerd
+  nodeTemplate:
+    labels:
+      node-role/opendistro-common: ""
+    taints:
+      - effect: NoSchedule
+        key: dedicated
+        value: opendistro-common
+  nodeType: CloudEphemeral
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  name: keycloak-employee
+spec:
+  chaos:
+    mode: Disabled
+  cloudInstances:
+    classReference:
+      kind: OpenStackInstanceClass
+      name: keycloak-employee
+    maxPerZone: 2
+    minPerZone: 2
+  cri:
+    type: Containerd
+  disruptions:
+    approvalMode: Automatic
+  nodeTemplate:
+    labels:
+      node-role/keycloak-employee: ""
+      node-role.k8s.lmru.tech/application: ''
+    taints:
+      - effect: NoSchedule
+        key: dedicated
+        value: keycloak-employee
+  nodeType: CloudEphemeral
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  name: keycloak-partner
+spec:
+  chaos:
+    mode: Disabled
+  cloudInstances:
+    classReference:
+      kind: OpenStackInstanceClass
+      name: keycloak-partner
+    maxPerZone: 2
+    minPerZone: 2
+  cri:
+    type: Containerd
+  disruptions:
+    approvalMode: Automatic
+  nodeTemplate:
+    labels:
+      node-role/keycloak-partner: ""
+      node-role.k8s.lmru.tech/application: ''
+    taints:
+      - effect: NoSchedule
+        key: dedicated
+        value: keycloak-partner
+  nodeType: CloudEphemeral
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  name: keycloak-customer
+spec:
+  chaos:
+    mode: Disabled
+  cloudInstances:
+    classReference:
+      kind: OpenStackInstanceClass
+      name: keycloak-customer
+    maxPerZone: 3
+    minPerZone: 1
+  cri:
+    type: Containerd
+  disruptions:
+    approvalMode: Automatic
+  nodeTemplate:
+    labels:
+      node-role/keycloak-customer: ""
+      node-role.k8s.lmru.tech/application: ''
+    taints:
+      - effect: NoSchedule
+        key: dedicated
+        value: keycloak-customer
+  nodeType: CloudEphemeral
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  name: loadbalancer
+spec:
+  chaos:
+    mode: Disabled
+  cloudInstances:
+    classReference:
+      kind: OpenStackInstanceClass
+      name: loadbalancer
+    maxPerZone: 2
+    minPerZone: 1
+    zones:
+      - PROD_AZ_1
+      - PROD_AZ_2
+      - PROD_AZ_3
+  cri:
+    type: Containerd
+  disruptions:
+    approvalMode: Automatic
+  kubelet:
+    containerLogMaxFiles: 4
+    containerLogMaxSize: 50Mi
+    resourceReservation:
+      mode: "Off"
+  nodeTemplate:
+    labels:
+      node-role/loadbalancer: ""
+      node-role/metallb-speaker: ""
+      threshold.extended-monitoring.deckhouse.io/load-average-per-core-warning: "1"
+      threshold.extended-monitoring.deckhouse.io/load-average-per-core-critical: "2"
+    taints:
+      - effect: NoExecute
+        key: node-role/loadbalancer
+        value: ""
+  nodeType: CloudEphemeral
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  name: d8-loadbalancer
+spec:
+  chaos:
+    mode: Disabled
+  cloudInstances:
+    classReference:
+      kind: OpenStackInstanceClass
+      name: d8-loadbalancer
+    maxPerZone: 1
+    minPerZone: 1
+  disruptions:
+    approvalMode: Automatic
+  cri:
+    type: Containerd
+  nodeTemplate:
+    labels:
+      node-role/d8-loadbalancer: ""
+      node-role/metallb-speaker: ""
+    taints:
+      - effect: NoExecute
+        key: dedicated
+        value: d8-loadbalancer
+  nodeType: CloudEphemeral
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  name: cloud-print-loadbalancer
+spec:
+  chaos:
+    mode: Disabled
+  cloudInstances:
+    classReference:
+      kind: OpenStackInstanceClass
+      name: cloud-print-loadbalancer
+    maxPerZone: 1
+    minPerZone: 1
+  disruptions:
+    approvalMode: Automatic
+  cri:
+    type: Containerd
+  nodeTemplate:
+    labels:
+      node-role/cloud-print-loadbalancer: ""
+      node-role.k8s.lmru.tech/loadbalancer: ""
+      node-role/metallb-speaker: ""
+      threshold.extended-monitoring.deckhouse.io/load-average-per-core-warning: "1"
+      threshold.extended-monitoring.deckhouse.io/load-average-per-core-critical: "2"
+    taints:
+      - effect: NoExecute
+        key: dedicated
+        value: cloud-print-loadbalancer
+  nodeType: CloudEphemeral
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  name: otel-system
+spec:
+  cloudInstances:
+    classReference:
+      kind: OpenStackInstanceClass
+      name: otel-system
+    maxPerZone: 1
+    minPerZone: 1
+    zones:
+      - PROD_AZ_1
+  disruptions:
+    approvalMode: Automatic
+  nodeTemplate:
+    labels:
+      node-role/otel-system: ""
+    taints:
+      - key: dedicated
+        value: otel-system
+        effect: NoSchedule
+  nodeType: CloudEphemeral
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  name: legoauth
+spec:
+  chaos:
+    mode: Disabled
+  cloudInstances:
+    classReference:
+      kind: OpenStackInstanceClass
+      name: legoauth
+    minPerZone: 1
+    maxPerZone: 5
+  cri:
+    type: Containerd
+  disruptions:
+    approvalMode: Automatic
+  nodeTemplate:
+    labels:
+      node-role/legoauth: ""
+      node-role.k8s.lmru.tech/application: ''
+    taints:
+      - effect: NoSchedule
+        key: dedicated
+        value: legoauth
+  nodeType: CloudEphemeral
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  name: devops-core-loki
+spec:
+  chaos:
+    mode: Disabled
+  cloudInstances:
+    classReference:
+      kind: OpenStackInstanceClass
+      name: devops-core-loki
+    maxPerZone: 2
+    minPerZone: 1
+    zones:
+      - PROD_AZ_1
+      - PROD_AZ_2
+      - PROD_AZ_3
+  disruptions:
+    approvalMode: Automatic
+  nodeTemplate:
+    labels:
+      node-role/devops-core-loki: ""
+    taints:
+      - effect: NoExecute
+        key: dedicated
+        value: devops-core-loki
+  nodeType: CloudEphemeral
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  name: victoria-alerts
+spec:
+  nodeType: CloudEphemeral
+  cloudInstances:
+    minPerZone: 1
+    maxPerZone: 3
+    zones:
+      - PROD_AZ_1
+      - PROD_AZ_2
+      - PROD_AZ_3
+    classReference:
+      kind: OpenStackInstanceClass
+      name: victoria-alerts
+  nodeTemplate:
+    labels:
+      node-role/victoria-alerts: ""
+    taints:
+      - effect: NoExecute
+        key: dedicated
+        value: victoria-alerts
+  disruptions:
+    approvalMode: Automatic
+  chaos:
+    mode: Disabled
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  name: victoria-metrics
+spec:
+  nodeType: CloudEphemeral
+  cloudInstances:
+    minPerZone: 1
+    maxPerZone: 1
+    zones:
+      - PROD_AZ_1
+    classReference:
+      kind: OpenStackInstanceClass
+      name: victoria-metrics
+  nodeTemplate:
+    labels:
+      node-role/victoria-metrics: ""
+    taints:
+      - effect: NoExecute
+        key: dedicated
+        value: victoria-metrics
+  disruptions:
+    approvalMode: Automatic
+  chaos:
+    mode: Disabled
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  name: devops-loki-loadbalancer
+spec:
+  chaos:
+    mode: Disabled
+  cloudInstances:
+    classReference:
+      kind: OpenStackInstanceClass
+      name: devops-loki-loadbalancer
+    maxPerZone: 1
+    minPerZone: 1
+  disruptions:
+    approvalMode: Automatic
+  cri:
+    type: Containerd
+  nodeTemplate:
+    labels:
+      node-role/devops-loki-loadbalancer: ""
+      node-role/metallb-speaker: ""
+    taints:
+      - effect: NoExecute
+        key: dedicated
+        value: devops-loki-loadbalancer
+  nodeType: CloudEphemeral

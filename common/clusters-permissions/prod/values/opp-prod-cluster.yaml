@@ -1,0 +1,368 @@
+---
+cluster_authorization:
+  defaults:
+    default_sa_permissions: &default
+      accessLevel: User
+      limitNamespaces:
+        - default
+      allowScale: true
+      allowAccessToSystemNamespaces: true
+      portForwarding: true
+  crowd:
+    groups:
+      # opp-sre
+      crowd-opp-sre-admin:
+        <<: *default
+        accessLevel: SuperAdmin
+        limitNamespaces:
+          - .*
+      crowd-publication-admin:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - opp-.*
+          - opp
+          - pim.*
+          - default
+          - jenkins-slaves
+      crowd-publication-ro:
+        <<: *default
+        accessLevel: User
+        limitNamespaces:
+          - opp-.*
+          - opp
+          - pim.*
+          - default
+          - jenkins-slaves
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+      crowd-publication-rw:
+        <<: *default
+        accessLevel: Editor
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - opp-.*
+          - opp
+          - pim.*
+          - default
+          - jenkins-slaves
+      crowd-sa-publication:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - opp-.*
+          - opp
+          - pim.*
+          - default
+          - jenkins-slaves
+      crowd-chords-admin:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - jenkins-slaves
+          - chords.*
+      crowd-chords-ro:
+        <<: *default
+        accessLevel: User
+        limitNamespaces:
+          - jenkins-slaves
+          - chords.*
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+      crowd-chords-rw:
+        <<: *default
+        accessLevel: Editor
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - jenkins-slaves
+          - chords.*
+      crowd-sa-chords:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - jenkins-slaves
+          - chords.*
+      crowd-pim-admin:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - pim.*
+          - pim-.*
+          - rulm-.*
+          - default
+      crowd-pim-ro:
+        <<: *default
+        accessLevel: User
+        limitNamespaces:
+          - pim.*
+          - pim-.*
+          - rulm-.*
+          - default
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+      crowd-pim-rw:
+        <<: *default
+        accessLevel: Editor
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - pim.*
+          - pim-.*
+          - rulm-.*
+          - default
+      crowd-sa-pim:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - pim.*
+          - pim-.*
+          - rulm-.*
+          - default
+      crowd-obs-ro:
+        <<: *default
+        accessLevel: User
+        limitNamespaces:
+          - .*
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+      crowd-flant-bravo-rw:
+        <<: *default
+        accessLevel: SuperAdmin
+        limitNamespaces:
+          - .*
+        allowScale: true
+        allowAccessToSystemNamespaces: true
+        portForwarding: true
+      crowd-flant-rnd-rw:
+        <<: *default
+        accessLevel: SuperAdmin
+        limitNamespaces:
+          - .*
+        allowScale: true
+        allowAccessToSystemNamespaces: true
+        portForwarding: true
+      crowd-plcs-admin:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - plcs.*
+          - default
+          - jenkins-slaves
+      crowd-plcs-ro:
+        <<: *default
+        accessLevel: User
+        limitNamespaces:
+          - plcs.*
+          - default
+          - jenkins-slaves
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+      crowd-plcs-rw:
+        <<: *default
+        accessLevel: Editor
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - plcs.*
+          - default
+          - jenkins-slaves
+      crowd-sa-plcs:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - plcs.*
+          - default
+          - jenkins-slaves
+      #productregistration
+      crowd-productregistration-admin:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - productregistration-.*
+          - productregistration
+          - rulm-pmd-productregistration-lmru-prod
+      crowd-productregistration-ro:
+        <<: *default
+        accessLevel: User
+        limitNamespaces:
+          - productregistration-.*
+          - productregistration
+          - rulm-pmd-productregistration-lmru-prod
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+      crowd-productregistration-rw:
+        <<: *default
+        accessLevel: Editor
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - productregistration-.*
+          - productregistration
+          - rulm-pmd-productregistration-lmru-prod
+      crowd-sa-productregistration:
+        <<: *default
+        accessLevel: Admin
+        allowAccessToSystemNamespaces: true
+        limitNamespaces:
+          - productregistration-.*
+          - productregistration
+          - rulm-pmd-productregistration-lmru-prod
+      #sequoya
+      crowd-sequoya-admin:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - sequoya-.*
+          - sequoya
+          - rulm-.*
+      crowd-sequoya-ro:
+        <<: *default
+        accessLevel: User
+        limitNamespaces:
+          - sequoya-.*
+          - sequoya
+          - rulm-.*
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+      crowd-sequoya-rw:
+        <<: *default
+        accessLevel: Editor
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - sequoya-.*
+          - sequoya
+          - rulm-.*
+      crowd-sa-sequoya:
+        <<: *default
+        accessLevel: Admin
+        allowAccessToSystemNamespaces: true
+        limitNamespaces:
+          - sequoya-.*
+          - sequoya
+          - rulm-.*
+      # syndication platform
+      crowd-syn-admin:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - syn-.*
+          - rulm-.*
+      crowd-syn-ro:
+        <<: *default
+        accessLevel: User
+        limitNamespaces:
+          - syn-.*
+          - rulm-.*
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+      crowd-syn-rw:
+        <<: *default
+        accessLevel: Editor
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - syn-.*
+          - rulm-.*
+      crowd-sa-syn:
+        <<: *default
+        accessLevel: Admin
+        allowAccessToSystemNamespaces: true
+        limitNamespaces:
+          - syn-.*
+          - rulm-.*
+      #admintool
+      crowd-admintool-admin:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - admintool-.*
+          - admintool
+          - rulm-.*
+      crowd-admintool-ro:
+        <<: *default
+        accessLevel: User
+        limitNamespaces:
+          - admintool-.*
+          - admintool
+          - rulm-.*
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+      crowd-admintool-rw:
+        <<: *default
+        accessLevel: Editor
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - admintool-.*
+          - admintool
+          - rulm-.*
+      crowd-sa-admintool:
+        <<: *default
+        accessLevel: Admin
+        allowAccessToSystemNamespaces: true
+        limitNamespaces:
+          - admintool-.*
+          - admintool
+          - rulm-.*
+      #redwood
+      crowd-redwood-admin:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - redwood-.*
+          - redwood
+      crowd-redwood-ro:
+        <<: *default
+        accessLevel: User
+        limitNamespaces:
+          - redwood-.*
+          - redwood
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+      crowd-redwood-rw:
+        <<: *default
+        accessLevel: Editor
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - redwood-.*
+          - redwood
+      crowd-sa-redwood:
+        <<: *default
+        accessLevel: Admin
+        allowAccessToSystemNamespaces: true
+        limitNamespaces:
+          - redwood-.*
+          - redwood
+      crowd-sa-turbine:
+        <<: *default
+        accessLevel: Admin
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - rulm-.*
+
+DexProvider:
+  clientID: k8s-local-opus-prod
+  clientSecret: crowd_app_k8s-local-opus-prod
+
+ServiceAccount:
+  adeo-vault-sa:
+    metadata:
+      name: adeo-vault-sa
+      namespace: lmru-devops-k8s-configuration
+
+ClusterRoleBinding:
+  adeo-vault-cluster-role-binding:
+    metadata:
+      name: adeo-vault
+    roleRef:
+      kind: ClusterRole
+      name: system:auth-delegator
+    subjects:
+      - kind: ServiceAccount
+        name: adeo-vault-sa
+        namespace: lmru-devops-k8s-configuration

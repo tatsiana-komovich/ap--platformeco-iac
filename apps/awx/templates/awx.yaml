@@ -1,0 +1,24 @@
+---
+apiVersion: awx.ansible.com/v1beta1
+kind: AWX
+metadata:
+  name: {{ .Values.app.name }}
+  namespace: {{ .Values.app.name }}
+spec:
+  postgres_configuration_secret: awx-postgres-configuration
+  image: docker-remote-quay-io.art.lmru.tech/ansible/awx
+  image_version: "24.6.1"
+  redis_image: docker.art.lmru.tech/redis
+  redis_image_version: "7.4"
+  control_plane_ee_image: docker-remote-quay-io.art.lmru.tech/ansible/awx-ee:latest
+  init_container_image: docker-remote-quay-io.art.lmru.tech/ansible/awx-ee
+  init_container_image_version: latest
+  ee_images:
+    - name: my-custom-awx-ee
+      image: docker-remote-quay-io.art.lmru.tech/ansible/awx-ee
+  tolerations: |
+    - effect: NoSchedule
+      key: dedicated
+      value: rundeck
+  node_selector: |
+    node-role/rundeck: ""

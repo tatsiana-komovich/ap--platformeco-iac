@@ -1,0 +1,149 @@
+---
+opendistro:
+  logstash:
+    filter: |-
+      filter{
+        if [kubernetes][labels][component]=="shipping-docs-manager" {
+          json {
+            id => "json_msg"
+            source => "message"
+            target => "jsonLog"
+            skip_on_invalid_json => true
+          }
+        } else {
+          json {
+           id => "json_msg2"
+           source => "message"
+           skip_on_invalid_json => true
+          }
+        }
+        if [kubernetes][namespace]== "bpmsved-prod"  {
+          mutate {
+            id => "drop_context"
+            remove_field => [ "context" ]
+          }
+        }
+        if [kubernetes][namespace] == "bpmsved-prod" {
+          mutate {
+            id => "drop_msg"
+            remove_field => [ "msg" ]
+          }
+        }
+        if [kubernetes][namespace] == "supplier-calendar-prod" {
+          mutate {
+            id => "drop_response"
+            remove_field => [ "response" ]
+          }
+        }
+        grok {
+          id => "grok_multi"
+          match => {
+            "message" => [
+              "(((?<brick>[a-zA-Z\-0-9]+)_(?<application>[a-zA-Z\-0-9]+)\s)|((?<application>[a-zA-Z\-0-9]+)\s)|(.{0}))(?<timestamp>%{YEAR}-%{MONTHNUM}-%{MONTHDAY} %{TIME}) \[(?<transaction>[A-Za-z0-9\-_\.]*),{0,1}(?<traceId>[A-Za-z0-9\-_\.]*),(?<spanId>[A-Za-z0-9\-_\.]*)\]\[%{GREEDYDATA:thread}\] %{LOGLEVEL:level}[ ]+%{NOTSPACE:class} - %{GREEDYDATA:text}",
+              "(((?<brick>[a-zA-Z\-0-9]+)_(?<application>[a-zA-Z\-0-9]+)\s)|((?<application>[a-zA-Z\-0-9]+)\s)|(.{0}))(?<timestamp>%{YEAR}-%{MONTHNUM}-%{MONTHDAY} %{TIME}) %{LOGLEVEL:level} \[(?<transaction>[A-Za-z0-9\-_\.]*),{0,1}(?<traceId>[A-Za-z0-9\-_\.]*),(?<spanId>[A-Za-z0-9\-_\.]*),([A-Za-z0-9\-_\.]*)\] ([0-9]*) --- \[%{GREEDYDATA:thread}\] %{NOTSPACE:class}[ ]+: %{GREEDYDATA:text}",
+              "(((?<brick>[a-zA-Z\-0-9]+)_(?<application>[a-zA-Z\-0-9]+)\s)|((?<application>[a-zA-Z\-0-9]+)\s)|(.{0}))(?<timestamp>%{YEAR}-%{MONTHNUM}-%{MONTHDAY} %{TIME}) \[(?<processId>[A-Za-z\-0-9]*),(?<solutionId>[A-Za-z0-9\-_\.]*),{0,1}(?<traceId>[A-Za-z0-9\-_\.]*),(?<spanId>[A-Za-z0-9\-_\.]*)\]\[%{GREEDYDATA:thread}\] %{LOGLEVEL:level}[ ]+%{NOTSPACE:class} - %{GREEDYDATA:text}",
+              "(((?<brick>[a-zA-Z\-0-9]+)_(?<application>[a-zA-Z\-0-9]+)\s)|((?<application>[a-zA-Z\-0-9]+)\s)|(.{0}))(?<timestamp>%{YEAR}-%{MONTHNUM}-%{MONTHDAY} %{TIME}) \[((?<transaction>[A-Za-z0-9\-_\.]*),{0,1})(?<traceId>[A-Za-z0-9\-_\.]*),(?<spanId>[A-Za-z0-9\-_\.]*)\]\[%{GREEDYDATA:thread}\] %{LOGLEVEL:level}[ ]+%{NOTSPACE:class} - %{GREEDYDATA:text}",
+              "(?<event>([A-Z][0-9]{0,4})) %{TIME:datetime}%{SPACE}%{NUMBER:n} (?<appsrc>%{WORD}\.%{WORD}:\d{1,})\] %{GREEDYDATA:msg}"
+            ]
+          }
+        }
+        if [kubernetes] {
+          if [kubernetes][namespace]=~/^d8.*/ {
+              grok {
+                  id => "grok_component"
+                  match => { "component" => "lmru-les-%{GREEDYDATA:app}" }
+              }
+              mutate {
+                  id => "mutate_targetindex"
+                  add_field => { "[@metadata][target_index]" => "%{[kubernetes][namespace]}" }
+              }
+              if [jsonLog][binding] {
+                  mutate {
+                      id => "mutate_binding"
+                      add_field => { "[jsonLog][binding_name]" => "%{[jsonLog][binding.name]}" }
+                      add_field => { "[jsonLog][hook_type]" => "%{[jsonLog][hook.type]}" }
+                      remove_field => [ "[jsonLog][binding.name]",  "[jsonLog][hook.type]" ]
+                  }
+              }
+          } else if [kubernetes][namespace]=~/^les.*/  {
+              mutate {
+                  id => "mutate_addfield_component"
+                  add_field => {"component" => "%{[kubernetes][labels][component]}"}
+              }
+              grok {
+                  id => "grok_component2"
+                  match => { "component" => "lmru-les-%{GREEDYDATA:app}" }
+              }
+              if [app] {
+                  mutate {
+                      id => "mutate_targetindex2"
+                      add_field => { "[@metadata][target_index]" => "%{[kubernetes][namespace]}-%{app}" }
+                  }
+              } else {
+                  mutate {
+                      id => "mutate_targetindex0"
+                      add_field => { "[@metadata][target_index]" => "%{[kubernetes][namespace]}" }
+                  }
+              }
+          } else if [kubernetes][labels][opendistro_index] {
+            mutate {
+              id => "mutate_opendist_idx"
+              add_field => { "[@metadata][target_index]" => "%{[kubernetes][labels][opendistro_index]}" }
+            }
+          } else {
+              grok {
+                 id => "grok"
+                 match => { "message" => "%{MONTHDAY}-%{MONTH}-%{YEAR} %{TIME} %{LOGLEVEL:level} \[%{DATA:thread}\] %{NOTSPACE:class} %{GREEDYDATA:text}"}
+              }
+              mutate {
+                 id => "mutate_targetindex1"
+                 add_field => { "[@metadata][target_index]" => "%{[kubernetes][namespace]}" }
+              }
+          }
+        } else {
+              mutate {
+                  id => "mutate_commonlog"
+                  add_field => { "[@metadata][target_index]" => "commonlog" }
+              }
+        }
+        mutate {
+          id => "add_cluster_field"
+          add_field => { "cluster" => "supchain.prod" }
+        }
+        mutate {
+          id => "copy_product_id"
+          copy => { "[kubernetes][namespace_labels][product-id]" => "[product_id]" }
+        }
+        mutate {
+            id => "lowercase_prod_id"
+            lowercase => [ "product_id" ]
+        }
+        mutate {
+          id => "mutate_removefield_multi"
+          remove_field => ["ecs", "tags", "@version", "log","agent","input","stream","app","component"]
+        }
+        if [jsonLog] {
+          mutate {
+            id => "mutate_msg"
+            remove_field => ["message"]
+          }
+        }
+        if [response]=~/^"[1-9][0-9][0-9]"$/ {
+          mutate {
+            id => "remove_non_obj_response"
+            remove_field => ["response"]
+          }
+        }
+        if [time]=~/".*20[2-9][0-9].*"/ {
+          mutate {
+            id => "remove_non_utc_time"
+            remove_field => ["time"]
+          }
+        }
+        if [ingress][upstream_response_time] {
+          mutate {
+            id => "ingress_nginx_float"
+            convert => { "[ingress][upstream_response_time]" => "float" }
+          }
+        }
+      }

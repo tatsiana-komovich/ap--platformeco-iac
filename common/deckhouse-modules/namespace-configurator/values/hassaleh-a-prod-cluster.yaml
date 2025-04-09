@@ -1,0 +1,57 @@
+---
+extended_monitoring_enable_on_all_ns: {}
+
+products:
+  - product-id: P0471
+    namespace_pattern:
+      - ^devops-core-vector$
+
+  - product-id: P0335
+    namespace_pattern:
+      - ^ediep-.*
+  - product-id: P0812
+    namespace_pattern:
+      - ^partnerportal-.*
+  - product-id: P0813
+    namespace_pattern:
+      - ^pcs-.*
+
+  - product-id: P0614
+    namespace_pattern:
+      - ^logbonus-.*
+
+  - product-id: P0631
+    namespace_pattern:
+      - ^pcol-.*
+
+  - product-id: P0803
+    namespace_pattern:
+      - ^ppmru-.*
+
+  - product-id: P1026
+    namespace_pattern:
+      - ^tender-management-.*
+
+  - product-id: P0852
+    namespace_pattern:
+      - ^rulm-supplier-platform-.*
+
+  - product-id: P0758
+    namespace_pattern:
+      - ^elma-.*
+
+  - product-id: P1171
+    namespace_pattern:
+      - ^ppcfs-.*
+
+prometheus:
+  - prometheus.deckhouse.io/monitor-watcher-enabled: "true"
+    namespace_pattern:
+      - ^partnerportal-.*
+      - ^pcs-.*
+      - ^tender-management-.*
+
+devops-core-vector:
+  - security.deckhouse.io/pod-policy-action: warn
+    namespace_pattern:
+      - ^devops-core-vector$

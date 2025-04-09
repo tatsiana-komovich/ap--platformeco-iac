@@ -1,0 +1,250 @@
+---
+opendistro:
+  tariff: extra
+
+  alerts:
+    ro_index:
+      enabled: true
+      for: "1m"
+      severity_level: 3
+
+  project: yc-techno
+
+  node_pref: p
+
+  userlist:
+    services: ["admin", "filebeat", "logstash", "kibana", "read_only_filebeat", "apiuser"]
+
+  cluster: production
+  cluster_env: prod
+
+  common:
+    nodegroup: opendistro-common
+
+  clusterDomain: yc-techno.p.mesh
+
+  init:
+    image:
+      repo: "docker-flant.art.lmru.tech/lmru/devops/opensearch--"
+      name: "init-image"
+      tag: "0.0.2"
+
+  opendistro:
+    image:
+      repo: "docker-flant.art.lmru.tech/lmru/devops/opensearch--"
+      name: "opensearch"
+      tag: "2.16.0"
+    # custom - самодельные сертификаты только для старых серверов
+    # cluster - выписываются при помощи k8s
+    certificates: "custom"
+    pv_storageclass: network-ssd-nonreplicated
+    pv_size: 558Gi
+    replicas: "7"
+    limits:
+      memory: 12Gi
+    requests:
+      cpu: 3
+      memory: 12Gi
+    s3_backup:
+      enabled: true
+      repos:
+        - repository: s3-backup-new
+          client: default
+          access_key: '<path:services/data/opensearch#yctechno.s3_backup_new.access_key.prod>'
+          secret_key: '<path:services/data/opensearch#yctechno.s3_backup_new.secret_key.prod>'
+          scheme: https
+          endpoint: "https://storage.yandexcloud.net"
+          region: ru-central1
+          max_snapshot_bytes_per_sec: "40m" # 40MB/s
+          max_restore_bytes_per_sec: "40m"
+          bucket: flant-yc-techno-prod-opendistro-new
+    keystore:
+      - secretName: opendistro-s3-backup-new
+        items:
+          - key: s3.access_key
+            path: s3.client.default.access_key
+          - key: s3.secret_key
+            path: s3.client.default.secret_key
+    wait_cluster_green: true
+
+  exporter:
+    enabled: true
+    image:
+      repo: "docker-flant.art.lmru.tech/lmru/devops/opensearch--"
+      name: "os-exporter"
+      tag: "0.0.2"
+
+  snapshot_exporter:
+    enabled: true
+    image:
+      repo: "docker-flant.art.lmru.tech/lmru/devops/opensearch--"
+      name: "os-snapshot-exporter"
+      tag: "0.0.1"
+
+  oneday_exporter:
+    enabled: true
+    image:
+      repo: "docker-flant.art.lmru.tech/lmru/devops/opensearch--"
+      name: "os-oneday-exporter"
+      tag: "0.0.2"
+
+  admin:
+    elasticsearch:
+      password: '<path:services/data/opensearch#admin.elasticsearch.password.stage>'
+      username: admin
+      roles:
+        - admin
+    madison_key: 7a80b30dfdcfeb889efae4fd5fb41420cd485d74cd10e29ef4208722d0ff90db
+    restore_madison_key: 5c33a88b6c874c40258bae417cbde582c93a23084022c8895339d2ed3be2621f
+
+  apiuser:
+    elasticsearch:
+      password: '<path:services/data/opensearch#apiuser.elasticsearch.password.stage>'
+      username: apiuser
+      roles: []
+
+  read_only_filebeat:
+    elasticsearch:
+      username: read_only_filebeat
+      password: '<path:services/data/opensearch#read_only_filebeat.elasticsearch.password.stage>'
+      roles:
+        - readall
+        - kibanauser
+
+  csi:
+    enabled: false
+
+  vector:
+    enabled: false
+
+  recoverer:
+    enabled: false
+    sc_system_name: network-ssd
+
+  filebeat:
+    enabled: true
+    image:
+      repo: "docker-flant.art.lmru.tech/lmru/devops/opensearch--"
+      name: "filebeat"
+      tag: "0.0.2"
+    index_name: "production-%{+yyyy.MM.dd}"
+    setup_name: "production"
+    setup_pattern: "production-*"
+
+  logstash:
+    enabled: true
+    image:
+      repo: "docker-flant.art.lmru.tech/lmru/devops/opensearch--"
+      name: "logstash"
+      tag: "0.0.1"
+    remote_os:
+      enabled: true
+      host: "10.203.2.238:9200"
+      index_name:
+        - "keycloak-partner-prod-2"
+        - "keycloak-customer-prod"
+        - "keycloak-employee-prod"
+        - "ausweis"
+      user: logstash
+      password: '<path:services/data/opensearch#remote_os.password>'
+    timeout: 90
+    check_connection_timeout: 500
+    replicas: 5
+    workers: 4
+    queuesize: 1900mb
+    batch:
+      size: 1000
+    pv:
+      size: 2Gi
+      storageclass: network-ssd
+    resources:
+      limits:
+        memory: 5Gi
+      requests:
+        cpu: 2
+        memory: 5Gi
+    exporter:
+      enabled: true
+      image:
+        repo: "docker-flant.art.lmru.tech/lmru/devops/opensearch--"
+        name: "logstash-exporter"
+        tag: "0.0.1"
+
+  kibana:
+    enabled: true
+    image:
+      repo: "docker-flant.art.lmru.tech/lmru/devops/opensearch--"
+      name: "opensearch-dashboards"
+      tag: "2.16.0"
+    host: kibana-yc-techno.apps.lmru.tech
+    connecturl: dex-yc-techno.apps.lmru.tech
+
+  shell_operator:
+    image:
+      repo: "docker-flant.art.lmru.tech/lmru/devops/opensearch--"
+      name: "shell-operator"
+      tag: "0.0.1"
+
+  curator:
+    image:
+      repo: "docker-flant.art.lmru.tech/lmru/devops/opensearch--"
+      name: "os-curator"
+      tag: "0.0.1"
+
+  pv_retain_operator:
+    enabled: true
+
+  cerebro:
+    enabled: true
+    image:
+      repo: "docker-flant.art.lmru.tech/lmru/devops/opensearch--"
+      name: "cerebro"
+      tag: "0.0.1"
+    host: cerebro-yc-techno.apps.lmru.tech
+
+  xtractor:
+    enabled: true
+    image:
+      repo: "docker-flant.art.lmru.tech/lmru/devops/opensearch--"
+      name: "xtractor"
+      tag: "0.2.21"
+    is_s3: false
+    host: xtractor-yc-techno.apps.lmru.tech
+    opendistro: "opendistro"
+    kibana: "kibana-yc-techno.apps.lmru.tech"
+
+  xkibana:
+    enabled: false
+
+  retention:
+    enabled: false
+
+  dereplicator:
+    enabled: true
+
+  danglingChecker:
+    enabled: true
+    schedule: "0 10 * * *"
+
+  madison:
+    key: 280ea36804f79a6d10943c7af3042a9d7fd63f8dee5f2b94fa9d63b5dcb40bab
+    project: lm-elk
+
+  node_updater:
+    enabled: true
+    image:
+      repo: "docker-flant.art.lmru.tech/lmru/devops/opensearch--"
+      name: "node-updater"
+      tag: "0.0.1"
+
+  sheet_reporter:
+    enabled: true
+    image:
+      repo: "docker-flant.art.lmru.tech/lmru/devops/opensearch--"
+      name: "sheet-reporter"
+      tag: "0.2.0"
+    job:
+      schedule: "30 22 * * *"
+
+billing-resource:
+  resourceName: opendistro

@@ -1,0 +1,42 @@
+---
+vector:
+  fullnameOverride: devops-core-vector-agent
+  role: "Agent"
+  image:
+    tag: "0.42.0-debian"
+    repository: docker-remote-docker-io.art.lmru.tech/timberio/vector
+  resources:
+    requests:
+      cpu: 50m
+      memory: 64Mi
+    limits:
+      cpu: 500m
+      memory: 1Gi
+  tolerations:
+    - operator: "Exists"
+      effect: "NoSchedule"
+    - operator: "Exists"
+      effect: "PreferNoSchedule"
+    - operator: "Exists"
+      effect: "NoExecute"
+  podPriorityClassName: "production-medium"
+  rbac:
+    create: true
+  service:
+    enabled: false
+  serviceHeadless:
+    enabled: false
+  podMonitor:
+    enabled: true
+
+  dataDir: /vector-data-dir
+
+  existingConfigMaps:
+    - devops-core-vector-config
+
+  envFrom:
+    - secretRef:
+        name: devops-core-vector-env
+
+  args:
+    - --watch-config

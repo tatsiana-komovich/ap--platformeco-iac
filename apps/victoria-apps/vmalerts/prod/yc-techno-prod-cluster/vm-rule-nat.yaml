@@ -1,0 +1,19 @@
+---
+apiVersion: operator.victoriametrics.com/v1beta1
+kind: VMRule
+metadata:
+  name: vm-rule-nat
+  namespace: devops-core-victoria-alerts
+spec:
+  groups:
+    - name: nat-instance.general
+      concurrency: 1
+      rules:
+        - alert: D8YandexNatInstanceConnectionsQuotaUtilization
+          expr: max_over_time(network_connections_quota_utilization{resource_id=~".*nat.*"}[5m]) > 85
+          for: 5m
+          labels:
+            severity: critical
+          annotations:
+            summary: "Yandex nat-instance connections quota utilization is above 85% over the last 5 minutes."
+            description: Nat-instance connections quota should be increased by Yandex technical support.

@@ -1,0 +1,185 @@
+{{- if $.Values.enabled }}
+
+{{- $env_list := list }}
+{{- range $k,$v:= $.Values.namespace }}
+   {{- if ne $k "_default" }}
+     {{- $env_list = append $env_list $k }}
+   {{- end }}
+{{- end }}
+
+{{- range $env_list }}
+  {{- $environ := . }}
+  {{- $namespace := pluck $environ $.Values.namespace | first | default $.Values.namespace._default }}
+---
+apiVersion: deckhouse.io/v1
+kind: CustomPrometheusRules
+metadata:
+  name: monitoring-custom-{{ $namespace }}
+spec:
+  groups:
+    - name: opendistro.rules
+      rules:
+        - alert: ElasticShardSize-{{ $namespace }}
+          for: 10m
+          expr: elasticsearch_indices_shards_store_size_in_bytes{namespace="{{ $namespace }}"}/1024/1024/1024 > 400
+          labels:
+            severity_level: "4"
+          annotations:
+            description: "ElasticShardSize is bigger than 400 gb"
+            summary: |-
+              Elastic shard {{`{{ $labels.index }}`}} size is bigger than {{`{{ $value }}`}} GB. Check with client is it ok or not.
+            plk_markup_format: markdown
+            plk_protocol_version: "1"
+            plk_labels_as_annotations: pod,instance
+
+        - alert: ElasticWatermarkHigh
+          annotations:
+            description: |-
+              При достижении показателя `watermark.high` (заполненность диска в %) на каком-либо из узлов, Elasticsearch начинает эвакуировать с него шарды.
+
+              Чтобы посмотреть список индексов отсортированный по размеру:
+              1. `NODE_IP="$(kubectl -n {{ printf "{{ $labels.name }}" }} get svc elasticsearch -o=jsonpath='{.spec.clusterIP}'):9200"`
+              2. `curl -s -X GET "$NODE_IP/_cat/indices?pretty&v=true&s=store.size"`
+
+
+            summary: |-
+              Нода `{{ printf "{{ $labels.name }}" }}` приближается к High Watermark значение которого для текущего кластера установлен на отметке `{{ printf "{{ printf \"max by (cluster, name, namespace, service) (elasticsearch_clustersettings_stats_allocation_watermark_high{pod=~\\\"elasticsearch-exporter\\\"})\" | query | first | value }}" }}%`.
+            plk_markup_format: markdown
+            plk_protocol_version: "1"
+            plk_labels_as_annotations: pod,instance
+          expr: |-
+            max by (cluster, name, namespace, service, pod, mount, path)
+            (
+              (
+                elasticsearch_filesystem_data_size_bytes{namespace="{{ $namespace }}"}
+                -
+                elasticsearch_filesystem_data_free_bytes{namespace="{{ $namespace }}"}
+              )
+                *
+              100
+                /
+              elasticsearch_filesystem_data_size_bytes{namespace="{{ $namespace }}"}
+              -
+              on() group_left max by (cluster, name, namespace, service) (
+                elasticsearch_clustersettings_stats_allocation_watermark_high{namespace="{{ $namespace }}"}
+              )
+            )
+            *
+            -1
+            <=
+            {{ pluck $environ $.Values.watermark_exporter.prometheus_threshold.high | first | default $.Values.watermark_exporter.prometheus_threshold.high._default }}
+          for: 1m
+          labels:
+            severity_level: "{{ pluck $environ $.Values.watermark_exporter.prometheus_threshold.crit_severity_level | first | default $.Values.watermark_exporter.prometheus_threshold.crit_severity_level._default }}"
+
+        - alert: ElasticWatermarkFloodStage
+          annotations:
+            description: |-
+              При достижении показателя `watermark.flood_stage` (заполненность диска в %) на каком-либо из узлов, Elasticsearch переводит индексы в `read_only_allow_delete`.
+
+              Чтобы посмотреть список индексов отсортированный по размеру:
+              1. `NODE_IP="$(kubectl -n {{ printf "{{ $labels.name }}" }} get svc elasticsearch -o=jsonpath='{.spec.clusterIP}'):9200"`
+              2. `curl -s -X GET "$NODE_IP/_cat/indices?pretty&v=true&s=store.size"`
+
+              Чтобы деактивировать режим `read_only_allow_delete`:
+              1. `NODE_IP="$(kubectl -n {{ printf "{{ $labels.name }}" }} get svc elasticsearch -o=jsonpath='{.spec.clusterIP}'):9200"`
+              2. ```curl -s -X PUT "Content-Type: application/json" "$NODE_IP/_all/_settings"` -d '{"index.blocks.read_only_allow_delete": false}'```
+
+
+            summary: |-
+              Нода `{{ printf "{{ $labels.name }}" }}` приближается к Flood Stage Watermark значение которого для текущего кластера установлен на отметке `{{ printf "{{ printf \"max by (cluster, name, namespace, service) (elasticsearch_clustersettings_stats_allocation_watermark_flood_stage{pod=~\\\"elasticsearch-exporter\\\"})\" | query | first | value }}" }}%`.
+            plk_markup_format: markdown
+            plk_protocol_version: "1"
+            plk_labels_as_annotations: pod,instance
+          expr: |-
+            max by (cluster, name, namespace, service, pod, mount, path)
+            (
+              (
+                elasticsearch_filesystem_data_size_bytes{namespace="{{ $namespace }}"}
+                -
+                elasticsearch_filesystem_data_free_bytes{namespace="{{ $namespace }}"}
+              )
+                *
+              100
+                /
+              elasticsearch_filesystem_data_size_bytes{namespace="{{ $namespace }}"}
+              -
+              on() group_left max by (cluster, name, namespace, service) (
+                elasticsearch_clustersettings_stats_allocation_watermark_flood_stage{namespace="{{ $namespace }}"}
+              )
+            )
+            *
+            -1
+            <=
+            {{ pluck $environ $.Values.watermark_exporter.prometheus_threshold.flood_stage | first | default $.Values.watermark_exporter.prometheus_threshold.flood_stage._default }}
+          for: 1m
+          labels:
+            severity_level: "{{ pluck $environ $.Values.watermark_exporter.prometheus_threshold.crit_severity_level | first | default $.Values.watermark_exporter.prometheus_threshold.crit_severity_level._default }}"
+
+        - alert: ElasticRelocatingShardsLongTime
+          annotations:
+            description: |-
+              **Если это вызвано расширением кластера.**
+              Просто понаблюдать.
+
+              **Если это происходит только на одной ноде и не прекращается.**
+              Зайти в **Kibana** - **Management** - **Dev Tools** и выполнить ряд действий
+              1. Проверить, что шардов на проблемной ноде значительно меньше, чем на остальных
+                  ```
+                  GET _cat/allocation?v&s=node
+                  ```
+                  Выяснить примерный процент утилизации дисков на остальных нодах
+                  ```
+                  GET _cat/nodes?v&h=ip,disk.total,disk.used,disk.used_percent,name
+                  ```
+              2. В зависимости от примерной утилизации дисков на нодах увеличиваем или уменьшаем число нод opensearch в кластере.
+              -   Если примерная утилизация большинства нод ~50% и более:
+                  Увеличиваем число реплик кластера opensearch.
+                  Обычно нужно добавить 1 или 2 реплики. То есть, последовательно добавляем по одной ноде, пока процесс релокации не прекратится.
+                  После окончания релокации, уменьшаем число нод до изначального.
+              -   Если примерная утилизация большинства нод менее 50%:
+                  Уменьшаем число нод.
+                  проверяем конфиг
+                  ```
+                  GET _cluster/settings
+                  ```
+                  исключаем последнюю ноду из аллокации
+                  ```
+                  PUT _cluster/settings
+                  { "persistent": { "cluster.routing.allocation.exclude._name": "opendistro-<N>" } }
+                  ```
+                  Повторяем для ноды opendistro-<N-1> при необходимости. При исключении
+                  сразу двух нод команда такая:
+                  ```
+                  PUT _cluster/settings
+                  { "persistent": { "cluster.routing.allocation.exclude._name": "opendistro-<N>,opendistro-<N-1>" } }
+                  ```
+                  Через небольшое время релокация должна прекратиться.
+                  После того, как шарды уедут с исключённой ноды, уменьшаем число реплик стейтфулсета.
+                  > NOTE: Если уменьшение/увеличение количества нод не помогает, пробуем скейлить в обратную сторону (если уменьшали - увеличиваем, если увеличивали - уменьшаем)
+              3. После удаления реплик включаем аллокацию для всего кластера.
+                  ```
+                  PUT _cluster/settings
+                  { "persistent": { "cluster.routing.allocation.exclude._name": null } }
+                  ```
+
+              Полезные команды, чтобы отследить аллокацию шардов на проблемной нода и исключаемых нодах, а также проблемы с релокацией:
+              ```
+              GET _cat/recovery?active_only=true&h=index,shard,source_node,target_node,bytes_percent,time&s=index,shard
+              GET _cat/shards?v
+              GET _cluster/allocation/explain?pretty
+              ```
+            summary: |-
+              Шарды релоцирются между нодами слишком долго.
+              стоит взглянуть на [графики]({{ $.Values.grafana }}/prometheus/graph?g0.expr=elasticsearch_cluster_health_relocating_shards&g0.tab=0&g0.stacked=0&g0.show_exemplars=0&g0.range_input=12h).
+            plk_markup_format: markdown
+            plk_protocol_version: "1"
+            plk_labels_as_annotations: pod,instance
+          expr: |-
+            elasticsearch_cluster_health_relocating_shards{namespace="{{ $namespace }}"} != 0
+          for: 60m
+          labels:
+            severity_level: "{{ pluck $environ $.Values.watermark_exporter.prometheus_threshold.crit_severity_level | first | default $.Values.watermark_exporter.prometheus_threshold.crit_severity_level._default }}"
+
+{{- end }}
+{{- end }}

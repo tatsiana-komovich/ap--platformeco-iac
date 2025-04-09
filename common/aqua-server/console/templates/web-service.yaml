@@ -1,0 +1,53 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}-console-svc
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: {{ .Release.Name }}-console
+    aqua.component: server
+{{ include "aqua.labels" . | indent 4 }}
+{{- if .Values.web.service.labels }}
+{{ toYaml .Values.web.service.labels | indent 4 }}
+{{- end }}
+{{- if .Values.web.service.annotations }}
+  annotations:
+{{ toYaml .Values.web.service.annotations | indent 4 }}
+{{- end }}
+spec:
+  type: {{ .Values.web.service.type }}
+  {{- if eq .Values.global.platform "aks" }}
+  loadBalancerIP: {{ .Values.web.service.loadbalancerIP }}
+  {{- end }}
+  selector:
+    app: {{ .Release.Name }}-console
+  ports:
+  {{- if eq .Values.global.platform "k3s"}}
+  {{- range $port := .Values.web.service.k3sPorts }}
+    - name: {{ $port.name }}
+      port: {{ $port.port }}
+      targetPort: {{ $port.targetPort }}
+      {{- if $port.nodePort }}
+      nodePort: {{ $port.nodePort }}
+      {{- end }}
+      {{- if $port.protocol }}
+      protocol: {{ $port.protocol }}
+      {{- end }}
+  {{- end }}
+  {{- else }}
+  {{- range $port := .Values.web.service.ports }}
+    - name: {{ $port.name }}
+      port: {{ $port.port }}
+      targetPort: {{ $port.targetPort }}
+      {{- if $port.nodePort }}
+      nodePort: {{ $port.nodePort }}
+      {{- end }}
+      {{- if $port.protocol }}
+      protocol: {{ $port.protocol }}
+      {{- end }}
+      {{- if $port.appProtocol }}
+      appProtocol: {{ $port.appProtocol }}
+      {{- end }}
+  {{- end }}
+  {{- end }}

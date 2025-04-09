@@ -1,0 +1,113 @@
+---
+admission-policy-engine:
+  spec:
+    version: 1
+    enabled: true
+  internal-lb-policy: true
+  artifactory-repos:
+    enforcementAction: deny
+
+global:
+  settings:
+    modules:
+      ingressClass: nginx-d8s
+
+user-authn:
+  enabled: true
+  settings:
+    idTokenTTL: 1h
+    publishAPI:
+      enabled: true
+      https:
+        global:
+          kubeconfigGeneratorMasterCA: ""
+        mode: Global
+  version: 2
+
+prometheus:
+  enabled: true
+  settings:
+    externalLabels:
+      k8s_cluster: dacc-stage
+      project_name: data-accel
+      datacenter: yc
+      environment: stage
+      platform: yandex
+  version: 2
+
+okmeter:
+  enabled: true
+  settings:
+    apiKey: f159b9f1-5f38-44d6-a29c-6420adcb32a6
+    nodeSelector:
+      node-role.kubernetes.io/control-plane: ""
+    tolerations:
+      - key: node-role.kubernetes.io/control-plane
+        operator: Exists
+      - key: node-role.kubernetes.io/master
+        operator: Exists
+      - key: dedicated
+        operator: Equal
+        value: router
+  version: 1
+
+control-plane-manager:
+  enabled: true
+  settings:
+    apiserver:
+      auditPolicyEnabled: true
+      certSANs:
+        - kubernetes.default.svc.cluster.local
+        - kubernetes.default.svc.dacc.s.mesh
+  version: 1
+
+istio:
+  enabled: true
+  settings:
+    sidecar:
+      resourcesManagement:
+        mode: Static
+        static:
+          limits:
+            cpu: "10"
+            memory: 10Gi
+          requests:
+            cpu: 100m
+            memory: 128Mi
+    globalVersion: "1.21"
+    alliance:
+      ingressGateway:
+        inlet: LoadBalancer
+        serviceAnnotations:
+          yandex.cpi.flant.com/listener-subnet-id: e2lt2hrin53vcd0b8n3o
+          yandex.cpi.flant.com/target-group-network-id: enpofm2o1fd0e01e2rfb
+        nodeSelector:
+          node-role.deckhouse.io/frontend: ""
+        tolerations:
+          - effect: NoExecute
+            key: dedicated.deckhouse.io
+            operator: Equal
+            value: frontend
+    federation:
+      enabled: true
+    dataPlane:
+      trafficRedirectionSetupMode: CNIPlugin
+  version: 2
+
+cert-manager:
+  enabled: true
+  settings:
+    enableCAInjector: true
+  version: 1
+
+logShipper:
+  enabled: false
+  version: 1
+
+extended-monitoring:
+  enabled: true
+  settings:
+    events:
+      exporterEnabled: true
+      severityLevel: All
+  version: 2

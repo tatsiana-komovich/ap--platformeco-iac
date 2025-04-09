@@ -1,0 +1,14 @@
+clusterName: "k8s-marketplace-prod"
+
+aquaSecret:
+  kubeEnforcerToken: enforcer-marketplace-k8s
+
+enforcer:
+  enforcerToken: enforcer-marketplace
+  nodeSelector:
+    node-role.k8s.lmru.tech/application: ''
+  tolerations:
+    - key: dedicated
+      operator: Equal
+      effect: "NoExecute"
+      value: node-lc

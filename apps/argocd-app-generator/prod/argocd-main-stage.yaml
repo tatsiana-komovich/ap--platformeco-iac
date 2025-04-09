@@ -1,0 +1,35 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: argocd-infra-app-stage
+  namespace: devops-core-argocd
+  annotations:
+    argocd.argoproj.io/manifest-generate-paths: .
+spec:
+  destination:
+    namespace: devops-core-argocd
+    server: https://api-yc-techno.apps.lmru.tech
+  project: argocd-infra
+  source:
+    path: .helm
+    repoURL: https://github.lmru.tech/adeo/lmru--devops--argocd.git
+    targetRevision: master
+    plugin:
+      name: argocd-vault-additional-helm-cmp
+      env:
+        - name: VAULT_NAMESPACE
+          value: it-devops
+        - name: AVP_SECRET
+          value: 'devops-core-argocd:argocd-vault-plugin-credentials'
+        - name: RELEASE_NAME
+          value: argocd
+        - name: ADDITIONAL_SPEC
+          value: "-f values.yaml -f values-stage.yaml"
+  syncPolicy:
+    retry:
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m0s
+      limit: 2

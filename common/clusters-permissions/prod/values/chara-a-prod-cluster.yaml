@@ -1,0 +1,357 @@
+---
+cluster_authorization:
+  defaults:
+    default_sa_permissions: &default
+      accessLevel: User
+      limitNamespaces:
+        - default
+      allowScale: true
+      allowAccessToSystemNamespaces: true
+      portForwarding: true
+  crowd:
+    groups:
+      # demand forecasting
+      crowd-sf-ro:
+        <<: *default
+        accessLevel: User
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+        limitNamespaces:
+          - alfor
+          - alfor-.*
+      crowd-sf-rw:
+        <<: *default
+        accessLevel: Editor
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - alfor
+          - alfor-.*
+      crowd-sf-admin:
+        <<: *default
+        accessLevel: Admin
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - alfor
+          - alfor-.*
+      crowd-sa-sf:
+        <<: *default
+        accessLevel: SuperAdmin
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - alfor
+          - alfor-.*
+      # stockrepository
+      crowd-sa-stockrepository:
+        <<: *default
+        accessLevel: Admin
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - cfp-.*
+          - stock-repository.*
+          - stockrepository-.*
+          - stockrepository
+      crowd-stockrepository-rw:
+        <<: *default
+        accessLevel: Editor
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - cfp-.*
+          - stock-repository.*
+          - stockrepository-.*
+          - stockrepository
+      crowd-stockrepository-ro:
+        <<: *default
+        accessLevel: User
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - cfp-.*
+          - stock-repository.*
+          - stockrepository-.*
+          - stockrepository
+      crowd-stockrepository-admin:
+        <<: *default
+        accessLevel: Admin
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - cfp-.*
+          - stock-repository.*
+          - stockrepository-.*
+          - stockrepository
+      crowd-cfp-admin:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - cfp-.*
+          - stock-repository.*
+      crowd-cfp-ro:
+        <<: *default
+        accessLevel: User
+        limitNamespaces:
+          - cfp-.*
+          - stock-repository.*
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+      crowd-cfp-rw:
+        <<: *default
+        accessLevel: Editor
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - cfp-.*
+          - stock-repository.*
+      crowd-sa-cfp:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - cfp-.*
+          - stock-repository.*
+      # replenishment
+      crowd-sa-replenishment:
+        <<: *default
+        accessLevel: Admin
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - replenishment-.*
+          - replenishment
+          - almaz-.*
+      crowd-replenishment-rw:
+        <<: *default
+        accessLevel: Editor
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - replenishment-.*
+          - replenishment
+          - almaz-.*
+      crowd-replenishment-ro:
+        <<: *default
+        accessLevel: User
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - replenishment-.*
+          - replenishment
+          - almaz-.*
+      crowd-replenishment-admin:
+        <<: *default
+        accessLevel: Admin
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - replenishment-.*
+          - replenishment
+          - almaz-.*
+      # networkconfiguration
+      crowd-sa-networkconfiguration:
+        <<: *default
+        accessLevel: Admin
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - networkconfiguration-.*
+          - ip-nc-.*
+      crowd-networkconfiguration-rw:
+        <<: *default
+        accessLevel: Editor
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - networkconfiguration-.*
+          - ip-nc-.*
+      crowd-networkconfiguration-ro:
+        <<: *default
+        accessLevel: User
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - networkconfiguration-.*
+          - ip-nc-.*
+      crowd-networkconfiguration-admin:
+        <<: *default
+        accessLevel: Admin
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - networkconfiguration-.*
+          - ip-nc-.*
+      crowd-sa-dom:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - networkconfiguration-.*
+          - ip-nc-.*
+      # cfo
+      crowd-sa-cfo:
+        <<: *default
+        accessLevel: Admin
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - cfo.*
+          - cfo-.*
+      crowd-cfo-rw:
+        <<: *default
+        accessLevel: Editor
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - cfo.*
+          - cfo-.*
+      crowd-cfo-ro:
+        <<: *default
+        accessLevel: User
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - cfo.*
+          - cfo-.*
+      crowd-cfo-admin:
+        <<: *default
+        accessLevel: Admin
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - cfo.*
+          - cfo-.*
+      # quota
+      crowd-quota-ro:
+        <<: *default
+        accessLevel: User
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - quota-.*
+      crowd-quota-admin:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - quota-.*
+      crowd-quota-rw:
+        <<: *default
+        accessLevel: Editor
+        limitNamespaces:
+          - quota-.*
+      crowd-sa-quota:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - quota-.*
+      #location-repository
+      crowd-sa-location-repository:
+        <<: *default
+        accessLevel: Admin
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - location-repository-.*
+      crowd-location-repository-rw:
+        <<: *default
+        accessLevel: Editor
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - location-repository-.*
+      crowd-location-repository-ro:
+        <<: *default
+        accessLevel: User
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - location-repository-.*
+      crowd-location-repository-admin:
+        <<: *default
+        accessLevel: Admin
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - location-repository-.*
+      #logbonus
+      crowd-logbonus-admin:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - logbonus-.*
+          - logbonus
+      crowd-logbonus-ro:
+        <<: *default
+        accessLevel: User
+        limitNamespaces:
+          - logbonus-.*
+          - logbonus
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+      crowd-logbonus-rw:
+        <<: *default
+        accessLevel: Editor
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - logbonus-.*
+          - logbonus
+      crowd-sa-logbonus:
+        <<: *default
+        accessLevel: Admin
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - logbonus-.*
+          - logbonus
+      # lmru--logistic-services-catalog
+      crowd-sa-logistic-service-cat:
+        <<: *default
+        accessLevel: Admin
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - logistic-services-.*
+      crowd-logistic-service-cat-rw:
+        <<: *default
+        accessLevel: Editor
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - logistic-services-.*
+      crowd-logistic-service-cat-ro:
+        <<: *default
+        accessLevel: User
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - logistic-services-.*
+      crowd-logistic-service-cat-admin:
+        <<: *default
+        accessLevel: Admin
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - logistic-services-.*
+      crowd-supplier-calendar-ro:
+        <<: *default
+        accessLevel: User
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - supplier-calendar.*
+      crowd-supplier-calendar-admin:
+        <<: *default
+        accessLevel: Admin
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - supplier-calendar.*
+      crowd-supplier-calendar-rw:
+        <<: *default
+        accessLevel: Editor
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - supplier-calendar.*
+      crowd-sa-supplier-calendar:
+        <<: *default
+        accessLevel: Admin
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - supplier-calendar.*
+      #Les P0157
+      crowd-les-ro:
+        <<: *default
+        accessLevel: User
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - les-.*
+      crowd-les-admin:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - les-.*
+      crowd-les-rw:
+        <<: *default
+        accessLevel: Editor
+        limitNamespaces:
+          - les-.*
+      crowd-sa-les:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - les-.*
+
+DexProvider:
+  clientID: k8s-argocd
+  clientSecret: crowd_app_k8s-argocd

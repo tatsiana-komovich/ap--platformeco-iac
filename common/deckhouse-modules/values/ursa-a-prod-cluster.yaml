@@ -1,0 +1,127 @@
+---
+clusterName: ursa-a
+clusterDomain: ursa-a.p.mesh
+
+admission-policy-engine:
+  spec:
+    version: 1
+    enabled: true
+  internal-lb-policy: true
+  artifactory-repos:
+    enforcementAction: deny
+
+global:
+  settings:
+    modules:
+      ingressClass: nginx-d8s
+
+user-authn:
+  enabled: true
+  settings:
+    publishAPI:
+      enable: true
+      https:
+        global:
+          kubeconfigGeneratorMasterCA: ""
+        mode: Global
+  version: 1
+
+prometheus:
+  enabled: true
+  settings:
+    externalLabels:
+      k8s_cluster: ursa-a
+      project_name: valuable-sale-price
+      datacenter: yc
+      environment: prod
+      platform: yandex
+  version: 2
+
+okmeter:
+  enabled: true
+  settings:
+    apiKey: 33543718-8f93-4860-842d-e735fb21d81f
+    nodeSelector:
+      node-role.kubernetes.io/control-plane: ""
+    tolerations:
+      - key: node-role.kubernetes.io/control-plane
+        operator: Exists
+      - key: node-role.kubernetes.io/master
+        operator: Exists
+      - key: dedicated
+        operator: Equal
+        value: router
+  version: 1
+
+control-plane-manager:
+  enabled: true
+  settings:
+    apiserver:
+      auditPolicyEnabled: true
+      certSANs:
+        - kubernetes.default.svc.cluster.local
+        - kubernetes.default.svc.ursa-a.p.mesh
+  version: 1
+
+logShipper:
+  enabled: false
+  version: 1
+
+cni-simple-bridge:
+  enabled: true
+  version: 1
+
+istio:
+  enabled: true
+  settings:
+    sidecar:
+      resourcesManagement:
+        mode: Static
+        static:
+          limits:
+            cpu: "10"
+            memory: 10Gi
+          requests:
+            cpu: 100m
+            memory: 128Mi
+    alliance:
+      ingressGateway:
+        inlet: LoadBalancer
+        serviceAnnotations:
+          yandex.cpi.flant.com/listener-subnet-id: e9b90h8ndqe9ut649rs4
+          yandex.cpi.flant.com/target-group-network-id: enpofm2o1fd0e01e2rfb
+        nodeSelector:
+          node-role.deckhouse.io/frontend: ""
+        tolerations:
+          - effect: NoExecute
+            key: dedicated.deckhouse.io
+            operator: Equal
+            value: frontend
+    federation:
+      enabled: true
+    dataPlane:
+      trafficRedirectionSetupMode: CNIPlugin
+    globalVersion: "1.21"
+  version: 2
+
+cert-manager:
+  enabled: true
+  settings:
+    enableCAInjector: true
+  version: 1
+
+extended-monitoring:
+  enabled: true
+  settings:
+    events:
+      exporterEnabled: true
+      severityLevel: All
+  version: 1
+
+deckhouse:
+  updateMode: Auto
+  windows:
+    - from: "19:00"
+      to: "21:00"
+      days:
+        - Mon

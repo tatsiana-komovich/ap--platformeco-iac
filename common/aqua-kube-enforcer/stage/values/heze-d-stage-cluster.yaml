@@ -1,0 +1,18 @@
+clusterName: "k8s-heze-d-stage"
+
+aquaSecret:
+  kubeEnforcerToken: enforcer-heze-d-stage-k8s
+
+enforcer:
+  enforcerToken: enforcer-heze-d-stage
+  nodeSelector:
+    node-role.k8s.lmru.tech/application: ''
+  tolerations:
+    - key: dedicated
+      operator: Equal
+      effect: "NoSchedule"
+      value: ghe-runners
+    - key: dedicated
+      operator: Equal
+      effect: "NoExecute"
+      value: tekton-pipelines

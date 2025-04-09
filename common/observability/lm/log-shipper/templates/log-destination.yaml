@@ -1,0 +1,13 @@
+{{- if .Values.logDestination.enabled }}
+{{- if hasKey .Values.logDestination "custom" }}
+{{- range $destination := .Values.logDestination.custom }}
+---
+apiVersion: deckhouse.io/v1alpha1
+kind: ClusterLogDestination
+metadata:
+  name: {{ $destination.name }}
+spec:
+{{- toYaml $destination.spec | nindent 2 }}
+{{- end }}
+{{- end }}
+{{- end }}

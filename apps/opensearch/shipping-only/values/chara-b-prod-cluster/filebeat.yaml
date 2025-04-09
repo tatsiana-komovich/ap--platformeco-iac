@@ -1,0 +1,42 @@
+---
+opendistro:
+  filebeat:
+    kubernetesyml: |-
+      - type: container
+        paths:
+          - /var/log/containers/*.log
+        exclude_files:
+          - '^\/var\/log\/containers\/(logstash|opendistro|vector|filebeat|kibana)[\w-]+infra-elklogs[\w-]+\.log$'
+        close_inactive: 10m
+        close_removed: true
+        ignore_older: 30m
+        clean_inactive: 66m
+        clean_removed: true
+        multiline.pattern: '^((([a-zA-Z\-0-9]+)_([a-zA-Z\-0-9]+)\s)|(([a-zA-Z\-0-9]+)\s)|(.{0}))(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\.\d{3}) \[|^(\{\s{0,1}\")|^(\d{2}-\w{3}-\d{4}\s\d{2}:\d{2}:\d{2}\.{0,1}\d{2,3})\s(\w+)|^([A-Z][0-9]{0,4}\s\d{2}:\d{2}:\d{2}\.\d{0,6})|^(\d{2}.\d{2}.\d{2},\s\d{2}:\d{2})|(\d{4}\/\d{2}\/\d{2} \d{2}:\d{2}:\d{2}\ \[\w{0,8}\])'
+        multiline.negate: true
+        multiline.match: after
+        processors:
+          - add_kubernetes_metadata:
+              in_cluster: true
+              matchers:
+              - logs_path:
+                  logs_path: "/var/log/containers/"
+          - drop_event:
+              when:
+                and:
+                  - not.equals:
+                      kubernetes.namespace_labels.product-id: "P0767"
+                  - not.equals:
+                      kubernetes.namespace_labels.product-id: "P0955"
+                  - not.equals:
+                      kubernetes.namespace_labels.product-id: "P0188"
+                  - not.equals:
+                      kubernetes.namespace_labels.product-id: "P1168"
+                  - not.equals:
+                      kubernetes.namespace_labels.product-id: "P1183"
+                  - not.equals:
+                      kubernetes.namespace_labels.product-id: "P0177"
+          - decode_json_fields:
+              fields: ['message']
+              target: 'json'
+              max_depth: 1

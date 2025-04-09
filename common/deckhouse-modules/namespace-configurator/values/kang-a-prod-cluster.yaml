@@ -1,0 +1,16 @@
+---
+extended_monitoring_enable_on_all_ns: {}
+products:
+  - product-id: P0864
+    log-shipping: enabled
+    namespace_pattern:
+      - ^airflow-.*
+
+  - product-id: P0657
+    namespace_pattern:
+      - ^dg-.*
+
+devops-core-vector:
+  - security.deckhouse.io/pod-policy-action: warn
+    namespace_pattern:
+      - ^devops-core-vector$

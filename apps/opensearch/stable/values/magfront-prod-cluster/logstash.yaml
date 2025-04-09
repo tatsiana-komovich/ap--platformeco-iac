@@ -1,0 +1,260 @@
+---
+opendistro:
+  logstash:
+    filter: |-
+      filter {
+        grok {
+          id => "grok_multi"
+          match => {
+            "message" => [
+              "(((?<brick>[a-zA-Z\-0-9]+)_(?<application>[a-zA-Z\-0-9]+)\s)|((?<application>[a-zA-Z\-0-9]+)\s)|(.{0}))(?<timestamp>%{YEAR}-%{MONTHNUM}-%{MONTHDAY} %{TIME}) \[(?<transaction>[A-Za-z0-9\-_\.]*),{0,1}(?<traceId>[A-Za-z0-9\-_\.]*),(?<spanId>[A-Za-z0-9\-_\.]*)\]\[%{GREEDYDATA:thread}\] %{LOGLEVEL:level}[ ]+%{NOTSPACE:class} - %{GREEDYDATA:text}",
+              "(((?<brick>[a-zA-Z\-0-9]+)_(?<application>[a-zA-Z\-0-9]+)\s)|((?<application>[a-zA-Z\-0-9]+)\s)|(.{0}))(?<timestamp>%{YEAR}-%{MONTHNUM}-%{MONTHDAY} %{TIME}) %{LOGLEVEL:level} \[(?<transaction>[A-Za-z0-9\-_\.]*),{0,1}(?<traceId>[A-Za-z0-9\-_\.]*),(?<spanId>[A-Za-z0-9\-_\.]*),([A-Za-z0-9\-_\.]*)\] ([0-9]*) --- \[%{GREEDYDATA:thread}\] %{NOTSPACE:class}[ ]+: %{GREEDYDATA:text}",
+              "(((?<brick>[a-zA-Z\-0-9]+)_(?<application>[a-zA-Z\-0-9]+)\s)|((?<application>[a-zA-Z\-0-9]+)\s)|(.{0}))(?<timestamp>%{YEAR}-%{MONTHNUM}-%{MONTHDAY} %{TIME}) \[(?<processId>[A-Za-z\-0-9]*),(?<solutionId>[A-Za-z0-9\-_\.]*),{0,1}(?<traceId>[A-Za-z0-9\-_\.]*),(?<spanId>[A-Za-z0-9\-_\.]*)\]\[%{GREEDYDATA:thread}\] %{LOGLEVEL:level}[ ]+%{NOTSPACE:class} - %{GREEDYDATA:text}",
+              "(?<event>([A-Z][0-9]{0,4})) %{TIME:time}%{SPACE}%{NUMBER:n} (?<appsrc>%{WORD}\.%{WORD}:\d{1,})\] %{GREEDYDATA:msg}"
+            ]
+          }
+        }
+
+        mutate {
+          id => "mutate_log"
+          rename => { "log" => "original_log" }
+          rename => { "text" => "log" }
+          remove_field => ["time"]
+        }
+
+        json {
+          id => "json_log"
+          source => "log"
+          skip_on_invalid_json => true
+          target => "jsonLog"
+        }
+
+        if [jsonLog][duration] {
+          mutate {
+            id => "mutate_duration"
+            add_field => { "duration" => "%{[jsonLog][duration]}" }
+          }
+
+          mutate {
+            id => "convert_duration"
+            convert => { "duration" => "integer" }
+          }
+        }
+
+        if [jsonLog][uri] {
+          mutate {
+            id => "mutate_uri"
+            add_field => { "uri" => "%{[jsonLog][uri]}" }
+          }
+        }
+
+        if [jsonLog][type] {
+          mutate {
+            id => "mutate_direction"
+            add_field => { "direction" => "%{[jsonLog][type]}" }
+          }
+        }
+
+        if [jsonLog][origin] {
+          mutate {
+            id => "mutate_origin"
+            add_field => { "origin" => "%{[jsonLog][origin]}" }
+          }
+        }
+
+        if [jsonLog][status] {
+          mutate {
+            id => "mutate_status"
+            add_field => { "status" => "%{[jsonLog][status]}" }
+          }
+        }
+
+        if [jsonLog][correlation] {
+          mutate {
+            id => "mutate_correlation"
+            add_field => { "correlation" => "%{[jsonLog][correlation]}" }
+          }
+        }
+
+        if [jsonLog][request] {
+          mutate {
+            id => "mutate_request"
+            add_field => { "request" => "%{[jsonLog][request]}" }
+          }
+        }
+
+        if [jsonLog][requestMethod] {
+          mutate {
+            id => "mutate_methodrequest"
+            add_field => { "requestMethod" => "%{[jsonLog][requestMethod]}" }
+          }
+        }
+
+        if [jsonLog][body][orderId] {
+          mutate {
+            id => "mutate_orderid"
+            add_field => { "orderId" => "%{[jsonLog][body][orderId]}" }
+          }
+        }
+
+        if [jsonLog][body][storeId] {
+          mutate {
+              id => "mutate_storeid"
+              add_field => { "storeId" => "%{[jsonLog][body][storeId]}" }
+          }
+        }
+
+        if [jsonLog][body][amount] {
+          mutate {
+            id => "mutate_amount"
+            add_field => { "amount" => "%{[jsonLog][body][amount]}" }
+          }
+        }
+
+        if [jsonLog][body][channel] {
+          mutate {
+            id => "mutate_channel"
+            add_field => { "channel" => "%{[jsonLog][body][channel]}" }
+          }
+        }
+
+        if [jsonLog][body][status] {
+          mutate {
+            id => "mutate_orderstatus"
+            add_field => { "order-status" => "%{[jsonLog][body][status]}" }
+          }
+        }
+
+        if [jsonLog][body][ErrorMessage] {
+          mutate {
+            id => "mutate_errmessage"
+            add_field => { "errorMessage" => "%{[jsonLog][body][ErrorMessage]}" }
+          }
+        }
+
+        if [jsonLog][body][errorMessage] {
+          mutate {
+            id => "mutate_errmessage2"
+            add_field => { "errorMessage" => "%{[jsonLog][body][errorMessage]}" }
+          }
+        }
+
+        mutate {
+          id => "log_remove_field"
+          remove_field => [ "jsonLog" ]
+        }
+
+        grok {
+          id => "grok_count"
+          match => {"message" => ".?number: %{NUMBER:count:int}.?"}
+        }
+
+        grok {
+          id => "grok_mills"
+          match => {"message" => ".?\(millis\) = %{NUMBER:millis:int}.?"}
+        }
+
+        grok {
+          id => "grok_duration"
+          match => {"message" => ".?Duration: %{NUMBER:duration:int}.?"}
+        }
+
+        grok {
+          id => "grok_value"
+          match => {"message" => ".?value: '%{WORD:value}'.?"}
+        }
+
+        grok {
+          id => "grok_value2"
+          match => {"message" => ".?value2: '%{WORD:value2}'.?"}
+        }
+
+        grok {
+          id => "grok_username"
+          match => {"message" => "^\/logs\/%{USERNAME:application}\.log$"}
+        }
+
+        grok {
+          id => "grok_eventsource"
+          match => {"message" => ".?eventSource: '%{DATA:eventSource}'.?"}
+        }
+
+        grok {
+          id => "grok_event"
+          match => {"message" => ".?event: '%{DATA:event}'.?"}
+        }
+
+        grok {
+          id => "grok_storeid"
+          match => {"message" => ".?storeId: '%{WORD:storeId}'.?"}
+        }
+
+        grok {
+          id => "grok_param"
+          match => {"message" => ".?type parameter: %{WORD:parameter}.?"}
+        }
+
+        grok {
+          id => "grok_status"
+          match => {"message" => ".?status: '%{WORD:status}'.?"}
+        }
+
+        grok {
+          id => "grok_entities"
+          match => {"message" => ".?contains %{NUMBER:entities:int}.?"}
+        }
+
+        if [message] =~ "\tat" {
+          grok {
+            id => "grok_tat"
+            match => ["message", "^(\tat)"]
+            add_tag => ["stacktrace"]
+          }
+        }
+
+        if [message] =~ "Non-zero metrics" {
+          drop { }
+        }
+
+        if [message] =~ "Hibernate:" {
+          drop { }
+        }
+
+        if [log] {
+          mutate {
+            id => "log_remove_field2"
+            remove_field => [ "message" ]
+          }
+        }
+
+        if [kubernetes][namespace] =~ /^solution.*/ {
+          mutate {
+            id => "mutate_solution"
+            add_field => { "external_es" => "true" }
+            remove_field => [ "host" ]
+          }
+        }
+
+        date {
+          id => "date"
+          match => ["timestamp", "yyyy-MM-dd HH:mm:ss.SSS", "ISO8601"]
+        }
+
+        if ![kubernetes][namespace] {
+          mutate {
+            id => "filebeat_index"
+            add_field => { "[@metadata][target_index]" => "filebeat" }
+          }
+        } else {
+          grok {
+            id => "grok_targetindex"
+            match => { "[kubernetes][namespace]" => "(?<[@metadata][target_index]>^[^-]+)" }
+          }
+        }
+        if [ingress][upstream_response_time] {
+          mutate {
+            id => "ingress_nginx_float"
+            convert => { "[ingress][upstream_response_time]" => "float" }
+          }
+        }
+      }

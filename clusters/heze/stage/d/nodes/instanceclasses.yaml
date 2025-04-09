@@ -1,0 +1,64 @@
+---
+apiVersion: deckhouse.io/v1
+kind: YandexInstanceClass
+metadata:
+  name: application-nodes
+spec:
+  cores: 16
+  memory: 32768
+  diskSizeGB: 100
+  diskType: network-ssd
+  imageID: fd8emvfmfoaordspe1jr
+  networkType: Standard
+---
+apiVersion: deckhouse.io/v1
+kind: YandexInstanceClass
+metadata:
+  name: system
+spec:
+  cores: 32
+  diskSizeGB: 50
+  diskType: network-ssd
+  imageID: fd8emvfmfoaordspe1jr
+  memory: 98304
+  networkType: Standard
+  platformID: standard-v2
+---
+apiVersion: deckhouse.io/v1
+kind: YandexInstanceClass
+metadata:
+  name: node-tekton-pipelines
+spec:
+  cores: 8
+  diskSizeGB: 200
+  diskType: network-ssd
+  imageID: fd8emvfmfoaordspe1jr
+  memory: 16384
+  networkType: Standard
+  platformID: standard-v2
+---
+apiVersion: deckhouse.io/v1
+kind: YandexInstanceClass
+metadata:
+  name: otel-system-obs
+spec:
+  cores: 8
+  diskSizeGB: 50
+  diskType: network-ssd
+  imageID: fd8emvfmfoaordspe1jr
+  memory: 16384
+  networkType: Standard
+  platformID: standard-v2
+---
+apiVersion: deckhouse.io/v1
+kind: YandexInstanceClass
+metadata:
+  name: d8-loki
+spec:
+  cores: 4
+  diskSizeGB: 50
+  diskType: network-ssd
+  memory: 8192
+  imageID: fd8emvfmfoaordspe1jr
+  networkType: Standard
+  platformID: standard-v2

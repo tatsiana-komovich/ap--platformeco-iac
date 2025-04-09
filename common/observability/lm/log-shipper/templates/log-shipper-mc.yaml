@@ -1,0 +1,12 @@
+{{- if .Values.logShipper.enabled }}
+---
+apiVersion: deckhouse.io/v1alpha1
+kind: ModuleConfig
+metadata:
+  name: log-shipper
+spec:
+  version: 1
+  enabled: {{ .Values.logShipper.enabled }}
+  settings:
+{{- toYaml .Values.logShipper.settings | nindent 4 }}
+{{- end }}

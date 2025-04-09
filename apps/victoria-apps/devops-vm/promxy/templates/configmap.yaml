@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: "{{ .Values.app.name }}-config"
+  namespace: {{ .Values.namespace }}
+data:
+  config.yaml: |
+    promxy:
+      server_groups:
+        - static_configs:
+            - targets:
+              - vm-cluster-vmselect-x1-techno.apps.lmru.tech
+          remote_read: false
+          path_prefix: /select/0/prometheus/
+          query_params:
+            nocache: 1
+          scheme: https
+          http_client:
+            dial_timeout: 1s
+            tls_config:
+              insecure_skip_verify: true

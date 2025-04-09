@@ -1,0 +1,62 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: {{ .Values.clusterRoleBinding.name }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    role: {{ .Release.Name }}
+    app: {{ include "kube-enforcer.fullname" . }}
+    aqua.component: kubeenforcer
+{{ include "aqua.labels" . | indent 4 }}
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: {{ .Values.clusterRole.name }}
+subjects:
+  - kind: ServiceAccount
+    name: {{ template "serviceAccount" . }}
+    namespace: {{ .Release.Namespace }}
+    
+{{- if and (ge (atoi (.Capabilities.KubeVersion.Minor | replace "+" "")) 19 ) .Values.starboard.enabled }}
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: {{ .Values.starboard.clusterRoleBinding.name }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: {{ .Release.Name }}
+    aqua.component: starboard-operator
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}"
+    release: "{{ .Release.Name }}"
+    heritage: "{{ .Release.Service }}"
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: {{ .Values.starboard.clusterRole.name }}
+subjects:
+  - kind: ServiceAccount
+    name: {{ template "serviceAccountStarboard" . }}
+    namespace: {{ .Release.Namespace }}
+{{- end }}
+{{- if eq .Values.global.platform "mke" }}
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: {{ .Values.clusterRoleBinding.name }}-admin
+  namespace: {{ .Release.Namespace }}
+  labels:
+    role: {{ .Release.Name }}
+    app: {{ include "kube-enforcer.fullname" . }}
+    aqua.component: kubeenforcer
+{{ include "aqua.labels" . | indent 4 }}
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: cluster-admin
+subjects:
+  - kind: ServiceAccount
+    name: {{ template "serviceAccount" . }}
+    namespace: {{ .Release.Namespace }}
+{{- end }}

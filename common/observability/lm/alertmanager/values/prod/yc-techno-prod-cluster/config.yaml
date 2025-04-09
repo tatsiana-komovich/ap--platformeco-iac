@@ -1,0 +1,85 @@
+---
+alertmanager:
+  templates:
+    alertmanager.tmpl: |-
+      '{{ define "generator.url" }} {{ (index .Alerts 0).GeneratorURL | reReplaceAll "&g0.tab=1$" "&g0.tab=0" }} {{ end }}'
+
+  config:
+    global:
+      smtp_from: 'alertmanager@leroy-merlin.ru'
+      smtp_smarthost: 'massmail.hq.ru.corp.leroymerlin.com:25'
+      smtp_require_tls: false
+
+    templates:
+      - '/etc/alertmanager/*.tmpl'
+
+    route:
+      group_by: ['alertname', 'job']
+      receiver: 'void'
+      repeat_interval: 4h
+
+  ## Add your Alertmanager configuration below
+
+      routes:
+        - matchers:
+            - cool_label="cool_value"
+          receiver: 'my-grafana-oncall-webhook'
+        - matchers:
+            - namespace=~"keycloak-.*"
+          receiver: 'itam-grafana-oncall-keycloak'
+        - matchers:
+            - namespace=~"legoauth-.*"
+          receiver: 'itam-grafana-oncall-legoauth'
+        - matchers:
+            - namespace=~"ausweis-.*"
+          receiver: 'itam-grafana-oncall-ausweis'
+
+        # Observability.
+        # Grafana/Grafana OnCall.
+        # Default alerts from deckhouse in namespace.
+        - matchers:
+            - namespace="obs-grafana"
+          receiver: 'obs-grafana-oncall'
+        # Default alerts from deckhouse for node group.
+        - matchers:
+            - node_group="obs-grafana"
+          receiver: 'obs-grafana-oncall'
+        # Aqua alerts
+        - matchers:
+            - devsecops=true
+          receiver: 'devsecops-grafana-oncall'
+
+    receivers:
+      - name: 'void'
+
+      - name: 'my-grafana-oncall-webhook'
+        webhook_configs:
+          - url: 'https://obs-grafana-oncall-yc-techno.apps.lmru.tech/00/integrations/v1/alertmanager/AABBCCC112233/'
+            send_resolved: true
+
+      - name: 'itam-grafana-oncall-keycloak'
+        webhook_configs:
+          - url: 'https://obs-grafana-oncall-yc-techno.apps.lmru.tech/37/integrations/v1/alertmanager/u7ZJyUE8WUCyoxv2HwiMLKg5B/'
+            send_resolved: true
+
+      - name: 'itam-grafana-oncall-legoauth'
+        webhook_configs:
+          - url: 'https://obs-grafana-oncall-yc-techno.apps.lmru.tech/37/integrations/v1/alertmanager/CpFjfK2I1BPwfjR8BwE0wH0Q8/'
+            send_resolved: true
+
+      - name: 'itam-grafana-oncall-ausweis'
+        webhook_configs:
+          - url: 'https://obs-grafana-oncall-yc-techno.apps.lmru.tech/37/integrations/v1/alertmanager/y0nbKMgmRK5GL0wOKe9YkSu3u/'
+            send_resolved: true
+
+      # Observability.
+      - name: 'obs-grafana-oncall'
+        webhook_configs:
+          - url: 'https://obs-grafana-oncall-yc-techno.apps.lmru.tech/2/integrations/v1/alertmanager/Pab70rYkYJFd6xror063S0rKO/'
+            send_resolved: true
+
+      # DevSecOps
+      - name: 'devsecops-grafana-oncall'
+        webhook_configs:
+          - url: 'https://obs-grafana-oncall-yc-techno.apps.lmru.tech/14/integrations/v1/alertmanager/zaLQom7gxk99niO7gYQaQ2HJY/'
+            send_resolved: false

@@ -1,0 +1,245 @@
+---
+opendistro:
+  curator:
+    enabled: true
+    s3_snapshots:
+      unit_count:
+        all: 60
+        unknown: 7
+    cron:
+      restore: 50 6 * * *
+      snapshot: 30 0 * * *
+    unknown:
+      days_count: 7
+      snapshot: true
+      schedule: 30 0 * * *
+    indices:
+      - kind: prefix
+        value: filebeat
+        system: false
+        days_count: 30
+        snapshot: true
+        schedule: 50 0 * * *
+      - kind: prefix
+        value: infra-elklogs
+        system: false
+        days_count: 30
+        snapshot: false
+        schedule: 55 0 * * *
+      - kind: prefix
+        value: d8-ingress
+        system: false
+        days_count: 7
+        snapshot: true
+        snapshot_count_s3: 7
+        schedule: 0 1 * * *
+      - kind: prefix
+        value: eventrouter
+        system: false
+        days_count: 7
+        snapshot: false
+        schedule: 5 1 * * *
+      - kind: prefix
+        value: lmru-p0471-eventrouter-prod
+        system: false
+        days_count: 7
+        snapshot: false
+        schedule: 7 1 * * *
+      - kind: prefix
+        value: psp-prod
+        system: false
+        days_count: 30
+        snapshot: true
+        schedule: 10 1 * * *
+      - kind: prefix
+        value: rap-prod
+        system: false
+        days_count: 30
+        snapshot: true
+        schedule: 12 1 * * *
+      - kind: prefix
+        value: b2bm-prod
+        system: false
+        monitoring: false
+        days_count: 7
+        snapshot: true
+        snapshot_count_s3: 180
+        schedule: 15 1 * * *
+      - kind: prefix
+        value: src-prod
+        system: false
+        monitoring: false
+        days_count: 7
+        snapshot: true
+        snapshot_count_s3: 180
+        schedule: 17 1 * * *
+      - kind: prefix
+        value: payment-ptm
+        system: false
+        days_count: 7
+        snapshot: true
+        snapshot_count_s3: 180
+        schedule: 20 1 * * *
+      - kind: prefix
+        value: lmru-p0445-payment-ptm-prod
+        system: false
+        days_count: 7
+        snapshot: true
+        snapshot_count_s3: 180
+        schedule: 22 1 * * *
+      - kind: prefix
+        value: payment-pdm
+        system: false
+        days_count: 7
+        snapshot: true
+        snapshot_count_s3: 180
+        schedule: 25 1 * * *
+      - kind: prefix
+        value: lmru-p0510-payment-pdm-prod
+        system: false
+        days_count: 7
+        snapshot: true
+        snapshot_count_s3: 180
+        schedule: 27 1 * * *
+      - kind: prefix
+        value: payment-wallet
+        system: false
+        days_count: 7
+        snapshot: true
+        snapshot_count_s3: 180
+        schedule: 30 1 * * *
+      - kind: prefix
+        value: lmru-p0405-payment-wallet-prod
+        system: false
+        days_count: 7
+        snapshot: true
+        snapshot_count_s3: 180
+        schedule: 32 1 * * *
+      - kind: prefix
+        value: payment-pb
+        system: false
+        days_count: 7
+        snapshot: true
+        snapshot_count_s3: 180
+        schedule: 35 1 * * *
+      - kind: prefix
+        value: lmru-p0165-payment-pb-prod
+        system: false
+        days_count: 7
+        snapshot: true
+        snapshot_count_s3: 180
+        schedule: 37 1 * * *
+      - kind: prefix
+        value: payment-pof
+        system: false
+        days_count: 7
+        snapshot: true
+        snapshot_count_s3: 180
+        schedule: 40 1 * * *
+      - kind: prefix
+        value: lmru-p0709-payment-pof-prod
+        system: false
+        days_count: 7
+        snapshot: true
+        snapshot_count_s3: 180
+        schedule: 42 1 * * *
+      - kind: prefix
+        value: cashoffice-prod
+        system: false
+        monitoring: false
+        days_count: 7
+        snapshot: true
+        snapshot_count_s3: 180
+        schedule: 45 1 * * *
+      - kind: prefix
+        value: lmru-p1042-cashoffice-prod
+        system: false
+        monitoring: false
+        days_count: 7
+        snapshot: true
+        snapshot_count_s3: 180
+        schedule: 45 1 * * *
+      - kind: prefix
+        value: payment-sre
+        system: false
+        days_count: 7
+        snapshot: true
+        snapshot_count_s3: 180
+        schedule: 50 1 * * *
+      - kind: prefix
+        value: payment-wfm
+        system: false
+        monitoring: false
+        days_count: 7
+        snapshot: true
+        snapshot_count_s3: 180
+        schedule: 55 1 * * *
+      - kind: prefix
+        value: wfm
+        system: false
+        days_count: 30
+        snapshot: true
+        snapshot_count_s3: 180
+        schedule: 0 2 * * *
+      - kind: prefix
+        value: lmru-p0171-wfm-prod
+        system: false
+        days_count: 30
+        snapshot: true
+        snapshot_count_s3: 180
+        schedule: 2 2 * * *
+      - kind: prefix
+        value: payment-pon
+        system: false
+        days_count: 7
+        snapshot: true
+        snapshot_count_s3: 180
+        schedule: 25 1 * * *
+      - kind: prefix
+        value: lmru-p0717-payment-pon-prod
+        system: false
+        days_count: 7
+        snapshot: true
+        snapshot_count_s3: 180
+        schedule: 27 1 * * *
+      - kind: prefix
+        value: lmru-p0084-pbb-prod-prod
+        system: false
+        days_count: 7
+        snapshot: true
+        snapshot_count_s3: 180
+        schedule: 23 1 * * *
+      - kind: prefix
+        value: lmru-p1169-b2bm-prod-prod
+        system: false
+        days_count: 7
+        snapshot: true
+        snapshot_count_s3: 180
+        schedule: 6 2 * * *
+      - kind: prefix
+        value: lmru-p0950-src-prod-prod
+        system: false
+        days_count: 7
+        snapshot: true
+        snapshot_count_s3: 180
+        schedule: 9 2 * * *
+      - kind: prefix
+        value: lmru-p0949-rap-prod-prod
+        system: false
+        days_count: 7
+        snapshot: true
+        snapshot_count_s3: 180
+        schedule: 12 2 * * *
+      - kind: prefix
+        value: lmru-p0948-psp-prod-prod
+        system: false
+        days_count: 7
+        snapshot: true
+        snapshot_count_s3: 180
+        schedule: 15 2 * * *
+      - kind: prefix
+        value: .kibana
+        system: true
+        days_count: 30
+        snapshot: true
+        schedule: 5 2 * * *

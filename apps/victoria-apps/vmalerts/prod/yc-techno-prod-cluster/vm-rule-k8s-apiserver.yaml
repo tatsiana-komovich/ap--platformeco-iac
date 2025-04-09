@@ -1,0 +1,45 @@
+---
+apiVersion: operator.victoriametrics.com/v1beta1
+kind: VMRule
+metadata:
+  name: vm-rule-k8s-apiserver
+  namespace: devops-core-victoria-alerts
+spec:
+  groups:
+    - name: kubernetes.apiserver
+      rules:
+        - alert: KubeAPIServerDown
+          expr: |
+                (sum by (job, pod, k8s_cluster) (up{job="kube-apiserver", k8s_cluster=~".*"} == 1 default 0)) == 0
+          for: 5m
+          labels:
+            severity: critical
+          annotations:
+            summary: "kubeapiserver in {{ $labels.k8s_cluster }} cluster is down"
+            description: https://runbooks.prometheus-operator.dev/runbooks/kubernetes/kubeapidown
+
+        - alert: KubeClientCertificateExpiration
+          expr: |
+                apiserver_client_certificate_expiration_seconds_count{job="kube-apiserver"} > 0 
+                and on(job) histogram_quantile(0.01, sum by (job, le)
+                (rate(apiserver_client_certificate_expiration_seconds_bucket{job="kube-apiserver"}[5m])))
+                < 604800
+          for: 5m
+          labels:
+            severity: warning
+          annotations:
+            summary: "A client certificate used to authenticate to kubernetes apiserver expires in less than 7 days"
+            description: https://runbooks.prometheus-operator.dev/runbooks/kubernetes/kubeclientcertificateexpiration
+
+        - alert: KubeClientCertificateExpiration
+          expr: |
+                apiserver_client_certificate_expiration_seconds_count{job="kube-apiserver"} > 0 
+                and on(job) histogram_quantile(0.01, sum by (job, le)
+                (rate(apiserver_client_certificate_expiration_seconds_bucket{job="kube-apiserver"}[5m])))
+                < 86400
+          for: 5m
+          labels:
+            severity: critical
+          annotations:
+            summary: "A client certificate used to authenticate to kubernetes apiserver expires in less than 1 day"
+            description: https://runbooks.prometheus-operator.dev/runbooks/kubernetes/kubeclientcertificateexpiration

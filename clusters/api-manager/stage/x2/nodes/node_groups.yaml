@@ -1,0 +1,266 @@
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  name: deckhouse
+spec:
+  chaos:
+    mode: Disabled
+  cloudInstances:
+    classReference:
+      kind: VsphereInstanceClass
+      name: deckhouse
+    maxPerZone: 1
+    minPerZone: 1
+    zones:
+      - X2-A
+  cri:
+    type: Containerd
+  disruptions:
+    approvalMode: Automatic
+    automatic:
+      drainBeforeApproval: false
+  nodeTemplate:
+    labels:
+      node-role.deckhouse.io/deckhouse: ""
+    taints:
+      - effect: NoExecute
+        key: dedicated.deckhouse.io
+        value: deckhouse
+  nodeType: CloudEphemeral
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  name: node-worker22
+spec:
+  chaos:
+    mode: Disabled
+  cloudInstances:
+    classReference:
+      kind: VsphereInstanceClass
+      name: node-worker22
+    maxPerZone: 60
+    minPerZone: 1
+    standby: 3
+    standbyHolder:
+      overprovisioningRate: 80
+    zones:
+      - X2-A
+  cri:
+    type: Containerd
+  disruptions:
+    approvalMode: Automatic
+  kubelet:
+    containerLogMaxFiles: 4
+    containerLogMaxSize: 50Mi
+    maxPods: 160
+    resourceReservation:
+      mode: "Auto"
+  nodeTemplate:
+    labels:
+      threshold.extended-monitoring.deckhouse.io/load-average-per-core-warning: "10"
+      threshold.extended-monitoring.deckhouse.io/disk-bytes-critical: "80"
+      threshold.extended-monitoring.deckhouse.io/disk-bytes-warning: "75"
+      node-role.k8s.lmru.tech/application: ''
+  nodeType: CloudEphemeral
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  name: prometheus
+spec:
+  chaos:
+    mode: Disabled
+  cloudInstances:
+    classReference:
+      kind: VsphereInstanceClass
+      name: prometheus
+    maxPerZone: 4
+    minPerZone: 2
+    zones:
+      - X2-A
+  cri:
+    type: Containerd
+  disruptions:
+    approvalMode: Automatic
+  nodeTemplate:
+    labels:
+      node-role/prometheus: ""
+    taints:
+      - effect: NoExecute
+        key: dedicated
+        value: prometheus
+  nodeType: CloudEphemeral
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  name: node-tekton-pipelines
+spec:
+  chaos:
+    mode: Disabled
+  cloudInstances:
+    classReference:
+      kind: VsphereInstanceClass
+      name: node-tekton-pipelines22
+    maxPerZone: 6
+    minPerZone: 2
+    standby: 1
+    standbyHolder:
+      notHeldResources:
+        cpu: 200m
+        memory: 700Mi
+    zones:
+      - X2-A
+  cri:
+    type: Containerd
+  disruptions:
+    approvalMode: Automatic
+  kubelet:
+    containerLogMaxFiles: 4
+    containerLogMaxSize: 50Mi
+    resourceReservation:
+      mode: "Auto"
+  nodeTemplate:
+    taints:
+      - effect: NoExecute
+        key: dedicated
+        value: tekton-pipelines
+    labels:
+      node-role.k8s.lmru.tech/application: ''
+  nodeType: CloudEphemeral
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  name: d8-loki
+spec:
+  chaos:
+    mode: Disabled
+  cloudInstances:
+    classReference:
+      kind: VsphereInstanceClass
+      name: d8-loki
+    maxPerZone: 1
+    minPerZone: 1
+    zones:
+      - X2-A
+  disruptions:
+    approvalMode: Automatic
+  nodeTemplate:
+    labels:
+      node-role/d8-loki: ""
+    taints:
+      - effect: NoExecute
+        key: dedicated
+        value: d8-loki
+  nodeType: CloudEphemeral
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  name: loadbalancer-a
+spec:
+  chaos:
+    mode: Disabled
+  cloudInstances:
+    classReference:
+      kind: VsphereInstanceClass
+      name: loadbalancer-a
+    maxPerZone: 4
+    minPerZone: 4
+    zones:
+      - X2-A
+  cri:
+    type: Containerd
+  disruptions:
+    approvalMode: Manual
+  nodeTemplate:
+    labels:
+      node-role/loadbalancer: ""
+      okmeter.io/enabled: ""
+      node-role/metallb: ""
+    taints:
+      - effect: NoExecute
+        key: node-role/loadbalancer
+        value: ""
+  nodeType: CloudEphemeral
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  name: d8-loadbalancer-a
+spec:
+  chaos:
+    mode: Disabled
+  cloudInstances:
+    classReference:
+      kind: VsphereInstanceClass
+      name: d8-loadbalancer-a
+    maxPerZone: 4
+    minPerZone: 4
+    zones:
+      - X2-A
+  cri:
+    type: Containerd
+  disruptions:
+    approvalMode: Manual
+  nodeTemplate:
+    labels:
+      node-role/d8-loadbalancer: ""
+      okmeter.io/enabled: ""
+      node-role/metallb: ""
+    taints:
+      - effect: NoExecute
+        key: node-role/d8-loadbalancer
+        value: ""
+  nodeType: CloudEphemeral
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  name: master
+spec:
+  cri:
+    type: Containerd
+  disruptions:
+    approvalMode: Manual
+  nodeTemplate:
+    labels:
+      node-role.kubernetes.io/control-plane: ""
+      node-role.kubernetes.io/master: ""
+      okmeter.io/enabled: ""
+    taints:
+      - effect: NoSchedule
+        key: node-role.kubernetes.io/control-plane
+  nodeType: CloudPermanent
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  name: system
+spec:
+  chaos:
+    mode: Disabled
+  cloudInstances:
+    classReference:
+      kind: VsphereInstanceClass
+      name: system
+    maxPerZone: 4
+    minPerZone: 2
+    zones:
+      - X2-A
+  cri:
+    type: Containerd
+  disruptions:
+    approvalMode: Manual
+  nodeTemplate:
+    labels:
+      node-role.deckhouse.io/system: ""
+      okmeter.io/enabled: ""
+    taints:
+      - effect: NoExecute
+        key: dedicated.deckhouse.io
+        value: system
+  nodeType: CloudEphemeral

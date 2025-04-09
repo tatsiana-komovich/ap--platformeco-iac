@@ -1,0 +1,16 @@
+---
+apiVersion: deckhouse.io/v1alpha1
+kind: NodeGroupConfiguration
+metadata:
+  name: kill-unattended-upgrades.sh
+spec:
+  weight: 3
+  bundles:
+    - "*"
+  nodeGroups:
+    - "opensearch"
+    - "odfe-common"
+    - "application-nodes"
+    - "system"
+  content: |
+    systemctl disable unattended-upgrades.service; systemctl stop unattended-upgrades.service; killall -9 unattended-upgrade || true

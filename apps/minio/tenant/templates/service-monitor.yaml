@@ -1,0 +1,30 @@
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  labels:
+    prometheus: main
+  name: minio-tenant
+  namespace: devops-core-minio-operator
+spec:
+  endpoints:
+  - port: http-minio
+    path: /minio/v2/metrics/bucket
+  selector:
+    matchLabels:
+      svc-custom-target: devops-minio-tenant
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  labels:
+    prometheus: main
+  name: minio-tenant-cluster
+  namespace: devops-core-minio-operator
+spec:
+  endpoints:
+  - port: http-minio
+    path: /minio/v2/metrics/cluster
+  selector:
+    matchLabels:
+      svc-custom-target: devops-minio-tenant

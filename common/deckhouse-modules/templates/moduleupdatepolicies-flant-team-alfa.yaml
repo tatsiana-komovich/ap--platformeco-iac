@@ -1,0 +1,9 @@
+{{- with (get .Values "mup-flant-team-alfa") }}
+---
+apiVersion: deckhouse.io/v1alpha2
+kind: ModuleUpdatePolicy
+metadata:
+  name: flant-team-alfa
+spec:
+  {{- toYaml . | nindent 2 }}
+{{- end }}

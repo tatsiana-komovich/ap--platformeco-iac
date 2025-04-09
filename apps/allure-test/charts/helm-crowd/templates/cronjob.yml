@@ -1,0 +1,24 @@
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: "{{ .Values.app.name }}-cronjob"
+spec:
+  schedule: "{{ .Values.cronjob.schedule }}"
+  successfulJobsHistoryLimit: 1
+  failedJobsHistoryLimit: 1
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          imagePullSecrets:
+            - name: {{ .Values.imagePullSecret }}
+          containers:
+          - name: "{{ .Values.app.name }}-cronjob"
+            image: {{ .Values.cronjob.image }}
+            args:
+              - {{ .Values.cronjob.args }}
+            envFrom:
+            - secretRef:
+                name: "{{ .Values.app.name }}-env"
+          restartPolicy: Never

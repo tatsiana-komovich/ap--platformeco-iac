@@ -1,0 +1,131 @@
+---
+logShipper:
+  enabled: false
+  settings:
+    debug: false
+
+logDestination:
+  enabled: false
+  custom:
+    - name: lmru-p0767-almaz
+      spec:
+        type: Logstash
+        logstash:
+          endpoint: logstash.infra-elklogs.svc.cluster.local:9045
+        extraLabels:
+          cluster: chara-a-prod
+          product_id: p0767
+    - name: lmru-p0955-network-configuration
+      spec:
+        type: Logstash
+        logstash:
+          endpoint: logstash.infra-elklogs.svc.cluster.local:9045
+        extraLabels:
+          cluster: chara-a-prod
+          product_id: p0955
+    - name: lmru-p0188-stockrepository
+      spec:
+        type: Logstash
+        logstash:
+          endpoint: logstash.infra-elklogs.svc.cluster.local:9045
+        extraLabels:
+          cluster: chara-a-prod
+          product_id: p0188
+    - name: lmru-p0702-alfor
+      spec:
+        type: Logstash
+        logstash:
+          endpoint: logstash.infra-elklogs.svc.cluster.local:9045
+        extraLabels:
+          cluster: chara-a-prod
+          product_id: p0702
+    - name: lmru-p1168-locrep
+      spec:
+        type: Logstash
+        logstash:
+          endpoint: logstash.infra-elklogs.svc.cluster.local:9045
+        extraLabels:
+          cluster: chara-a-prod
+          product_id: p1168
+    - name: lmru-p0177-quota
+      spec:
+        type: Logstash
+        logstash:
+          endpoint: logstash.infra-elklogs.svc.cluster.local:9045
+        extraLabels:
+          cluster: chara-a-prod
+          product_id: p0177
+
+loggingConfig:
+  enabled: false
+  custom:
+    - name: lmru-p0767-almaz
+      spec:
+        type: KubernetesPods
+        kubernetesPods:
+          namespaceSelector:
+            labelSelector:
+              matchLabels:
+                product-id: P0767
+        multilineParser:
+          type: Custom
+          custom:
+            startsWhen:
+              regex: ^(((([a-zA-Z\-0-9]+)_([a-zA-Z\-0-9]+)\s)|(([a-zA-Z\-0-9]+)\s)|(.{0}))(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\.\d{3}) \[)|^(\{\s{0,1}\")|^(\d{2}-\w{3}-\d{4}\s\d{2}:\d{2}:\d{2}\.{0,1}\d{2,3})\s(\w+)|^([A-Z][0-9]{0,4}\s\d{2}:\d{2}:\d{2}\.\d{0,6})|^(\d{2}.\d{2}.\d{2},\s\d{2}:\d{2})|^(\d{4}\/\d{2}\/\d{2} \d{2}:\d{2}:\d{2}\ \[\w{0,8}\])|^(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\.\d{3}\s+)|^(\w\d{4}\/\d{2}\/\d{2} \d{2}:\d{2}:\d{2})|^(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3})
+        destinationRefs:
+          - lmru-p0767-almaz
+    - name: lmru-p0955-network-configuration
+      spec:
+        type: KubernetesPods
+        kubernetesPods:
+          namespaceSelector:
+            labelSelector:
+              matchLabels:
+                product-id: P0955
+        destinationRefs:
+          - lmru-p0955-network-configuration
+    - name: lmru-p0188-stockrepository
+      spec:
+        type: KubernetesPods
+        kubernetesPods:
+          namespaceSelector:
+            labelSelector:
+              matchLabels:
+                product-id: P0188
+        multilineParser:
+          type: Custom
+          custom:
+            startsWhen:
+              regex: ^(((([a-zA-Z\-0-9]+)_([a-zA-Z\-0-9]+)\s)|(([a-zA-Z\-0-9]+)\s)|(.{0}))(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\.\d{3}) \[)|^(\{\s{0,1}\")|^(\d{2}-\w{3}-\d{4}\s\d{2}:\d{2}:\d{2}\.{0,1}\d{2,3})\s(\w+)|^([A-Z][0-9]{0,4}\s\d{2}:\d{2}:\d{2}\.\d{0,6})|^(\d{2}.\d{2}.\d{2},\s\d{2}:\d{2})|^(\d{4}\/\d{2}\/\d{2} \d{2}:\d{2}:\d{2}\ \[\w{0,8}\])|^(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\.\d{3}\s+)|^(\w\d{4}\/\d{2}\/\d{2} \d{2}:\d{2}:\d{2})|^(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3})
+        destinationRefs:
+          - lmru-p0188-stockrepository
+    - name: lmru-p0702-alfor
+      spec:
+        type: KubernetesPods
+        kubernetesPods:
+          namespaceSelector:
+            labelSelector:
+              matchLabels:
+                product-id: P0702
+        destinationRefs:
+          - lmru-p0702-alfor
+    - name: lmru-p1168-locrep
+      spec:
+        type: KubernetesPods
+        kubernetesPods:
+          namespaceSelector:
+            labelSelector:
+              matchLabels:
+                product-id: P1168
+        destinationRefs:
+          - lmru-p1168-locrep
+    - name: lmru-p0177-quota
+      spec:
+        type: KubernetesPods
+        kubernetesPods:
+          namespaceSelector:
+            labelSelector:
+              matchLabels:
+                product-id: P0177
+        destinationRefs:
+          - lmru-p0177-quota

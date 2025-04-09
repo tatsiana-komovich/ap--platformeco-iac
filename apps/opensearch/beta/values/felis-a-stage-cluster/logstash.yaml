@@ -1,0 +1,232 @@
+---
+opendistro:
+  logstash:
+    enabled: true
+    filter: |-
+      filter {
+        grok {
+          id => "grok_multi"
+          match => {
+            "message" => [
+              "(((?<brick>[a-zA-Z\-0-9]+)_(?<application>[a-zA-Z\-0-9]+)\s)|((?<application>[a-zA-Z\-0-9]+)\s)|(.{0}))(?<timestamp>%{YEAR}-%{MONTHNUM}-%{MONTHDAY} %{TIME}) \[(?<transaction>[A-Za-z0-9\-_\.]*),{0,1}(?<traceId>[A-Za-z0-9\-_\.]*),(?<spanId>[A-Za-z0-9\-_\.]*)\]\[%{GREEDYDATA:thread}\] %{LOGLEVEL:level}[ ]+%{NOTSPACE:class} - %{GREEDYDATA:text}",
+              "(((?<brick>[a-zA-Z\-0-9]+)_(?<application>[a-zA-Z\-0-9]+)\s)|((?<application>[a-zA-Z\-0-9]+)\s)|(.{0}))(?<timestamp>%{YEAR}-%{MONTHNUM}-%{MONTHDAY} %{TIME}) %{LOGLEVEL:level} \[(?<transaction>[A-Za-z0-9\-_\.]*),{0,1}(?<traceId>[A-Za-z0-9\-_\.]*),(?<spanId>[A-Za-z0-9\-_\.]*),([A-Za-z0-9\-_\.]*)\] ([0-9]*) --- \[%{GREEDYDATA:thread}\] %{NOTSPACE:class}[ ]+: %{GREEDYDATA:text}",
+              "(((?<brick>[a-zA-Z\-0-9]+)_(?<application>[a-zA-Z\-0-9]+)\s)|((?<application>[a-zA-Z\-0-9]+)\s)|(.{0}))(?<timestamp>%{YEAR}-%{MONTHNUM}-%{MONTHDAY} %{TIME}) \[(?<processId>[A-Za-z\-0-9]*),(?<solutionId>[A-Za-z0-9\-_\.]*),{0,1}(?<traceId>[A-Za-z0-9\-_\.]*),(?<spanId>[A-Za-z0-9\-_\.]*)\]\[%{GREEDYDATA:thread}\] %{LOGLEVEL:level}[ ]+%{NOTSPACE:class} - %{GREEDYDATA:text}",
+              "(((?<brick>[a-zA-Z\-0-9]+)_(?<application>[a-zA-Z\-0-9]+)\s)|((?<application>[a-zA-Z\-0-9]+)\s)|(.{0}))(?<timestamp>%{YEAR}-%{MONTHNUM}-%{MONTHDAY} %{TIME}) \[((?<transaction>[A-Za-z0-9\-_\.]*),{0,1})(?<traceId>[A-Za-z0-9\-_\.]*),(?<spanId>[A-Za-z0-9\-_\.]*)\]\[%{GREEDYDATA:thread}\] %{LOGLEVEL:level}[ ]+%{NOTSPACE:class} - %{GREEDYDATA:text}",
+              "(?<event>([A-Z][0-9]{0,4})) %{TIME:time}%{SPACE}%{NUMBER:n} (?<appsrc>%{WORD}\.%{WORD}:\d{1,})\] %{GREEDYDATA:msg}"
+            ]
+          }
+        }
+        mutate {
+          id => "mutate_removefield_time"
+          remove_field => ["time"]
+        }
+        mutate {
+          id => "add_cluster_field"
+          add_field => { "cluster" => "felis_a.stage" }
+        }
+
+        mutate {
+          id => "copy_product_id"
+          copy => { "[kubernetes][namespace_labels][product-id]" => "[product_id]" }
+        }
+        mutate {
+            id => "lowercase_prod_id"
+            lowercase => [ "product_id" ]
+        }
+
+        if [kubernetes][labels][component] !~ "merchants-.+" {
+          json {
+            id => "json_msg"
+            source => "message"
+            skip_on_invalid_json => true
+            target => "jsonLog"
+          }
+          if [jsonLog][uri] {
+            mutate {
+              id => "mutate_uri"
+              add_field => { "uri" => "%{[jsonLog][uri]}" }
+            }
+          }
+          if [jsonLog][renderedMessage] {
+            mutate {
+              id => "mutate_renderedmsg"
+              add_field => { "renderedMessage" => "%{[jsonLog][renderedMessage]}" }
+            }
+          }
+          if [jsonLog][serviceName] {
+            mutate {
+              id => "mutate_svcname"
+              add_field => { "serviceName" => "%{[jsonLog][serviceName]}" }
+            }
+          }
+          if [jsonLog][serviceVersion] {
+            mutate {
+              id => "mutate_svcvrs"
+              add_field => { "serviceVersion" => "%{[jsonLog][serviceVersion]}" }
+            }
+          }
+          if [jsonLog][stack] {
+            mutate {
+              id => "mutate_stack"
+              add_field => { "stack" => "%{[jsonLog][stack]}" }
+            }
+          }
+          if [jsonLog][request] {
+            mutate {
+              id => "mutate_request"
+              add_field => { "request" => "%{[jsonLog][request]}" }
+            }
+          }
+          if [jsonLog][duration] {
+            mutate {
+              id => "mutate_duration"
+              add_field => { "duration" => "%{[jsonLog][duration]}" }
+            }
+          }
+          if [jsonLog][type] {
+            mutate {
+              id => "mutate_type"
+              add_field => { "type" => "%{[jsonLog][type]}" }
+            }
+          }
+          if [jsonLog][origin] {
+            mutate {
+              id => "mutate_origin"
+              add_field => { "origin" => "%{[jsonLog][origin]}" }
+            }
+          }
+          if [jsonLog][status] {
+            mutate {
+              id => "mutate_status"
+              add_field => { "status" => "%{[jsonLog][status]}" }
+            }
+          }
+          if [jsonLog][correlation] {
+            mutate {
+              id => "mutate_correlation"
+              add_field => { "correlation" => "%{[jsonLog][correlation]}" }
+            }
+          }
+          if [jsonLog][requestMethod] {
+            mutate {
+              id => "mutate_requestMethod"
+              add_field => { "requestMethod" => "%{[jsonLog][requestMethod]}" }
+            }
+          }
+          if [jsonLog][body][orderId] {
+            mutate {
+              id => "mutate_body_orderId"
+              add_field => { "orderId" => "%{[jsonLog][body][orderId]}" }
+            }
+          }
+          if [jsonLog][body][storeId] {
+            mutate {
+              id => "mutate_body_storeId"
+              add_field => { "storeId" => "%{[jsonLog][body][storeId]}" }
+            }
+          }
+          if [jsonLog][body][amount] {
+            mutate {
+              id => "mutate_body_amount"
+              add_field => { "amount" => "%{[jsonLog][body][amount]}" }
+            }
+          }
+          if [jsonLog][body][channel] {
+            mutate {
+              id => "mutate_body_channel"
+              add_field => { "channel" => "%{[jsonLog][body][channel]}" }
+            }
+          }
+          if [jsonLog][body][status] {
+            mutate {
+              id => "mutate_body_status"
+              add_field => { "status" => "%{[jsonLog][body][status]}" }
+            }
+          }
+          if [jsonLog][body][ErrorMessage] {
+            mutate {
+              id => "mutate_body_ErrorMessage"
+              add_field => { "ErrorMessage" => "%{[jsonLog][body][ErrorMessage]}" }
+            }
+          }
+          if [jsonLog][ts] {
+               mutate {
+                 id => "mutate_removefield_ts"
+                 remove_field => [ "[jsonLog][ts]" ]
+               }
+          }
+          if [jsonLog][time] {
+               mutate {
+                 id => "mutate_removefield_time1"
+                 remove_field => [ "[jsonLog][time]" ]
+               }
+          }
+          if [jsonLog][level] {
+               mutate {
+                 id => "mutate_removefield_level"
+                 remove_field => [ "[jsonLog][level]" ]
+               }
+          }
+          if [jsonLog][error] {
+               mutate {
+                 id => "mutate_removefield_error"
+                 remove_field => [ "[jsonLog][error]" ]
+               }
+          }
+          if [jsonLog][metadata][json] {
+               mutate {
+                 id => "mutate_removefield_metadata_json"
+                 remove_field => [ "[jsonLog][metadata][json]" ]
+               }
+          }
+          if [jsonLog][requestDetails][data][delivery_data][shipment][deliveryDate] {
+               mutate {
+                 id => "mutate_removefield_deliveryDate"
+                 remove_field => [ "[jsonLog][requestDetails][data][delivery_data][shipment][deliveryDate]" ]
+               }
+          }
+        }
+        if [jsonLog][msg] {
+            ruby {
+              id => "ruby_data_to_string"
+              code => 'event.set("[jsonLog][msg]", event.get("[jsonLog][msg]").to_s)'
+            }
+        }
+        if ![kubernetes][namespace] {
+          mutate {
+            id => "filebeat_index"
+            add_field => { "[@metadata][target_index]" => "filebeat" }
+          }
+        } else if [kubernetes][labels][component] == "market-radar--crawler-content-downloader" or [kubernetes][labels][component] == "market-radar--crawler-extractor"  or [kubernetes][labels][component] == "market-radar--crawler-customer" or [kubernetes][labels][component] == "market-radar--crawler-task-scheduler" or [kubernetes][labels][component] == "market-radar--crawler-crawler-proxy" {
+          json {
+            id => "json_msg2"
+            source => "message"
+            skip_on_invalid_json => true
+          }
+          mutate {
+            id => "mutate_mr_crawler"
+            add_field => { "[@metadata][target_index]" => "mr-crawler" }
+          }
+        } else if [kubernetes][labels][opendistro_index] {
+          mutate {
+            id => "mutate_opendist_idx"
+            add_field => { "[@metadata][target_index]" => "%{[kubernetes][labels][opendistro_index]}" }
+          }
+        } else if [kubernetes][namespace] =~ /^scdp-.*/ {
+          grok {
+            id => "grok_targetindexscdp"
+            match => { "[kubernetes][namespace]" => "(?<[@metadata][target_index]>^[^-]+(?:-[^-]+){0,2})" }
+          }
+        } else {
+          grok {
+            id => "grok_targetindex"
+            match => { "[kubernetes][namespace]" => "(?<[@metadata][target_index]>^[^-]+)" }
+          }
+        }
+        if [ingress][upstream_response_time] {
+          mutate {
+            id => "ingress_nginx_float"
+            convert => { "[ingress][upstream_response_time]" => "float" }
+          }
+        }
+      }

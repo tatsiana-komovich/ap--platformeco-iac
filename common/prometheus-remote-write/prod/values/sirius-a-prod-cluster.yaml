@@ -1,0 +1,30 @@
+---
+k8s_prometheus_remote_write:
+  vminsert-devops-lmru-tech-custom-remote-write:
+    url:
+      _default: https://vminsert.devops.lmru.tech/insert/0/prometheus/
+    writeRelabelConfigs: {}
+  vm-cluster-payment-domain:
+    url:
+      _default: https://vminsert.pay.lmru.tech/insert/1/prometheus/
+    writeRelabelConfigs:
+      _default:
+        - action: drop
+          sourceLabels: [__name__]
+          regex: "istio.*"
+        - action: replace
+          regex: slo.*|ALERTS
+          replacement: payment-sre-tools
+          sourceLabels: [__name__]
+          targetLabel: namespace
+        - action: keep
+          regex: .*-prod|payment-sre-tools|payment-sre-exporter
+          sourceLabels:
+            - namespace
+        - action: replace
+          sourceLabels: [__name__, url]
+          regex: 'http_(server|client|proxy).*;(.+)'
+          targetLabel: uri
+          replacement: '${2}'
+        - action: labeldrop
+          regex: 'url'

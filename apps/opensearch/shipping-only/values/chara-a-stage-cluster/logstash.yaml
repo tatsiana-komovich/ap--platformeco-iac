@@ -1,0 +1,186 @@
+---
+opendistro:
+  logstash:
+    enabled: true
+    filter: |-
+      filter {
+          if [json] {
+             mutate {
+               id => "remove_message_if_json"
+               remove_field => [ "message" ]
+             }
+          }
+          grok {
+            id => "grok_multi"
+            match => {
+              "message" => [
+                "(((?<brick>[a-zA-Z\-0-9]+)_(?<application>[a-zA-Z\-0-9]+)\s)|((?<application>[a-zA-Z\-0-9]+)\s)|(.{0}))(?<timestamp_event>%{YEAR}-%{MONTHNUM}-%{MONTHDAY} %{TIME}) \[(?<traceId>[A-Za-z0-9\-_\.]*)\]\[%{GREEDYDATA:thread}\] %{LOGLEVEL:level}[ ]+%{NOTSPACE:class} - %{GREEDYDATA:lmsg}",
+                "(((?<brick>[a-zA-Z\-0-9]+)_(?<application>[a-zA-Z\-0-9]+)\s)|((?<application>[a-zA-Z\-0-9]+)\s)|(.{0}))(?<timestamp_event>%{YEAR}-%{MONTHNUM}-%{MONTHDAY} %{TIME}) \[(?<transactionId>[A-Za-z\-0-9]*),transportCompanyId:(?<transportCompanyId>[A-Za-z0-9\-_\.]*),{0,1}(?<traceId>[A-Za-z0-9\-_\.]*),(?<spanId>[A-Za-z0-9\-_\.]*)\]\[%{GREEDYDATA:thread}\] %{LOGLEVEL:level}[ ]+%{NOTSPACE:class} - %{GREEDYDATA:lmsg}",
+                "(((?<brick>[a-zA-Z\-0-9]+)_(?<application>[a-zA-Z\-0-9]+)\s)|((?<application>[a-zA-Z\-0-9]+)\s)|(.{0}))(?<timestamp_event>%{YEAR}-%{MONTHNUM}-%{MONTHDAY} %{TIME}) \[(?<transaction>[A-Za-z0-9\-_\.]*),{0,1}(?<traceId>[A-Za-z0-9\-_\.]*),(?<spanId>[A-Za-z0-9\-_\.]*)\]\[%{GREEDYDATA:thread}\] %{LOGLEVEL:level}[ ]+%{NOTSPACE:class} - %{GREEDYDATA:lmsg}",
+                "(((?<brick>[a-zA-Z\-0-9]+)_(?<application>[a-zA-Z\-0-9]+)\s)|((?<application>[a-zA-Z\-0-9]+)\s)|(.{0}))(?<timestamp_event>%{YEAR}-%{MONTHNUM}-%{MONTHDAY} %{TIME}) %{LOGLEVEL:level} \[(?<transaction>[A-Za-z0-9\-_\.]*),{0,1}(?<traceId>[A-Za-z0-9\-_\.]*),(?<spanId>[A-Za-z0-9\-_\.]*),([A-Za-z0-9\-_\.]*)\] ([0-9]*) --- \[%{GREEDYDATA:thread}\] %{NOTSPACE:class}[ ]+: %{GREEDYDATA:lmsg}",
+                "(((?<brick>[a-zA-Z\-0-9]+)_(?<application>[a-zA-Z\-0-9]+)\s)|((?<application>[a-zA-Z\-0-9]+)\s)|(.{0}))(?<timestamp_event>%{YEAR}-%{MONTHNUM}-%{MONTHDAY} %{TIME}) \[(?<processId>[A-Za-z\-0-9]*),(?<solutionId>[A-Za-z0-9\-_\.]*),{0,1}(?<traceId>[A-Za-z0-9\-_\.]*),(?<spanId>[A-Za-z0-9\-_\.]*)\]\[%{GREEDYDATA:thread}\] %{LOGLEVEL:level}[ ]+%{NOTSPACE:class} - %{GREEDYDATA:lmsg}",
+                "(?<controller.event>([A-Z][0-9]{0,4})) %{TIME:controller.time}%{SPACE}%{NUMBER:controller.n} (?<controller.appsrc>%{WORD}\.%{WORD}:\d{1,})\] %{GREEDYDATA:controller.lmsg}"
+              ]
+            }
+          }
+          json {
+            id => "json_log"
+            source => "lmsg"
+            skip_on_invalid_json => true
+            target => "jsonLog"
+          }
+          if [jsonLog][duration] {
+            mutate {
+              id => "mutate_duration"
+              add_field => { "duration" => "%{[jsonLog][duration]}" }
+            }
+            mutate {
+              id => "convert_duration"
+              convert => { "duration" => "integer" }
+            }
+          }
+          if [jsonLog][uri] {
+            mutate {
+              id => "mutate_uri"
+              add_field => { "uri" => "%{[jsonLog][uri]}" }
+            }
+          }
+          if [jsonLog][type] {
+            mutate {
+              id => "mutate_direction"
+              add_field => { "direction" => "%{[jsonLog][type]}" }
+            }
+          }
+          if [jsonLog][origin] {
+            mutate {
+              id => "mutate_origin"
+              add_field => { "origin" => "%{[jsonLog][origin]}" }
+            }
+          }
+          if [jsonLog][status] {
+            mutate {
+              id => "mutate_status"
+              add_field => { "status" => "%{[jsonLog][status]}" }
+            }
+          }
+          if [jsonLog][correlation] {
+            mutate {
+              id => "mutate_correlation"
+              add_field => { "correlation" => "%{[jsonLog][correlation]}" }
+            }
+          }
+          if [jsonLog][request] {
+            mutate {
+              id => "mutate_request"
+              add_field => { "request" => "%{[jsonLog][request]}" }
+            }
+          }
+          if [jsonLog][requestMethod] {
+            mutate {
+              id => "mutate_methodrequest"
+              add_field => { "requestMethod" => "%{[jsonLog][requestMethod]}" }
+            }
+          }
+          if [jsonLog][method] {
+            mutate {
+              id => "mutate_method"
+              add_field => { "method" => "%{[jsonLog][method]}" }
+            }
+          }
+          if [jsonLog][body][orderId] {
+            mutate {
+              id => "mutate_orderid"
+              add_field => { "orderId" => "%{[jsonLog][body][orderId]}" }
+            }
+          }
+          if [jsonLog][body][storeId] {
+            mutate {
+                id => "mutate_storeid"
+                add_field => { "storeId" => "%{[jsonLog][body][storeId]}" }
+            }
+          }
+          if [jsonLog][body][amount] {
+            mutate {
+              id => "mutate_amount"
+              add_field => { "amount" => "%{[jsonLog][body][amount]}" }
+            }
+          }
+          if [jsonLog][body][channel] {
+            mutate {
+              id => "mutate_channel"
+              add_field => { "channel" => "%{[jsonLog][body][channel]}" }
+            }
+          }
+          if [jsonLog][body][status] {
+            mutate {
+              id => "mutate_orderstatus"
+              add_field => { "order-status" => "%{[jsonLog][body][status]}" }
+            }
+          }
+          if [jsonLog][body][ErrorMessage] {
+            mutate {
+              id => "mutate_errmessage"
+              add_field => { "errorMessage" => "%{[jsonLog][body][ErrorMessage]}" }
+            }
+          }
+          if [jsonLog][body][errorMessage] {
+            mutate {
+              id => "mutate_errmessage2"
+              add_field => { "errorMessage" => "%{[jsonLog][body][errorMessage]}" }
+            }
+          }
+          if [lmsg] {
+            mutate {
+              id => "log_remove_field2"
+              remove_field => [ "message" ]
+            }
+          }
+          if [json][time] {
+            mutate {
+              id => "remove_json_time"
+              remove_field => [ "[json][time]", "[josn.time]" ]
+            }
+          }
+          mutate {
+            id => "log_remove_field3"
+            remove_field => [ "jsonLog", "stream", "host" ]
+          }
+        mutate {
+          id => "add_cluster_field"
+          add_field => { "cluster" => "chara_a.stage" }
+        }
+        date {
+          id => "date"
+          match => ["timestamp", "yyyy-MM-dd HH:mm:ss.SSS", "ISO8601"]
+        }
+
+        mutate {
+          id => "copy_product_id"
+          copy => { "[kubernetes][namespace_labels][product-id]" => "[product_id]" }
+        }
+        mutate {
+          id => "lowercase_prod_id"
+          lowercase => [ "product_id" ]
+        }
+        if ![kubernetes][namespace] {
+            mutate {
+              id => "filebeat_index"
+              add_field => { "[@metadata][target_index]" => "filebeat" }
+            }
+        } else {
+          grok {
+            id => "target_index"
+            match => { "[kubernetes][namespace]" => "(?<[@metadata][target_index]>^(?:[-]?[a-z0-9]+)+)[-]+[a-z0-9]+" }
+          }
+          mutate {
+           id => "copy_idx_name"
+           copy => { "[@metadata][target_index]" => "[index_name]" }
+          }
+        }
+        if [ingress][upstream_response_time] {
+          mutate {
+            id => "ingress_nginx_float"
+            convert => { "[ingress][upstream_response_time]" => "float" }
+          }
+        }
+      }

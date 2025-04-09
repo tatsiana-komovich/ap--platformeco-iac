@@ -1,0 +1,24 @@
+---
+apiVersion: deckhouse.io/v1
+kind: VsphereInstanceClass
+metadata:
+  name: application-nodes
+spec:
+  datastore: 3par_4_Lun102
+  mainNetwork: DEVOPS_3
+  memory: 16384
+  numCPUs: 8
+  rootDiskSize: 50
+  template: Templates/ubuntu-jammy-22.04-packer
+---
+apiVersion: deckhouse.io/v1
+kind: VsphereInstanceClass
+metadata:
+  name: system
+spec:
+  datastore: 3par_4_Lun102
+  mainNetwork: DEVOPS_3
+  memory: 32768
+  numCPUs: 8
+  rootDiskSize: 50
+  template: Templates/ubuntu-jammy-22.04-packer

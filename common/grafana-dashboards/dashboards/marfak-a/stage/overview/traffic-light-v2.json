@@ -1,0 +1,301 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": {
+          "type": "grafana",
+          "uid": "-- Grafana --"
+        },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "target": {
+          "limit": 100,
+          "matchAny": false,
+          "tags": [],
+          "type": "dashboard"
+        },
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": false,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "id": 70,
+  "iteration": 1696579186814,
+  "links": [],
+  "liveNow": false,
+  "panels": [
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "P0D6E4079E36703EB"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "#EAB839",
+                "value": 1
+              },
+              {
+                "color": "red",
+                "value": 2
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 4,
+        "x": 0,
+        "y": 0
+      },
+      "id": 2,
+      "maxDataPoints": 100,
+      "maxPerRow": 6,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": [
+            "last"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "text": {
+          "titleSize": 20,
+          "valueSize": 20
+        },
+        "textMode": "value_and_name"
+      },
+      "pluginVersion": "8.5.13",
+      "repeat": "Namespace",
+      "repeatDirection": "h",
+      "targets": [
+        {
+          "$$hashKey": "object:651",
+          "aggregation": "Last",
+          "alias": "asd",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P0D6E4079E36703EB"
+          },
+          "decimals": 2,
+          "displayAliasType": "Warning / Critical",
+          "displayType": "Regular",
+          "displayValueWithAlias": "Never",
+          "editorMode": "code",
+          "exemplar": false,
+          "expr": "count(ALERTS{namespace=\"$Namespace\", severity_level=\"1\"}) OR on() vector(0)",
+          "format": "time_series",
+          "instant": false,
+          "interval": "",
+          "legendFormat": "P1",
+          "range": true,
+          "refId": "A",
+          "units": "none",
+          "valueHandler": "Number Threshold"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P0D6E4079E36703EB"
+          },
+          "editorMode": "code",
+          "expr": "count(ALERTS{namespace=\"$Namespace\", severity_level=\"2\"}) OR on() vector(0)",
+          "hide": false,
+          "legendFormat": "P2",
+          "range": true,
+          "refId": "B"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P0D6E4079E36703EB"
+          },
+          "editorMode": "code",
+          "expr": "count(ALERTS{namespace=\"$Namespace\", severity_level=\"3\"}) OR on() vector(0)",
+          "hide": false,
+          "legendFormat": "P3",
+          "range": true,
+          "refId": "C"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P0D6E4079E36703EB"
+          },
+          "editorMode": "code",
+          "expr": "count(ALERTS{namespace=\"$Namespace\", severity_level!~\"1|2|3\"}) OR on() vector(0)",
+          "hide": false,
+          "legendFormat": "Other",
+          "range": true,
+          "refId": "D"
+        }
+      ],
+      "title": "$Namespace",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "P0D6E4079E36703EB"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "align": "auto",
+            "displayMode": "auto",
+            "filterable": false,
+            "inspect": false
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 7,
+        "w": 24,
+        "x": 0,
+        "y": 15
+      },
+      "id": 23,
+      "options": {
+        "footer": {
+          "enablePagination": false,
+          "fields": "",
+          "reducer": [
+            "sum"
+          ],
+          "show": false
+        },
+        "showHeader": true
+      },
+      "pluginVersion": "8.5.13",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P0D6E4079E36703EB"
+          },
+          "editorMode": "code",
+          "exemplar": false,
+          "expr": "ALERTS{namespace=~\"$Namespace\", alertstate=\"firing\"}",
+          "format": "table",
+          "instant": true,
+          "range": false,
+          "refId": "A"
+        }
+      ],
+      "transformations": [
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "Time": true,
+              "Value": true,
+              "__name__": true,
+              "alertstate": true,
+              "instance": true,
+              "job": true
+            },
+            "indexByName": {
+              "Time": 0,
+              "Value": 10,
+              "__name__": 1,
+              "alertname": 3,
+              "alertstate": 5,
+              "instance": 6,
+              "job": 7,
+              "namespace": 2,
+              "pod": 9,
+              "service": 8,
+              "severity_level": 4
+            },
+            "renameByName": {}
+          }
+        }
+      ],
+      "type": "table"
+    }
+  ],
+  "refresh": "10s",
+  "schemaVersion": 36,
+  "style": "dark",
+  "tags": [],
+  "templating": {
+    "list": [
+      {
+        "current": {
+          "selected": true,
+          "text": [
+            "All"
+          ],
+          "value": [
+            "$__all"
+          ]
+        },
+        "datasource": {
+          "type": "prometheus",
+          "uid": "P0D6E4079E36703EB"
+        },
+        "definition": "label_values(kube_namespace_labels, namespace)",
+        "hide": 0,
+        "includeAll": true,
+        "multi": true,
+        "name": "Namespace",
+        "options": [],
+        "query": {
+          "query": "label_values(kube_namespace_labels, namespace)",
+          "refId": "StandardVariableQuery"
+        },
+        "refresh": 1,
+        "regex": "^(?!d8-|obs-alertmanager|lmru-devops-|aqua|default|devops-core-k8s-blender-exporter|eventrouter|flant-|infra-|jaeger|kube-|upmeter|okmeter|werf-).*",
+        "skipUrlSync": false,
+        "sort": 0,
+        "type": "query"
+      }
+    ]
+  },
+  "time": {
+    "from": "now-15m",
+    "to": "now"
+  },
+  "timepicker": {},
+  "timezone": "",
+  "title": "Traffic light",
+  "uid": "1jzTz8y4k",
+  "version": 4,
+  "weekStart": ""
+}

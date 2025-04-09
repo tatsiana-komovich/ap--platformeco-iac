@@ -1,0 +1,54 @@
+---
+cluster_authorization:
+  defaults:
+    default_sa_permissions: &default
+      accessLevel: User
+      limitNamespaces:
+        - default
+      allowScale: true
+      allowAccessToSystemNamespaces: true
+      portForwarding: true
+  crowd:
+    groups:
+      crowd-apiinfra-admin:
+        <<: *default
+        accessLevel: SuperAdmin
+        allowAccessToSystemNamespaces: true
+        allowScale: true
+        portForwarding: true
+        limitNamespaces:
+          - .*
+      crowd-apiinfra-ro:
+        <<: *default
+        accessLevel: User
+        limitNamespaces:
+          - .*
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+      crowd-apiinfra-rw:
+        <<: *default
+        accessLevel: Editor
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - .*
+      crowd-sa-apiinfra:
+        <<: *default
+        accessLevel: SuperAdmin
+        limitNamespaces:
+          - .*
+        allowAccessToSystemNamespaces: true
+        allowScale: true
+        portForwarding: true
+      crowd-otel-admin:
+        <<: *default
+        accessLevel: Admin
+        allowAccessToSystemNamespaces: true
+        allowScale: true
+        portForwarding: true
+        limitNamespaces:
+          - .*
+
+DexProvider:
+  clientID: k8s-x1-platformeco-stage
+  clientSecret: crowd_app_k8s-x1-platformeco-stage

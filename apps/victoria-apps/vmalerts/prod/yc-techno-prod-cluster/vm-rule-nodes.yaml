@@ -1,0 +1,132 @@
+---
+apiVersion: operator.victoriametrics.com/v1beta1
+kind: VMRule
+metadata:
+  name: vm-rule-nodes
+  namespace: devops-core-victoria-alerts
+spec:
+  groups:
+    - name: kubernetes.node
+      concurrency: 1
+      rules:
+        - alert: NodeConntrackTableFull
+          expr: |
+            node_nf_conntrack_entries / node_nf_conntrack_entries_limit > 0.7
+          for: 5m
+          labels:
+            severity: warning
+          annotations:
+            summary: "The `conntrack` table is close to the maximum size."
+            description: |-
+              The conntrack table on the {{ $labels.node }} is {{ $value }}% of the maximum size.
+
+              There's nothing to worry about yet if the `conntrack` table is only 70-80 percent full. However, if it runs out, you will experience problems with new connections while the software will behave strangely.
+
+              The recommended course of action is to identify the source of "excess" `conntrack` entries using Okmeter or Grafana charts.
+        
+        - alert: NodeConntrackTableFull
+          expr: |
+            node_nf_conntrack_entries / node_nf_conntrack_entries_limit > 0.9
+          for: 1m
+          labels:
+            severity: critical
+          annotations:
+            summary: "The `conntrack` table is full."
+            description: |-
+              The `conntrack` table on the {{ $labels.node }} Node is full!
+
+              No new connections are created or accepted on the Node; note that this may result in strange software issues.
+
+              The recommended course of action is to identify the source of "excess" `conntrack` entries using Okmeter or Grafana charts.
+        
+        - alert: NodeSUnreclaimBytesUsageHigh
+          expr: "max by (node,k8s_cluster) (predict_linear(node_memory_SUnreclaim_bytes[2h], 43200) > node_memory_MemTotal_bytes * 0.25) and max by (node) (node_memory_SUnreclaim_bytes > node_memory_MemTotal_bytes * 0.1)"
+          for: 20m
+          labels:
+            severity: warning
+          annotations:
+            summary: "The {{ $labels.node }} Node has high kernel memory usage."
+            description: |-
+              The {{ $labels.node }} Node has potential kernel memory leak. There is one known issue that can be reason for it.
+
+              You should check cgroupDriver on the {{ $labels.node }} Node:
+              - `cat /var/lib/kubelet/config.yaml | grep 'cgroupDriver: systemd'`
+
+              If cgroupDriver is set to systemd then reboot is required to roll back to cgroupfs driver. Please, drain and reboot the node.
+
+              You can check this [issue](https://github.com/deckhouse/deckhouse/issues/2152) for extra information.
+        
+        - alert: NodeHighCpuLoad
+          expr: |
+                100 - (avg by(k8s_cluster, node) (rate(node_cpu_seconds_total{node=~".*frontend.*|.*master.*|.*system.*|.*loadbalancer.*", mode="idle"}[1m])) * 100) > 90
+          for: 15m
+          labels:
+            severity: warning
+          annotations:
+            description: "The {{ $labels.node }} Node has high CPU load. CPU load is {{ printf \"%0.1f\" $value | humanize }} for last 15 min (threshold: 90%)"
+       
+        - alert: NodeOutOfMemory
+          expr: node_memory_MemAvailable_bytes{node=~".*frontend.*|.*master.*|.*system.*|.*loadbalancer.*"} / node_memory_MemTotal_bytes{node=~".*frontend.*|.*master.*|.*system.*|.*loadbalancer.*"} * 100 < 10
+          for: 15m
+          labels:
+            severity: warning
+          annotations:
+            description: "The {{ $labels.node }} Node memory has < 10% left for last 15 min. Current value = {{ $value }}"
+        
+        - alert: NodeDiskBytesUsage
+          expr: |
+            (
+              max by (k8s_cluster, mountpoint, node) (
+                (node_filesystem_size_bytes - node_filesystem_avail_bytes)
+                /
+                node_filesystem_size_bytes
+              ) * 100
+            )
+            > 90
+          for: 15m
+          labels:
+            severity: warning
+          annotations:
+            description: |-
+              Mountpoint {{$labels.mountpoint}} on {{$labels.node}} node is using more than 90% of the storage capacity.
+              Currently at: {{ .Value }}%
+      
+              Retrieve the disk usage info on the node: `ncdu -x {{$labels.mountpoint}}'
+      
+              If the output shows high disk usage in the /var/lib/containerd/io.containerd.snapshotter.v1.overlayfs/ directory, use the following command to show the pods with the highest usage:
+              `crictl stats -o json | jq '.stats[] | select((.writableLayer.usedBytes.value | tonumber) > 1073741824) | { meta: .attributes.labels, diskUsage: ((.writableLayer.usedBytes.value | tonumber) / 1073741824 * 100 | round / 100 | tostring + " GiB")}'`
+            summary: |-
+              Mountpoint {{$labels.mountpoint}} is using more than 90% of the storage capacity.
+              Currently at: {{ .Value }}%
+        
+        - alert: NodeFilesystemIsRO
+          expr: |-
+            max by (k8s_cluster, node, mountpoint, device, fstype) (
+              node_filesystem_readonly{mountpoint=~"(/|/mnt/kubernetes-data|/var/lib/containerd/)"}
+            ) != 0
+          for: 5m
+          labels:
+            severity: warning
+          annotations:
+            description: |-
+              The file system on the node has switched to read-only mode.
+              See the node logs to find out the cause and fix it.
+            summary: The file system of the node is in read-only mode.
+
+        - alert: NodeHighNetworkThroughputOut
+          expr: sum by (k8s_cluster, node) (rate(node_network_transmit_bytes_total{device!~"lo"}[2m])) / 1024 / 1024 > 200
+          for: 10m
+          labels:
+            severity: warning
+          annotations:
+            summary: Node {{ $labels.node }} has high network throughput out 
+            description: Node {{ $labels.node }} has high network throughput out (> 200 MB/s). Current value = {{ $value }}
+
+        - alert: NodeHighNetworkThroughputIn
+          expr: sum by (k8s_cluster, node) (rate(node_network_receive_bytes_total{device!~"lo"}[2m])) / 1024 / 1024 > 200
+          for: 10m
+          labels:
+            severity: warning
+          annotations:
+            summary: Node {{ $labels.node }} has high network throughput in 
+            description: Node {{ $labels.node }} has high network throughput in (> 200 MB/s). Current value = {{ $value }}

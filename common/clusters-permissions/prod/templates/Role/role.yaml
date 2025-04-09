@@ -1,0 +1,24 @@
+{{- if .Values.Role }}
+{{- range $key, $value := .Values.Role }}
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+    {{- toYaml $value.metadata | nindent 2 }}
+rules:
+{{- range $key, $vol := $value.rules }}
+- apiGroups:
+{{- range $k, $v := $vol.apiGroups }}
+    - "{{ $v }}"
+{{- end }}
+  resources:
+{{- range $k, $v := $vol.resources }}
+    - "{{ $v }}"
+{{- end }}
+  verbs:
+{{- range $k, $v := $vol.verbs }}
+    - "{{ $v }}"
+{{- end }}
+{{- end }}
+{{- end }}
+{{- end }}

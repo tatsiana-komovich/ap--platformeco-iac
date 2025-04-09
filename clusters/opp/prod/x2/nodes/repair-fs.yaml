@@ -1,0 +1,36 @@
+---
+apiVersion: deckhouse.io/v1alpha1
+kind: NodeGroupConfiguration
+metadata:
+  name: repair-fs.sh
+spec:
+  weight: 110
+  bundles: ["*"]
+  nodeGroups:
+    - application-nodes
+    - system
+  content: |
+    LOCK_FILE="/tmp/repair-fs.lock"
+    FSCK_PARAMS="fsck.mode=force fsck.repair=yes"
+
+    if [ -f "$LOCK_FILE" ]; then
+      echo "$LOCK_FILE lockfile exists. Skip"
+      exit 0
+    fi
+
+    if grep -q "$FSCK_PARAMS" /etc/default/grub; then
+      echo "FSCK_PARAMS have already added"
+      touch "$LOCK_FILE"
+      exit 0
+    fi
+
+    sed -i -E "/^GRUB_CMDLINE_LINUX_DEFAULT=/ s/\"$/ $FSCK_PARAMS\"/" /etc/default/grub
+    update-grub
+
+    if [ $? -eq 0 ]; then
+      echo "Done"
+      touch "$LOCK_FILE"
+    else
+      echo "Error during restart"
+      exit 1
+    fi

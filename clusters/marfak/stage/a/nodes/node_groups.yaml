@@ -1,0 +1,355 @@
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  name: application-nodes
+spec:
+  nodeType: CloudEphemeral
+  cloudInstances:
+    minPerZone: 20
+    maxPerZone: 60
+    zones:
+      - ru-central1-a
+    classReference:
+      kind: YandexInstanceClass
+      name: application-nodes
+  disruptions:
+    approvalMode: Automatic
+  chaos:
+    mode: Disabled
+  nodeTemplate:
+    labels:
+      node-role.k8s.lmru.tech/application: ''
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  name: perf-nodes
+spec:
+  nodeType: CloudEphemeral
+  cloudInstances:
+    minPerZone: 3
+    maxPerZone: 7
+    zones:
+      - ru-central1-a
+    classReference:
+      kind: YandexInstanceClass
+      name: perf-nodes
+  disruptions:
+    approvalMode: Automatic
+  nodeTemplate:
+    labels:
+      node-role/perf-nodes: ""
+      node-role.k8s.lmru.tech/application: ''
+    taints:
+      - effect: NoExecute
+        key: dedicated
+        value: perf-nodes
+  chaos:
+    mode: Disabled
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  name: system
+spec:
+  chaos:
+    mode: Disabled
+  cloudInstances:
+    classReference:
+      kind: YandexInstanceClass
+      name: system
+    maxPerZone: 3
+    minPerZone: 3
+    zones:
+      - ru-central1-a
+  disruptions:
+    approvalMode: Automatic
+  nodeTemplate:
+    labels:
+      node-role.deckhouse.io/system: ""
+    taints:
+      - effect: NoExecute
+        key: dedicated.deckhouse.io
+        value: system
+  nodeType: CloudEphemeral
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  name: gpu-a100
+spec:
+  nodeType: CloudEphemeral
+  nodeTemplate:
+    labels:
+      node-role/gpu-a100: ""
+      node-role.k8s.lmru.tech/application: ''
+    taints:
+      - effect: NoExecute
+        key: dedicated
+        value: gpu-a100
+  cloudInstances:
+    minPerZone: 0
+    maxPerZone: 1
+    zones:
+      - ru-central1-a
+    classReference:
+      kind: YandexInstanceClass
+      name: gpu-a100
+  disruptions:
+    approvalMode: Automatic
+  chaos:
+    mode: Disabled
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  name: d8-loki
+spec:
+  chaos:
+    mode: Disabled
+  cloudInstances:
+    classReference:
+      kind: YandexInstanceClass
+      name: d8-loki
+    maxPerZone: 1
+    minPerZone: 0
+    zones:
+      - ru-central1-a
+  disruptions:
+    approvalMode: Automatic
+  nodeTemplate:
+    labels:
+      node-role/d8-loki: ""
+    taints:
+      - effect: NoExecute
+        key: dedicated
+        value: d8-loki
+  nodeType: CloudEphemeral
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  name: odfe-common
+spec:
+  chaos:
+    mode: Disabled
+  cloudInstances:
+    classReference:
+      kind: YandexInstanceClass
+      name: odfe-common
+    maxPerZone: 7
+    minPerZone: 5
+    priority: 90
+    zones:
+      - ru-central1-a
+  disruptions:
+    approvalMode: Manual
+  cri:
+    type: Containerd
+  nodeTemplate:
+    labels:
+      node-role/opendistro-common: ""
+    taints:
+      - effect: NoSchedule
+        key: dedicated
+        value: opendistro-common
+  nodeType: CloudEphemeral
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  name: opendistro
+spec:
+  chaos:
+    mode: Disabled
+  cloudInstances:
+    classReference:
+      kind: YandexInstanceClass
+      name: opendistro
+    maxPerZone: 17
+    minPerZone: 8
+    priority: 90
+    zones:
+      - ru-central1-a
+  disruptions:
+    approvalMode: Manual
+  cri:
+    type: Containerd
+  nodeTemplate:
+    labels:
+      node-role/opendistro: ""
+    taints:
+      - effect: NoSchedule
+        key: dedicated
+        value: opendistro
+  nodeType: CloudEphemeral
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  name: intenzo-nodes
+spec:
+  nodeType: CloudEphemeral
+  cloudInstances:
+    minPerZone: 2
+    maxPerZone: 10
+    zones:
+      - ru-central1-a
+    classReference:
+      kind: YandexInstanceClass
+      name: intenzo-nodes
+  disruptions:
+    approvalMode: Automatic
+  chaos:
+    mode: Disabled
+  nodeTemplate:
+    labels:
+      node-role.k8s.lmru.tech/application: ''
+      node-role/intenzo: ''
+    taints:
+      - effect: NoExecute
+        key: dedicated
+        value: intenzo
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  name: lopus
+spec:
+  chaos:
+    mode: Disabled
+  cloudInstances:
+    classReference:
+      kind: YandexInstanceClass
+      name: lopus
+    maxPerZone: 30
+    minPerZone: 1
+    standby: "1"
+    zones:
+      - ru-central1-a
+  cri:
+    type: Containerd
+  nodeTemplate:
+    labels:
+      node-role/lopus: ""
+      node-role.k8s.lmru.tech/application: ''
+    taints:
+      - effect: NoExecute
+        key: dedicated
+        value: lopus
+  nodeType: CloudEphemeral
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  name: lopus-family
+spec:
+  chaos:
+    mode: Disabled
+  cloudInstances:
+    classReference:
+      kind: YandexInstanceClass
+      name: lopus-family
+    maxPerZone: 10
+    minPerZone: 2
+    zones:
+      - ru-central1-a
+  cri:
+    type: Containerd
+  nodeTemplate:
+    labels:
+      node-role/lopus-family: ""
+      node-role.k8s.lmru.tech/application: ''
+    taints:
+      - effect: NoExecute
+        key: dedicated
+        value: lopus-family
+  nodeType: CloudEphemeral
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  name: otel-system
+spec:
+  nodeType: CloudEphemeral
+  cloudInstances:
+    minPerZone: 1
+    maxPerZone: 3
+    zones:
+      - ru-central1-a
+    classReference:
+      kind: YandexInstanceClass
+      name: otel-system
+  disruptions:
+    approvalMode: Automatic
+  cri:
+    type: Containerd
+  nodeTemplate:
+    labels:
+      node-role/otel-system: ""
+    taints:
+      - effect: NoSchedule
+        key: dedicated
+        value: otel-system
+  chaos:
+    mode: Disabled
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  name: jenkins-slaves
+spec:
+  chaos:
+    mode: Disabled
+  cloudInstances:
+    classReference:
+      kind: YandexInstanceClass
+      name: jenkins-slaves
+    maxPerZone: 4
+    minPerZone: 1
+    standby: "1"
+    zones:
+      - ru-central1-a
+  disruptions:
+    approvalMode: Automatic
+  cri:
+    type: Containerd
+  nodeTemplate:
+    labels:
+      node-role/jenkins-slave: ""
+      node-role.k8s.lmru.tech/application: ''
+    taints:
+      - effect: NoExecute
+        key: node-role/jenkins-slave
+        value: ""
+  nodeType: CloudEphemeral
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  name: ghe-runners
+spec:
+  nodeType: CloudEphemeral
+  cloudInstances:
+    minPerZone: 2
+    maxPerZone: 3
+    zones:
+      - ru-central1-a
+    classReference:
+      kind: YandexInstanceClass
+      name: ghe-runners
+  disruptions:
+    approvalMode: Automatic
+  cri:
+    type: Containerd
+  nodeTemplate:
+    labels:
+      node-role/ghe-runners: ""
+      node-role.k8s.lmru.tech/application: ''
+    taints:
+      - effect: NoSchedule
+        key: dedicated
+        value: ghe-runners
+  chaos:
+    mode: Disabled

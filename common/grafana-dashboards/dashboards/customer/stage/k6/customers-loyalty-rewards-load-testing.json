@@ -1,0 +1,1970 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": {
+          "type": "grafana",
+          "uid": "-- Grafana --"
+        },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "description": "customers-loyalty-rewards-load-testing project dashboard for k6",
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "id": 79,
+  "links": [],
+  "panels": [
+    {
+      "collapsed": false,
+      "datasource": "customers-loyalty-rewards-load-testing",
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "id": 50,
+      "panels": [],
+      "targets": [
+        {
+          "datasource": "customers-loyalty-rewards-load-testing",
+          "refId": "A"
+        }
+      ],
+      "title": "Main (RPS-Request Time)",
+      "type": "row"
+    },
+    {
+      "datasource": "customers-loyalty-rewards-load-testing",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisGridShow": true,
+            "axisLabel": "",
+            "axisPlacement": "left",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 14,
+            "gradientMode": "opacity",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "stepBefore",
+            "lineStyle": {
+              "fill": "solid"
+            },
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "spanNulls": true,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Create Account"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "#eab839",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Get By Card Number"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "#1f78c1",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Get By Customer Number"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "#f9934e",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Get By Customer Number 404"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "#dedaf7",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Get History By Card Number"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "#bf1b00",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 11,
+        "w": 24,
+        "x": 0,
+        "y": 1
+      },
+      "id": 29,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "table",
+          "placement": "right",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "8.2.6",
+      "targets": [
+        {
+          "alias": "All RPS",
+          "datasource": "customers-loyalty-rewards-load-testing",
+          "groupBy": [
+            {
+              "params": [
+                "1s"
+              ],
+              "type": "time"
+            }
+          ],
+          "measurement": "http_reqs",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT count(\"value\") FROM \"http_reqs\" WHERE $timeFilter GROUP BY time($interval)",
+          "rawQuery": false,
+          "refId": "A",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "count"
+              }
+            ]
+          ],
+          "tags": []
+        },
+        {
+          "alias": "$m",
+          "datasource": "customers-loyalty-rewards-load-testing",
+          "groupBy": [
+            {
+              "params": [
+                "$interval"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "null"
+              ],
+              "type": "fill"
+            }
+          ],
+          "hide": false,
+          "measurement": "/^$SuccessFailure$/",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT count(\"value\") FROM /^$SuccessFailure$/ WHERE $timeFilter GROUP BY time(1s) fill(null)",
+          "rawQuery": true,
+          "refId": "B",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "count"
+              }
+            ]
+          ],
+          "tags": []
+        }
+      ],
+      "title": "RPS (Request per Seconds)",
+      "type": "timeseries"
+    },
+    {
+      "datasource": "customers-loyalty-rewards-load-testing",
+      "description": "Grouped by 1 sec intervals",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 10,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 4,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "always",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "ms"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "p80"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "#6ED0E0",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 12,
+        "w": 20,
+        "x": 0,
+        "y": 12
+      },
+      "id": 20,
+      "interval": ">1s",
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "10.4.5",
+      "targets": [
+        {
+          "alias": "$m",
+          "datasource": "customers-loyalty-rewards-load-testing",
+          "dsType": "influxdb",
+          "groupBy": [
+            {
+              "params": [
+                "$__interval"
+              ],
+              "type": "time"
+            }
+          ],
+          "hide": false,
+          "measurement": "/^$Duration$/",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT percentile(\"value\", 95) FROM /^$Duration$/ WHERE $timeFilter GROUP BY time($__interval) fill(none)",
+          "rawQuery": true,
+          "refId": "C",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [
+                  95
+                ],
+                "type": "percentile"
+              }
+            ]
+          ],
+          "tags": []
+        }
+      ],
+      "title": "Request Duration",
+      "type": "timeseries"
+    },
+    {
+      "datasource": "customers-loyalty-rewards-load-testing",
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "ms"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 20,
+        "y": 12
+      },
+      "id": 5,
+      "interval": ">1s",
+      "options": {
+        "colorMode": "background",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "vertical",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": true
+        },
+        "showPercentChange": false,
+        "text": {
+          "titleSize": 30
+        },
+        "textMode": "value_and_name",
+        "wideLayout": true
+      },
+      "pluginVersion": "10.4.5",
+      "targets": [
+        {
+          "alias": "P(95)",
+          "datasource": "customers-loyalty-rewards-load-testing",
+          "dsType": "influxdb",
+          "groupBy": [],
+          "hide": false,
+          "measurement": "http_req_duration",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT percentile(\"value\", 95) FROM \"http_req_duration\" WHERE $timeFilter",
+          "rawQuery": false,
+          "refId": "D",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [
+                  "95"
+                ],
+                "type": "percentile"
+              }
+            ]
+          ],
+          "tags": []
+        }
+      ],
+      "title": "Percentile 95",
+      "type": "stat"
+    },
+    {
+      "datasource": "customers-loyalty-rewards-load-testing",
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "semi-dark-yellow",
+            "mode": "fixed"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "ms"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 20,
+        "y": 16
+      },
+      "id": 33,
+      "interval": ">1s",
+      "options": {
+        "colorMode": "background",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "vertical",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": true
+        },
+        "showPercentChange": false,
+        "text": {
+          "titleSize": 30
+        },
+        "textMode": "value_and_name",
+        "wideLayout": true
+      },
+      "pluginVersion": "10.4.5",
+      "targets": [
+        {
+          "alias": "P(90)",
+          "datasource": "customers-loyalty-rewards-load-testing",
+          "dsType": "influxdb",
+          "groupBy": [],
+          "hide": false,
+          "measurement": "http_req_duration",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT percentile(\"value\", 90) FROM \"http_req_duration\" WHERE $timeFilter",
+          "rawQuery": false,
+          "refId": "C",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [
+                  "90"
+                ],
+                "type": "percentile"
+              }
+            ]
+          ],
+          "tags": []
+        }
+      ],
+      "title": "Percentile 90",
+      "type": "stat"
+    },
+    {
+      "datasource": "customers-loyalty-rewards-load-testing",
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "orange",
+            "mode": "fixed"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "ms"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 20,
+        "y": 20
+      },
+      "id": 31,
+      "interval": ">1s",
+      "options": {
+        "colorMode": "background",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "vertical",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": true
+        },
+        "showPercentChange": false,
+        "text": {
+          "titleSize": 30
+        },
+        "textMode": "value_and_name",
+        "wideLayout": true
+      },
+      "pluginVersion": "10.4.5",
+      "targets": [
+        {
+          "alias": "P(99)",
+          "datasource": "customers-loyalty-rewards-load-testing",
+          "dsType": "influxdb",
+          "groupBy": [],
+          "hide": false,
+          "measurement": "http_req_duration",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT percentile(\"value\", 50) FROM \"http_req_duration\" WHERE $timeFilter",
+          "rawQuery": false,
+          "refId": "B",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [
+                  "99"
+                ],
+                "type": "percentile"
+              }
+            ]
+          ],
+          "tags": []
+        }
+      ],
+      "title": "Percentile 99",
+      "type": "stat"
+    },
+    {
+      "collapsed": true,
+      "datasource": "customers-loyalty-rewards-load-testing",
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 24
+      },
+      "id": 52,
+      "panels": [
+        {
+          "cards": {},
+          "color": {
+            "cardColor": "rgb(0, 234, 255)",
+            "colorScale": "sqrt",
+            "colorScheme": "interpolateSpectral",
+            "exponent": 0.5,
+            "mode": "opacity"
+          },
+          "dataFormat": "timeseries",
+          "datasource": "customers-loyalty-rewards-load-testing",
+          "fieldConfig": {
+            "defaults": {
+              "custom": {
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "scaleDistribution": {
+                  "type": "linear"
+                }
+              }
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 12,
+            "w": 15,
+            "x": 0,
+            "y": 25
+          },
+          "heatmap": {},
+          "hideZeroBuckets": false,
+          "highlightCards": true,
+          "id": 8,
+          "interval": ">1s",
+          "legend": {
+            "show": false
+          },
+          "options": {
+            "calculate": true,
+            "calculation": {
+              "yBuckets": {
+                "mode": "count",
+                "scale": {
+                  "log": 2,
+                  "type": "log"
+                }
+              }
+            },
+            "cellGap": 2,
+            "cellValues": {},
+            "color": {
+              "exponent": 0.5,
+              "fill": "rgb(0, 234, 255)",
+              "mode": "opacity",
+              "reverse": false,
+              "scale": "exponential",
+              "scheme": "Oranges",
+              "steps": 128
+            },
+            "exemplars": {
+              "color": "rgba(255,0,255,0.7)"
+            },
+            "filterValues": {
+              "le": 1e-9
+            },
+            "legend": {
+              "show": false
+            },
+            "rowsFrame": {
+              "layout": "auto"
+            },
+            "showValue": "never",
+            "tooltip": {
+              "mode": "single",
+              "showColorScale": false,
+              "yHistogram": false
+            },
+            "yAxis": {
+              "axisPlacement": "left",
+              "reverse": false,
+              "unit": "ms"
+            }
+          },
+          "pluginVersion": "10.4.5",
+          "reverseYBuckets": false,
+          "targets": [
+            {
+              "alias": "$s",
+              "datasource": "customers-loyalty-rewards-load-testing",
+              "dsType": "influxdb",
+              "groupBy": [
+                {
+                  "params": [
+                    "$__interval"
+                  ],
+                  "type": "time"
+                },
+                {
+                  "params": [
+                    "null"
+                  ],
+                  "type": "fill"
+                }
+              ],
+              "measurement": "http_req_duration",
+              "orderByTime": "ASC",
+              "policy": "default",
+              "query": "SELECT mean(\"value\") FROM \"http_req_duration\" WHERE $timeFilter GROUP BY time($__interval) fill(null)",
+              "rawQuery": false,
+              "refId": "A",
+              "resultFormat": "time_series",
+              "select": [
+                [
+                  {
+                    "params": [
+                      "value"
+                    ],
+                    "type": "field"
+                  },
+                  {
+                    "params": [],
+                    "type": "mean"
+                  }
+                ]
+              ],
+              "tags": []
+            }
+          ],
+          "title": "Request Duration Capacity",
+          "tooltip": {
+            "show": true,
+            "showHistogram": false
+          },
+          "type": "heatmap",
+          "xAxis": {
+            "show": true
+          },
+          "yAxis": {
+            "format": "ms",
+            "logBase": 2,
+            "show": true
+          },
+          "yBucketBound": "auto"
+        },
+        {
+          "datasource": "customers-loyalty-rewards-load-testing",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                }
+              },
+              "mappings": [],
+              "unit": "none"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 12,
+            "w": 9,
+            "x": 15,
+            "y": 25
+          },
+          "id": 39,
+          "options": {
+            "legend": {
+              "displayMode": "table",
+              "placement": "right",
+              "showLegend": true,
+              "values": [
+                "percent",
+                "value"
+              ]
+            },
+            "pieType": "pie",
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": true
+            },
+            "tooltip": {
+              "mode": "multi",
+              "sort": "none"
+            }
+          },
+          "pluginVersion": "8.5.2",
+          "targets": [
+            {
+              "alias": "$m",
+              "datasource": "customers-loyalty-rewards-load-testing",
+              "groupBy": [],
+              "hide": false,
+              "measurement": "/^$SuccessFailure$/",
+              "orderByTime": "ASC",
+              "policy": "default",
+              "query": "SELECT count(\"value\") FROM /^$SuccessFailure$/ WHERE $timeFilter",
+              "rawQuery": true,
+              "refId": "A",
+              "resultFormat": "time_series",
+              "select": [
+                [
+                  {
+                    "params": [
+                      "value"
+                    ],
+                    "type": "field"
+                  },
+                  {
+                    "params": [],
+                    "type": "count"
+                  }
+                ]
+              ],
+              "tags": []
+            }
+          ],
+          "title": "Propotion",
+          "transformations": [
+            {
+              "id": "reduce",
+              "options": {
+                "includeTimeField": false,
+                "reducers": [
+                  "sum"
+                ]
+              }
+            }
+          ],
+          "type": "piechart"
+        },
+        {
+          "datasource": "customers-loyalty-rewards-load-testing",
+          "description": "",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  },
+                  {
+                    "color": "red",
+                    "value": 80
+                  }
+                ]
+              },
+              "unit": "ms"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 5,
+            "w": 5,
+            "x": 0,
+            "y": 37
+          },
+          "id": 16,
+          "interval": ">1s",
+          "options": {
+            "colorMode": "background",
+            "graphMode": "area",
+            "justifyMode": "auto",
+            "orientation": "auto",
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": true
+            },
+            "showPercentChange": false,
+            "text": {
+              "titleSize": 20
+            },
+            "textMode": "value_and_name",
+            "wideLayout": true
+          },
+          "pluginVersion": "10.4.5",
+          "targets": [
+            {
+              "alias": "P(95)",
+              "datasource": "customers-loyalty-rewards-load-testing",
+              "groupBy": [],
+              "measurement": "rewardsSearch1Duration",
+              "orderByTime": "ASC",
+              "policy": "default",
+              "refId": "A",
+              "resultFormat": "time_series",
+              "select": [
+                [
+                  {
+                    "params": [
+                      "value"
+                    ],
+                    "type": "field"
+                  },
+                  {
+                    "params": [
+                      95
+                    ],
+                    "type": "percentile"
+                  }
+                ]
+              ],
+              "tags": []
+            }
+          ],
+          "title": "Rewards Search 1 Duration 95",
+          "type": "stat"
+        },
+        {
+          "datasource": "customers-loyalty-rewards-load-testing",
+          "description": "",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "fixedColor": "orange",
+                "mode": "fixed"
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  },
+                  {
+                    "color": "red",
+                    "value": 80
+                  }
+                ]
+              },
+              "unit": "ms"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 5,
+            "w": 6,
+            "x": 5,
+            "y": 37
+          },
+          "id": 38,
+          "interval": ">1s",
+          "options": {
+            "colorMode": "background",
+            "graphMode": "area",
+            "justifyMode": "auto",
+            "orientation": "auto",
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": true
+            },
+            "showPercentChange": false,
+            "text": {
+              "titleSize": 20
+            },
+            "textMode": "value_and_name",
+            "wideLayout": true
+          },
+          "pluginVersion": "10.4.5",
+          "targets": [
+            {
+              "alias": "P(99)",
+              "datasource": "customers-loyalty-rewards-load-testing",
+              "groupBy": [],
+              "measurement": "rewardsSearch1Duration",
+              "orderByTime": "ASC",
+              "policy": "default",
+              "refId": "A",
+              "resultFormat": "time_series",
+              "select": [
+                [
+                  {
+                    "params": [
+                      "value"
+                    ],
+                    "type": "field"
+                  },
+                  {
+                    "params": [
+                      "99"
+                    ],
+                    "type": "percentile"
+                  }
+                ]
+              ],
+              "tags": []
+            }
+          ],
+          "title": "Rewards Search 1 Duration 99",
+          "type": "stat"
+        },
+        {
+          "datasource": "customers-loyalty-rewards-load-testing",
+          "description": "",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  },
+                  {
+                    "color": "red",
+                    "value": 80
+                  }
+                ]
+              },
+              "unit": "ms"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 5,
+            "w": 5,
+            "x": 0,
+            "y": 42
+          },
+          "id": 43,
+          "interval": ">1s",
+          "options": {
+            "colorMode": "background",
+            "graphMode": "area",
+            "justifyMode": "auto",
+            "orientation": "auto",
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": true
+            },
+            "showPercentChange": false,
+            "text": {
+              "titleSize": 20
+            },
+            "textMode": "value_and_name",
+            "wideLayout": true
+          },
+          "pluginVersion": "10.4.5",
+          "targets": [
+            {
+              "alias": "P(95)",
+              "datasource": "customers-loyalty-rewards-load-testing",
+              "groupBy": [],
+              "measurement": "rewardsSearch100Duration",
+              "orderByTime": "ASC",
+              "policy": "default",
+              "refId": "A",
+              "resultFormat": "time_series",
+              "select": [
+                [
+                  {
+                    "params": [
+                      "value"
+                    ],
+                    "type": "field"
+                  },
+                  {
+                    "params": [
+                      95
+                    ],
+                    "type": "percentile"
+                  }
+                ]
+              ],
+              "tags": []
+            }
+          ],
+          "title": "Rewards Search 100 Duration 95",
+          "type": "stat"
+        },
+        {
+          "datasource": "customers-loyalty-rewards-load-testing",
+          "description": "",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "fixedColor": "orange",
+                "mode": "fixed"
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  },
+                  {
+                    "color": "red",
+                    "value": 80
+                  }
+                ]
+              },
+              "unit": "ms"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 5,
+            "w": 6,
+            "x": 5,
+            "y": 42
+          },
+          "id": 45,
+          "interval": ">1s",
+          "options": {
+            "colorMode": "background",
+            "graphMode": "area",
+            "justifyMode": "auto",
+            "orientation": "auto",
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": true
+            },
+            "showPercentChange": false,
+            "text": {
+              "titleSize": 20
+            },
+            "textMode": "value_and_name",
+            "wideLayout": true
+          },
+          "pluginVersion": "10.4.5",
+          "targets": [
+            {
+              "alias": "P(99)",
+              "datasource": "customers-loyalty-rewards-load-testing",
+              "groupBy": [],
+              "measurement": "rewardsSearch100Duration",
+              "orderByTime": "ASC",
+              "policy": "default",
+              "refId": "A",
+              "resultFormat": "time_series",
+              "select": [
+                [
+                  {
+                    "params": [
+                      "value"
+                    ],
+                    "type": "field"
+                  },
+                  {
+                    "params": [
+                      "99"
+                    ],
+                    "type": "percentile"
+                  }
+                ]
+              ],
+              "tags": []
+            }
+          ],
+          "title": "Rewards Search 100 Duration 99",
+          "type": "stat"
+        }
+      ],
+      "targets": [
+        {
+          "datasource": "customers-loyalty-rewards-load-testing",
+          "refId": "A"
+        }
+      ],
+      "title": "Request Time",
+      "type": "row"
+    },
+    {
+      "collapsed": true,
+      "datasource": "customers-loyalty-rewards-load-testing",
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 25
+      },
+      "id": 54,
+      "panels": [
+        {
+          "datasource": "customers-loyalty-rewards-load-testing",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "fixed"
+              },
+              "custom": {
+                "align": "auto",
+                "cellOptions": {
+                  "type": "auto"
+                },
+                "inspect": false
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  },
+                  {
+                    "color": "red",
+                    "value": 80
+                  }
+                ]
+              },
+              "unit": "short"
+            },
+            "overrides": [
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "Time"
+                },
+                "properties": [
+                  {
+                    "id": "displayName",
+                    "value": "Time"
+                  },
+                  {
+                    "id": "unit",
+                    "value": "time: YYYY-MM-DD HH:mm:ss"
+                  },
+                  {
+                    "id": "custom.align"
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": ""
+                },
+                "properties": [
+                  {
+                    "id": "unit",
+                    "value": "short"
+                  },
+                  {
+                    "id": "decimals",
+                    "value": 2
+                  },
+                  {
+                    "id": "custom.align"
+                  },
+                  {
+                    "id": "custom.align"
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "Field"
+                },
+                "properties": [
+                  {
+                    "id": "custom.width",
+                    "value": 582
+                  }
+                ]
+              }
+            ]
+          },
+          "gridPos": {
+            "h": 9,
+            "w": 12,
+            "x": 0,
+            "y": 26
+          },
+          "id": 27,
+          "options": {
+            "cellHeight": "sm",
+            "footer": {
+              "countRows": false,
+              "fields": "",
+              "reducer": [
+                "sum"
+              ],
+              "show": false
+            },
+            "showHeader": true,
+            "sortBy": [
+              {
+                "desc": true,
+                "displayName": "Total"
+              }
+            ]
+          },
+          "pluginVersion": "10.4.5",
+          "targets": [
+            {
+              "alias": "Requests",
+              "datasource": "customers-loyalty-rewards-load-testing",
+              "groupBy": [],
+              "measurement": "http_reqs",
+              "orderByTime": "ASC",
+              "policy": "default",
+              "query": "SELECT count(\"value\") FROM \"http_reqs\" WHERE $timeFilter",
+              "rawQuery": true,
+              "refId": "A",
+              "resultFormat": "time_series",
+              "select": [
+                [
+                  {
+                    "params": [
+                      "value"
+                    ],
+                    "type": "field"
+                  },
+                  {
+                    "params": [],
+                    "type": "count"
+                  }
+                ]
+              ],
+              "tags": []
+            },
+            {
+              "alias": "$m",
+              "datasource": "customers-loyalty-rewards-load-testing",
+              "groupBy": [
+                {
+                  "params": [
+                    "$interval"
+                  ],
+                  "type": "time"
+                }
+              ],
+              "hide": false,
+              "measurement": "/^$SuccessFailure$/",
+              "orderByTime": "ASC",
+              "policy": "default",
+              "query": "SELECT count(\"value\") FROM /^$SuccessFailure$/ WHERE $timeFilter GROUP BY time($interval)",
+              "rawQuery": true,
+              "refId": "E",
+              "resultFormat": "time_series",
+              "select": [
+                [
+                  {
+                    "params": [
+                      "value"
+                    ],
+                    "type": "field"
+                  },
+                  {
+                    "params": [],
+                    "type": "count"
+                  }
+                ]
+              ],
+              "tags": []
+            }
+          ],
+          "title": "Number of Iterations",
+          "transformations": [
+            {
+              "id": "reduce",
+              "options": {
+                "includeTimeField": false,
+                "reducers": [
+                  "sum"
+                ]
+              }
+            }
+          ],
+          "type": "table"
+        },
+        {
+          "datasource": "customers-loyalty-rewards-load-testing",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisBorderShow": false,
+                "axisCenteredZero": false,
+                "axisColorMode": "text",
+                "axisLabel": "",
+                "axisPlacement": "auto",
+                "barAlignment": 0,
+                "drawStyle": "line",
+                "fillOpacity": 10,
+                "gradientMode": "none",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "insertNulls": false,
+                "lineInterpolation": "stepBefore",
+                "lineWidth": 1,
+                "pointSize": 5,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "showPoints": "never",
+                "spanNulls": true,
+                "stacking": {
+                  "group": "A",
+                  "mode": "none"
+                },
+                "thresholdsStyle": {
+                  "mode": "off"
+                }
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  },
+                  {
+                    "color": "red",
+                    "value": 80
+                  }
+                ]
+              },
+              "unit": "short"
+            },
+            "overrides": [
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "Active VUs"
+                },
+                "properties": [
+                  {
+                    "id": "color",
+                    "value": {
+                      "fixedColor": "dark-green",
+                      "mode": "fixed"
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          "gridPos": {
+            "h": 9,
+            "w": 12,
+            "x": 12,
+            "y": 26
+          },
+          "id": 1,
+          "interval": ">1s",
+          "options": {
+            "legend": {
+              "calcs": [
+                "lastNotNull",
+                "max",
+                "min"
+              ],
+              "displayMode": "table",
+              "placement": "bottom",
+              "showLegend": true
+            },
+            "tooltip": {
+              "mode": "single",
+              "sort": "none"
+            }
+          },
+          "pluginVersion": "8.2.6",
+          "targets": [
+            {
+              "alias": "Active VUs",
+              "datasource": "customers-loyalty-rewards-load-testing",
+              "dsType": "influxdb",
+              "groupBy": [
+                {
+                  "params": [
+                    "$__interval"
+                  ],
+                  "type": "time"
+                },
+                {
+                  "params": [
+                    "none"
+                  ],
+                  "type": "fill"
+                }
+              ],
+              "measurement": "vus",
+              "orderByTime": "ASC",
+              "policy": "default",
+              "refId": "A",
+              "resultFormat": "time_series",
+              "select": [
+                [
+                  {
+                    "params": [
+                      "value"
+                    ],
+                    "type": "field"
+                  },
+                  {
+                    "params": [],
+                    "type": "mean"
+                  }
+                ]
+              ],
+              "tags": []
+            }
+          ],
+          "title": "Virtual Users",
+          "type": "timeseries"
+        },
+        {
+          "datasource": "customers-loyalty-rewards-load-testing",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  },
+                  {
+                    "color": "red",
+                    "value": ""
+                  }
+                ]
+              }
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 7,
+            "w": 12,
+            "x": 0,
+            "y": 35
+          },
+          "id": 35,
+          "options": {
+            "colorMode": "value",
+            "graphMode": "area",
+            "justifyMode": "center",
+            "orientation": "auto",
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "showPercentChange": false,
+            "text": {},
+            "textMode": "value_and_name",
+            "wideLayout": true
+          },
+          "pluginVersion": "10.4.5",
+          "targets": [
+            {
+              "datasource": "customers-loyalty-rewards-load-testing",
+              "groupBy": [],
+              "measurement": "errors400th",
+              "orderByTime": "ASC",
+              "policy": "default",
+              "refId": "A",
+              "resultFormat": "time_series",
+              "select": [
+                [
+                  {
+                    "params": [
+                      "value"
+                    ],
+                    "type": "field"
+                  },
+                  {
+                    "params": [],
+                    "type": "count"
+                  }
+                ]
+              ],
+              "tags": []
+            },
+            {
+              "alias": "400",
+              "datasource": "customers-loyalty-rewards-load-testing",
+              "groupBy": [
+                {
+                  "params": [
+                    "$__interval"
+                  ],
+                  "type": "time"
+                },
+                {
+                  "params": [
+                    "null"
+                  ],
+                  "type": "fill"
+                }
+              ],
+              "hide": false,
+              "measurement": "errors400th",
+              "orderByTime": "ASC",
+              "policy": "default",
+              "refId": "B",
+              "resultFormat": "time_series",
+              "select": [
+                [
+                  {
+                    "params": [
+                      "value"
+                    ],
+                    "type": "field"
+                  },
+                  {
+                    "params": [],
+                    "type": "mean"
+                  }
+                ]
+              ],
+              "tags": []
+            }
+          ],
+          "title": "Errors",
+          "type": "stat"
+        },
+        {
+          "datasource": "customers-loyalty-rewards-load-testing",
+          "description": "Time spent blocked (waiting for a free TCP connection slot) before initiating the request",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisBorderShow": false,
+                "axisCenteredZero": false,
+                "axisColorMode": "text",
+                "axisLabel": "",
+                "axisPlacement": "auto",
+                "barAlignment": 0,
+                "drawStyle": "line",
+                "fillOpacity": 10,
+                "gradientMode": "none",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "insertNulls": false,
+                "lineInterpolation": "linear",
+                "lineWidth": 1,
+                "pointSize": 5,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "showPoints": "never",
+                "spanNulls": false,
+                "stacking": {
+                  "group": "A",
+                  "mode": "none"
+                },
+                "thresholdsStyle": {
+                  "mode": "off"
+                }
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  },
+                  {
+                    "color": "red",
+                    "value": 80
+                  }
+                ]
+              },
+              "unit": "ms"
+            },
+            "overrides": [
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "http_req_blocked.percentile"
+                },
+                "properties": [
+                  {
+                    "id": "color",
+                    "value": {
+                      "fixedColor": "#bf1b00",
+                      "mode": "fixed"
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          "gridPos": {
+            "h": 7,
+            "w": 12,
+            "x": 12,
+            "y": 35
+          },
+          "id": 9,
+          "interval": ">1s",
+          "options": {
+            "legend": {
+              "calcs": [
+                "mean",
+                "max",
+                "min"
+              ],
+              "displayMode": "table",
+              "placement": "bottom",
+              "showLegend": true
+            },
+            "tooltip": {
+              "mode": "multi",
+              "sort": "none"
+            }
+          },
+          "pluginVersion": "10.4.5",
+          "targets": [
+            {
+              "datasource": "customers-loyalty-rewards-load-testing",
+              "dsType": "influxdb",
+              "groupBy": [
+                {
+                  "params": [
+                    "$__interval"
+                  ],
+                  "type": "time"
+                },
+                {
+                  "params": [
+                    "none"
+                  ],
+                  "type": "fill"
+                }
+              ],
+              "measurement": "http_req_blocked",
+              "orderByTime": "ASC",
+              "policy": "default",
+              "query": "SELECT percentile(\"value\", 95) FROM \"http_req_blocked\" WHERE $timeFilter GROUP BY time($__interval) fill(none)",
+              "rawQuery": true,
+              "refId": "C",
+              "resultFormat": "time_series",
+              "select": [
+                [
+                  {
+                    "params": [
+                      "value"
+                    ],
+                    "type": "field"
+                  },
+                  {
+                    "params": [
+                      95
+                    ],
+                    "type": "percentile"
+                  }
+                ]
+              ],
+              "tags": []
+            }
+          ],
+          "title": "Request blocked time (95%ile)",
+          "type": "timeseries"
+        }
+      ],
+      "targets": [
+        {
+          "datasource": "customers-loyalty-rewards-load-testing",
+          "refId": "A"
+        }
+      ],
+      "title": "Additional info",
+      "type": "row"
+    }
+  ],
+  "schemaVersion": 39,
+  "tags": [],
+  "templating": {
+    "list": [
+      {
+        "current": {},
+        "datasource": "customers-loyalty-rewards-load-testing",
+        "dsType": "influxdb",
+        "definition": "SHOW MEASUREMENTS",
+        "hide": 2,
+        "includeAll": true,
+        "label": "",
+        "multi": true,
+        "name": "SuccessFailure",
+        "options": [],
+        "query": "SHOW MEASUREMENTS",
+        "refresh": 1,
+        "regex": "/(.*(Success|Failure))/",
+        "skipUrlSync": false,
+        "sort": 0,
+        "type": "query"
+      },
+      {
+        "current": {},
+        "datasource": "customers-loyalty-rewards-load-testing",
+        "dsType": "influxdb",
+        "definition": "SHOW MEASUREMENTS",
+        "hide": 2,
+        "includeAll": true,
+        "label": "",
+        "multi": true,
+        "name": "Duration",
+        "options": [],
+        "query": "SHOW MEASUREMENTS",
+        "refresh": 1,
+        "regex": "/Duration/",
+        "skipUrlSync": false,
+        "sort": 0,
+        "type": "query"
+      }
+    ]
+  },
+  "time": {
+    "from": "2025-01-26T21:02:38.459Z",
+    "to": "2025-01-27T01:15:20.631Z"
+  },
+  "timepicker": {},
+  "timezone": "browser",
+  "title": "customers-loyalty-rewards-load-testing",
+  "uid": "de5919246tdkwe",
+  "version": 2,
+  "weekStart": ""
+}

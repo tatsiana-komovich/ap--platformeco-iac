@@ -1,0 +1,11 @@
+---
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - app/argocd-permissions.yaml
+namespace: devops-core-argocd
+commonLabels:
+  app: argocd-permissions-deployment
+images:
+  - name: docker-devops.art.lmru.tech/argocd-permissions/argocd-permissions
+    newTag: main-2cd6423

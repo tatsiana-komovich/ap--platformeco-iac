@@ -1,0 +1,105 @@
+---
+infra-elklogs:
+  - security.deckhouse.io/pod-policy: privileged
+    namespace_pattern:
+      - ^infra-elklogs$
+products:
+  - product-id: P0471
+    namespace_pattern:
+      - ^devops-core-vector$
+
+  - product-id: P0188 # Stock Repository
+    namespace_pattern:
+      - ^cfp-stock-repository-.*$
+      - ^stock-repository-.*$
+
+  - product-id: P0767 # New Replenishment (aLMaz)
+    namespace_pattern:
+      - ^replenishment-.*$
+      - ^almaz-.*$
+
+  - product-id: P0955 # networkconfiguration
+    namespace_pattern:
+      - ^ip-nc-.*$
+
+  - product-id: P0702 # Demand forecasting
+    namespace_pattern:
+      - ^alfor-.*$
+
+  - product-id: P1168 # location repository
+    namespace_pattern:
+      - ^location-repository-.*$
+
+  - product-id: P1183 # lmru--logistic-services-catalog
+    namespace_pattern:
+      - ^logistic-services-.*$
+
+  - product-id: P0485
+    namespace_pattern:
+      - ^cfo-.*
+
+  - product-id: P0499
+    namespace_pattern:
+      - ^supplier-calendar-.*
+
+
+  - product-id: P0614
+    namespace_pattern:
+      - ^logbonus-.*
+
+  - product-id: P0157 # Les
+    namespace_pattern:
+      - ^les-.
+
+  - product-id: P0177
+    namespace_pattern:
+      - ^quota-.*
+
+prometheus:
+  - prometheus.deckhouse.io/monitor-watcher-enabled: "true"
+    namespace_pattern:
+      - ^cfp-stock-repository-.*$
+      - ^stock-repository-.*$
+      - ^location-repository-.*$
+      - ^logistic-services-.*
+      - ^replenishment-.*$
+      - ^almaz-.*$
+      - ^ip-nc-.*$
+      - ^quota-.*
+      - ^cfo-.*
+      - ^alfor-.*$
+    exclusions:
+      - ^replenishment-.*-pr-.*$
+      - ^almaz-.*-pr-.*$
+
+logging:
+  - logging: enable
+    namespace_pattern:
+      - ^cfp-stock-repository-.*$
+      - ^stock-repository-.*$
+      - ^replenishment-.*$
+      - ^almaz-.*$
+      - ^ip-nc-.*$
+      - ^location-repository-.*$
+      - ^logistic-services-.*
+      - ^quota-.*
+      - ^cfo-.*
+      - ^alfor-.*$
+    exclusions:
+      - ^replenishment-.*-pr-.*$
+      - ^almaz-.*-pr-.*$
+
+istio:
+  - istio-injection: enabled
+    namespace_pattern:
+      - ^replenishment-.*$
+      - ^stock-repository-.*$
+      - ^cfp-stock-repository-.*$
+      - ^ip-nc-.*$
+    exclusions:
+      - ^replenishment-infra-.*$
+
+devops-core-vector:
+  - security.deckhouse.io/pod-policy-action: warn
+    namespace_pattern:
+      - ^devops-core-vector$

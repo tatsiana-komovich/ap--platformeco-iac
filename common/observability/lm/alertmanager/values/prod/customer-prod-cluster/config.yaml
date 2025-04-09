@@ -1,0 +1,67 @@
+---
+alertmanager:
+  templates:
+    alertmanager.tmpl: |-
+      '{{ define "generator.url" }} {{ (index .Alerts 0).GeneratorURL | reReplaceAll "&g0.tab=1$" "&g0.tab=0" }} {{ end }}'
+
+  config:
+    global:
+      smtp_from: 'alertmanager@leroy-merlin.ru'
+      smtp_smarthost: 'massmail.hq.ru.corp.leroymerlin.com:25'
+      smtp_require_tls: false
+
+    templates:
+      - '/etc/alertmanager/*.tmpl'
+
+    route:
+      group_by: ['alertname', 'job']
+      receiver: 'void'
+      repeat_interval: 4h
+
+  ## Add your Alertmanager configuration below
+
+      routes:
+      # Customer - Communication platform
+        - matchers:
+            - product_team="communication-platform"
+          receiver: 'communication-platform'
+      # Customer - Customer Digital Twin - Customer Master Data
+        - matchers:
+            - product_team="customer-master-data"
+          receiver: 'customer-master-data'
+      # Customer - Customer Digital Twin - Customer Selfservice
+        - matchers:
+            - product_team="customer-selfservice"
+          receiver: 'customer-selfservice'
+      # Customer - Customer Knowledge
+        - matchers:
+            - product_team="customer-knowledge"
+          receiver: 'customer-knowledge'
+      # Customer - Customer Loyalty
+        - matchers:
+            - product_team="customer-loyalty"
+          receiver: 'customer-loyalty'
+
+    receivers:
+      - name: 'void'
+
+      - name: 'communication-platform'
+        webhook_configs:
+          - url: 'https://obs-grafana-oncall-yc-techno.apps.lmru.tech/59/integrations/v1/alertmanager/3ISXebVEIYcKdjk6Kq2O2VnsT/'
+            send_resolved: true
+      - name: 'customer-master-data'
+        webhook_configs:
+          - url: 'https://obs-grafana-oncall-yc-techno.apps.lmru.tech/70/integrations/v1/alertmanager/NZABFpKUsJuULotVfcF9jqNhg/'
+            send_resolved: true
+      - name: 'customer-selfservice'
+        webhook_configs:
+          - url: 'https://obs-grafana-oncall-yc-techno.apps.lmru.tech/71/integrations/v1/alertmanager/2FtK64S6P7bwoUZMthq9NruVZ/'
+            send_resolved: true
+      - name: 'customer-knowledge'
+        webhook_configs:
+          - url: 'https://obs-grafana-oncall-yc-techno.apps.lmru.tech/57/integrations/v1/alertmanager/fUV9yB18Qt4DkAyUwphTcqNel/'
+            send_resolved: true
+      - name: 'customer-loyalty'
+        webhook_configs:
+          - url: 'https://obs-grafana-oncall-yc-techno.apps.lmru.tech/58/integrations/v1/alertmanager/h384h6rPB3M8Ex2jQkvjWhJeT/'
+            send_resolved: true

@@ -1,0 +1,103 @@
+---
+IngressNginxController:
+  main-a:
+    name: main-a
+    spec:
+      chaosMonkey: false
+      disableHTTP2: false
+      hsts: false
+      ingressClass: nginx
+      inlet: LoadBalancer
+      maxReplicas: 1
+      minReplicas: 1
+      underscoresInHeaders: false
+      validationEnabled: true
+      enableIstioSidecar: true
+      waitLoadBalancerOnTerminating: 60
+    loadBalancer:
+      annotations:
+        yandex.cloud/load-balancer-type: Internal
+        yandex.cpi.flant.com/listener-subnet-id: e9ba1bdl42op3o87vja4
+        yandex.cpi.flant.com/target-group-network-id: enpofm2o1fd0e01e2rfb
+      behindL7Proxy: true
+      realIPHeader: X-Forwarded-For
+
+  d8-main-a:
+    name: d8-main-a
+    spec:
+      chaosMonkey: false
+      disableHTTP2: false
+      hsts: false
+      ingressClass: nginx
+      inlet: LoadBalancer
+      maxReplicas: 1
+      minReplicas: 1
+      underscoresInHeaders: false
+      validationEnabled: true
+      enableIstioSidecar: true
+      waitLoadBalancerOnTerminating: 60
+    loadBalancer:
+      annotations:
+        yandex.cloud/load-balancer-type: Internal
+        yandex.cpi.flant.com/listener-subnet-id: e9ba1bdl42op3o87vja4
+        yandex.cpi.flant.com/target-group-network-id: enpofm2o1fd0e01e2rfb
+      behindL7Proxy: true
+      realIPHeader: X-Forwarded-For
+    nodeSelector:
+      node-role/d8-frontend: ""
+    tolerations:
+      - effect: NoExecute
+        key: dedicated
+        operator: Equal
+        value: d8-frontend
+
+  main-b:
+    name: main-b
+    spec:
+      chaosMonkey: false
+      disableHTTP2: false
+      hsts: false
+      ingressClass: nginx
+      inlet: LoadBalancer
+      maxReplicas: 1
+      minReplicas: 1
+      underscoresInHeaders: false
+      validationEnabled: true
+      enableIstioSidecar: true
+      waitLoadBalancerOnTerminating: 60
+    loadBalancer:
+      annotations:
+        yandex.cloud/load-balancer-type: Internal
+        yandex.cpi.flant.com/listener-subnet-id: e2lt10arjf1pffp6qc2d
+        yandex.cpi.flant.com/target-group-network-id: enpofm2o1fd0e01e2rfb
+      behindL7Proxy: true
+      realIPHeader: X-Forwarded-For
+
+  d8-main-b:
+    name: d8-main-b
+    spec:
+      chaosMonkey: false
+      disableHTTP2: false
+      hsts: false
+      ingressClass: nginx
+      inlet: LoadBalancer
+      maxReplicas: 1
+      minReplicas: 1
+      underscoresInHeaders: false
+      validationEnabled: true
+      enableIstioSidecar: true
+      waitLoadBalancerOnTerminating: 60
+    loadBalancer:
+      annotations:
+        yandex.cloud/load-balancer-type: Internal
+        yandex.cpi.flant.com/listener-subnet-id: e2lt10arjf1pffp6qc2d
+        yandex.cpi.flant.com/target-group-network-id: enpofm2o1fd0e01e2rfb
+      behindL7Proxy: true
+      realIPHeader: X-Forwarded-For
+    nodeSelector:
+      node-role/d8-frontend: ""
+    tolerations:
+      - effect: NoExecute
+        key: dedicated
+        operator: Equal
+        value: d8-frontend

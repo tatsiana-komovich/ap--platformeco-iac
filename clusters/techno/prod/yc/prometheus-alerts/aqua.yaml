@@ -1,0 +1,31 @@
+---
+apiVersion: deckhouse.io/v1
+kind: CustomPrometheusRules
+metadata:
+  name: aqua-alerts
+spec:
+  groups:
+
+    - name: aqua-enforcers
+      rules:
+
+        - alert: FewEnforcers
+          expr: aqua_enforcers_connected < 100
+          labels:
+            severity_level: "1"
+            devsecops: "true"
+          annotations:
+            custom_leroymerlin_ru: ""
+            summary: "Aqua Security - Number of Enforcers is below threshold"
+            description: "The number of connected enforcers in Aqua Security is below 100. Current value: {{ $value }}"
+
+        - alert: InsufficientGateways
+          expr: aqua_gateways_connected < 2
+          for: 2m
+          labels:
+            severity_level: "1"
+            devsecops: "true"
+          annotations:
+            custom_leroymerlin_ru: ""
+            summary: "Aqua Security - Number of Gateways is below threshold"
+            description: "The number of connected gateways in Aqua Security is below 2 for more than 2 minutes. Current value: {{ $value }}"

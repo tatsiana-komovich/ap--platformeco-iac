@@ -1,0 +1,32 @@
+---
+apiVersion: operator.victoriametrics.com/v1beta1
+kind: VMRule
+metadata:
+  name: vm-rule-extended
+  namespace: devops-core-victoria-alerts
+spec:
+  groups:
+    - name: kubernetes.config_maps
+      concurrency: 1
+      rules:
+        - alert: LenConfigMaps
+          expr: sum(kube_configmap_info) by (namespace) > 100
+          for: 5m
+          labels:
+            severity: warning
+          annotations:
+            summary: "Count configmaps $labels.k8s_cluster"
+            description: |
+              There is a {{ $labels.namespace }}/{{ $labels.k8s_cluster }} configmaps more than 100
+    - name: kubernetes.secrets
+      concurrency: 1
+      rules:
+        - alert: LenSecrets
+          expr: sum(kube_secret_info) by (namespace) > 100
+          for: 5m
+          labels:
+            severity: warning
+          annotations:
+            summary: "Count kube_secret_info $labels.k8s_cluster"
+            description: |
+              There is a {{ $labels.namespace }}/{{ $labels.k8s_cluster }} configmaps more than 100

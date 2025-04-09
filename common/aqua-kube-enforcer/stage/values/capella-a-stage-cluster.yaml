@@ -1,0 +1,22 @@
+clusterName: "k8s-capella-a-stage"
+
+aquaSecret:
+  kubeEnforcerToken: enforcer-capella-a-stage-k8s
+
+enforcer:
+  enforcerToken: enforcer-capella-a-stage
+  nodeSelector:
+    node-role.k8s.lmru.tech/application: ''
+  tolerations:
+    - key: dedicated
+      operator: Equal
+      effect: "NoSchedule"
+      value: ghe-runners
+    - key: node-role/jenkins-slave
+      operator: Equal
+      effect: "NoExecute"
+      value: ""
+    - key: node-role/perf-test-jenkins-slave
+      operator: Equal
+      effect: "NoExecute"
+      value: ""

@@ -1,0 +1,186 @@
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  name: worker
+spec:
+  nodeType: CloudEphemeral
+  cloudInstances:
+    minPerZone: 9
+    maxPerZone: 25
+    zones:
+      - ru-central1-a
+      - ru-central1-b
+    classReference:
+      kind: YandexInstanceClass
+      name: worker
+    standby: 1
+  disruptions:
+    approvalMode: Automatic
+  chaos:
+    mode: Disabled
+  nodeTemplate:
+    labels:
+      node-role.k8s.lmru.tech/application: ''
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  name: system
+spec:
+  chaos:
+    mode: Disabled
+  cloudInstances:
+    classReference:
+      kind: YandexInstanceClass
+      name: system
+    maxPerZone: 4
+    minPerZone: 3
+    zones:
+      - ru-central1-a
+  disruptions:
+    approvalMode: Automatic
+  nodeTemplate:
+    labels:
+      node-role.deckhouse.io/system: ""
+    taints:
+      - effect: NoExecute
+        key: dedicated.deckhouse.io
+        value: system
+  nodeType: CloudEphemeral
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  name: clickhouse
+spec:
+  nodeType: CloudEphemeral
+  cloudInstances:
+    minPerZone: 2
+    maxPerZone: 5
+    zones:
+      - ru-central1-a
+      - ru-central1-b
+    classReference:
+      kind: YandexInstanceClass
+      name: clickhouse
+  nodeTemplate:
+    labels:
+      node-role/clickhouse: ""
+    taints:
+      - effect: NoExecute
+        key: dedicated
+        value: clickhouse
+  disruptions:
+    approvalMode: Automatic
+  chaos:
+    mode: Disabled
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  name: redis
+spec:
+  nodeType: CloudEphemeral
+  cloudInstances:
+    minPerZone: 4
+    maxPerZone: 5
+    zones:
+      - ru-central1-a
+      - ru-central1-b
+    classReference:
+      kind: YandexInstanceClass
+      name: redis
+  nodeTemplate:
+    labels:
+      node-role/redis: ""
+    taints:
+      - effect: NoExecute
+        key: dedicated
+        value: redis
+  disruptions:
+    approvalMode: Automatic
+  chaos:
+    mode: Disabled
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  name: kafka
+spec:
+  nodeType: CloudEphemeral
+  cloudInstances:
+    minPerZone: 1
+    maxPerZone: 3
+    zones:
+      - ru-central1-a
+      - ru-central1-b
+    classReference:
+      kind: YandexInstanceClass
+      name: kafka
+  nodeTemplate:
+    labels:
+      node-role/kafka: ""
+      node-role.k8s.lmru.tech/application: ''
+    taints:
+      - effect: NoExecute
+        key: dedicated
+        value: kafka
+  disruptions:
+    approvalMode: Automatic
+  chaos:
+    mode: Disabled
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  name: rabbit
+spec:
+  nodeType: CloudEphemeral
+  cloudInstances:
+    minPerZone: 1
+    maxPerZone: 4
+    zones:
+      - ru-central1-a
+    classReference:
+      kind: YandexInstanceClass
+      name: rabbit
+  nodeTemplate:
+    labels:
+      node-role/rabbit: ""
+    taints:
+      - effect: NoExecute
+        key: dedicated
+        value: rabbit
+  disruptions:
+    approvalMode: Automatic
+  chaos:
+    mode: Disabled
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  name: memcached
+spec:
+  nodeType: CloudEphemeral
+  cloudInstances:
+    minPerZone: 2
+    maxPerZone: 4
+    zones:
+      - ru-central1-a
+      - ru-central1-b
+    classReference:
+      kind: YandexInstanceClass
+      name: memcached
+  nodeTemplate:
+    labels:
+      node-role/memcached: ""
+      node-role.k8s.lmru.tech/application: ''
+    taints:
+      - effect: NoExecute
+        key: dedicated
+        value: memcached
+  disruptions:
+    approvalMode: Automatic
+  chaos:
+    mode: Disabled

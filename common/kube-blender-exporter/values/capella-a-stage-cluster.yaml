@@ -1,0 +1,23 @@
+---
+global:
+  env: prod
+
+kube_blender_exporter:
+  _default: kube-blender-exporter-stage
+  prod: kube-blender-exporter
+  stage: kube-blender-exporter-stage
+image_name: docker-blender.art.lmru.tech/kube-blender-exporter
+resources:
+  app:
+    requests:
+      cpu: 0.1
+      mem: 64Mi
+    limits:
+      cpu: 1
+      mem: 1Gi
+
+port: 2112
+limit: 15000
+
+globals:
+  namespace: devops-core-k8s-blender-exporter

@@ -1,0 +1,92 @@
+apiVersion: deckhouse.io/v1alpha1
+kind: ModuleConfig
+metadata:
+  name: namespace-configurator
+spec:
+  enabled: true
+  version: 1
+  settings:
+    configurations:
+      {{- $defaultProducts := dict
+          "P0471" (list "^d8-.*" "^kube-.*" "^lmru-devops-k8s-.*" "^eventrouter" "^infra-elklogs" "^infra-lokilogs")
+          "P0137" (list "^coroot")
+          "P0675" (list "^devops-core-k8s-blender-exporter$")
+          "P0395" (list "^obs-alertmanager$")
+          "P0873" (list "^aqua$")
+          "TBD"   (list "^flant-backups$" "^default$" "^jaeger$" "^strimzi-kafka-operator$" "^redis-operator$")
+          "P0741" (list "^lmru-qa-stress-test$")
+          "P0729" (list "^otel-.*")
+      }}
+        # will contain all marked ns patterns in cluster to add them to the exclusions for each subject ('product', 'prometheus', etc.)
+      {{- $taggedNsPatterns := dict }}
+        # iterate over subjects ('product', 'prometheus', etc.)
+      {{- range $subject, $values := (omit .Values "argocd") }}
+        {{- $_ := set $taggedNsPatterns $subject list }}
+        {{- range $values }}
+        {{- $label := omit . "namespace_pattern" "exclusions" }}
+    - labels:
+      {{- range $k, $v := $label  }}
+        {{ $k }}: {{ $v | quote }}
+      {{- end }}
+      includeNames:
+      {{- range .namespace_pattern }}
+      - {{ . }}
+      {{- $_ := set $taggedNsPatterns $subject (append (get $taggedNsPatterns $subject) .) }}
+      {{- end }}
+      excludeNames:
+      - ^d8-.*
+      {{- range .exclusions }}
+      - {{ . }}
+      {{- end }}
+      {{- end }}
+    {{- end }}
+    {{- range $productId, $namespacePatterns := $defaultProducts }}
+    - labels:
+        product-id: {{ $productId }}
+      includeNames:
+      {{- range $namespacePatterns }}
+      - {{ . }}
+      {{- end }}
+    {{- end }}
+    {{- if not (hasKey .Values "platformeco_exclusion") }}
+    - labels:
+        product-id: unknown
+      includeNames:
+        - .*
+      excludeNames:
+    {{- with (get $taggedNsPatterns "products") }}
+      {{- range . }}
+      - {{ . }}
+      {{- end }}
+    {{- end }}
+      {{- range $_, $namespacePatterns := $defaultProducts }}
+       {{- range $namespacePatterns }}
+      - {{ . }}
+       {{- end }}
+      {{- end }}
+      {{- end }}
+    - labels:
+        extended-monitoring.deckhouse.io/enabled: ""
+{{- if hasKey .Values "extended_monitoring_enable_on_all_ns" }}
+      includeNames:
+        - .*
+      excludeNames:
+        - ^infra-elklogs$
+        - ^d8-.*
+        - ^upmeter-.$
+        - ^kube-.$
+        - ^flant-.$
+        - ^dynatrace$
+{{- else }}
+      includeNames:
+        - ^infra-lokilogs$
+{{- end }}
+    - labels:
+        security.deckhouse.io/pod-policy: privileged
+      includeNames:
+       - ^lmru-devops-k8s-backup$
+       - ^aqua$
+    - labels:
+         prometheus.deckhouse.io/monitor-watcher-enabled: "true"
+      includeNames:
+       - ^cross-namespace$

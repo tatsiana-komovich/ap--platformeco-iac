@@ -1,0 +1,30 @@
+{{- if hasKey .Values "alerts" }}
+{{- if hasKey .Values.alerts "network_traffic" }}
+{{- if .Values.alerts.network_traffic.enabled }}
+---
+apiVersion: deckhouse.io/v1
+kind: CustomPrometheusRules
+metadata:
+  labels:
+    component: rules
+    prometheus: main
+  name: cluster-network-traffic
+spec:
+  groups:
+    - name: cluster-network-traffic
+      rules:
+        - alert: ClusterHighNetworkOutgoingTraffic
+          for: 5m
+          expr: (sum(rate(node_network_transmit_bytes_total{device!~"cni0|lo|nodelocaldns"}[5m])) - sum(rate(node_network_transmit_bytes_total{device="cni0"}[5m]))) * 8/1000^3 > 3
+          labels:
+            severity_level: "4"
+          annotations:
+            description: |
+              "High outgoing cluster traffic"
+            summary: |
+              "High outgoing cluster traffic for more then 5 min (> 3 Gbit/s)\n  VALUE = {{`{{ $value }}`}}"
+            plk_markup_format: markdown
+            plk_protocol_version: "1"
+{{- end }}
+{{- end }}
+{{- end }}

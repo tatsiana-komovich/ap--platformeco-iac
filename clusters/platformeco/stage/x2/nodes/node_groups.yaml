@@ -1,0 +1,184 @@
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  name: application-nodes
+spec:
+  chaos:
+    mode: Disabled
+  cloudInstances:
+    classReference:
+      kind: OpenStackInstanceClass
+      name: application-nodes
+    maxPerZone: 10
+    minPerZone: 1
+    zones:
+      - TEST_AZ_1
+  disruptions:
+    approvalMode: Automatic
+  kubelet:
+    containerLogMaxFiles: 4
+    containerLogMaxSize: 50Mi
+    maxPods: 160
+    resourceReservation:
+      mode: "Auto"
+  nodeTemplate:
+    labels:
+      threshold.extended-monitoring.deckhouse.io/load-average-per-core-critical: "100"
+      threshold.extended-monitoring.deckhouse.io/load-average-per-core-warning: "100"
+      node-role.k8s.lmru.tech/application: ''
+  nodeType: CloudEphemeral
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  name: application-nodes-manual
+spec:
+  chaos:
+    mode: Disabled
+  cloudInstances:
+    classReference:
+      kind: OpenStackInstanceClass
+      name: application-nodes
+    maxPerZone: 20
+    minPerZone: 1
+    zones:
+      - TEST_AZ_1
+  disruptions:
+    approvalMode: Automatic
+  kubelet:
+    containerLogMaxFiles: 4
+    containerLogMaxSize: 50Mi
+    maxPods: 160
+    resourceReservation:
+      mode: "Auto"
+  nodeTemplate:
+    labels:
+      threshold.extended-monitoring.deckhouse.io/load-average-per-core-warning: "6"
+      node-role.k8s.lmru.tech/application: ''
+  nodeType: CloudEphemeral
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  name: system-1
+spec:
+  chaos:
+    mode: Disabled
+  cloudInstances:
+    classReference:
+      kind: OpenStackInstanceClass
+      name: system
+    maxPerZone: 2
+    minPerZone: 1
+    zones:
+      - TEST_AZ_1
+  disruptions:
+    approvalMode: Automatic
+  nodeTemplate:
+    labels:
+      node-role.deckhouse.io/system: ""
+      okmeter.io/enabled: ""
+    taints:
+      - effect: NoExecute
+        key: dedicated.deckhouse.io
+        value: system
+  nodeType: CloudEphemeral
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  name: system-2
+spec:
+  chaos:
+    mode: Disabled
+  cloudInstances:
+    classReference:
+      kind: OpenStackInstanceClass
+      name: system
+    maxPerZone: 2
+    minPerZone: 1
+    zones:
+      - TEST_AZ_2
+  disruptions:
+    approvalMode: Automatic
+  nodeTemplate:
+    labels:
+      node-role.deckhouse.io/system: ""
+      okmeter.io/enabled: ""
+    taints:
+      - effect: NoExecute
+        key: dedicated.deckhouse.io
+        value: system
+  nodeType: CloudEphemeral
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  name: d8-loki
+spec:
+  chaos:
+    mode: Disabled
+  cloudInstances:
+    classReference:
+      kind: OpenStackInstanceClass
+      name: d8-loki
+    maxPerZone: 1
+    minPerZone: 1
+    zones:
+      - TEST_AZ_1
+  disruptions:
+    approvalMode: Automatic
+  nodeTemplate:
+    labels:
+      node-role/d8-loki: ""
+    taints:
+      - effect: NoExecute
+        key: dedicated
+        value: d8-loki
+  nodeType: CloudEphemeral
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  name: loadbalancer
+spec:
+  chaos:
+    mode: Disabled
+  cloudInstances:
+    classReference:
+      kind: OpenStackInstanceClass
+      name: loadbalancer
+    maxPerZone: 1
+    minPerZone: 1
+  disruptions:
+    approvalMode: Automatic
+  nodeTemplate:
+    labels:
+      node-role/loadbalancer: ""
+      okmeter.io/enabled: ""
+      node-role/metallb: ""
+    taints:
+      - effect: NoExecute
+        key: dedicated
+        value: loadbalancer
+  nodeType: CloudEphemeral
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  name: master
+spec:
+  disruptions:
+    approvalMode: Manual
+  nodeTemplate:
+    labels:
+      node-role.kubernetes.io/control-plane: ""
+      node-role.kubernetes.io/master: ""
+      okmeter.io/enabled: ""
+    taints:
+      - effect: NoSchedule
+        key: node-role.kubernetes.io/control-plane
+      - effect: NoSchedule
+        key: node-role.kubernetes.io/master
+  nodeType: CloudPermanent

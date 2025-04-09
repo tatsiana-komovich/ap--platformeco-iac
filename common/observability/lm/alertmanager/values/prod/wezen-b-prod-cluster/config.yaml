@@ -1,0 +1,154 @@
+---
+alertmanager:
+  templates:
+    alertmanager.tmpl: |-
+      '{{ define "generator.url" }} {{ (index .Alerts 0).GeneratorURL | reReplaceAll "&g0.tab=1$" "&g0.tab=0" }} {{ end }}'
+
+  config:
+    global:
+      smtp_from: 'alertmanager@leroy-merlin.ru'
+      smtp_smarthost: 'massmail.hq.ru.corp.leroymerlin.com:25'
+      smtp_require_tls: false
+
+    templates:
+      - '/etc/alertmanager/*.tmpl'
+
+    route:
+      group_by: ['alertname', 'job']
+      receiver: 'void'
+      repeat_interval: 4h
+
+  ## Add your Alertmanager configuration below
+
+      routes:
+        - matchers:
+            - product_id = "P0486"
+            - autoresolve = "false"
+          receiver: 'wms-reception'
+          group_by: [alertname, datacenter, app]
+        - matchers:
+            - product_id = "P0486"
+          receiver: 'wms-reception-stopautoresolve'
+          group_by: [alertname, datacenter, app]
+        - matchers:
+            - product_id = "P0487"
+          receiver: 'wms-sie'
+          group_by: [alertname, datacenter, app]
+        - matchers:
+            - product_id = "P0487"
+            - autoresolve = "false"
+          receiver: 'wms-sie-stopautoresolve'
+          group_by: [alertname, datacenter, app]
+        - matchers:
+            - product_id = "P0075"
+          receiver: 'picking'
+          group_by: [alertname, datacenter, app]
+        - matchers:
+            - product_id = "P0075"
+            - autoresolve = "false"
+          receiver: 'picking-stopautoresolve'
+          group_by: [alertname, datacenter, app]
+        - matchers:
+            - product_id = "P0585"
+          receiver: 'handover'
+          group_by: [alertname, datacenter, app]
+        - matchers:
+            - product_id = "P0585"
+            - autoresolve = "false"
+          receiver: 'handover-stopautoresolve'
+          group_by: [alertname, datacenter, app]
+        - matchers:
+            - product_id = "P0772"
+            - autoresolve = "false"
+          receiver: 'lsa-grafana-oncall'
+          group_by: [alertname, datacenter, app]
+        - matchers:
+            - namespace = "scdp-whs-dostovernost-prod"
+          receiver: 'lmir-grafana-oncall'
+          group_by: [alertname, datacenter, app]
+        - matchers:
+            - product_id = "P0327"
+          receiver: 'lmdmn-grafana-oncall'
+        - matchers:
+            - namespace = "scdp-whs-lmdb-prod"
+          receiver: 'lmdmn-grafana-oncall'
+        - matchers:
+            - namespace = "scdp-whs-lmdb-api-current-prod"
+          receiver: 'lmdmn-grafana-oncall'
+        - matchers:
+            - product_id="P0587"
+          receiver: 'pr-grafana-oncall'
+          group_by: [alertname, datacenter, app]
+        - matchers:
+            - product_id="P0882"
+          receiver: 'pr-grafana-oncall'
+          group_by: [alertname, datacenter, app]
+        - matchers:
+            - namespace = "scdp-whs-carrier-appointment-prod"
+          receiver: 'pr-grafana-oncall'
+          group_by: [alertname, datacenter, app]
+        - matchers:
+            - namespace = "yms-lm-prod"
+          receiver: 'pr-grafana-oncall'
+          group_by: [alertname, datacenter, app]
+        - matchers:
+            - namespace = "scdp-whs-stockcounting-prod"
+          receiver: 'lmir-grafana-oncall'
+          group_by: [alertname, datacenter, app]
+
+    receivers:
+      - name: 'void'
+
+      - name: 'wms-reception'
+        webhook_configs:
+          - url: https://obs-grafana-oncall-yc-techno.apps.lmru.tech/44/integrations/v1/alertmanager/tk5GRZP35Jh8SEuOmYvO1GTsw/
+            send_resolved: true
+      - name: 'wms-reception-stopautoresolve'
+        webhook_configs:
+          - url: https://obs-grafana-oncall-yc-techno.apps.lmru.tech/44/integrations/v1/alertmanager/tk5GRZP35Jh8SEuOmYvO1GTsw/
+            send_resolved: false
+      - name: 'wms-sie'
+        webhook_configs:
+          - url: https://obs-grafana-oncall-yc-techno.apps.lmru.tech/46/integrations/v1/alertmanager/rdQdo53KOLGYom4rMBY3rawXc/
+            send_resolved: true
+      - name: 'wms-sie-stopautoresolve'
+        webhook_configs:
+          - url: https://obs-grafana-oncall-yc-techno.apps.lmru.tech/46/integrations/v1/alertmanager/rdQdo53KOLGYom4rMBY3rawXc/
+            send_resolved: false
+      - name: 'picking'
+        webhook_configs:
+          - url: https://obs-grafana-oncall-yc-techno.apps.lmru.tech/45/integrations/v1/alertmanager/Fk79AY6A6crkxE0jXjT940lKO/
+            send_resolved: true
+      - name: 'picking-stopautoresolve'
+        webhook_configs:
+          - url: https://obs-grafana-oncall-yc-techno.apps.lmru.tech/45/integrations/v1/alertmanager/Fk79AY6A6crkxE0jXjT940lKO/
+            send_resolved: false
+      - name: 'handover'
+        webhook_configs:
+          - url: https://obs-grafana-oncall-yc-techno.apps.lmru.tech/47/integrations/v1/alertmanager/7AeInyfn9FIWT53N5Xg8GmRpo/
+            send_resolved: true
+      - name: 'handover-stopautoresolve'
+        webhook_configs:
+          - url: https://obs-grafana-oncall-yc-techno.apps.lmru.tech/47/integrations/v1/alertmanager/7AeInyfn9FIWT53N5Xg8GmRpo/
+            send_resolved: false
+
+      - name: 'adst-grafana-oncall'
+        webhook_configs:
+          - url: https://obs-grafana-oncall-yc-techno.apps.lmru.tech/46/integrations/v1/alertmanager/rdQdo53KOLGYom4rMBY3rawXc/
+            send_resolved: true
+      - name: 'lsa-grafana-oncall'
+        webhook_configs:
+          - url: https://obs-grafana-oncall-yc-techno.apps.lmru.tech/34/integrations/v1/alertmanager/FJ3G6tcBE2C7AfQAU4y11LSzz/
+            send_resolved: true
+      - name: 'lmir-grafana-oncall'
+        webhook_configs:
+          - url: https://obs-grafana-oncall-yc-techno.apps.lmru.tech/48/integrations/v1/alertmanager/xG3l8rZKX7w3AiIveF0GSDfdE/
+            send_resolved: true
+      - name: 'lmdmn-grafana-oncall'
+        webhook_configs:
+          - url: https://obs-grafana-oncall-yc-techno.apps.lmru.tech/88/integrations/v1/alertmanager/I5mm1sk7NVLyP6LhimWbzn1bq/
+            send_resolved: true
+      - name: 'pr-grafana-oncall'
+        webhook_configs:
+          - url: https://obs-grafana-oncall-yc-techno.apps.lmru.tech/113/integrations/v1/alertmanager/20vSSsWQP4zE4mo3K6DJPcfZx/
+            send_resolved: true

@@ -1,0 +1,14 @@
+clusterName: "k8s-felis-a-stage"
+
+aquaSecret:
+  kubeEnforcerToken: enforcer-felis-a-stage-k8s
+
+enforcer:
+  enforcerToken: enforcer-felis-a-stage
+  nodeSelector:
+    node-role.k8s.lmru.tech/application: ''
+  tolerations:
+    - key: node-role/jenkins-slave
+      operator: Equal
+      effect: "NoExecute"
+      value: ""

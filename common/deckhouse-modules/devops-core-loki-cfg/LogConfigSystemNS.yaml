@@ -1,0 +1,16 @@
+---
+apiVersion: deckhouse.io/v1alpha1
+kind: ClusterLoggingConfig
+metadata:
+  name: loki-devops-core-system-ns
+spec:
+  destinationRefs:
+    - loki-devops-core-storage
+  type: KubernetesPods
+  kubernetesPods:
+    namespaceSelector:
+      matchNames:
+        - d8-system
+        - d8-cloud-instance-manager
+        - kube-system
+        - d8-istio

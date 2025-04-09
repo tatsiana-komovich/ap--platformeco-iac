@@ -1,0 +1,51 @@
+---
+apiVersion: deckhouse.io/v1
+kind: OpenStackInstanceClass
+metadata:
+  name: node-tekton-pipelines
+spec:
+  flavorName: t-c8m16
+  imageName: ubuntu-20-04-cloud-amd64
+  mainNetwork: s-x1-platformeco-stage-ks
+  rootDiskSize: 200
+---
+apiVersion: deckhouse.io/v1
+kind: OpenStackInstanceClass
+metadata:
+  name: application-nodes-big
+spec:
+  flavorName: t-c8m16
+  imageName: ubuntu-20-04-cloud-amd64
+  mainNetwork: s-x1-platformeco-stage-ks
+  rootDiskSize: 100
+---
+apiVersion: deckhouse.io/v1
+kind: OpenStackInstanceClass
+metadata:
+  name: d8-loki
+spec:
+  flavorName: t-c4m8
+  imageName: ubuntu-22-04-cloud-amd64
+  mainNetwork: s-x1-platformeco-stage-ks
+  rootDiskSize: 50
+---
+apiVersion: deckhouse.io/v1
+kind: OpenStackInstanceClass
+metadata:
+  name: loadbalancer
+spec:
+  additionalNetworks:
+    - BGP-VLAN-27-DEV
+  flavorName: t-c8m16
+  imageName: ubuntu-22-04-cloud-amd64
+  mainNetwork: s-x1-platformeco-stage-ks
+  rootDiskSize: 30
+---
+apiVersion: deckhouse.io/v1
+kind: OpenStackInstanceClass
+metadata:
+  name: system
+spec:
+  flavorName: t-c12m24
+  imageName: ubuntu-22-04-cloud-amd64
+  rootDiskSize: 40

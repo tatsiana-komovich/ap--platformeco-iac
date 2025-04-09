@@ -1,0 +1,108 @@
+---
+logShipper:
+  enabled: true
+  settings:
+    debug: false
+
+logDestination:
+  enabled: false
+  custom:
+    - name: carrier-portal-logstash
+      spec:
+        type: Logstash
+        logstash:
+          endpoint: logstash.infra-elklogs.svc.cluster.local:9045
+        extraLabels:
+          product_id: p0665
+    - name: gts-logstash
+      spec:
+        type: Logstash
+        logstash:
+          endpoint: logstash.infra-elklogs.svc.cluster.local:9045
+        extraLabels:
+          product_id: p0666
+    - name: del-sell-logstash
+      spec:
+        type: Logstash
+        logstash:
+          endpoint: logstash.infra-elklogs.svc.cluster.local:9045
+        extraLabels:
+          product_id: p0479
+    - name: del-repo-logstash
+      spec:
+        type: Logstash
+        logstash:
+          endpoint: logstash.infra-elklogs.svc.cluster.local:9045
+        extraLabels:
+          product_id: p0442
+    - name: pickup-point-logstash
+      spec:
+        type: Logstash
+        logstash:
+          endpoint: logstash.infra-elklogs.svc.cluster.local:9045
+        extraLabels:
+          product_id: p0752
+
+loggingConfig:
+  enabled: false
+  custom:
+    - name: carrier-portal--stage-logging
+      spec:
+        type: KubernetesPods
+        kubernetesPods:
+          namespaceSelector:
+            matchNames:
+              - carrier-portal--alfa
+              - carrier-portal--beta
+              - carrier-portal--dev
+              - carrier-portal--perf
+              - carrier-portal--preprod
+              - carrier-portal--test
+        destinationRefs:
+          - carrier-portal-logstash
+    - name: gts--stage-logging
+      spec:
+        type: KubernetesPods
+        kubernetesPods:
+          namespaceSelector:
+            matchNames:
+              - gts-tms--alfa
+              - gts-tms--beta
+              - gts-tms--dev
+              - gts-tms--perf
+              - gts-tms--preprod
+              - gts-tms--test
+              - gts-tms--transptech-135
+        destinationRefs:
+          - gts-logstash
+    - name: del-sell-logging
+      spec:
+        type: KubernetesPods
+        kubernetesPods:
+          namespaceSelector:
+            matchNames:
+              - del-sell--test
+              - del-sell--preprod
+              - del-sell--autotest
+        destinationRefs:
+          - del-sell-logstash
+    - name: del-repo-logging
+      spec:
+        type: KubernetesPods
+        kubernetesPods:
+          namespaceSelector:
+            matchNames:
+              - del-repo--test
+              - del-repo--preprod
+        destinationRefs:
+          - del-repo-logstash
+    - name: pickup-point-logging
+      spec:
+        type: KubernetesPods
+        kubernetesPods:
+          namespaceSelector:
+            matchNames:
+              - pickup-point--test
+              - pickup-point--preprod
+        destinationRefs:
+          - pickup-point-logstash

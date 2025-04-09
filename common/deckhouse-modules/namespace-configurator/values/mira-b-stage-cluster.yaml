@@ -1,0 +1,143 @@
+---
+infra-elklogs:
+  - security.deckhouse.io/pod-policy: privileged
+    namespace_pattern:
+      - ^infra-elklogs$
+
+products:
+  - product-id: P0471
+    namespace_pattern:
+      - ^devops-core-vector$
+
+  - product-id: P0471
+    namespace_pattern:
+      - ^okmeter$
+
+  - product-id: P0732
+    namespace_pattern:
+      - ^pac-arm-.*
+
+  - product-id: P0333
+    namespace_pattern:
+      - ^cp-aggregator-.*
+      - ^cp-basic-.*
+      - ^cp-bathroom-.*
+      - ^cp-telegram-client-.*
+      - ^cp-telegram-client-bot.*
+      - ^cp-games-.*
+      - ^cp-b2b-preprod$
+      - ^cp-b2b-test$
+      - ^cp-b2b-dev$
+      - ^cp-kitchen-.*
+      - ^cp-storage-.*
+      - ^cp-client-projects-.*
+      - ^cp-constructions-reference-.*
+      - ^cp-constructions-.*
+      - ^cp-news-.*
+      - ^cp-leads-.*
+      - ^cp-budget-.*
+      - ^cp-presale-history-.*
+      - ^cp-presale-crawler-.*
+      - ^cp-project-manager-.*
+      - ^cp-reference-repository-.*
+      - ^cp-b2b-exchange-communication-history-.*
+      - ^cp-b2b-exchange-exchange-connector-.*
+      - ^cp-microfront-deals-.*
+      - ^cp-microfront-equeue-.*
+      - ^cp-microfront-kanban-.*
+      - ^cp-microfront-libpresale-.*
+      - ^cp-microfront-main-.*
+      - ^cp-microfront-pcpobjects-.*
+      - ^cp-microfront-portfolio-.*
+      - ^cp-microfront-promotions-.*
+      - ^cp-microfront-quotation-.*
+      - ^cp-microfront-tasks-.*
+      - ^cp-microfront-communications-.*
+      - ^cp-mobile-.*
+      - ^cp-presaleui-storybook.*
+
+  - product-id: P0586
+    namespace_pattern:
+      - ^cp-b2b-clients-repository-.*
+      - ^cp-b2b-promo-.*
+
+  - product-id: P0307
+    namespace_pattern:
+      - ^cp-confbrick-.*
+
+  - product-id: P0155
+    namespace_pattern:
+      - ^cp-equeue-queue-manager-.*
+
+  - product-id: P0735
+    namespace_pattern:
+      - ^cp-project-library-.*
+
+  - product-id: P0130
+    namespace_pattern:
+      - ^cp-quotation-offer-.*
+
+  - product-id: P0497
+    namespace_pattern:
+      - ^cp-quotation-ceramic-3d-.*
+
+  - product-id: P0685
+    namespace_pattern:
+      - ^cp-calculator-.*
+
+  - product-id: P0334
+    namespace_pattern:
+      - ^cp-user-tasks-.*
+
+  - product-id: P0721
+    namespace_pattern:
+      - ^cp-microfront-masterdata-.*
+
+  - product-id: P0356
+    namespace_pattern:
+      - ^search-.*
+
+istio:
+  - istio-injection: enabled
+    namespace_pattern:
+      - ^cp-user-tasks-.*
+      - ^cp-equeue-queue-manager-.*
+      - ^cp-microfront-equeue-.*
+      - ^cp-telegram-client-bot-.*
+      - ^cp-project-manager-.*
+      - ^cp-presale-history-.*
+      - ^cp-presale-crawler-.*
+      - ^cp-kitchen-.*
+      - ^cp-leads-.*
+      - ^cp-budget-.*
+      - ^cp-bathroom-.*
+      - ^cp-basic-.*
+      - ^cp-b2b-clients-repository-.*
+      - ^cp-b2b-preprod$
+      - ^cp-b2b-test$
+      - ^cp-b2b-dev$
+      - ^cp-aggregator-.*
+      - ^cp-quotation-ceramic-3d-.*
+      - ^cp-quotation-offer-.*
+      - ^cp-confbrick-.*
+      - ^cp-calculator-.*
+      - ^cp-project-library-.*
+      - ^cp-microfront-masterdata-.*
+      - ^cp-reference-repository-.*
+      - ^cp-mobile-.*
+      - ^cp-microfront-kanban-.*
+      - ^cp-microfront-deals-.*
+      - ^cp-microfront-communications-.*
+      - ^cp-microfront-portfolio-.*
+      - ^cp-microfront-tasks-.*
+      - ^cp-microfront-promotions-.*
+      - ^cp-microfront-pcpobjects-.*
+      - ^cp-microfront-main-.*
+      - ^cp-microfront-libpresale-.*
+      - ^search-preprod$
+      - ^search-perf$
+
+devops-core-vector:
+  - security.deckhouse.io/pod-policy-action: warn
+    namespace_pattern:
+      - ^devops-core-vector$

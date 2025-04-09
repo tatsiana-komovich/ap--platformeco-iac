@@ -1,0 +1,64 @@
+---
+apiVersion: deckhouse.io/v1
+kind: OpenStackInstanceClass
+metadata:
+  name: application-nodes
+spec:
+  flavorName: p-c16m32
+  imageName: ubuntu-20-04-cloud-amd64
+  mainNetwork: p-x1-platformeco-ks
+  rootDiskSize: 50
+---
+apiVersion: deckhouse.io/v1
+kind: OpenStackInstanceClass
+metadata:
+  name: system
+spec:
+  imageName: ubuntu-22-04-cloud-amd64
+  flavorName: p-c24m64
+  mainNetwork: p-x1-platformeco-ks
+  rootDiskSize: 30
+---
+apiVersion: deckhouse.io/v1
+kind: OpenStackInstanceClass
+metadata:
+  name: loadbalancer
+spec:
+  additionalNetworks:
+    - BGP-VLAN-28-PROD
+  imageName: ubuntu-22-04-cloud-amd64
+  flavorName: p-c8m12
+  mainNetwork: p-x1-platformeco-ks
+  rootDiskSize: 30
+---
+apiVersion: deckhouse.io/v1
+kind: OpenStackInstanceClass
+metadata:
+  name: d8-frontend
+spec:
+  additionalNetworks:
+    - BGP-VLAN-28-PROD
+  flavorName: p-c4m8
+  imageName: ubuntu-22-04-cloud-amd64
+  mainNetwork: p-x1-platformeco-ks
+  rootDiskSize: 30
+---
+apiVersion: deckhouse.io/v1
+kind: OpenStackInstanceClass
+metadata:
+  name: d8-loki
+spec:
+  flavorName: p-c4m8
+  imageName: ubuntu-22-04-cloud-amd64
+  mainNetwork: p-x1-platformeco-ks
+  rootDiskSize: 50
+---
+apiVersion: deckhouse.io/v1
+kind: OpenStackInstanceClass
+metadata:
+  name: otel-system
+spec:
+  flavorName: p-c8m16
+  imageName: ubuntu-22-04-cloud-amd64
+  mainNetwork: p-x1-platformeco-ks
+  rootDiskSize: 50

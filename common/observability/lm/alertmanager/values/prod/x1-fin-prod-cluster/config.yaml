@@ -1,0 +1,125 @@
+---
+alertmanager:
+  templates:
+    alertmanager.tmpl: |-
+      '{{ define "generator.url" }} {{ (index .Alerts 0).GeneratorURL | reReplaceAll "&g0.tab=1$" "&g0.tab=0" }} {{ end }}'
+
+  config:
+    global:
+      smtp_from: 'alertmanager@leroy-merlin.ru'
+      smtp_smarthost: 'massmail.hq.ru.corp.leroymerlin.com:25'
+      smtp_require_tls: false
+
+    templates:
+      - '/etc/alertmanager/*.tmpl'
+
+    route:
+      group_by: ['alertname', 'job']
+      receiver: 'void'
+      repeat_interval: 4h
+
+  ## Add your Alertmanager configuration below
+
+      routes:
+        - matchers:
+            - alert_channel="bankapi"
+          receiver: 'bankapi'
+        - matchers:
+            - alert_channel="rms-api"
+          receiver: 'bsrv-grafana-oncall-rms_api'
+        - matchers:
+            - alert_channel="gg"
+          receiver: 'bsrv-grafana-oncall-gg'
+        - matchers:
+            - alert_channel="fin-sre"
+          receiver: 'bsrv-grafana-oncall-sre'
+        - matchers:
+            - alert_channel="robots"
+          receiver: 'bsrv-grafana-oncall-robots'
+        - matchers:
+            - alert_channel="facrd-oebs"
+          receiver: 'facrd-grafana-oncall-oebs'
+        - matchers:
+            - alert_channel="rms-func"
+          receiver: 'facrd-grafana-oncall-rms_func'
+        - matchers:
+            - alert_channel="facrd-rms-api"
+          receiver: 'facrd-grafana-oncall-rms_api'
+        - matchers:
+            - alert_channel="dbi-ribmon"
+          receiver: 'facrd-grafana-oncall-dbi_ribmon'
+        - matchers:
+            - alert_channel="dbi-idm"
+          receiver: 'facrd-grafana-oncall-dbi_idm'
+        - matchers:
+            - alert_channel="fincat"
+          receiver: 'facrd-grafana-oncall-fincat'
+        - matchers:
+            - alert_channel="digital-signature"
+          receiver: 'lsrv-grafana-oncall-ds'
+        - matchers:
+            - alert_channel="edi"
+          receiver: 'rprtn-grafana-oncall-edi'
+        - matchers:
+            - alert_channel="codemark"
+          receiver: 'rprtn-grafana-oncall-codemark'
+
+    receivers:
+      - name: 'void'
+
+      - name: 'bankapi'
+        webhook_configs:
+          - url: 'https://obs-grafana-oncall-yc-techno.apps.lmru.tech/61/integrations/v1/alertmanager/wdVMTbPoUVNYH8D7hRBbs28Yb/'
+            send_resolved: true
+      - name: 'bsrv-grafana-oncall-rms_api'
+        webhook_configs:
+          - url: 'https://obs-grafana-oncall-yc-techno.apps.lmru.tech/60/integrations/v1/alertmanager/XdHqQ0PUFNEB132yc5Kpp27y5/'
+            send_resolved: true
+      - name: 'bsrv-grafana-oncall-gg'
+        webhook_configs:
+          - url: 'https://obs-grafana-oncall-yc-techno.apps.lmru.tech/60/integrations/v1/alertmanager/2wdOYZ7Mcsy5xsmMa6ZnXizOC/'
+            send_resolved: true
+      - name: 'bsrv-grafana-oncall-sre'
+        webhook_configs:
+          - url: 'https://obs-grafana-oncall-yc-techno.apps.lmru.tech/60/integrations/v1/alertmanager/zIzVYlFKCgZsMUCwbgLCVbhVE/'
+            send_resolved: true
+      - name: 'bsrv-grafana-oncall-robots'
+        webhook_configs:
+          - url: 'https://obs-grafana-oncall-yc-techno.apps.lmru.tech/60/integrations/v1/alertmanager/HyXUWxZ0CkpQiKQ5YNGYxRoy1/'
+            send_resolved: true
+      - name: 'facrd-grafana-oncall-oebs'
+        webhook_configs:
+          - url: 'https://obs-grafana-oncall-yc-techno.apps.lmru.tech/73/integrations/v1/alertmanager/6GHBW0L6bPGxX1ODyqsDhZApd/'
+            send_resolved: true
+      - name: 'facrd-grafana-oncall-rms_func'
+        webhook_configs:
+          - url: 'https://obs-grafana-oncall-yc-techno.apps.lmru.tech/73/integrations/v1/alertmanager/pfFuOO4LEIeq5IcHuLOffLNuM/'
+            send_resolved: true
+      - name: 'facrd-grafana-oncall-rms_api'
+        webhook_configs:
+          - url: 'https://obs-grafana-oncall-yc-techno.apps.lmru.tech/73/integrations/v1/alertmanager/OyDClKRIe8o9xi5PQkNZ74mYG/'
+            send_resolved: true
+      - name: 'facrd-grafana-oncall-dbi_ribmon'
+        webhook_configs:
+          - url: 'https://obs-grafana-oncall-yc-techno.apps.lmru.tech/73/integrations/v1/alertmanager/z0lfCbizLDHh0T2wqlga4QPUx/'
+            send_resolved: true
+      - name: 'facrd-grafana-oncall-dbi_idm'
+        webhook_configs:
+          - url: 'https://obs-grafana-oncall-yc-techno.apps.lmru.tech/73/integrations/v1/alertmanager/AlScQPC3HXunhuHTpC6mfeZQ1/'
+            send_resolved: true
+      - name: 'facrd-grafana-oncall-fincat'
+        webhook_configs:
+          - url: 'https://obs-grafana-oncall-yc-techno.apps.lmru.tech/73/integrations/v1/alertmanager/dkDm6FsGzRPAlZMJcKGIq61MZ/'
+            send_resolved: true
+      - name: 'lsrv-grafana-oncall-ds'
+        webhook_configs:
+          - url: 'https://obs-grafana-oncall-yc-techno.apps.lmru.tech/120/integrations/v1/alertmanager/E1My40wSMaX10dfURtQWzkpX9/'
+            send_resolved: true
+      - name: 'rprtn-grafana-oncall-edi'
+        webhook_configs:
+          - url: 'https://obs-grafana-oncall-yc-techno.apps.lmru.tech/75/integrations/v1/alertmanager/VtzsnwpF82z767JzpiKMDGrdu/'
+            send_resolved: true
+      - name: 'rprtn-grafana-oncall-codemark'
+        webhook_configs:
+          - url: 'https://obs-grafana-oncall-yc-techno.apps.lmru.tech/75/integrations/v1/alertmanager/61XagQrnohqNTAdq4Y3os3n1i/'
+            send_resolved: true

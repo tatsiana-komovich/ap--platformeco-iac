@@ -1,0 +1,15 @@
+apiVersion: deckhouse.io/v1
+kind: ClusterAuthorizationRule
+metadata:
+  name: crowd-itsec-ro-global
+spec:
+  accessLevel: PrivilegedUser
+  allowAccessToSystemNamespaces: false
+  allowScale: false
+  # TODO: Switch to namespaceSelector after upgdate deckhouse to v1.53.*
+  limitNamespaces:
+    - aqua
+  portForwarding: true
+  subjects:
+    - kind: Group
+      name: crowd-itsec-ro-global

@@ -1,0 +1,61 @@
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: restore-restic
+  annotations:
+    avp.kubernetes.io/path: "{{ .Values.avp_path }}"
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: restore-resic
+  template:
+    metadata:
+      labels:
+        app: restore-resic
+        prometheus.deckhouse.io/custom-target: backups-restic
+    spec:
+      imagePullSecrets:
+      - name: regsecret
+      nodeSelector:
+        node-role.kubernetes.io/control-plane: ""
+      tolerations:
+      - effect: NoSchedule
+        operator: Exists
+      hostNetwork: true
+      containers:
+      - name: backup
+        command: ["sleep"]
+        args:
+        - "infinity"
+        image: {{ .Values.restic_image }}
+        imagePullPolicy: IfNotPresent
+        volumeMounts:
+        - mountPath: "/etc/kubernetes"
+          name: k8s-dir
+          readOnly: true
+        - name: backup-script
+          subPath: restic_backup.sh
+          mountPath: /restic_backup.sh
+        securityContext:
+          privileged: true
+        env:
+        {{ include "envs" $ | nindent 10 }}
+        ports:
+        resources:
+          requests:
+            cpu: 100m
+            ephemeral-storage: 500Mi
+            memory: 200Mi
+      volumes:
+      - name: k8s-dir
+        hostPath:
+          path: /etc/kubernetes
+          type: Directory
+      - name: backup-script
+        configMap:
+          name: etcd-backup-script
+          defaultMode: 0755

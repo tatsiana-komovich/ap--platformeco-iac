@@ -1,0 +1,96 @@
+---
+extended_monitoring_enable_on_all_ns: {}
+
+products:
+  - product-id: P0311
+    namespace_pattern:
+      - ^complatform-.*
+
+  - product-id: P0680
+    namespace_pattern:
+      - ^infra-sentry.*
+
+  - product-id: P0527
+    namespace_pattern:
+      - ^cr-ausweis-.*
+      - ^crm-auth-aem-.*
+
+  - product-id: P0495
+    namespace_pattern:
+      - ^cr-card-gen-.*
+
+  - product-id: P0119
+    namespace_pattern:
+      - ^crm-legal-portal-b2b-.*
+
+  - product-id: P0002
+    namespace_pattern:
+      - ^crm-combrick2-.*
+
+  - product-id: P0021
+    namespace_pattern:
+      - ^crm-b2-rbac-.*
+
+  - product-id: P0471
+    namespace_pattern:
+      - ^okmeter$
+
+  - product-id: P0494
+    namespace_pattern:
+      - ^cr-wac-.*
+
+  - product-id: P0001
+    namespace_pattern:
+      - ^cr-status-order-.*
+
+  - product-id: P0361
+    namespace_pattern:
+      - ^cr-service-.*
+
+  - product-id: P0359
+    namespace_pattern:
+      - ^cr-mdm-kz-prod$
+      - ^cr-mdm-prod$
+
+  - product-id: P0542
+    namespace_pattern:
+      - ^cr-loyalty-.*
+
+  - product-id: P0007
+    namespace_pattern:
+      - ^cr-fabrika-idei-.*
+
+  - product-id: P0006
+    namespace_pattern:
+      - ^cr-customer-services-.*
+
+  - product-id: P0496
+    namespace_pattern:
+      - ^cr-customer-.*
+    exclusions:
+      - ^cr-customer-services-.*
+
+  - product-id: P0721
+    namespace_pattern:
+      - ^cr-org-orchestrator-.*
+      - ^cr-crm-data-sync-.*
+
+  - product-id: P0720
+    namespace_pattern:
+      - ^cr-mdm-b2b-.*
+
+  - product-id: P0993
+    namespace_pattern:
+      - ^cr-cusac-.*
+
+istio:
+  - istio.deckhouse.io/auto-upgrade: "true"
+    namespace_pattern:
+      - ^cr-customer-master$
+      - ^cr-mdm-prod$
+      - ^cr-cusac-master$
+
+devops-core-vector:
+  - security.deckhouse.io/pod-policy-action: warn
+    namespace_pattern:
+      - ^devops-core-vector$

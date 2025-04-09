@@ -1,0 +1,125 @@
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  name: application-nodes
+spec:
+  nodeType: CloudEphemeral
+  cloudInstances:
+    minPerZone: 20
+    maxPerZone: 100
+    zones:
+      - ru-central1-a
+    classReference:
+      kind: YandexInstanceClass
+      name: application-nodes
+  disruptions:
+    approvalMode: Automatic
+  chaos:
+    mode: Disabled
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  name: argocd-workflow
+spec:
+  nodeType: CloudEphemeral
+  cloudInstances:
+    minPerZone: 5
+    maxPerZone: 10
+    zones:
+      - ru-central1-a
+    classReference:
+      kind: YandexInstanceClass
+      name: argocd-workflow-nodes
+  disruptions:
+    approvalMode: Automatic
+  kubelet:
+    maxPods: 200
+  nodeTemplate:
+    labels:
+      node-role/argocd-workflow: ""
+    taints:
+      - effect: NoExecute
+        key: dedicated
+        value: argocd-workflow
+  chaos:
+    mode: Disabled
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  name: system
+spec:
+  chaos:
+    mode: Disabled
+  cloudInstances:
+    classReference:
+      kind: YandexInstanceClass
+      name: system
+    maxPerZone: 3
+    minPerZone: 1
+    zones:
+      - ru-central1-a
+  disruptions:
+    approvalMode: Automatic
+  nodeTemplate:
+    labels:
+      node-role.deckhouse.io/system: ""
+    taints:
+      - effect: NoExecute
+        key: dedicated.deckhouse.io
+        value: system
+  nodeType: CloudEphemeral
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  name: argocd
+spec:
+  nodeType: CloudEphemeral
+  cloudInstances:
+    minPerZone: 1
+    maxPerZone: 20
+    zones:
+      - ru-central1-a
+    classReference:
+      kind: YandexInstanceClass
+      name: devops-core-argocd-extra
+  disruptions:
+    approvalMode: Automatic
+  chaos:
+    mode: Disabled
+  nodeTemplate:
+    labels:
+      node-role/argocd: ""
+    taints:
+      - effect: NoSchedule
+        key: dedicated
+        value: argocd
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  name: argocd-redis
+spec:
+  nodeType: CloudEphemeral
+  cloudInstances:
+    minPerZone: 8
+    maxPerZone: 8
+    zones:
+      - ru-central1-a
+    classReference:
+      kind: YandexInstanceClass
+      name: devops-core-argocd-redis
+  disruptions:
+    approvalMode: Automatic
+  chaos:
+    mode: Disabled
+  nodeTemplate:
+    labels:
+      node-role/argocd-redis: ""
+    taints:
+      - effect: NoSchedule
+        key: dedicated
+        value: argocd

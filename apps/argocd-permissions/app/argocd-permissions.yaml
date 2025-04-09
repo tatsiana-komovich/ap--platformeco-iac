@@ -1,0 +1,91 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: argocd-permissions-deployment
+  labels:
+    app: argocd-permissions-deployment
+spec:
+  selector:
+    matchLabels:
+      app: argocd-permissions-deployment
+  replicas: 1
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: argocd-permissions-deployment
+    spec:
+      serviceAccountName: argocd-permissions-sa
+      automountServiceAccountToken: true
+      containers:
+        - name: argocd-permissions
+          image: docker-devops.art.lmru.tech/argocd-permissions/argocd-permissions:1.1.4
+          resources:
+            limits:
+              memory: 512Mi
+            requests:
+              cpu: 200m
+              memory: 128Mi
+          env:
+            - name: POD_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  labels:
+    app: "argocd-permissions-cronjob-role"
+  name: argocd-permissions-role
+  namespace: devops-core-argocd
+rules:
+  - apiGroups:
+      - argoproj.io
+    resources:
+      - applications
+      - appprojects
+      - applicationsets
+      - applicationsets/finalizers
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - argoproj.io
+    resources:
+      - applicationsets/status
+    verbs:
+      - get
+  - apiGroups:
+      - ""
+    resources:
+      - configmaps
+    verbs:
+      - get
+      - list
+      - patch
+      - update
+      - watch
+---
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: argocd-permissions-sa-rb
+  namespace: devops-core-argocd
+subjects:
+  - kind: ServiceAccount
+    name: argocd-permissions-sa
+    namespace: devops-core-argocd
+roleRef:
+  kind: Role
+  name: argocd-permissions-role
+  apiGroup: rbac.authorization.k8s.io
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: argocd-permissions-sa
+automountServiceAccountToken: false

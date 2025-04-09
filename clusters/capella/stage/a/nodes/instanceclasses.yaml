@@ -1,0 +1,64 @@
+---
+apiVersion: deckhouse.io/v1
+kind: YandexInstanceClass
+metadata:
+  name: application-nodes
+spec:
+  cores: 8
+  memory: 16384
+  diskSizeGB: 50
+  diskType: network-ssd
+  imageID: fd8emvfmfoaordspe1jr
+  networkType: Standard
+---
+apiVersion: deckhouse.io/v1
+kind: YandexInstanceClass
+metadata:
+  name: system
+spec:
+  cores: 8
+  diskSizeGB: 50
+  diskType: network-hdd
+  imageID: fd8emvfmfoaordspe1jr
+  memory: 32768
+  networkType: Standard
+  platformID: standard-v2
+---
+apiVersion: deckhouse.io/v1
+kind: YandexInstanceClass
+metadata:
+  name: odfe-common
+spec:
+  cores: 8
+  diskSizeGB: 50
+  diskType: network-hdd
+  imageID: fd8emvfmfoaordspe1jr
+  memory: 16384
+  networkType: Standard
+  platformID: standard-v2
+---
+apiVersion: deckhouse.io/v1
+kind: YandexInstanceClass
+metadata:
+  name: opendistro
+spec:
+  cores: 4
+  diskSizeGB: 50
+  diskType: network-hdd
+  imageID: fd8emvfmfoaordspe1jr
+  memory: 8192
+  networkType: Standard
+  platformID: standard-v2
+---
+apiVersion: deckhouse.io/v1
+kind: YandexInstanceClass
+metadata:
+  name: jenkins-slave
+spec:
+  cores: 16
+  diskSizeGB: 100
+  diskType: network-ssd
+  imageID: fd8emvfmfoaordspe1jr
+  memory: 32768
+  networkType: Standard
+  platformID: standard-v2

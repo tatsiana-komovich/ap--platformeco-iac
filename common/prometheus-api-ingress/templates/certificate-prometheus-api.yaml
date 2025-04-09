@@ -1,0 +1,13 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: prometheus-api-tls
+  namespace: d8-monitoring
+spec:
+  secretName: prometheus-api-tls
+  issuerRef:
+    kind: ClusterIssuer
+    name: selfsigned
+  commonName: {{ .Values.k8s_prometheus_api_ingress.host }}
+  dnsNames:                                 
+  - {{ .Values.k8s_prometheus_api_ingress.host }}

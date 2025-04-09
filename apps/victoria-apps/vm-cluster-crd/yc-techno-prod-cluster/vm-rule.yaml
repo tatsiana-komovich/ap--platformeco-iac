@@ -1,0 +1,50 @@
+---
+apiVersion: operator.victoriametrics.com/v1beta1
+kind: VMRule
+metadata:
+  name: capacity-planning
+spec:
+  groups:
+    - name: capacity-planning
+      interval: 1h
+      rules:
+        - record: capacity_planning:controller:max_percentage_cpu_usage_seconds_to_product:1w_avg
+          expr: |-
+            max_over_time
+            (
+            capacity_planning:controller:max_cpu_usage_seconds:1h_avg
+            [1w]
+            )
+            /
+            on (label_product_id, k8s_cluster) group_left()
+            max_over_time
+            (
+            sum by (label_product_id, k8s_cluster) 
+            (
+            capacity_planning:controller:max_cpu_usage_seconds:1h_avg
+            > 0
+            [1w]
+            )
+            )
+            *
+            100
+        - record: capacity_planning:controller:max_percentage_memory_usage_bytes_to_product:1w_avg
+          expr: |-
+            max_over_time
+            (
+            capacity_planning:controller:max_memory_usage_bytes:1h_avg
+            [1w]
+            )
+            /
+            on (label_product_id, k8s_cluster) group_left()
+            max_over_time
+            (
+            sum by (label_product_id, k8s_cluster) 
+            (
+            capacity_planning:controller:max_memory_usage_bytes:1h_avg
+            > 0
+            [1w]
+            )
+            )
+            *
+            100

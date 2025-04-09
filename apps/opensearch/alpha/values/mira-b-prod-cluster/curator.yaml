@@ -1,0 +1,53 @@
+---
+opendistro:
+  curator:
+    enabled: true
+    s3_snapshots:
+      unit_count:
+        all: 60
+        unknown: 7
+    cron:
+      restore: 10 3 * * *
+      snapshot: 30 0 * * *
+    unknown:
+      days_count: 7
+      snapshot: true
+      schedule: 30 0 * * *
+    indices:
+      - kind: prefix
+        value: filebeat
+        system: false
+        days_count: 14
+        snapshot: true
+        schedule: 50 0 * * *
+      - kind: prefix
+        value: infra
+        system: false
+        days_count: 30
+        snapshot: false
+        schedule: 55 0 * * *
+      - kind: prefix
+        value: .opendistro_security
+        system: true
+        days_count: 30
+        snapshot: true
+        schedule: 0 1 * * *
+      - kind: prefix
+        value: .kibana
+        system: true
+        days_count: 30
+        snapshot: true
+        schedule: 5 1 * * *
+      - kind: prefix
+        value: d8
+        system: false
+        days_count: 7
+        snapshot: true
+        snapshot_count_s3: 7
+        schedule: 10 1 * * *
+      - kind: prefix
+        value: cp
+        system: false
+        days_count: 7
+        snapshot: true
+        schedule: 15 1 * * *

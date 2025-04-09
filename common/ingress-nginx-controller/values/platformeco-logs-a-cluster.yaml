@@ -1,0 +1,100 @@
+---
+IngressNginxController:
+  main-a:
+    name: main-a
+    spec:
+      chaosMonkey: false
+      disableHTTP2: false
+      hsts: false
+      ingressClass: nginx
+      inlet: LoadBalancer
+      maxReplicas: 1
+      minReplicas: 1
+      underscoresInHeaders: false
+      validationEnabled: true
+      waitLoadBalancerOnTerminating: 60
+    loadBalancer:
+      annotations:
+        yandex.cloud/load-balancer-type: Internal
+        yandex.cpi.flant.com/listener-subnet-id: e9bglbkgv0f0joole94c
+        yandex.cpi.flant.com/target-group-network-id: enpofm2o1fd0e01e2rfb
+      behindL7Proxy: true
+      realIPHeader: X-Forwarded-For
+    nodeSelector:
+      node.deckhouse.io/group: front-a
+  d8-main-a:
+    name: d8-main-a
+    spec:
+      chaosMonkey: false
+      disableHTTP2: false
+      hsts: false
+      ingressClass: d8-nginx
+      inlet: LoadBalancer
+      maxReplicas: 1
+      minReplicas: 1
+      underscoresInHeaders: false
+      validationEnabled: true
+      waitLoadBalancerOnTerminating: 60
+    loadBalancer:
+      annotations:
+        yandex.cloud/load-balancer-type: Internal
+        yandex.cpi.flant.com/listener-subnet-id: e9bglbkgv0f0joole94c
+        yandex.cpi.flant.com/target-group-network-id: enpofm2o1fd0e01e2rfb
+      behindL7Proxy: true
+      realIPHeader: X-Forwarded-For
+    nodeSelector:
+      node.deckhouse.io/group: d8-front-a
+    tolerations:
+      - effect: NoExecute
+        key: dedicated
+        operator: Equal
+        value: d8-frontend
+  main-b:
+    name: main-b
+    spec:
+      chaosMonkey: false
+      disableHTTP2: false
+      hsts: false
+      ingressClass: nginx
+      inlet: LoadBalancer
+      maxReplicas: 1
+      minReplicas: 1
+      underscoresInHeaders: false
+      validationEnabled: true
+      waitLoadBalancerOnTerminating: 60
+    loadBalancer:
+      annotations:
+        yandex.cloud/load-balancer-type: Internal
+        yandex.cpi.flant.com/listener-subnet-id: e2lroavpiulqeqd8atp1
+        yandex.cpi.flant.com/target-group-network-id: enpofm2o1fd0e01e2rfb
+      behindL7Proxy: true
+      realIPHeader: X-Forwarded-For
+    nodeSelector:
+      node.deckhouse.io/group: front-b
+  d8-main-b:
+    name: d8-main-b
+    spec:
+      chaosMonkey: false
+      disableHTTP2: false
+      hsts: false
+      ingressClass: d8-nginx
+      inlet: LoadBalancer
+      maxReplicas: 1
+      minReplicas: 1
+      underscoresInHeaders: false
+      validationEnabled: true
+      waitLoadBalancerOnTerminating: 60
+    loadBalancer:
+      annotations:
+        yandex.cloud/load-balancer-type: Internal
+        yandex.cpi.flant.com/listener-subnet-id: e2lroavpiulqeqd8atp1
+        yandex.cpi.flant.com/target-group-network-id: enpofm2o1fd0e01e2rfb
+      behindL7Proxy: true
+      realIPHeader: X-Forwarded-For
+    nodeSelector:
+      node.deckhouse.io/group: d8-front-b
+    tolerations:
+      - effect: NoExecute
+        key: dedicated
+        operator: Equal
+        value: d8-frontend

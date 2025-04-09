@@ -1,0 +1,20 @@
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  annotations:
+    user-authz.deckhouse.io/access-level: Admin
+  name: grafana-dashboard-definitions:admin
+rules:
+- apiGroups:
+  - "deckhouse.io"
+  resources:
+  - grafanadashboarddefinitions
+  verbs:
+  - get
+  - list
+  - watch
+  - create
+  - delete
+  - patch
+  - update

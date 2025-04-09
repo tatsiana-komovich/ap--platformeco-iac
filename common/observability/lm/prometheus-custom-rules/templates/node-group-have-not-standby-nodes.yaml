@@ -1,0 +1,24 @@
+apiVersion: deckhouse.io/v1
+kind: CustomPrometheusRules
+metadata:
+  labels:
+    component: rules
+    prometheus: main
+  name: node-group-have-not-standby-nodes
+spec:
+  groups:
+    - name: node-group-have-not-standby-nodes
+      rules:
+        - alert: NodeGroupsHaveNotStandbyNodes
+          for: 15m
+          expr: sum(kube_pod_status_unschedulable{namespace="d8-cloud-instance-manager",pod=~"standby-holder-.*"} * on(pod) group_left(label_ng) kube_pod_labels{namespace="d8-cloud-instance-manager",pod=~"standby-holder-.*",label_ng=~"node|worker|application-nodes"}) by (label_ng)
+          labels:
+            severity_level: "4"
+          annotations:
+            description: "NodeGroups {{`{{$labels.label_ng}}`}} do not have standby Nodes 15m ago"
+            summary: |-
+              1. Проверить `kubectl get ng {{`{{$labels.label_ng}}`}}` на достижения максимального количества нод.
+              Уведомить клиента, увеличить число нод если это необходимо.
+              2. Проверить `kubectl -n d8-cloud-instance-manager get pods | grep standby` статус подов для инициализации standby нод.
+            plk_markup_format: markdown
+            plk_protocol_version: "1"

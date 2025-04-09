@@ -1,0 +1,1211 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": "-- Grafana --",
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": true,
+  "gnetId": null,
+  "graphTooltip": 0,
+  "iteration": 1632395808279,
+  "links": [],
+  "panels": [
+    {
+      "collapsed": false,
+      "datasource": null,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "id": 11,
+      "panels": [],
+      "title": "Total",
+      "type": "row"
+    },
+    {
+      "datasource": null,
+      "description": "Доступность",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {},
+          "decimals": 3,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "red",
+                "value": null
+              },
+              {
+                "color": "green",
+                "value": 0.999
+              }
+            ]
+          },
+          "unit": "percentunit"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 8,
+        "x": 0,
+        "y": 1
+      },
+      "id": 9,
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showThresholdLabels": false,
+        "showThresholdMarkers": true,
+        "text": {}
+      },
+      "pluginVersion": "7.4.2",
+      "targets": [
+        {
+          "expr": "sum(increase(http_client_requests_process_payment_seconds_count{status!~\"5..\"}[$__range:])) by (paymentInstrument) / sum(increase(http_client_requests_process_payment_seconds_count[$__range:])) by (paymentInstrument)",
+          "instant": true,
+          "interval": "",
+          "legendFormat": "{{paymentInstrument}}",
+          "refId": "A"
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Availability",
+      "type": "gauge"
+    },
+    {
+      "datasource": null,
+      "description": "99 percentile",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {},
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 1
+              }
+            ]
+          },
+          "unit": "s"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 8,
+        "x": 8,
+        "y": 1
+      },
+      "id": 12,
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showThresholdLabels": false,
+        "showThresholdMarkers": true,
+        "text": {}
+      },
+      "pluginVersion": "7.4.2",
+      "targets": [
+        {
+          "expr": "histogram_quantile(0.99, sum(rate(http_client_requests_process_payment_seconds_bucket[$__range:])) by (le, paymentInstrument))",
+          "interval": "",
+          "legendFormat": "{{paymentInstrument}}",
+          "refId": "A"
+        }
+      ],
+      "title": "99 percentile",
+      "type": "gauge"
+    },
+    {
+      "aliasColors": {},
+      "bars": true,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": null,
+      "fieldConfig": {
+        "defaults": {
+          "custom": {},
+          "unit": "percentunit"
+        },
+        "overrides": []
+      },
+      "fill": 1,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 8,
+        "w": 8,
+        "x": 16,
+        "y": 1
+      },
+      "hiddenSeries": false,
+      "id": 8,
+      "legend": {
+        "avg": true,
+        "current": false,
+        "max": true,
+        "min": false,
+        "rightSide": true,
+        "show": true,
+        "total": false,
+        "values": true
+      },
+      "lines": false,
+      "linewidth": 1,
+      "nullPointMode": "null",
+      "options": {
+        "alertThreshold": true
+      },
+      "percentage": false,
+      "pluginVersion": "7.4.2",
+      "pointradius": 2,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": true,
+      "steppedLine": false,
+      "targets": [
+        {
+          "expr": "sum(increase(http_client_requests_process_payment_seconds_count[5m])) by (status) / scalar(sum(increase(http_client_requests_process_payment_seconds_count[5m])) by (service))",
+          "interval": "",
+          "legendFormat": "{{status}}",
+          "refId": "A"
+        }
+      ],
+      "thresholds": [],
+      "timeFrom": null,
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "Response Statuses [5m]",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "$$hashKey": "object:89",
+          "decimals": 1,
+          "format": "percentunit",
+          "label": null,
+          "logBase": 1,
+          "max": "1",
+          "min": "0",
+          "show": true
+        },
+        {
+          "$$hashKey": "object:90",
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    },
+    {
+      "collapsed": false,
+      "datasource": null,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 9
+      },
+      "id": 4,
+      "panels": [],
+      "repeat": "merchant",
+      "scopedVars": {
+        "merchant": {
+          "selected": true,
+          "text": "LEROYMERLIN_002",
+          "value": "LEROYMERLIN_002"
+        }
+      },
+      "title": "$merchant",
+      "type": "row"
+    },
+    {
+      "datasource": null,
+      "description": "Доступность",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {},
+          "decimals": 3,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "red",
+                "value": null
+              },
+              {
+                "color": "green",
+                "value": 0.999
+              }
+            ]
+          },
+          "unit": "percentunit"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 8,
+        "x": 0,
+        "y": 10
+      },
+      "id": 2,
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showThresholdLabels": false,
+        "showThresholdMarkers": true,
+        "text": {}
+      },
+      "pluginVersion": "7.4.2",
+      "scopedVars": {
+        "merchant": {
+          "selected": true,
+          "text": "LEROYMERLIN_002",
+          "value": "LEROYMERLIN_002"
+        }
+      },
+      "targets": [
+        {
+          "expr": "sum(increase(http_client_requests_process_payment_seconds_count{status!~\"5..\", merchant=\"$merchant\"}[$__range:])) by (paymentInstrument) / sum(increase(http_client_requests_process_payment_seconds_count{merchant=\"$merchant\"}[$__range:])) by (paymentInstrument)",
+          "instant": true,
+          "interval": "",
+          "legendFormat": "{{paymentInstrument}}",
+          "refId": "A"
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Availability",
+      "type": "gauge"
+    },
+    {
+      "datasource": null,
+      "description": "99 percentile",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {},
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 1
+              }
+            ]
+          },
+          "unit": "s"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 8,
+        "x": 8,
+        "y": 10
+      },
+      "id": 6,
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showThresholdLabels": false,
+        "showThresholdMarkers": true,
+        "text": {}
+      },
+      "pluginVersion": "7.4.2",
+      "scopedVars": {
+        "merchant": {
+          "selected": true,
+          "text": "LEROYMERLIN_002",
+          "value": "LEROYMERLIN_002"
+        }
+      },
+      "targets": [
+        {
+          "expr": "histogram_quantile(0.99, sum(rate(http_client_requests_process_payment_seconds_bucket{merchant=\"$merchant\"}[$__range:])) by (le, paymentInstrument))",
+          "interval": "",
+          "legendFormat": "{{paymentInstrument}}",
+          "refId": "A"
+        }
+      ],
+      "title": "99 percentile",
+      "type": "gauge"
+    },
+    {
+      "aliasColors": {},
+      "bars": true,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": null,
+      "fieldConfig": {
+        "defaults": {
+          "custom": {},
+          "unit": "percentunit"
+        },
+        "overrides": []
+      },
+      "fill": 1,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 8,
+        "w": 8,
+        "x": 16,
+        "y": 10
+      },
+      "hiddenSeries": false,
+      "id": 13,
+      "legend": {
+        "avg": true,
+        "current": false,
+        "max": true,
+        "min": false,
+        "rightSide": true,
+        "show": true,
+        "total": false,
+        "values": true
+      },
+      "lines": false,
+      "linewidth": 1,
+      "nullPointMode": "null",
+      "options": {
+        "alertThreshold": true
+      },
+      "percentage": false,
+      "pluginVersion": "7.4.2",
+      "pointradius": 2,
+      "points": false,
+      "renderer": "flot",
+      "scopedVars": {
+        "merchant": {
+          "selected": true,
+          "text": "LEROYMERLIN_002",
+          "value": "LEROYMERLIN_002"
+        }
+      },
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": true,
+      "steppedLine": false,
+      "targets": [
+        {
+          "expr": "sum(increase(http_client_requests_process_payment_seconds_count{merchant=\"$merchant\"}[5m])) by (status) / scalar(sum(increase(http_client_requests_process_payment_seconds_count{merchant=\"$merchant\"}[5m])) by (service))",
+          "interval": "",
+          "legendFormat": "{{status}}",
+          "refId": "A"
+        }
+      ],
+      "thresholds": [],
+      "timeFrom": null,
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "Response Statuses [5m]",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "$$hashKey": "object:89",
+          "decimals": 1,
+          "format": "percentunit",
+          "label": null,
+          "logBase": 1,
+          "max": "1",
+          "min": "0",
+          "show": true
+        },
+        {
+          "$$hashKey": "object:90",
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    }
+  ],
+  "schemaVersion": 27,
+  "style": "dark",
+  "tags": [],
+  "templating": {
+    "list": [
+      {
+        "allValue": null,
+        "current": {
+          "selected": false,
+          "text": [
+            "LEROYMERLIN_002"
+          ],
+          "value": [
+            "LEROYMERLIN_002"
+          ]
+        },
+        "datasource": null,
+        "definition": "label_values(http_client_requests_process_payment_seconds_count,merchant)",
+        "description": null,
+        "error": null,
+        "hide": 0,
+        "includeAll": true,
+        "label": null,
+        "multi": true,
+        "name": "merchant",
+        "options": [
+          {
+            "selected": false,
+            "text": "All",
+            "value": "$__all"
+          },
+          {
+            "selected": true,
+            "text": "LEROYMERLIN_002",
+            "value": "LEROYMERLIN_002"
+          },
+          {
+            "selected": false,
+            "text": "LEROYMERLIN_003",
+            "value": "LEROYMERLIN_003"
+          },
+          {
+            "selected": false,
+            "text": "LEROYMERLIN_004",
+            "value": "LEROYMERLIN_004"
+          },
+          {
+            "selected": false,
+            "text": "LEROYMERLIN_005",
+            "value": "LEROYMERLIN_005"
+          },
+          {
+            "selected": false,
+            "text": "LEROYMERLIN_006",
+            "value": "LEROYMERLIN_006"
+          },
+          {
+            "selected": false,
+            "text": "LEROYMERLIN_007",
+            "value": "LEROYMERLIN_007"
+          },
+          {
+            "selected": false,
+            "text": "LEROYMERLIN_008",
+            "value": "LEROYMERLIN_008"
+          },
+          {
+            "selected": false,
+            "text": "LEROYMERLIN_009",
+            "value": "LEROYMERLIN_009"
+          },
+          {
+            "selected": false,
+            "text": "LEROYMERLIN_012",
+            "value": "LEROYMERLIN_012"
+          },
+          {
+            "selected": false,
+            "text": "LEROYMERLIN_013",
+            "value": "LEROYMERLIN_013"
+          },
+          {
+            "selected": false,
+            "text": "LEROYMERLIN_014",
+            "value": "LEROYMERLIN_014"
+          },
+          {
+            "selected": false,
+            "text": "LEROYMERLIN_016",
+            "value": "LEROYMERLIN_016"
+          },
+          {
+            "selected": false,
+            "text": "LEROYMERLIN_017",
+            "value": "LEROYMERLIN_017"
+          },
+          {
+            "selected": false,
+            "text": "LEROYMERLIN_018",
+            "value": "LEROYMERLIN_018"
+          },
+          {
+            "selected": false,
+            "text": "LEROYMERLIN_019",
+            "value": "LEROYMERLIN_019"
+          },
+          {
+            "selected": false,
+            "text": "LEROYMERLIN_020",
+            "value": "LEROYMERLIN_020"
+          },
+          {
+            "selected": false,
+            "text": "LEROYMERLIN_021",
+            "value": "LEROYMERLIN_021"
+          },
+          {
+            "selected": false,
+            "text": "LEROYMERLIN_022",
+            "value": "LEROYMERLIN_022"
+          },
+          {
+            "selected": false,
+            "text": "LEROYMERLIN_023",
+            "value": "LEROYMERLIN_023"
+          },
+          {
+            "selected": false,
+            "text": "LEROYMERLIN_024",
+            "value": "LEROYMERLIN_024"
+          },
+          {
+            "selected": false,
+            "text": "LEROYMERLIN_025",
+            "value": "LEROYMERLIN_025"
+          },
+          {
+            "selected": false,
+            "text": "LEROYMERLIN_026",
+            "value": "LEROYMERLIN_026"
+          },
+          {
+            "selected": false,
+            "text": "LEROYMERLIN_027",
+            "value": "LEROYMERLIN_027"
+          },
+          {
+            "selected": false,
+            "text": "LEROYMERLIN_028",
+            "value": "LEROYMERLIN_028"
+          },
+          {
+            "selected": false,
+            "text": "LEROYMERLIN_030",
+            "value": "LEROYMERLIN_030"
+          },
+          {
+            "selected": false,
+            "text": "LEROYMERLIN_031",
+            "value": "LEROYMERLIN_031"
+          },
+          {
+            "selected": false,
+            "text": "LEROYMERLIN_032",
+            "value": "LEROYMERLIN_032"
+          },
+          {
+            "selected": false,
+            "text": "LEROYMERLIN_033",
+            "value": "LEROYMERLIN_033"
+          },
+          {
+            "selected": false,
+            "text": "LEROYMERLIN_034",
+            "value": "LEROYMERLIN_034"
+          },
+          {
+            "selected": false,
+            "text": "LEROYMERLIN_035",
+            "value": "LEROYMERLIN_035"
+          },
+          {
+            "selected": false,
+            "text": "LEROYMERLIN_036",
+            "value": "LEROYMERLIN_036"
+          },
+          {
+            "selected": false,
+            "text": "LEROYMERLIN_037",
+            "value": "LEROYMERLIN_037"
+          },
+          {
+            "selected": false,
+            "text": "LEROYMERLIN_038",
+            "value": "LEROYMERLIN_038"
+          },
+          {
+            "selected": false,
+            "text": "LEROYMERLIN_039",
+            "value": "LEROYMERLIN_039"
+          },
+          {
+            "selected": false,
+            "text": "LEROYMERLIN_040",
+            "value": "LEROYMERLIN_040"
+          },
+          {
+            "selected": false,
+            "text": "LEROYMERLIN_041",
+            "value": "LEROYMERLIN_041"
+          },
+          {
+            "selected": false,
+            "text": "LEROYMERLIN_042",
+            "value": "LEROYMERLIN_042"
+          },
+          {
+            "selected": false,
+            "text": "LEROYMERLIN_043",
+            "value": "LEROYMERLIN_043"
+          },
+          {
+            "selected": false,
+            "text": "LEROYMERLIN_044",
+            "value": "LEROYMERLIN_044"
+          },
+          {
+            "selected": false,
+            "text": "LEROYMERLIN_045",
+            "value": "LEROYMERLIN_045"
+          },
+          {
+            "selected": false,
+            "text": "LEROYMERLIN_046",
+            "value": "LEROYMERLIN_046"
+          },
+          {
+            "selected": false,
+            "text": "LEROYMERLIN_047",
+            "value": "LEROYMERLIN_047"
+          },
+          {
+            "selected": false,
+            "text": "LEROYMERLIN_049",
+            "value": "LEROYMERLIN_049"
+          },
+          {
+            "selected": false,
+            "text": "LEROYMERLIN_051",
+            "value": "LEROYMERLIN_051"
+          },
+          {
+            "selected": false,
+            "text": "LEROYMERLIN_052",
+            "value": "LEROYMERLIN_052"
+          },
+          {
+            "selected": false,
+            "text": "LEROYMERLIN_053",
+            "value": "LEROYMERLIN_053"
+          },
+          {
+            "selected": false,
+            "text": "LEROYMERLIN_055",
+            "value": "LEROYMERLIN_055"
+          },
+          {
+            "selected": false,
+            "text": "LEROYMERLIN_056",
+            "value": "LEROYMERLIN_056"
+          },
+          {
+            "selected": false,
+            "text": "LEROYMERLIN_057",
+            "value": "LEROYMERLIN_057"
+          },
+          {
+            "selected": false,
+            "text": "LEROYMERLIN_058",
+            "value": "LEROYMERLIN_058"
+          },
+          {
+            "selected": false,
+            "text": "LEROYMERLIN_059",
+            "value": "LEROYMERLIN_059"
+          },
+          {
+            "selected": false,
+            "text": "LEROYMERLIN_062",
+            "value": "LEROYMERLIN_062"
+          },
+          {
+            "selected": false,
+            "text": "LEROYMERLIN_065",
+            "value": "LEROYMERLIN_065"
+          },
+          {
+            "selected": false,
+            "text": "LEROYMERLIN_067",
+            "value": "LEROYMERLIN_067"
+          },
+          {
+            "selected": false,
+            "text": "LEROYMERLIN_068",
+            "value": "LEROYMERLIN_068"
+          },
+          {
+            "selected": false,
+            "text": "LEROYMERLIN_069",
+            "value": "LEROYMERLIN_069"
+          },
+          {
+            "selected": false,
+            "text": "LEROYMERLIN_070",
+            "value": "LEROYMERLIN_070"
+          },
+          {
+            "selected": false,
+            "text": "LEROYMERLIN_071",
+            "value": "LEROYMERLIN_071"
+          },
+          {
+            "selected": false,
+            "text": "LEROYMERLIN_073",
+            "value": "LEROYMERLIN_073"
+          },
+          {
+            "selected": false,
+            "text": "LEROYMERLIN_074",
+            "value": "LEROYMERLIN_074"
+          },
+          {
+            "selected": false,
+            "text": "LEROYMERLIN_075",
+            "value": "LEROYMERLIN_075"
+          },
+          {
+            "selected": false,
+            "text": "LEROYMERLIN_077",
+            "value": "LEROYMERLIN_077"
+          },
+          {
+            "selected": false,
+            "text": "LEROYMERLIN_078",
+            "value": "LEROYMERLIN_078"
+          },
+          {
+            "selected": false,
+            "text": "LEROYMERLIN_079",
+            "value": "LEROYMERLIN_079"
+          },
+          {
+            "selected": false,
+            "text": "LEROYMERLIN_080",
+            "value": "LEROYMERLIN_080"
+          },
+          {
+            "selected": false,
+            "text": "LEROYMERLIN_081",
+            "value": "LEROYMERLIN_081"
+          },
+          {
+            "selected": false,
+            "text": "LEROYMERLIN_082",
+            "value": "LEROYMERLIN_082"
+          },
+          {
+            "selected": false,
+            "text": "LEROYMERLIN_083",
+            "value": "LEROYMERLIN_083"
+          },
+          {
+            "selected": false,
+            "text": "LEROYMERLIN_086",
+            "value": "LEROYMERLIN_086"
+          },
+          {
+            "selected": false,
+            "text": "LEROYMERLIN_087",
+            "value": "LEROYMERLIN_087"
+          },
+          {
+            "selected": false,
+            "text": "LEROYMERLIN_088",
+            "value": "LEROYMERLIN_088"
+          },
+          {
+            "selected": false,
+            "text": "LEROYMERLIN_089",
+            "value": "LEROYMERLIN_089"
+          },
+          {
+            "selected": false,
+            "text": "LEROYMERLIN_090",
+            "value": "LEROYMERLIN_090"
+          },
+          {
+            "selected": false,
+            "text": "LEROYMERLIN_091",
+            "value": "LEROYMERLIN_091"
+          },
+          {
+            "selected": false,
+            "text": "LEROYMERLIN_092",
+            "value": "LEROYMERLIN_092"
+          },
+          {
+            "selected": false,
+            "text": "LEROYMERLIN_093",
+            "value": "LEROYMERLIN_093"
+          },
+          {
+            "selected": false,
+            "text": "LEROYMERLIN_109",
+            "value": "LEROYMERLIN_109"
+          },
+          {
+            "selected": false,
+            "text": "LEROYMERLIN_110",
+            "value": "LEROYMERLIN_110"
+          },
+          {
+            "selected": false,
+            "text": "LEROYMERLIN_111",
+            "value": "LEROYMERLIN_111"
+          },
+          {
+            "selected": false,
+            "text": "LEROYMERLIN_114",
+            "value": "LEROYMERLIN_114"
+          },
+          {
+            "selected": false,
+            "text": "LEROYMERLIN_115",
+            "value": "LEROYMERLIN_115"
+          },
+          {
+            "selected": false,
+            "text": "LEROYMERLIN_117",
+            "value": "LEROYMERLIN_117"
+          },
+          {
+            "selected": false,
+            "text": "LEROYMERLIN_118",
+            "value": "LEROYMERLIN_118"
+          },
+          {
+            "selected": false,
+            "text": "LEROYMERLIN_119",
+            "value": "LEROYMERLIN_119"
+          },
+          {
+            "selected": false,
+            "text": "LEROYMERLIN_122",
+            "value": "LEROYMERLIN_122"
+          },
+          {
+            "selected": false,
+            "text": "LEROYMERLIN_123",
+            "value": "LEROYMERLIN_123"
+          },
+          {
+            "selected": false,
+            "text": "LEROYMERLIN_124",
+            "value": "LEROYMERLIN_124"
+          },
+          {
+            "selected": false,
+            "text": "LEROYMERLIN_126",
+            "value": "LEROYMERLIN_126"
+          },
+          {
+            "selected": false,
+            "text": "LEROYMERLIN_127",
+            "value": "LEROYMERLIN_127"
+          },
+          {
+            "selected": false,
+            "text": "LEROYMERLIN_128",
+            "value": "LEROYMERLIN_128"
+          },
+          {
+            "selected": false,
+            "text": "LEROYMERLIN_129",
+            "value": "LEROYMERLIN_129"
+          },
+          {
+            "selected": false,
+            "text": "LEROYMERLIN_134",
+            "value": "LEROYMERLIN_134"
+          },
+          {
+            "selected": false,
+            "text": "LEROYMERLIN_135",
+            "value": "LEROYMERLIN_135"
+          },
+          {
+            "selected": false,
+            "text": "LEROYMERLIN_136",
+            "value": "LEROYMERLIN_136"
+          },
+          {
+            "selected": false,
+            "text": "LEROYMERLIN_137",
+            "value": "LEROYMERLIN_137"
+          },
+          {
+            "selected": false,
+            "text": "LEROYMERLIN_138",
+            "value": "LEROYMERLIN_138"
+          },
+          {
+            "selected": false,
+            "text": "LEROYMERLIN_139",
+            "value": "LEROYMERLIN_139"
+          },
+          {
+            "selected": false,
+            "text": "LEROYMERLIN_140",
+            "value": "LEROYMERLIN_140"
+          },
+          {
+            "selected": false,
+            "text": "LEROYMERLIN_141",
+            "value": "LEROYMERLIN_141"
+          },
+          {
+            "selected": false,
+            "text": "LEROYMERLIN_142",
+            "value": "LEROYMERLIN_142"
+          },
+          {
+            "selected": false,
+            "text": "LEROYMERLIN_143",
+            "value": "LEROYMERLIN_143"
+          },
+          {
+            "selected": false,
+            "text": "LEROYMERLIN_147",
+            "value": "LEROYMERLIN_147"
+          },
+          {
+            "selected": false,
+            "text": "LEROYMERLIN_150",
+            "value": "LEROYMERLIN_150"
+          },
+          {
+            "selected": false,
+            "text": "LEROYMERLIN_153",
+            "value": "LEROYMERLIN_153"
+          },
+          {
+            "selected": false,
+            "text": "LEROYMERLIN_155",
+            "value": "LEROYMERLIN_155"
+          },
+          {
+            "selected": false,
+            "text": "LEROYMERLIN_156",
+            "value": "LEROYMERLIN_156"
+          },
+          {
+            "selected": false,
+            "text": "LEROYMERLIN_163",
+            "value": "LEROYMERLIN_163"
+          },
+          {
+            "selected": false,
+            "text": "LEROYMERLIN_165",
+            "value": "LEROYMERLIN_165"
+          },
+          {
+            "selected": false,
+            "text": "LEROYMERLIN_174",
+            "value": "LEROYMERLIN_174"
+          },
+          {
+            "selected": false,
+            "text": "LEROYMERLIN_181",
+            "value": "LEROYMERLIN_181"
+          },
+          {
+            "selected": false,
+            "text": "LeroyMerlin_010",
+            "value": "LeroyMerlin_010"
+          },
+          {
+            "selected": false,
+            "text": "LeroyMerlin_011",
+            "value": "LeroyMerlin_011"
+          },
+          {
+            "selected": false,
+            "text": "leroymerlin",
+            "value": "leroymerlin"
+          },
+          {
+            "selected": false,
+            "text": "leroymerlin_048",
+            "value": "leroymerlin_048"
+          },
+          {
+            "selected": false,
+            "text": "leroymerlin_1",
+            "value": "leroymerlin_1"
+          }
+        ],
+        "query": {
+          "query": "label_values(http_client_requests_process_payment_seconds_count,merchant)",
+          "refId": "StandardVariableQuery"
+        },
+        "refresh": 0,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
+        "tagValuesQuery": "",
+        "tags": [],
+        "tagsQuery": "",
+        "type": "query",
+        "useTags": false
+      },
+      {
+        "allValue": null,
+        "current": {
+          "selected": true,
+          "text": [
+            "applepay",
+            "card",
+            "google"
+          ],
+          "value": [
+            "applepay",
+            "card",
+            "google"
+          ]
+        },
+        "datasource": null,
+        "definition": "label_values(http_client_requests_process_payment_seconds_count,paymentInstrument)",
+        "description": null,
+        "error": null,
+        "hide": 0,
+        "includeAll": true,
+        "label": null,
+        "multi": true,
+        "name": "paymentInstrument",
+        "options": [
+          {
+            "selected": false,
+            "text": "All",
+            "value": "$__all"
+          },
+          {
+            "selected": true,
+            "text": "applepay",
+            "value": "applepay"
+          },
+          {
+            "selected": true,
+            "text": "card",
+            "value": "card"
+          },
+          {
+            "selected": true,
+            "text": "google",
+            "value": "google"
+          }
+        ],
+        "query": {
+          "query": "label_values(http_client_requests_process_payment_seconds_count,paymentInstrument)",
+          "refId": "StandardVariableQuery"
+        },
+        "refresh": 0,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
+        "tagValuesQuery": "",
+        "tags": [],
+        "tagsQuery": "",
+        "type": "query",
+        "useTags": false
+      }
+    ]
+  },
+  "time": {
+    "from": "now-6h",
+    "to": "now"
+  },
+  "timepicker": {},
+  "timezone": "",
+  "title": "Sberbank",
+  "uid": "esO-wKN7z",
+  "version": 6
+}

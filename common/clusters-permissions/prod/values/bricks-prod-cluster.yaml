@@ -1,0 +1,277 @@
+---
+cluster_authorization:
+  defaults:
+    default_sa_permissions: &default
+      accessLevel: User
+      limitNamespaces:
+        - default
+      allowScale: true
+      allowAccessToSystemNamespaces: true
+      portForwarding: true
+  crowd:
+    groups:
+      crowd-checkout-tunnel-admin:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - checkout-tunnel-.*
+          - checkout-tunnel
+          - checkout-tunnel.*
+      crowd-checkout-tunnel-ro:
+        <<: *default
+        accessLevel: User
+        limitNamespaces:
+          - checkout-tunnel-.*
+          - checkout-tunnel
+          - checkout-tunnel.*
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+      crowd-checkout-tunnel-rw:
+        <<: *default
+        accessLevel: Editor
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - checkout-tunnel-.*
+          - checkout-tunnel
+          - checkout-tunnel.*
+      crowd-sa-checkout-tunnel:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - checkout-tunnel-.*
+          - checkout-tunnel
+          - checkout-tunnel.*
+      crowd-checkout-v2-admin:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - checkout-v2-.*
+          - checkout-v2
+          - checkout-v2.*
+      crowd-checkout-v2-ro:
+        <<: *default
+        accessLevel: User
+        limitNamespaces:
+          - checkout-v2-.*
+          - checkout-v2
+          - checkout-v2.*
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+      crowd-checkout-v2-rw:
+        <<: *default
+        accessLevel: Editor
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - checkout-v2-.*
+          - checkout-v2
+          - checkout-v2.*
+      crowd-sa-checkout-v2:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - checkout-v2-.*
+          - checkout-v2
+          - checkout-v2.*
+      crowd-solution-admin:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - solution-.*
+          - solution
+          - solution.*
+      crowd-solution-ro:
+        <<: *default
+        accessLevel: User
+        limitNamespaces:
+          - solution-.*
+          - solution
+          - solution.*
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+      crowd-solution-rw:
+        <<: *default
+        accessLevel: Editor
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - solution-.*
+          - solution
+          - solution.*
+      crowd-sa-solution:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - solution-.*
+          - solution
+          - solution.*
+      lm-sa-solution:
+        <<: *default
+        accessLevel: Editor
+        limitNamespaces:
+          - solution-.*
+          - solution
+          - solution.*
+        allowScale: false
+        allowAccessToSystemNamespaces: true
+        portForwarding: false
+      crowd-search-admin:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - search-.*
+          - search
+          - search.*
+      crowd-search-ro:
+        <<: *default
+        accessLevel: User
+        limitNamespaces:
+          - search-.*
+          - search
+          - search.*
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+      crowd-search-rw:
+        <<: *default
+        accessLevel: Editor
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - search-.*
+          - search
+          - search.*
+      crowd-sa-search:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - search-.*
+          - search
+          - search.*
+      crowd-solution-kibana-rw:
+        <<: *default
+        accessLevel: Editor
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+      crowd-checkout-tunnel-kibana-rw:
+        <<: *default
+        accessLevel: Editor
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+      crowd-detailed-solution-admin:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - detailed-solution-.*
+          - detailed-solution
+          - detailed-solution.*
+      crowd-detailed-solution-ro:
+        <<: *default
+        accessLevel: User
+        limitNamespaces:
+          - detailed-solution-.*
+          - detailed-solution
+          - detailed-solution.*
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+      crowd-detailed-solution-rw:
+        <<: *default
+        accessLevel: Editor
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - detailed-solution-.*
+          - detailed-solution
+          - detailed-solution.*
+      crowd-sa-detailed-solution:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - detailed-solution-.*
+          - detailed-solution
+          - detailed-solution.*
+      crowd-services-platform-ro:
+        <<: *default
+        accessLevel: User
+        limitNamespaces:
+          - checkout-tunnel-.*
+          - checkout-tunnel
+          - checkout-tunnel.*
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+      crowd-dataplatform-ro:
+        <<: *default
+        accessLevel: User
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+      crowd-obs-ro:
+        <<: *default
+        accessLevel: User
+        limitNamespaces:
+          - .*
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+      crowd-flant-bravo-admin:
+        accessLevel: SuperAdmin
+        allowAccessToSystemNamespaces: true
+        allowScale: true
+        portForwarding: true
+      crowd-flant-charlie-admin:
+        accessLevel: SuperAdmin
+        allowAccessToSystemNamespaces: true
+        allowScale: true
+        portForwarding: true
+      crowd-flant-alfa-admin:
+        accessLevel: SuperAdmin
+        allowAccessToSystemNamespaces: true
+        allowScale: true
+        portForwarding: true
+      crowd-flant-echo-admin:
+        accessLevel: SuperAdmin
+        allowAccessToSystemNamespaces: true
+        allowScale: true
+        portForwarding: true
+      crowd-flant-rnd-admin:
+        accessLevel: SuperAdmin
+        allowAccessToSystemNamespaces: true
+        allowScale: true
+        portForwarding: true
+      crowd-ff-admin:
+        accessLevel: Admin
+        allowScale: true
+        limitNamespaces:
+          - .*
+        portForwarding: false
+      crowd-ff-ro:
+        accessLevel: User
+        allowScale: false
+        limitNamespaces:
+          - .*
+        portForwarding: true
+      crowd-ff-rw:
+        accessLevel: Editor
+        allowScale: false
+        limitNamespaces:
+          - .*
+        portForwarding: true
+
+DexProvider:
+  clientID: k8s-bricks-prod
+  clientSecret: crowd_app_k8s-bricks-prod
+
+ClusterRole:
+  solution-ns-editor:
+    metadata:
+      annotations:
+        user-authz.deckhouse.io/access-level: Editor
+      name: solution-ns-editor
+    rules:
+      - apiGroups:
+          - flagger.app
+        resources:
+          - "*"
+        verbs:
+          - "*"

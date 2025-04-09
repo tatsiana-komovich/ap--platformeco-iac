@@ -1,0 +1,13 @@
+---
+apiVersion: deckhouse.io/v1
+kind: UpmeterRemoteWrite
+metadata:
+  name: victoria-metrics
+spec:
+  additionalLabels:
+    project: {{ .Values.default.project }}
+    cluster: {{ .Values.default.clusterName }}
+    environment: {{ .Values.default.environment }}
+  config:
+    url: {{ .Values.default.victoriaUrl }}
+  intervalSeconds: 300

@@ -1,0 +1,562 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": {
+          "type": "grafana",
+          "uid": "-- Grafana --"
+        },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "target": {
+          "limit": 100,
+          "matchAny": false,
+          "tags": [],
+          "type": "dashboard"
+        },
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "iteration": 1700748074730,
+  "links": [],
+  "liveNow": false,
+  "panels": [
+    {
+      "datasource": {
+        "type": "postgres",
+        "uid": "LPZWeRHSz"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "align": "auto",
+            "displayMode": "auto",
+            "inspect": false
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "metric"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 269
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Time"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 264
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "id": 2,
+      "options": {
+        "footer": {
+          "fields": "",
+          "reducer": [
+            "sum"
+          ],
+          "show": false
+        },
+        "showHeader": true,
+        "sortBy": []
+      },
+      "pluginVersion": "8.5.13",
+      "targets": [
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "LPZWeRHSz"
+          },
+          "format": "time_series",
+          "group": [],
+          "metricColumn": "\"nameMethod\"",
+          "rawQuery": false,
+          "rawSql": "SELECT\n  \"time\" AS \"time\",\n  \"nameMethod\" AS metric,\n  \"jobUrl\"\nFROM \"library-metrics\"\nWHERE\n  $__timeFilter(\"time\") AND\n  \"libraryVersion\" = '$libraryVersion' AND\n  \"nameMethod\" = '$nameMethod'\nORDER BY 1,2",
+          "refId": "A",
+          "select": [
+            [
+              {
+                "params": [
+                  "\"jobUrl\""
+                ],
+                "type": "column"
+              }
+            ]
+          ],
+          "table": "\"library-metrics\"",
+          "timeColumn": "\"time\"",
+          "timeColumnType": "timestamp",
+          "where": [
+            {
+              "name": "$__timeFilter",
+              "params": [],
+              "type": "macro"
+            },
+            {
+              "datatype": "text",
+              "name": "",
+              "params": [
+                "\"libraryVersion\"",
+                "=",
+                "'$libraryVersion'"
+              ],
+              "type": "expression"
+            },
+            {
+              "datatype": "text",
+              "name": "",
+              "params": [
+                "\"nameMethod\"",
+                "=",
+                "'$nameMethod'"
+              ],
+              "type": "expression"
+            }
+          ]
+        }
+      ],
+      "title": "Find old version",
+      "type": "table"
+    },
+    {
+      "datasource": {
+        "type": "postgres",
+        "uid": "LPZWeRHSz"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "continuous-GrYlRd"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 9
+      },
+      "id": 4,
+      "options": {
+        "displayMode": "lcd",
+        "minVizHeight": 10,
+        "minVizWidth": 0,
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showUnfilled": true
+      },
+      "pluginVersion": "8.5.13",
+      "targets": [
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "LPZWeRHSz"
+          },
+          "format": "time_series",
+          "group": [],
+          "metricColumn": "\"nameMethod\"",
+          "rawQuery": false,
+          "rawSql": "SELECT\n  \"time\" AS \"time\",\n  \"nameMethod\" AS metric,\n  sum(1) OVER (PARTITION BY \"nameMethod\" ORDER BY \"time\") AS \"1\"\nFROM \"library-metrics\"\nWHERE\n  $__timeFilter(\"time\")\nORDER BY 1,2",
+          "refId": "A",
+          "select": [
+            [
+              {
+                "params": [
+                  "1"
+                ],
+                "type": "column"
+              },
+              {
+                "params": [
+                  "sum"
+                ],
+                "type": "window"
+              },
+              {
+                "params": [
+                  "1"
+                ],
+                "type": "alias"
+              }
+            ]
+          ],
+          "table": "\"library-metrics\"",
+          "timeColumn": "\"time\"",
+          "timeColumnType": "timestamp",
+          "where": [
+            {
+              "name": "$__timeFilter",
+              "params": [],
+              "type": "macro"
+            }
+          ]
+        }
+      ],
+      "title": "Counter",
+      "type": "bargauge"
+    },
+    {
+      "datasource": {
+        "type": "postgres",
+        "uid": "LPZWeRHSz"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            }
+          },
+          "mappings": []
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 9
+      },
+      "id": 6,
+      "options": {
+        "displayLabels": [
+          "percent"
+        ],
+        "legend": {
+          "displayMode": "list",
+          "placement": "right",
+          "values": []
+        },
+        "pieType": "pie",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "LPZWeRHSz"
+          },
+          "format": "time_series",
+          "group": [],
+          "metricColumn": "\"libraryVersion\"",
+          "rawQuery": false,
+          "rawSql": "SELECT\n  \"time\" AS \"time\",\n  \"libraryVersion\" AS metric,\n  sum(1) OVER (PARTITION BY \"libraryVersion\" ORDER BY \"time\") AS \"1\"\nFROM \"library-metrics\"\nWHERE\n  $__timeFilter(\"time\")\nORDER BY 1,2",
+          "refId": "A",
+          "select": [
+            [
+              {
+                "params": [
+                  "1"
+                ],
+                "type": "column"
+              },
+              {
+                "params": [
+                  "sum"
+                ],
+                "type": "window"
+              },
+              {
+                "params": [
+                  "1"
+                ],
+                "type": "alias"
+              }
+            ]
+          ],
+          "table": "\"library-metrics\"",
+          "timeColumn": "\"time\"",
+          "timeColumnType": "timestamp",
+          "where": [
+            {
+              "name": "$__timeFilter",
+              "params": [],
+              "type": "macro"
+            }
+          ]
+        }
+      ],
+      "title": "Version usage",
+      "type": "piechart"
+    },
+    {
+      "datasource": {
+        "type": "postgres",
+        "uid": "LPZWeRHSz"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 17
+      },
+      "id": 8,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "LPZWeRHSz"
+          },
+          "format": "time_series",
+          "group": [
+            {
+              "params": [
+                "$__interval",
+                "none"
+              ],
+              "type": "time"
+            }
+          ],
+          "metricColumn": "\"nameMethod\"",
+          "rawQuery": false,
+          "rawSql": "SELECT\n  $__timeGroupAlias(time,$__interval),\n  \"nameMethod\" AS metric,\n  count(1) AS \"1\"\nFROM \"library-metrics\"\nWHERE\n  $__timeFilter(time) AND\n  \"nameMethod\" = '$nameMethod'\nGROUP BY 1,2\nORDER BY 1,2",
+          "refId": "A",
+          "select": [
+            [
+              {
+                "params": [
+                  "1"
+                ],
+                "type": "column"
+              },
+              {
+                "params": [
+                  "count"
+                ],
+                "type": "aggregate"
+              },
+              {
+                "params": [
+                  "1"
+                ],
+                "type": "alias"
+              }
+            ]
+          ],
+          "table": "\"library-metrics\"",
+          "timeColumn": "time",
+          "timeColumnType": "timestamp",
+          "where": [
+            {
+              "name": "$__timeFilter",
+              "params": [],
+              "type": "macro"
+            },
+            {
+              "datatype": "text",
+              "name": "",
+              "params": [
+                "\"nameMethod\"",
+                "=",
+                "'$nameMethod'"
+              ],
+              "type": "expression"
+            }
+          ]
+        }
+      ],
+      "title": "Method in time ",
+      "type": "timeseries"
+    }
+  ],
+  "schemaVersion": 36,
+  "style": "dark",
+  "tags": [],
+  "templating": {
+    "list": [
+      {
+        "current": {
+          "selected": true,
+          "text": "sendTelegramMessage.call",
+          "value": "sendTelegramMessage.call"
+        },
+        "datasource": {
+          "type": "postgres",
+          "uid": "LPZWeRHSz"
+        },
+        "definition": "select \"nameMethod\" from \"library-metrics\"",
+        "hide": 0,
+        "includeAll": false,
+        "multi": false,
+        "name": "nameMethod",
+        "options": [],
+        "query": "select \"nameMethod\" from \"library-metrics\"",
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
+        "type": "query"
+      },
+      {
+        "current": {
+          "selected": true,
+          "text": "library-metrics",
+          "value": "library-metrics"
+        },
+        "datasource": {
+          "type": "postgres",
+          "uid": "LPZWeRHSz"
+        },
+        "definition": "select \"libraryVersion\" from \"library-metrics\"",
+        "hide": 0,
+        "includeAll": false,
+        "multi": false,
+        "name": "libraryVersion",
+        "options": [],
+        "query": "select \"libraryVersion\" from \"library-metrics\"",
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
+        "type": "query"
+      }
+    ]
+  },
+  "time": {
+    "from": "now-2d",
+    "to": "now"
+  },
+  "timepicker": {},
+  "timezone": "",
+  "title": "Library-metrics",
+  "uid": "Library-metrics",
+  "version": 1,
+  "weekStart": ""
+}

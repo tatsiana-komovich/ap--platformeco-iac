@@ -1,0 +1,113 @@
+---
+apiVersion: templates.gatekeeper.sh/v1
+kind: ConstraintTemplate
+metadata:
+  name: allowedhostpaths
+  annotations:
+    description: Enforces security policy to restrict containers to specific allowed host paths.
+    metadata.gatekeeper.sh/title: Allowed Host Paths Security Policy Constraint
+    metadata.gatekeeper.sh/version: 1.0.0
+    argocd.argoproj.io/hook: PreSync
+spec:
+  crd:
+    spec:
+      names:
+        kind: AllowedHostPaths
+      validation:
+        openAPIV3Schema:
+          type: object
+          properties:
+            allowedHostPaths:
+              description: A list of allowed host paths with path prefixes and read-only settings.
+              type: array
+              items:
+                type: object
+                properties:
+                  pathPrefix:
+                    type: string
+                    description: The path prefix that the hostPath must start with.
+                  readOnly:
+                    type: boolean
+                    description: Indicates if the host path must be mounted as read-only.
+  targets:
+    - target: admission.k8s.gatekeeper.sh
+      rego: |
+        package d8.allowed_host_paths
+
+        # Проверка на использование запрещенного hostPath
+        violation[{"msg": msg}] {
+          volume := input.review.object.spec.volumes[_]
+          has_host_path(volume)
+          not host_path_is_allowed(volume.hostPath)
+          msg := sprintf("Host path %v is not allowed. Allowed host paths are %v.", [volume.hostPath.path, input.parameters.allowedHostPaths])
+        }
+
+        # Проверка, что volume использует hostPath
+        has_host_path(volume) {
+          volume.hostPath
+        }
+
+        # Проверка, является ли hostPath разрешенным
+        host_path_is_allowed(hostPath) {
+          allowed := input.parameters.allowedHostPaths[_]
+          startswith(hostPath.path, allowed.pathPrefix)
+          hostPath.readOnly == allowed.readOnly
+        }
+---
+apiVersion: constraints.gatekeeper.sh/v1beta1
+kind: AllowedHostPaths
+metadata:
+  name: allowed-host-paths
+  annotations:
+    argocd.argoproj.io/sync-options: "SkipDryRunOnMissingResource=true, Replace=true"
+spec:
+  enforcementAction: deny
+  parameters:
+    allowedHostPaths:
+      - pathPrefix: "/etc/kubernetes"
+        readOnly: true
+  match:
+    kinds:
+      - apiGroups: [""]
+        kinds: ["Pod"]
+      - apiGroups: ["apps"]
+        kinds: ["Deployment", "ReplicaSet", "StatefulSet", "DaemonSet"]
+    excludedNamespaces:
+      - kube-*
+      - d8-*
+      - aqua*
+      - lmru-*
+      - devops-core-*
+      - syn-github-actions-runner-controller #gha runners for synoptic p0602
+      - vspspr-*
+      - clickhouse-*
+      - coroot
+      - alfor-*
+      - asm-dev
+      - billing-preprod
+      - intraru-prod
+      - wecare-prod
+      - wecare-test
+      - fudzi
+      - carrier-portal-*
+      - pickup-point-*
+      - del-sell-*
+      - gts-tms-*
+      - pnr--alfa
+      - del-repo-*
+      - infra-elklogs*
+      - osaas-opensearch*
+      - osaas-logs-b-obs*
+      - jaeger*
+      - gitlab-runner*
+      - pim-*
+      - search-*
+      - mf
+      - chaos-mesh
+      - intraru-stage
+      - intraru-preprod
+      - obs-alloy
+      - default #services-prod, hassaleh-a-prod, marketplace, shared, yc-techno
+      - sentry* #marketplace
+      - lens-metrics #x1-presale
+      - trivy-operator

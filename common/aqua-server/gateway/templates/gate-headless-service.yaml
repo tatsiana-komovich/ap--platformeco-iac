@@ -1,0 +1,27 @@
+{{- if .Values.headlessService }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}-gateway-headless-svc
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: {{ .Release.Name }}-gateway
+    aqua.component: gateway
+{{ include "aqua.labels" . | indent 4 }}
+spec:
+  clusterIP: None
+  type: ClusterIP
+  selector:
+    app: {{ .Release.Name }}-gateway
+  ports:
+  {{- range $port := .Values.service.ports }}
+    - name: {{ $port.name }}
+      port: {{ $port.port }}
+      targetPort: {{ $port.targetPort }}
+      {{- if $port.protocol }}
+      protocol: {{ $port.protocol }}
+      {{- end }}
+  {{- end }}
+
+{{- end }}

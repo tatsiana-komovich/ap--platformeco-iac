@@ -1,0 +1,27 @@
+---
+# Default values for IngressNginxController.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+IngressNginxController:
+  main:
+    name: main
+    spec:
+      chaosMonkey: false
+      disableHTTP2: false
+      hsts: false
+      ingressClass: nginx
+      inlet: LoadBalancer
+      maxReplicas: 1
+      minReplicas: 1
+      underscoresInHeaders: false
+      validationEnabled: true
+    loadBalancer:
+      behindL7Proxy: true
+      realIPHeader: X-Forwarded-For
+    nodeSelector:
+      node-role/loadbalancer: ""
+    tolerations:
+      - effect: NoExecute
+        key: dedicated
+        operator: Equal
+        value: loadbalancer

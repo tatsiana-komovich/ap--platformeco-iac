@@ -1,0 +1,72 @@
+---
+# This role specific to kube-bench scans permissions
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: {{ .Values.role.name }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    role: {{ .Release.Name }}
+    app: {{ include "kube-enforcer.fullname" . }}
+    aqua.component: kubeenforcer
+{{ include "aqua.labels" . | indent 4 }}
+rules:
+  - apiGroups: ["*"]
+    resources: ["pods/log"]
+    verbs: ["get", "list", "watch"]
+  - apiGroups: ["*"]
+    resources: ["jobs"]
+    verbs: ["create", "delete"]
+  - apiGroups: [ "*" ]
+    resources: [ "leases" ]
+    verbs: [ "get", "list", "create", "update" ]
+  - apiGroups: [ "*" ]
+    resources: [ "secrets" ]
+    verbs: [ "create", "delete" ]
+  - apiGroups: [ "*" ]
+    resources: [ "configmaps" ]
+    verbs: [ "update", "create" ]
+{{- if eq .Values.global.platform "openshift" }}
+  - apiGroups: ["*"]
+    resources: ["pods"]
+    verbs: ["create", "delete"]
+{{- end }}
+
+{{- if and (ge (atoi (.Capabilities.KubeVersion.Minor | replace "+" "")) 19 ) .Values.starboard.enabled }}
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: starboard-operator
+  namespace: {{ .Release.Namespace }}
+rules:
+  - apiGroups:
+      - ""
+    resources:
+      - secrets
+    verbs:
+      - get
+      - create
+      - update
+  - apiGroups:
+      - ""
+    resources:
+      - configmaps
+      - serviceaccounts
+    verbs:
+      - create
+      - update
+  - apiGroups:
+      - ""
+    resources:
+      - events
+    verbs:
+      - create
+  - apiGroups:
+      - batch
+    resources:
+      - jobs
+    verbs:
+      - create
+      - delete
+{{- end }}

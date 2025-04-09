@@ -1,0 +1,17 @@
+{{- if .Values.Role }}
+{{- range $key, $value := .Values.Role }}
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  {{- toYaml $value.metadata | nindent 2 }}
+roleRef:
+  kind: Role
+  name: {{ $value.metadata.name }}
+  {{ "apiGroup: rbac.authorization.k8s.io" }}
+subjects:
+  - kind: ServiceAccount
+    name: {{ $value.metadata.name }}
+    namespace: {{ $value.metadata.namespace }}
+{{- end }}
+{{- end }}

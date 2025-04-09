@@ -1,0 +1,413 @@
+---
+cluster_authorization:
+  defaults:
+    default_sa_permissions: &default
+      accessLevel: User
+      limitNamespaces:
+        - default
+      allowScale: true
+      allowAccessToSystemNamespaces: false
+      portForwarding: true
+  crowd:
+    groups:
+      #elma
+      crowd-elma-admin:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - elma-.*
+          - elma
+      crowd-elma-ro:
+        <<: *default
+        accessLevel: User
+        limitNamespaces:
+          - elma-.*
+          - elma
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+      crowd-elma-rw:
+        <<: *default
+        accessLevel: Editor
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - elma-.*
+          - elma
+      crowd-sa-elma:
+        <<: *default
+        accessLevel: Admin
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - elma-.*
+          - elma
+      #logbonus
+      crowd-logbonus-admin:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - logbonus-.*
+          - logbonus
+      crowd-logbonus-ro:
+        <<: *default
+        accessLevel: User
+        limitNamespaces:
+          - logbonus-.*
+          - logbonus
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+      crowd-logbonus-rw:
+        <<: *default
+        accessLevel: Editor
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - logbonus-.*
+          - logbonus
+      crowd-sa-logbonus:
+        <<: *default
+        accessLevel: Admin
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - logbonus-.*
+          - logbonus
+      #ediep
+      crowd-ediep-admin:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - ediep-.*
+          - ediep
+      crowd-ediep-ro:
+        <<: *default
+        accessLevel: User
+        limitNamespaces:
+          - ediep-.*
+          - ediep
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+      crowd-ediep-rw:
+        <<: *default
+        accessLevel: Editor
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - ediep-.*
+          - ediep
+      crowd-sa-ediep:
+        <<: *default
+        accessLevel: Admin
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - ediep-.*
+          - ediep
+      # partnerportal
+      crowd-partnerportal-admin:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - partnerportal-.*
+          - partnerportal
+      crowd-partnerportal-rw:
+        <<: *default
+        accessLevel: User
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - partnerportal-.*
+          - partnerportal
+      crowd-sa-partnerportal:
+        <<: *default
+        accessLevel: Admin
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - partnerportal-.*
+          - partnerportal
+      crowd-middleware-rw:
+        <<: *default
+        accessLevel: Editor
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - elma-.*
+          - elma
+      # ppmru
+      crowd-ppmru-admin:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - ppmru-.*
+          - ppmru
+      crowd-ppmru-rw:
+        <<: *default
+        accessLevel: User
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - ppmru-.*
+          - ppmru
+      crowd-sa-ppmru:
+        <<: *default
+        accessLevel: Admin
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - ppmru-.*
+          - ppmru
+      # pcol
+      crowd-pcol-admin:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - pcol-.*
+          - pcol
+      crowd-pcol-rw:
+        <<: *default
+        accessLevel: User
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - pcol-.*
+          - pcol
+      crowd-sa-pcol:
+        <<: *default
+        accessLevel: Admin
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - pcol-.*
+          - pcol
+      # pcs
+      crowd-pcs-admin:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - pcs-.*
+          - pcs
+      crowd-pcs-rw:
+        <<: *default
+        accessLevel: User
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - pcs-.*
+          - pcs
+      crowd-sa-pcs:
+        <<: *default
+        accessLevel: Admin
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - pcs-.*
+          - pcs
+      # pccm
+      crowd-pccm-admin:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - pccm-.*
+      crowd-pccm-rw:
+        <<: *default
+        accessLevel: Editor
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - pccm-.*
+      crowd-pccm-ro:
+        <<: *default
+        accessLevel: User
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - pccm-.*
+      crowd-sa-pccm:
+        <<: *default
+        accessLevel: Admin
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - pccm-.*
+      # rfac
+      crowd-rfac-admin:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - rfac-.*
+      crowd-rfac-rw:
+        <<: *default
+        accessLevel: Editor
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - rfac-.*
+      crowd-rfac-ro:
+        <<: *default
+        accessLevel: User
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - rfac-.*
+      crowd-sa-rfac:
+        <<: *default
+        accessLevel: Admin
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - rfac-.*
+      # supplatform
+      crowd-supplatform-admin:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - rulm-supplier-platform-.*
+      crowd-supplatform-ro:
+        <<: *default
+        accessLevel: User
+        limitNamespaces:
+          - rulm-supplier-platform-.*
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+      crowd-supplatform-rw:
+        <<: *default
+        accessLevel: Editor
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - rulm-supplier-platform-.*
+      crowd-sa-supplatform:
+        <<: *default
+        accessLevel: Admin
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - rulm-supplier-platform-.*
+      crowd-sa-turbine:
+        <<: *default
+        accessLevel: Admin
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - rulm-.*
+      # tender-management
+      crowd-tender-management-admin:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - tender-management-.*
+          - tender-management
+      crowd-tender-management-ro:
+        <<: *default
+        accessLevel: User
+        limitNamespaces:
+          - tender-management-.*
+          - tender-management
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+      crowd-tender-management-rw:
+        <<: *default
+        accessLevel: Editor
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - tender-management-.*
+          - tender-management
+      crowd-sa-tender-management:
+        <<: *default
+        accessLevel: Admin
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - tender-management-.*
+          - tender-management
+      # otel for tracing
+      crowd-otel-ro:
+        <<: *default
+        accessLevel: User
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+      crowd-otel-rw:
+        <<: *default
+        accessLevel: Editor
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - otel-.*
+      crowd-otel-admin:
+        <<: *default
+        accessLevel: Admin
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - otel-.*
+      crowd-sa-otel:
+        <<: *default
+        accessLevel: SuperAdmin
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - otel-.*
+      # ppcfs
+      crowd-ppcfs-ro:
+        <<: *default
+        accessLevel: User
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+        limitNamespaces:
+          - ppcfs-.*
+      crowd-ppcfs-rw:
+        <<: *default
+        accessLevel: Editor
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - ppcfs-.*
+      crowd-ppcfs-admin:
+        <<: *default
+        accessLevel: Admin
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - ppcfs-.*
+      crowd-sa-ppcfs:
+        <<: *default
+        accessLevel: SuperAdmin
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - ppcfs-.*
+      # <-- start PE DevOps -->
+      crowd-pe-devops-rw:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - pe-devops.*
+      crowd-pe-devops-ro:
+        <<: *default
+        accessLevel: User
+        limitNamespaces:
+          - pe-devops.*
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+      crowd-sa-pe-devops:
+        <<: *default
+        accessLevel: Admin
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - pe-devops.*
+      # <--- end offer repository --->
+      # Jenkins Slaves
+      crowd-jenkins-slave:
+        <<: *default
+        accessLevel: Admin
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - jenkins-slaves
+      crowd-pe-devops-admin:
+        <<: *default
+        accessLevel: User
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+        limitNamespaces:
+          - jenkins-slaves
+
+ServiceAccount:
+  adeo-vault-sa:
+    metadata:
+      name: adeo-vault-sa
+      namespace: lmru-devops-k8s-configuration
+
+ClusterRoleBinding:
+  adeo-vault-cluster-role-binding:
+    metadata:
+      name: adeo-vault
+    roleRef:
+      kind: ClusterRole
+      name: system:auth-delegator
+    subjects:
+      - kind: ServiceAccount
+        name: adeo-vault-sa
+        namespace: lmru-devops-k8s-configuration
+
+DexProvider:
+  clientID: k8s-argocd
+  clientSecret: crowd_app_k8s-argocd

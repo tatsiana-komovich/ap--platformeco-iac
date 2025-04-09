@@ -1,0 +1,22 @@
+---
+apiVersion: operator.victoriametrics.com/v1beta1
+kind: VMRule
+metadata:
+  name: vm-rule-flagger
+  namespace: devops-core-victoria-alerts
+spec:
+  groups:
+    - name: flagger.status
+      concurrency: 1
+      rules:
+        - alert: FlaggerPodsAreNotReady
+          expr: kube_pod_status_ready{condition="true", pod=~"flagger-.*"} == 0
+          for: 10m
+          labels:
+            severity: warning
+          annotations:
+            summary: "Flagger pods are not ready"
+            description: |
+              Flagger pods are not ready for more than 10 minutes.
+              Namespace: {{ $labels.namespace }}
+              Check pods' status: kubectl get pod -n {{ $labels.namespace }} -l app.kubernetes.io/name=flagger

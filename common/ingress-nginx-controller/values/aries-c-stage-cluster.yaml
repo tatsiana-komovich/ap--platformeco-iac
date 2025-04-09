@@ -1,0 +1,28 @@
+---
+IngressNginxController:
+  main:
+    name: main
+    spec:
+      chaosMonkey: false
+      disableHTTP2: false
+      hsts: false
+      ingressClass: nginx
+      inlet: LoadBalancer
+      maxReplicas: 1
+      minReplicas: 1
+      underscoresInHeaders: false
+      validationEnabled: true
+      enableIstioSidecar: true
+      waitLoadBalancerOnTerminating: 60
+    loadBalancer:
+      behindL7Proxy: true
+      realIPHeader: X-Forwarded-For
+    sourceRanges:
+      - 10.80.120.50/32
+    nodeSelector:
+      node-role/loadbalancer: ""
+    tolerations:
+      - effect: NoExecute
+        key: dedicated
+        operator: Equal
+        value: "loadbalancer"

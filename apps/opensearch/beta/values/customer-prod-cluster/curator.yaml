@@ -1,0 +1,217 @@
+---
+opendistro:
+  curator:
+    enabled: true
+    s3_snapshots:
+      unit_count:
+        all: 60
+        unknown: 7
+    cron:
+      restore: 50 7 * * *
+      snapshot: 30 0 * * *
+    unknown:
+      days_count: 7
+      snapshot: true
+      schedule: 30 6 * * *
+    indices:
+      - kind: prefix
+        value: filebeat
+        system: false
+        days_count: 30
+        snapshot: true
+        schedule: 50 4 * * *
+        monitoring: false
+      - kind: prefix
+        value: infra-elklogs
+        system: false
+        monitoring: false
+        days_count: 30
+        snapshot: false
+        schedule: 55 4 * * *
+      - kind: prefix
+        value: d8-ingress
+        system: false
+        monitoring: false
+        days_count: 7
+        snapshot: true
+        snapshot_count_s3: 7
+        schedule: 0 5 * * *
+      - kind: prefix
+        value: eventrouter
+        system: false
+        monitoring: false
+        days_count: 2
+        snapshot: false
+        schedule: 5 5 * * *
+      - kind: prefix
+        value: complatform-frontend
+        system: false
+        monitoring: false
+        days_count: 7
+        snapshot: true
+        snapshot_count_s3: 30
+        schedule: 10 5 * * *
+      - kind: prefix
+        value: complatform-kutt
+        system: false
+        monitoring: false
+        days_count: 7
+        snapshot: true
+        snapshot_count_s3: 30
+        schedule: 15 5 * * *
+      - kind: prefix
+        value: complatform-master
+        system: false
+        monitoring: false
+        days_count: 7
+        snapshot: true
+        snapshot_count_s3: 30
+        schedule: 20 5 * * *
+      - kind: prefix
+        value: cr-card
+        system: false
+        monitoring: false
+        days_count: 2
+        snapshot: true
+        snapshot_count_s3: 30
+        schedule: 25 5 * * *
+      - kind: prefix
+        value: cr-customer
+        system: false
+        monitoring: false
+        days_count: 2
+        snapshot: true
+        snapshot_count_s3: 30
+        schedule: 30 6 * * *
+      - kind: prefix
+        value: cr-mdm
+        system: false
+        monitoring: false
+        days_count: 2
+        snapshot: true
+        snapshot_count_s3: 30
+        schedule: 35 6 * * *
+      - kind: prefix
+        value: crm-auth
+        system: false
+        monitoring: false
+        days_count: 2
+        snapshot: true
+        snapshot_count_s3: 30
+        schedule: 55 6 * * *
+      - kind: prefix
+        value: crm-b2
+        system: false
+        monitoring: false
+        days_count: 2
+        snapshot: true
+        snapshot_count_s3: 30
+        schedule: 0 4 * * *
+      - kind: prefix
+        value: crm-combrick2
+        system: false
+        monitoring: false
+        days_count: 2
+        snapshot: true
+        snapshot_count_s3: 30
+        schedule: 5 4 * * *
+      - kind: prefix
+        value: .kibana
+        system: true
+        days_count: 30
+        snapshot: true
+        schedule: 10 4 * * *
+      - kind: prefix
+        value: cr-client
+        system: false
+        monitoring: false
+        days_count: 7
+        snapshot: true
+        schedule: 15 4 * * *
+      - kind: prefix
+        value: lmru-devops
+        system: false
+        monitoring: false
+        days_count: 2
+        snapshot: true
+        schedule: 20 4 * * *
+      - kind: prefix
+        value: cr-data
+        system: false
+        monitoring: false
+        days_count: 7
+        snapshot: true
+        snapshot_count_s3: 30
+        schedule: 55 4 * * *
+      - kind: prefix
+        value: cr-datautil
+        system: false
+        monitoring: false
+        days_count: 7
+        snapshot: true
+        snapshot_count_s3: 30
+        schedule: 05 5 * * *
+      - kind: prefix
+        value: cr-kz
+        system: false
+        monitoring: false
+        days_count: 7
+        snapshot: true
+        snapshot_count_s3: 30
+        schedule: 10 5 * * *
+      - kind: prefix
+        value: cr-loyalty
+        system: false
+        monitoring: false
+        days_count: 7
+        snapshot: true
+        snapshot_count_s3: 30
+        schedule: 15 6 * * *
+      - kind: prefix
+        value: cr-fabrika
+        system: false
+        monitoring: false
+        days_count: 7
+        snapshot: true
+        snapshot_count_s3: 30
+        schedule: 20 5 * * *
+      - kind: prefix
+        value: cr-b2b
+        system: false
+        monitoring: false
+        days_count: 7
+        snapshot: true
+        snapshot_count_s3: 30
+        schedule: 40 5 * * *
+      - kind: prefix
+        value: cr-ausweis
+        system: false
+        monitoring: false
+        days_count: 7
+        snapshot: true
+        snapshot_count_s3: 30
+        schedule: 45 5 * * *
+      - kind: prefix
+        value: cr-legal
+        system: false
+        monitoring: false
+        days_count: 5
+        snapshot: true
+        snapshot_count_s3: 30
+        schedule: 50 6 * * *
+      - kind: prefix
+        value: cr-organization
+        system: false
+        monitoring: false
+        days_count: 7
+        snapshot: true
+        snapshot_count_s3: 30
+        schedule: 55 5 * * *
+      - kind: prefix
+        value: cr-status
+        system: false
+        monitoring: false
+        days_count: 7
+        snapshot: true
+        snapshot_count_s3: 30
+        schedule: 05 6 * * *

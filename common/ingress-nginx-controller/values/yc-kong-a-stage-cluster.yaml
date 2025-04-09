@@ -1,0 +1,94 @@
+---
+IngressNginxController:
+  main-hp:
+    apiVersion: deckhouse.io/v1
+    name: main-hp
+    acceptRequestsFrom:
+      - 127.0.0.1/32
+      - 10.203.5.0/24
+      - 10.203.8.0/24
+      - 10.203.21.0/24
+      - 10.203.107.0/24
+      - 10.203.206.0/24
+      - 10.203.118.0/24
+      - 10.220.211.0/24
+    spec:
+      chaosMonkey: false
+      disableHTTP2: false
+      hsts: false
+      maxReplicas: 1
+      minReplicas: 1
+      underscoresInHeaders: false
+      validationEnabled: true
+      ingressClass: nginx
+      inlet: HostPort
+      enableIstioSidecar: false
+    hostPort:
+      behindL7Proxy: true
+      httpPort: 30080
+      httpsPort: 30443
+  st-main-hp:
+    apiVersion: deckhouse.io/v1
+    name: st-main-hp
+    acceptRequestsFrom:
+      - 127.0.0.1/32
+      - 10.203.5.0/24
+      - 10.203.8.0/24
+      - 10.203.21.0/24
+      - 10.203.107.0/24
+      - 10.203.206.0/24
+      - 10.203.118.0/24
+      - 10.220.211.0/24
+    spec:
+      chaosMonkey: false
+      disableHTTP2: false
+      hsts: false
+      underscoresInHeaders: false
+      validationEnabled: true
+      ingressClass: nginx
+      inlet: HostPort
+      enableIstioSidecar: false
+    hostPort:
+      behindL7Proxy: true
+      httpPort: 30080
+      httpsPort: 30443
+    nodeSelector:
+      node-role/st-frontend: ""
+    tolerations:
+      - effect: NoExecute
+        key: dedicated
+        operator: Equal
+        value: st-frontend
+  st-external-hp:
+    apiVersion: deckhouse.io/v1
+    name: st-external-hp
+    acceptRequestsFrom:
+      - 127.0.0.1/32
+      - 10.203.5.0/24
+      - 10.203.8.0/24
+      - 10.203.21.0/24
+      - 10.203.107.0/24
+      - 10.203.206.0/24
+      - 10.203.118.0/24
+      - 10.220.211.0/24
+      - 10.203.115.160/27
+    spec:
+      chaosMonkey: false
+      disableHTTP2: false
+      hsts: false
+      underscoresInHeaders: false
+      validationEnabled: true
+      ingressClass: external
+      inlet: HostPort
+      enableIstioSidecar: false
+    hostPort:
+      behindL7Proxy: true
+      httpPort: 31080
+      httpsPort: 31443
+    nodeSelector:
+      node-role/st-frontend: ""
+    tolerations:
+      - effect: NoExecute
+        key: dedicated
+        operator: Equal
+        value: st-frontend

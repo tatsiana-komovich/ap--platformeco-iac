@@ -1,0 +1,133 @@
+apiVersion: deckhouse.io/v1
+kind: CustomPrometheusRules
+metadata:
+  labels:
+    component: rules
+    prometheus: main
+  name: tracing-application-selfmon
+spec:
+  groups:
+    - name: otel-collector
+      rules:
+        - alert: otel-collector-spans
+          for: 1m
+          expr: sum(rate(otelcol_processor_dropped_spans{}[1m])) == 0
+          labels:
+            severity_level: "4"
+            app: otel-collector
+            product_id: "P0729"
+          annotations:
+            description: |
+              Maybe collector has received non standard spans or it reached some limits
+            summary: |
+              Spans dropped by processor.
+        - alert: receiver-refused-spans
+          for: 2m
+          expr: sum(rate(otelcol_receiver_refused_spans{}[1m])) > 0
+          labels:
+            severity_level: "4"
+            app: otel-collector
+            product_id: "P0729"
+          annotations:
+            description: |
+              Maybe collector has received non standard spans or it reached some limits
+            summary: |
+              Some spans have been refused by receiver.
+        - alert: exporter-enqueued-spans
+          for: 2m
+          expr: sum(rate(otelcol_exporter_enqueue_failed_spans{}[1m])) > 0
+          labels:
+            severity_level: "4"
+            app: otel-collector
+            product_id: "P0729"
+          annotations:
+            description: |
+              Maybe used destination has a problem or used payload is not correct
+            summary: |
+              Some spans have been enqueued by exporter.
+        - alert: exporter-send-failed-spans
+          for: 2m
+          expr: sum(increase(otelcol_exporter_send_failed_spans{exporter="otlp"}[1m])) by (exporter) > 0
+          labels:
+            severity_level: "4"
+            app: otel-collector
+            product_id: "P0729"
+          annotations:
+            description: |
+              Maybe used destination has a problem or used payload is not correct
+            summary: |
+              Some exporter requests failed.
+        - alert: high-cpu-usage-collector
+          for: 5m
+          expr: max(rate(otelcol_process_cpu_seconds{}[1m])*100) > 90
+          labels:
+            severity_level: "4"
+            app: otel-collector
+            product_id: "P0729"
+          annotations:
+            description: |
+              Collector need to scale up
+            summary: |
+              High max CPU usage.
+    - name: tempo-components
+      rules:
+        - alert: ingester-flush-failed
+          for: 5m
+          expr: sum by (service) (increase(tempo_ingester_flush_failed_retries_total{namespace="otel-grafana-tempo"}[5m])) > 0
+          labels:
+            severity_level: "4"
+            app: tempo
+            product_id: "P0729"
+          annotations:
+            description: |
+              Maybe problem connect to s3
+            summary: |
+              Ingester not recieve data from wal to remote storage.
+        - alert: new-traces-create
+          for: 2m
+          expr: sum by(container) (tempo_ingester_live_traces{namespace="otel-grafana-tempo"}) == 0
+          labels:
+            severity_level: "4"
+            app: tempo
+            product_id: "P0729"
+          annotations:
+            description: |
+              New data may be missing
+            summary: |
+              New traces are not created.
+        - alert: new-span-recieve
+          for: 2m
+          expr: sum(rate(tempo_receiver_accepted_spans{namespace="otel-grafana-tempo", job="otel-grafana-tempo/distributor"}[1m])) == 0
+          labels:
+            severity_level: "4"
+            app: tempo
+            product_id: "P0729"
+          annotations:
+            description: |
+              New data may be missing
+            summary: |
+              New span are not recieve.
+        - alert: new-span-refused
+          for: 2m
+          expr: sum(rate(tempo_receiver_refused_spans{namespace="otel-grafana-tempo", job="otel-grafana-tempo/distributor"}[1m])) == 0
+          labels:
+            severity_level: "4"
+            app: tempo
+            product_id: "P0729"
+          annotations:
+            description: |
+              Maybe Insufficient resources for distributors and ingesters
+            summary: |
+              New span are refused.
+        - alert: Ingester-resource-limit
+          for: 2m
+          expr: (sum by(pod) (container_memory_working_set_bytes{namespace="otel-grafana-tempo",container="ingester"})/1073741824) > 22
+          labels:
+            severity_level: "4"
+            app: tempo
+            product_id: "P0729"
+          annotations:
+            description: |
+              Need scale up ingeser component
+            summary: |
+              Ingester Insufficient resources.

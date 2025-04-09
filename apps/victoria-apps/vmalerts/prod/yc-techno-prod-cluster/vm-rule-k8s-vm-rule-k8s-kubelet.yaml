@@ -1,0 +1,69 @@
+---
+apiVersion: operator.victoriametrics.com/v1beta1
+kind: VMRule
+metadata:
+  name: vm-rule-k8s-kubelet
+  namespace: devops-core-victoria-alerts
+spec:
+  groups:
+    - name: kubernetes.kubelet
+      rules:
+        - alert: KubeletDown
+          expr: |
+                (sum by (job, pod, k8s_cluster) (up{job="kubelet", k8s_cluster=~".*"} == 1 default 0)) == 0
+          for: 5m
+          labels:
+            severity: critical
+          annotations:
+            summary: "kubelet in {{ $labels.k8s_cluster }} cluster is down"
+            description: https://runbooks.prometheus-operator.dev/runbooks/kubernetes/kubeletdown
+
+        - alert: KubeNodeNotReady
+          expr: |
+                kube_node_status_condition{job="kube-state-metrics",condition="Ready",status="true"} == 0
+          for: 25m
+          labels:
+            severity: warning
+          annotations:
+            summary: "Kube node is not ready"
+            description: https://runbooks.prometheus-operator.dev/runbooks/kubernetes/kubenodenotready
+
+        - alert: KubeletClientCertificateExpiration
+          expr: |
+                kubelet_certificate_manager_client_ttl_seconds < 604800
+          for: 5m
+          labels:
+            severity: warning
+          annotations:
+            summary: "Client certificate for Kubelet on node {{ $labels.node }} expires in less than 7 days"
+            description: https://runbooks.prometheus-operator.dev/runbooks/kubernetes/kubeletclientcertificateexpiration
+
+        - alert: KubeletClientCertificateExpiration
+          expr: |
+                kubelet_certificate_manager_client_ttl_seconds < 86400
+          for: 5m
+          labels:
+            severity: critical
+          annotations:
+            summary: "Client certificate for Kubelet on node {{ $labels.node }} expires in less than 1 day"
+            description: https://runbooks.prometheus-operator.dev/runbooks/kubernetes/kubeletclientcertificateexpiration
+
+        - alert: KubeletServerCertificateExpiration
+          expr: |
+                kubelet_certificate_manager_server_ttl_seconds < 604800
+          for: 5m
+          labels:
+            severity: warning
+          annotations:
+            summary: "Server certificate for Kubelet on node {{ $labels.node }} expires in less than 7 days"
+            description: https://runbooks.prometheus-operator.dev/runbooks/kubernetes/kubeletservercertificateexpiration
+
+        - alert: KubeletServerCertificateExpiration
+          expr: |
+                kubelet_certificate_manager_server_ttl_seconds < 86400
+          for: 5m
+          labels:
+            severity: critical
+          annotations:
+            summary: "Server certificate for Kubelet on node {{ $labels.node }} expires in less than 1 day"
+            description: https://runbooks.prometheus-operator.dev/runbooks/kubernetes/kubeletservercertificateexpiration

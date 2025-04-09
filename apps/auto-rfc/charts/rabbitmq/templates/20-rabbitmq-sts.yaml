@@ -1,0 +1,234 @@
+{{ $user := .Values.config.username }}
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ include "chart.name" . }}
+  labels:
+    version: {{ include "chart.version" . }}
+spec:
+  serviceName: {{ include "chart.name" . }}
+  replicas: {{ .Values.replicas }}
+  selector:
+    matchLabels:
+      app: {{ include "chart.name" . }}
+  updateStrategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      annotations:
+        checksum/secret: {{ include (print .Template.BasePath "/10-rabbitmq-config.yaml") $ | sha256sum }}
+      labels:
+        app: {{ include "chart.name" . }}
+    spec:
+      imagePullSecrets: {{ toYaml .Values.imagePullSecrets | nindent 8 }}
+      affinity: {{ .Values.affinity | toYaml | nindent 8 }}
+      tolerations: {{ .Values.tolerations | toYaml | nindent 8 }}
+{{- if hasKey .Values "priorityClassName" }}
+      priorityClassName: {{ .Values.priorityClassName }}
+{{- end }}
+      serviceAccountName: {{ include "chart.name" . }}
+      terminationGracePeriodSeconds: 10
+      initContainers:
+      - name: copy-rabbitmq-config
+        image: docker-remote-docker-io.art.lmru.tech/busybox:glibc@sha256:42279ede3600b4e63af075a5e27d68232ff837d9cdcaba74feffc7ab0dfec0dc
+        command:
+        - sh
+        - -ec
+        - |
+          cp /configmap/* /etc/rabbitmq; rm -f /var/lib/rabbitmq/.erlang.cookie
+        volumeMounts:
+        - name: configmap
+          mountPath: /configmap
+        - name: config-volume
+          mountPath: /etc/rabbitmq
+        - name: data
+          mountPath: /var/lib/rabbitmq
+      containers:
+      - name: rabbitmq
+        image: docker-remote-docker-io.art.lmru.tech/rabbitmq:3-management-alpine
+        env:
+        - name: MY_POD_IP
+          valueFrom:
+            fieldRef:
+              fieldPath: status.podIP
+        - name: MY_POD_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        - name: MY_POD_NS
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.namespace
+        - name: K8S_SERVICE_NAME
+          value: "{{ include "chart.name" . }}"
+        - name: RABBITMQ_USE_LONGNAME
+          value: "true"
+        - name: RABBITMQ_NODENAME
+          value: "rabbit@$(MY_POD_NAME).$(K8S_SERVICE_NAME).$(MY_POD_NS).svc.cluster.local"
+        - name: K8S_HOSTNAME_SUFFIX
+          value: ".$(K8S_SERVICE_NAME).$(MY_POD_NS).svc.cluster.local"
+        - name: RABBITMQ_LOGS
+          value: '-'
+        envFrom:
+        - secretRef:
+            name: {{ include "chart.name" . }}-secret-envs
+        ports:
+        - name: epmd
+          containerPort: 4369
+        - name: amqp
+          containerPort: 5672
+        - name: dist
+          containerPort: 25672
+        - name: stats
+          containerPort: 15672
+{{- if not .Values.exporter }}
+        - name: http-metrics
+          containerPort: 15692
+{{- end }}
+        resources: {{ toYaml .Values.resources | nindent 10 }}
+        lifecycle:
+          preStop:
+            exec:
+              command: ["rabbitmqctl", "shutdown"]
+{{- if hasKey .Values "postStartHook" }}
+{{ .Values.postStartHook | toYaml | indent 10 }}
+{{- end }}
+        livenessProbe:
+          exec:
+            command:
+            - "/rmq_healthz"
+            - "-u={{ .Values.config.username }}"
+            - "-P={{ .Values.config.password }}"
+            - "-v=/{{ .Values.config.commonVhost }}"
+          initialDelaySeconds: 120
+          timeoutSeconds: 20
+          periodSeconds: 30
+          failureThreshold: 6
+          successThreshold: 1
+        readinessProbe:
+          exec:
+            command:
+            - /bin/bash
+            - -ec
+            - rabbitmq-diagnostics -q check_running && rabbitmq-diagnostics -q check_local_alarms
+          initialDelaySeconds: 10
+          timeoutSeconds: 20
+          periodSeconds: 30
+          failureThreshold: 3
+          successThreshold: 1
+        volumeMounts:
+        - name: data
+          mountPath: /var/lib/rabbitmq
+        - name: config-volume
+          mountPath: /etc/rabbitmq
+{{- if .Values.exporter }}
+      - name: exporter
+        image: {{ .Values.werf.image.rabbitmq_exporter }}
+        ports:
+        - containerPort: 15692
+          name: http-metrics
+        env:
+        - name: RABBIT_USER
+          value: {{ .Values.config.username }}
+        - name: INCLUDE_QUEUES
+          value: ".*"
+        - name: SKIP_QUEUES
+          value: "^$"
+        - name: PUBLISH_PORT
+          value: "15692"
+        - name: OUTPUT_FORMAT
+          value: "JSON"
+        - name: LOG_LEVEL
+          value: "info"
+        - name: SKIPVERIFY
+          value: "true"
+        envFrom:
+        - secretRef:
+            name: {{ include "chart.name" . }}-secret-envs
+{{- end }}
+      volumes:
+        - name: config-volume
+          emptyDir: {}
+        - name: configmap
+          secret:
+            secretName: {{ include "chart.name" . }}
+            items:
+            - key: rabbitmq.conf
+              path: rabbitmq.conf
+            - key: enabled_plugins
+              path: enabled_plugins
+            - key: advanced.config
+              path: advanced.config
+            - key: rabbitmq_definitions.json
+              path: rabbitmq_definitions.json
+  volumeClaimTemplates:
+  - metadata:
+      name: data
+    spec:
+      accessModes:
+      - {{ .Values.storage.accessModes }}
+      resources:
+        requests:
+          storage: {{ .Values.storage.size }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "chart.name" . }}
+{{- if hasKey .Values "serviceAnnotations" }}
+  annotations:
+    {{- .Values.serviceAnnotations | toYaml | nindent 4 }}
+{{- else }}
+  annotations:
+    prometheus.deckhouse.io/sample-limit: "25000"
+{{- end }}
+{{- if hasKey .Values "serviceLabels" }}
+  labels:
+    {{- .Values.serviceLabels | toYaml | nindent 4 }}
+{{- else }}
+  labels:
+    prometheus.deckhouse.io/target: rabbitmq
+{{- end }}
+spec:
+  selector:
+    app: {{ include "chart.name" . }}
+  clusterIP: None
+  ports:
+  - name: epmd
+    port: 4369
+    targetPort: epmd
+  - name: amqp
+    port: 5672
+    targetPort: amqp
+  - name: stats
+    port: 15672
+    targetPort: stats
+  - name: dist
+    port: 25672
+    targetPort: dist
+  - name: http-metrics
+    port: 15692
+    targetPort: http-metrics
+---
+apiVersion: autoscaling.k8s.io/v1beta2
+kind: VerticalPodAutoscaler
+metadata:
+  name: {{ include "chart.name" . }}
+spec:
+  targetRef:
+    apiVersion: "apps/v1"
+    kind: StatefulSet
+    name: {{ include "chart.name" . }}
+  updatePolicy:
+    updateMode: "Off"
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: {{ include "chart.name" . }}
+spec:
+  maxUnavailable: 1
+  selector:
+    matchLabels:
+      app: {{ include "chart.name" . }}

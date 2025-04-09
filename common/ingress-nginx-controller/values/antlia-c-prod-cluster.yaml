@@ -1,0 +1,78 @@
+---
+IngressNginxController:
+  main:
+    name: main
+    spec:
+      annotationValidationEnabled: false
+      chaosMonkey: false
+      disableHTTP2: false
+      enableHTTP3: false
+      hsts: false
+      ingressClass: nginx
+      inlet: HostPort
+      maxReplicas: 1
+      minReplicas: 1
+      underscoresInHeaders: false
+      validationEnabled: true
+    hostPort:
+      behindL7Proxy: true
+      httpPort: 80
+      httpsPort: 443
+      realIPHeader: X-Forwarded-For
+    nodeSelector:
+      node-role.deckhouse.io/frontend: ""
+    tolerations:
+      - effect: NoExecute
+        key: dedicated.deckhouse.io
+        operator: Equal
+        value: frontend
+
+  d8-main:
+    name: d8-main
+    spec:
+      annotationValidationEnabled: false
+      chaosMonkey: false
+      disableHTTP2: false
+      enableHTTP3: false
+      hsts: false
+      ingressClass: nginx-d8s
+      inlet: HostPort
+      maxReplicas: 1
+      minReplicas: 1
+      underscoresInHeaders: false
+      validationEnabled: true
+    hostPort:
+      behindL7Proxy: true
+      httpPort: 8080
+      httpsPort: 8443
+      realIPHeader: X-Forwarded-For
+    nodeSelector:
+      node-role.deckhouse.io/frontend: ""
+    tolerations:
+      - effect: NoExecute
+        key: dedicated.deckhouse.io
+        operator: Equal
+        value: frontend
+
+  nginx-passthrough:
+    name: nginx-passthrough
+    spec:
+      annotationValidationEnabled: false
+      chaosMonkey: false
+      disableHTTP2: false
+      enableHTTP3: false
+      hsts: false
+      ingressClass: nginx-passthrough
+      inlet: HostPortWithSSLPassthrough
+      maxReplicas: 1
+      minReplicas: 1
+      underscoresInHeaders: true
+      validationEnabled: false
+    hostPortWithSSLPassthrough:
+      httpPort: 9080
+      httpsPort: 9443
+    tolerations:
+      - effect: NoExecute
+        key: dedicated.deckhouse.io
+        operator: Equal
+        value: frontend

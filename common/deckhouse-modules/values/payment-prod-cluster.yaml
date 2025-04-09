@@ -1,0 +1,213 @@
+---
+admission-policy-engine:
+  spec:
+    version: 1
+    enabled: true
+  artifactory-repos:
+    enforcementAction: deny
+
+global:
+  settings:
+    modules:
+      ingressClass: nginx-d8s
+
+istio:
+  enabled: true
+  settings:
+    dataPlane:
+      trafficRedirectionSetupMode: CNIPlugin
+    globalVersion: "1.21"
+    sidecar:
+      resourcesManagement:
+        mode: Static
+        static:
+          limits:
+            cpu: "10"
+            memory: 10Gi
+          requests:
+            cpu: 100m
+            memory: 128Mi
+    alliance:
+      ingressGateway:
+        inlet: LoadBalancer
+        nodeSelector:
+          node-role/loadbalancer: ""
+        tolerations:
+          - operator: Exists
+    federation:
+      enabled: true
+    multicluster:
+      enabled: true
+  version: 2
+
+prometheus:
+  enabled: true
+  settings:
+    externalLabels:
+      k8s_cluster: payment
+      project_name: payment
+      datacenter: x2
+      environment: prod
+      platform: vsphere
+  version: 2
+
+user-authn:
+  enabled: true
+  settings:
+    publishAPI:
+      enabled: true
+      https:
+        global:
+          kubeconfigGeneratorMasterCA: ""
+        mode: Global
+  version: 2
+
+monitoring-ping:
+  enabled: true
+  settings:
+    externalTargets:
+      - host: ra2.rsb.ru
+        name: ra2.rsb.ru
+      - host: 10.203.11.38
+        name: sirius-a-gw
+      - host: art.lmru.tech
+        name: art.lmru.tech
+      - host: vault.lmru.tech
+        name: vault.lmru.tech
+      - host: 8.8.8.8
+        name: google-dns
+      - host: yandex.ru
+        name: yandex.ru
+      - host: 84.201.171.239
+        name: yandex-registry
+      - host: storage.yandexcloud.net
+        name: storage.yandexcloud.net
+      - host: 10.80.120.37
+        name: nginx-pay
+      - host: 10.80.120.50
+        name: nginx-lm
+      - host: p-kafka-as01.p-setretail-prod.x1-a.cloud.lmru.tech
+        name: p-kafka-as01.p-setretail-prod
+      - host: p-kafka-as02.p-setretail-prod.x1-a.cloud.lmru.tech
+        name: p-kafka-as02.p-setretail-prod
+      - host: p-kafka-as03.p-setretail-prod.x1-a.cloud.lmru.tech
+        name: p-kafka-as03.p-setretail-prod
+      - host: pkz-setc-kf-01.lmru.tech
+        name: pkz-setc-kf-01
+      - host: pkz-setc-kf-02.lmru.tech
+        name: pkz-setc-kf-02
+      - host: pkz-setc-kf-03.lmru.tech
+        name: pkz-setc-kf-03
+      - host: p-kfk4u-st01.hq.ru.corp.leroymerlin.com
+        name: p-kfk4u-st01
+      - host: p-kfk4u-st02.hq.ru.corp.leroymerlin.com
+        name: p-kfk4u-st02
+      - host: p-kfk4u-st03.hq.ru.corp.leroymerlin.com
+        name: p-kfk4u-st03
+      - host: p-kfk4u-st04.hq.ru.corp.leroymerlin.com
+        name: p-kfk4u-st04
+      - host: p-kfk4u-st05.hq.ru.corp.leroymerlin.com
+        name: p-kfk4u-st05
+      - host: prukfk01.hq.ru.corp.leroymerlin.com
+        name: prukfk01
+      - host: prukfk02.hq.ru.corp.leroymerlin.com
+        name: prukfk02
+      - host: prukfk03.hq.ru.corp.leroymerlin.com
+        name: prukfk03
+      - host: prukfk04.hq.ru.corp.leroymerlin.com
+        name: prukfk04
+      - host: prukfk05.hq.ru.corp.leroymerlin.com
+        name: prukfk05
+      - host: dsm-kafka-cedh7c.dp.hq.ru.corp.leroymerlin.com
+        name: dsm-kafka-cedh7c
+      - host: dsm-kafka-ds8yed.dp.hq.ru.corp.leroymerlin.com
+        name: dsm-kafka-ds8yed
+      - host: dsm-kafka-nd2zh7.dp.hq.ru.corp.leroymerlin.com
+        name: dsm-kafka-nd2zh7
+      - host: dsm-kafka-cedh7c.dp.hq.ru.corp.leroymerlin.com
+        name: dsm-kafka-cedh7c
+      - host: api.internal.leroymerlin.ru
+        name: api.internal.leroymerlin.ru
+      - host: oms-storage-marketplace.apps.lmru.tech
+        name: oms-storage-marketplace
+  version: 1
+
+okmeter:
+  enabled: true
+  settings:
+    apiKey: e9276add-c36c-4665-9db6-160fa066841c
+    nodeSelector:
+      node-role.kubernetes.io/control-plane: ""
+    tolerations:
+      - key: node-role.kubernetes.io/control-plane
+        operator: Exists
+      - key: node-role.kubernetes.io/master
+        operator: Exists
+      - key: dedicated
+        operator: Equal
+        value: router
+  version: 1
+
+control-plane-manager:
+  enabled: true
+  settings:
+    apiserver:
+      auditPolicyEnabled: true
+      certSANs:
+        - kubernetes.default.svc.cluster.local
+        - kubernetes.default.svc.payment.p.mesh
+  version: 1
+
+logShipper:
+  enabled: false
+  version: 1
+
+cert-manager:
+  enabled: true
+  settings:
+    enableCAInjector: true
+  version: 1
+
+extended-monitoring:
+  enabled: true
+  settings:
+    events:
+      exporterEnabled: true
+      severityLevel: All
+  version: 2
+
+upmeter:
+  enabled: true
+  settings:
+    smokeMiniDisabled: true
+  version: 3
+
+metallb:
+  enabled: true
+  settings:
+    addressPools:
+      - addresses:
+          - 10.220.214.192/29
+        name: mypool
+        protocol: bgp
+    bgpPeers:
+      - hold-time: 3s
+        my-asn: 64995
+        peer-address: 10.220.215.252
+        peer-asn: 64600
+      - hold-time: 3s
+        my-asn: 64995
+        peer-address: 10.220.215.253
+        peer-asn: 64600
+    speaker:
+      nodeSelector:
+        node-role/metallb-speaker: ""
+      tolerations:
+        - operator: Exists
+  version: 2
+
+cni-flannel:
+  enabled: true
+  settings:
+    podNetworkMode: HostGW
+  version: 1

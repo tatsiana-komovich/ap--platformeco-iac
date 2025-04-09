@@ -1,0 +1,49 @@
+---
+app:
+  name: lmru-k8s-platform-bot
+  replicaCount: 1
+  image:
+    pullPolicy: Always
+    repository: docker-devops-loop-bot.art.lmru.tech/devops-loop-bot
+secrets:
+  ABANDONED_TASK_TIMEOUT: "2"
+  GRAFANA_ON_CALL_API_TOKEN: <path:services/data/k8s-platform-bot#GRAFANA_ON_CALL_API_TOKEN>
+  GRAFANA_ON_CALL_DUTY_ENGINEERS_SCHEDULES_IDS: STKSHJJIXCKWH
+  GRAFANA_ON_CALL_ORG_ID: "14"
+  GRAFANA_ON_CALL_URL: https://obs-grafana-oncall-yc-techno.apps.lmru.tech
+  GRAFANA_ON_CALL_WEBHOOK_INTEGRATION_URL: <path:services/data/k8s-platform-bot#GRAFANA_ON_CALL_WEBHOOK_INTEGRATION_URL>
+  IS_ALERTING_ENABLED: "true"
+  IS_PING_ABANDONED_ENABLED: "true"
+  IS_PLAN_CMD_ENABLED: "true"
+  IS_TG_NOTIFICATION_ENABLED: "true"
+  LDAP_DN_NAME: dc=hq,dc=ru,dc=corp,dc=leroymerlin,dc=com
+  LDAP_PASSWORD: <path:services/data/k8s-platform-bot#LDAP_PASSWORD>
+  LDAP_URI: ldaps://ad.lmru.tech:636
+  LDAP_USERNAME: <path:services/data/k8s-platform-bot#LDAP_USERNAME>
+  LOG_LEVEL: INFO
+  LOOP_ADMIN_GROUP_ID: gbzrymuip3rff8re5kntq4umja
+  LOOP_SERVER_URL: https://lemanapro.loop.ru
+  LOOP_TEAM: leroymerlin
+  LOOP_TOKEN: <path:services/data/k8s-platform-bot#LOOP_TOKEN>
+  MONGODB_DB_NAME: k8splatformbot
+  MONGODB_PASSWORD: <path:services/data/k8s-platform-bot#MONGODB_PASSWORD>
+  MONGODB_PORT: "27018"
+  MONGODB_URL: rc1a-bt6o9jkvnx2v6kzm.mdb.yandexcloud.net
+  MONGODB_USERNAME: k8splatformbot
+  PING_ABANDONED_TASK_TIMEOUT: "10"
+  TG_API_URL: <path:services/data/k8s-platform-bot#TG_API_URL>
+  TG_CHAT_ID: <path:services/data/k8s-platform-bot#TG_CHAT_ID>
+  TG_TOKEN: <path:services/data/k8s-platform-bot#TG_TOKEN>
+  WORK_SCHEDULER_END_TIME_HOUR: "15"
+  WORK_SCHEDULER_START_TIME_HOUR: "7"
+  YC_IAM_AUTH_URL: https://iam.api.cloud.yandex.net/iam/v1/tokens
+  YT_API_URL: https://api.tracker.yandex.net/v2
+  YT_COMPONENT_ID: "2989"
+  YT_KEY_ID: <path:services/data/k8s-platform-bot#YT_KEY_ID>
+  YT_ORG_ID: bpf6lemclm2bnd2i9cce
+  YT_PRIVATE_KEY: <path:services/data/k8s-platform-bot#YT_PRIVATE_KEY>
+  YT_SERVICE_ACCOUNT_ID: ajelv3ivqsd0d03t12i7
+  YT_TASK_QUEUE: DOA
+  YT_TRANSITION_ID_DONE: doneMeta
+  YT_TRANSITION_ID_IN_PROGRESS: inProgressMeta
+  YT_URL: https://tracker.yandex.ru

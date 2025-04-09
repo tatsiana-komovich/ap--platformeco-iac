@@ -1,0 +1,107 @@
+---
+extended_monitoring_enable_on_all_ns: {}
+
+products:
+  - product-id: P0471
+    namespace_pattern:
+      - ^devops-core-vector$
+
+  - product-id: P0587 # GetSlot
+    namespace_pattern:
+      - ^scdp-whs-carrier-appointment-.*
+
+  - product-id: P0963
+    namespace_pattern:
+      - ^scdp-whs-common-.*
+
+  - product-id: P0185
+    namespace_pattern:
+      - ^scdp-whs-dostovernost.*
+
+  - product-id: P0327 # LogBrick
+    namespace_pattern:
+      - ^scdp-whs-lmdb-.*
+
+  - product-id: P0772
+    namespace_pattern:
+      - ^scdp-whs-ls-address-.*
+
+  - product-id: P0585
+    namespace_pattern:
+      - ^scdp-whs-packman-.*
+
+  - product-id: P0486
+    namespace_pattern:
+      - ^scdp-whs-receiveit-.*
+
+  - product-id: P0642
+    namespace_pattern:
+      - ^scdp-whs-ruptures-.*
+
+  - product-id: P0901
+    namespace_pattern:
+      - ^scdp-whs-stockcounting-.*
+
+  - product-id: P0487
+    namespace_pattern:
+      - ^scdp-whs-stockiteasy-.*
+
+  - product-id: P0707 # Svetofor2
+    namespace_pattern:
+      - ^scdp-whs-svetofor2-.*
+
+  - product-id: P0491 # Svetofor3
+    namespace_pattern:
+      - ^scdp-whs-svetofor3-.*
+
+  - product-id: P0604
+    namespace_pattern:
+      - ^scdp-whs-tis$
+
+  - product-id: P0882
+    namespace_pattern:
+      - ^scdp-whs-yms-lm-.*
+      - ^yms-lm-.*
+
+  - product-id: P0756
+    namespace_pattern:
+      - ^scdp-whs-stockanom.*
+      - ^stockanom.*
+
+istio:
+  - istio-injection: enabled
+    namespace_pattern:
+      - ^scdp-whs-carrier-appointment-prod$
+      - ^scdp-whs-common-prod$
+      - ^scdp-whs-dostovernost-prod$
+      - ^scdp-whs-ls-address-prod$
+      - ^scdp-whs-packman-prod$
+      - ^scdp-whs-receiveit-prod$
+      - ^scdp-whs-ruptures-prod$
+      - ^scdp-whs-stockcounting-prod$
+      - ^scdp-whs-stockiteasy-prod$
+      - ^scdp-whs-yms-lm-prod$
+      - ^yms-lm-prod$
+  - istio.deckhouse.io/auto-upgrade: "true"
+    namespace_pattern:
+      - ^scdp-whs-carrier-appointment-prod$
+      - ^scdp-whs-common-prod$
+      - ^scdp-whs-dostovernost-prod$
+      - ^scdp-whs-ls-address-prod$
+      - ^scdp-whs-packman-prod$
+      - ^scdp-whs-receiveit-prod$
+      - ^scdp-whs-ruptures-prod$
+      - ^scdp-whs-stockcounting-prod$
+      - ^scdp-whs-stockiteasy-prod$
+      - ^scdp-whs-yms-lm-prod$
+      - ^yms-lm-prod$
+
+prometheus:
+  - prometheus.deckhouse.io/monitor-watcher-enabled: "true"
+    namespace_pattern:
+      - ^.*-prod
+
+devops-core-vector:
+  - security.deckhouse.io/pod-policy-action: warn
+    namespace_pattern:
+      - ^devops-core-vector$

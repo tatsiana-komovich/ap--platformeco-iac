@@ -1,0 +1,26 @@
+---
+opentelemetry-collector:
+  gateway:
+    config:
+      exporters:
+        otlp:
+          # URL tempo distributor (Ingress GRPC)
+          endpoint: "tempo-distributor-grpc-traces.obs.lmru.tech:443"
+        otlphttp:
+          # URL tempo distributor (Ingress HTTP)
+          endpoint: "https://tempo-distributor-traces.obs.lmru.tech"
+
+  agent:
+    tolerations:
+      - key: "dedicated"
+        value: "keycloak-customer"
+        effect: "NoSchedule"
+      - key: "dedicated"
+        value: "keycloak-employee"
+        effect: "NoSchedule"
+      - key: "dedicated"
+        value: "keycloak-partner"
+        effect: "NoSchedule"
+      - key: "dedicated"
+        value: "legoauth"
+        effect: "NoSchedule"

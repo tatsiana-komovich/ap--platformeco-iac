@@ -1,0 +1,65 @@
+---
+admission-policy-engine:
+  spec:
+    version: 1
+    enabled: true
+  internal-lb-policy: true
+  disallowed-tags:
+    enforcementAction: warn # TODO: remove 28.08
+
+prometheus:
+  enabled: true
+  settings:
+    externalLabels:
+      k8s_cluster: yc-elk-kong-stage
+      project_name: kong
+      datacenter: yc
+      environment: stage
+      platform: yandex
+  version: 2
+
+logShipper:
+  enabled: false
+  version: 1
+
+extended-monitoring:
+  enabled: true
+  settings:
+    events:
+      exporterEnabled: true
+      severityLevel: All
+  version: 2
+
+okmeter:
+  enabled: true
+  settings:
+    apiKey: f4a6c069-e5b2-4e6b-85b9-5d0351ed8dfd
+    disableAutoDiscovery: true
+    nodeSelector:
+      okmeter.io/enabled: ""
+    tolerations:
+      - operator: Exists
+  version: 1
+
+user-authn:
+  enabled: true
+  settings:
+    publishAPI:
+      enabled: true
+      https:
+        mode: Global
+  version: 2
+
+upmeter:
+  enabled: false
+  version: 3
+
+global:
+  settings:
+    modules:
+      https:
+        certManager:
+          clusterIssuerName: selfsigned
+        mode: CertManager
+      publicDomainTemplate: '%s-yc-elk-kong-stage.apim.lmru.tech'
+  version: 2

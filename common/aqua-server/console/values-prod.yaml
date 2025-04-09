@@ -1,0 +1,184 @@
+---
+imageCredentials:
+  create: false
+  name:
+  repositoryUriPrefix: "docker-remote-aquasec.art.lmru.tech"
+  registry: "docker-remote-aquasec.art.lmru.tech"
+  username: ""
+  password: ""
+
+clusterRole:
+  roleRef: ""
+
+rbac:
+  create: true
+  enabled: true
+
+openshift_route:
+  create: false
+
+serviceAccount:
+  annotations: {}
+  create: true
+  name: ""
+
+# enable only one of the modes
+clustermode: ""
+activeactive: ""
+
+vaultSecret:
+  enabled: false
+
+admin:
+  createSecret: true
+  secretName: aqua-console-secrets
+  token: "<path:prod/data/console#license>"
+  password: "<path:prod/data/console#admin_password>"
+
+dockerSock:
+  # put true for mount docker socket.
+  mount:
+  path: /var/run/docker.sock
+
+podSecurityPolicy:
+  create: false
+
+global:
+  platform: k8s
+
+  db:
+    external:
+      enabled: true
+      name: "aqua-db"
+      host: "p-aquasec-db-01.ru-central1.internal"
+      port: "5435"
+      user: "aqua-db"
+      password: "<path:prod/data/console#db-password>"
+      auditName: "aqua-audit-db"
+      auditHost: "p-aquasec-db-01.ru-central1.internal"
+      auditPort: "5435"
+      auditUser: "aqua-audit-db"
+      auditPassword: "<path:prod/data/console#audit-password>"
+      pubsubName: "aqua-db"
+      pubsubHost: "p-aquasec-db-01.ru-central1.internal"
+      pubsubPort: "5435"
+      pubsubUser: "aqua-db"
+      pubsubPassword: "<path:prod/data/console#db-password>"
+
+    passwordFromSecret:
+      enabled: false
+
+    ssl: true
+    sslmode: disable          # accepts: allow | prefer | require | verify-ca | verify-full (Default: Require)
+    auditssl: true
+    auditsslmode: disable     # accepts: allow | prefer | require | verify-ca | verify-full (Default: Require)
+    pubsubssl: true
+    pubsubsslmode: disable    # accepts: allow | prefer | require | verify-ca | verify-full (Default: Require)
+
+    externalDbCerts:
+      enable: false
+
+    securityContext:
+      runAsUser: 70
+      runAsGroup: 70
+      fsGroup: 11433
+    container_securityContext:
+      privileged: false
+    env_size: "L"
+
+gateway:
+  enabled: false
+
+web:
+  replicaCount: 1
+  # logLevel: debug
+  image:
+    repository: console
+    tag: "2022.4.759"
+    pullPolicy: Always
+
+  service:
+    type: ClusterIP
+    labels: {}
+    annotations: {}
+    ports:
+      - name: aqua-web
+        port: 8080
+        targetPort: 8080
+        nodePort:
+        protocol: TCP
+      - name: aqua-web-ssl
+        port: 443
+        targetPort: 8443
+        nodePort:
+        protocol: TCP
+  ingress:
+    enabled: true
+    apiVersion: networking.k8s.io/v1
+    externalPort:
+    annotations:
+      kubernetes.io/ingress.class: nginx
+    hosts:
+      - aquasec-yc-techno.apps.lmru.tech
+    path: /
+    pathType: Prefix
+
+  livenessProbe:
+    httpGet:
+      path: /
+      port: 8080
+    initialDelaySeconds: 60
+    periodSeconds: 30
+
+  readinessProbe:
+    httpGet:
+      path: /
+      port: 8080
+    initialDelaySeconds: 60
+    periodSeconds: 30
+
+  resources:
+    requests:
+      cpu: 2000m
+      memory: 1Gi
+    limits:
+      cpu: 3000m
+      memory: 2Gi
+
+  pdbApiVersion: policy/v1
+
+  securityContext:
+    runAsUser: 11431
+    runAsGroup: 11433
+    fsGroup: 11433
+  container_securityContext: {}
+
+  pdb:
+    minAvailable: "1"
+
+  TLS:
+    enabled: false
+
+  maintenance_db:
+    name: "aqua-db"
+
+  extraEnvironmentVars:
+    AQUA_FF_OVERRIDES: '{"SLK-51933":true}'
+
+  extraSecretEnvironmentVars: []
+    # - envName: ENV_NAME
+    #   secretName: name
+    #   secretKey: key
+
+  extraVolumeMounts: []
+
+  extraVolumes: []
+
+envoy:
+  enabled: false
+
+sidecarContainers:
+  enabled: false
+
+initContainers:
+  enabled: false

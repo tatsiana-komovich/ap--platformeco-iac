@@ -1,0 +1,94 @@
+---
+{{- if and (ge (atoi (.Capabilities.KubeVersion.Minor | replace "+" "")) 19 ) .Values.starboard.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.starboard.appName }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    role: {{ .Release.Name }}
+    app: {{ .Values.starboard.appName }}
+    aqua.component: starboard-operator
+{{ include "aqua.labels" . | indent 4 }}
+spec:
+  replicas: {{ .Values.starboard.replicaCount }}
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: {{ .Values.starboard.appName }}
+  template:
+    metadata:
+      annotations:
+        checksum/config: {{ include (print $.Template.BasePath "/starboard-configmap.yaml") . | sha256sum }}
+      {{- if and (.Values.starboard.tolerations) (semverCompare "<1.6-0" .Capabilities.KubeVersion.GitVersion) }}
+        scheduler.alpha.kubernetes.io/tolerations: '{{ toJson .Values.starboard.tolerations }}'
+      {{- end }}
+      {{- with .Values.starboard.podAnnotations }}
+      {{- range $key,$value := . }}
+        {{ $key }}: {{ $value | quote }}
+      {{- end }}
+      {{- end }}
+      labels:
+        role: {{ .Release.Name }}
+        app: {{ .Values.starboard.appName }}
+        aqua.component: starboard-operator
+        {{- range $key, $value := .Values.starboard.podLabels }}
+        {{- printf "%s: %s" $key (tpl $value $ | quote) | nindent 8 }}
+        {{- end }}
+{{ include "aqua.labels" . | indent 8 }}
+    spec:
+      serviceAccountName: {{ template "serviceAccountStarboard" . }}
+      automountServiceAccountToken: {{ .Values.starboard.automountServiceAccountToken }}
+      {{- with .Values.starboard.securityContext }}
+      securityContext:
+{{ toYaml . | indent 8 }}
+      {{- end }}
+      containers:
+        - name: operator
+          image: "{{ .Values.starboard.image.repositoryUriPrefix }}/{{ .Values.starboard.image.repository }}:{{ .Values.starboard.image.tag }}"
+          imagePullPolicy: {{ .Values.starboard.image.pullPolicy }}
+          {{- with .Values.starboard.container_securityContext }}
+          securityContext:
+{{ toYaml . | indent 12 }}
+          {{- end }}
+          envFrom:
+            - configMapRef:
+                name: {{ .Release.Name }}-starboard-config
+          ports:
+            - name: metrics
+              containerPort: {{ .Values.starboard.ports.metricContainerPort }}
+            - name: probes
+              containerPort: {{ .Values.starboard.ports.probeCntainerPort }}
+          {{- with .Values.starboard.readinessProbe }}
+          readinessProbe:
+          {{ toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.starboard.livenessProbe }}
+          livenessProbe:
+          {{ toYaml . | nindent 12 }}
+          {{- end }}
+          {{- if and (not .Values.starboard.resources) .Values.enforcer.expressMode }}
+          resources:
+            requests:
+              cpu: "500m"
+              memory: "125Mi"
+            limits:
+              cpu: "1000m"
+              memory: "500Mi"
+          {{- else }}
+          resources: {{ toYaml .Values.starboard.resources | nindent 12 }}
+          {{- end }}
+      {{- with .Values.starboard.nodeSelector }}
+      nodeSelector:
+        {{ toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.starboard.affinity }}
+      affinity:
+        {{ toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.starboard.tolerations }}
+      tolerations:
+        {{ toYaml . | nindent 8 }}
+      {{- end }}
+{{- end }}

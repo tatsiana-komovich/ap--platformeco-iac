@@ -1,0 +1,83 @@
+---
+cluster_authorization:
+  defaults:
+    default_sa_permissions: &default
+      accessLevel: User
+      limitNamespaces:
+        - default
+      allowScale: true
+      allowAccessToSystemNamespaces: false
+      portForwarding: true
+  crowd:
+    groups:
+      # marfak-b-sre
+      crowd-marfak-b-sre-admin:
+        <<: *default
+        accessLevel: SuperAdmin
+        allowAccessToSystemNamespaces: true
+        limitNamespaces:
+          - .*
+      # <--- start lopus --->
+      crowd-publication-admin:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - opp-.*
+          - jenkins-slaves
+      crowd-publication-ro:
+        <<: *default
+        accessLevel: User
+        limitNamespaces:
+          - opp-.*
+          - jenkins-slaves
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+      crowd-publication-rw:
+        <<: *default
+        accessLevel: Editor
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - opp-.*
+          - jenkins-slaves
+      crowd-sa-publication:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - opp-.*
+          - jenkins-slaves
+      # <--- end lopus --->
+      # <--- start chords --->
+      crowd-chords-admin:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - jenkins-slaves
+          - chords.*
+      crowd-chords-ro:
+        <<: *default
+        accessLevel: User
+        limitNamespaces:
+          - jenkins-slaves
+          - chords.*
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+      crowd-chords-rw:
+        <<: *default
+        accessLevel: Editor
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - jenkins-slaves
+          - chords.*
+      crowd-sa-chords:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - jenkins-slaves
+          - chords.*
+      # <--- end chords --->
+
+DexProvider:
+  clientID: k8s-argocd
+  clientSecret: crowd_app_k8s-argocd

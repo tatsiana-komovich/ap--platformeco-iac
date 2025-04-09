@@ -1,0 +1,21 @@
+apiVersion: deckhouse.io/v1alpha1
+kind: ModuleConfig
+metadata:
+  name: loki
+spec:
+  settings:
+    storageClass: {{ .Values.lokiConfig.storage }}
+    diskSizeGigabytes: {{ .Values.lokiConfig.size }}
+    retentionPeriodHours: {{ .Values.lokiConfig.retention }}
+    nodeSelector: {{ toYaml .Values.lokiConfig.nodeSelector | nindent 6 }}
+    tolerations: {{ toYaml .Values.lokiConfig.tolerations | nindent 6 }}
+    storeSystemLogs: {{ (hasKey .Values.lokiConfig "storeSystemLogs") | ternary .Values.lokiConfig.storeSystemLogs "true" }}
+    resourcesManagement:
+      mode: Static
+      static:
+        requests:
+          memory: {{ .Values.lokiConfig.memoryRequest }}
+        limits:
+          memory: {{ .Values.lokiConfig.memoryRequest }}
+  enabled: true
+  version: 1

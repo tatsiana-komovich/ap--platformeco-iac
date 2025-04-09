@@ -1,0 +1,11 @@
+---
+{{- if eq .Environment "prod" }}
+extended_monitoring_enable_on_all_ns: {}
+{{- end }}
+
+{{- if eq .Datacenter "yc" }}
+opa:
+  - security.deckhouse.io/pod-policy: internal-lb
+    namespace_pattern:
+      - .*
+{{- end }}

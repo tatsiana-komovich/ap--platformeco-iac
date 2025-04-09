@@ -1,0 +1,17 @@
+---
+apiVersion: deckhouse.io/v1alpha1
+kind: NodeGroupConfiguration
+metadata:
+  name: disable-fstrim-timer.sh
+spec:
+  weight: 100
+  nodeGroups: ["*"]
+  bundles: ["*"]
+  content: |
+    if systemctl is-active -q fstrim.timer; then
+      systemctl stop fstrim.timer
+    fi
+    if systemctl is-enabled -q fstrim.timer; then
+      systemctl disable fstrim.timer
+      systemctl mask fstrim.timer
+    fi

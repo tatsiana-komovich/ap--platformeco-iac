@@ -1,0 +1,56 @@
+---
+# Default values for IngressNginxController.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+IngressNginxController:
+
+  main-b:
+    name: main-b
+    spec:
+      chaosMonkey: false
+      disableHTTP2: false
+      hsts: false
+      ingressClass: nginx
+      inlet: LoadBalancer
+      maxReplicas: 1
+      minReplicas: 1
+      underscoresInHeaders: false
+      validationEnabled: true
+      enableIstioSidecar: true
+    loadBalancer:
+      annotations:
+        yandex.cloud/load-balancer-type: Internal
+        yandex.cpi.flant.com/listener-subnet-id: e2l07ikqschm54cfe308
+        yandex.cpi.flant.com/target-group-network-id: enpofm2o1fd0e01e2rfb
+      behindL7Proxy: true
+      realIPHeader: X-Forwarded-For
+
+  d8-main-b:
+    apiVersion: deckhouse.io/v1
+    name: d8-main-b
+    acceptRequestsFrom: {}
+    spec:
+      chaosMonkey: false
+      disableHTTP2: false
+      enableIstioSidecar: true
+      hsts: false
+      ingressClass: nginx-d8s
+      inlet: LoadBalancer
+      maxReplicas: 1
+      minReplicas: 1
+      underscoresInHeaders: false
+      validationEnabled: true
+    loadBalancer:
+      annotations:
+        yandex.cloud/load-balancer-type: Internal
+        yandex.cpi.flant.com/listener-subnet-id: e2l07ikqschm54cfe308
+        yandex.cpi.flant.com/target-group-network-id: enpofm2o1fd0e01e2rfb
+      behindL7Proxy: true
+      realIPHeader: X-Forwarded-For
+    nodeSelector:
+      node-role/d8-frontend: ""
+    tolerations:
+      - effect: NoExecute
+        key: dedicated
+        operator: Equal
+        value: d8-frontend

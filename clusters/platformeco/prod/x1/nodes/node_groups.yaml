@@ -1,0 +1,172 @@
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  name: application-nodes
+spec:
+  chaos:
+    mode: Disabled
+  cloudInstances:
+    classReference:
+      kind: OpenStackInstanceClass
+      name: application-nodes
+    maxPerZone: 27
+    minPerZone: 27
+  disruptions:
+    approvalMode: Automatic
+  kubelet:
+    containerLogMaxFiles: 4
+    containerLogMaxSize: 50Mi
+    resourceReservation:
+      mode: "Auto"
+  nodeTemplate:
+    labels:
+      threshold.extended-monitoring.deckhouse.io/load-average-per-core-critical: "100"
+      threshold.extended-monitoring.deckhouse.io/load-average-per-core-warning: "100"
+  nodeType: CloudEphemeral
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  name: system
+spec:
+  chaos:
+    mode: Disabled
+  cloudInstances:
+    classReference:
+      kind: OpenStackInstanceClass
+      name: system
+    maxPerZone: 2
+    minPerZone: 1
+  disruptions:
+    approvalMode: Automatic
+  nodeTemplate:
+    labels:
+      node-role.deckhouse.io/system: ""
+      okmeter.io/enabled: ""
+    taints:
+      - effect: NoExecute
+        key: dedicated.deckhouse.io
+        value: system
+  nodeType: CloudEphemeral
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  name: loadbalancer
+spec:
+  chaos:
+    mode: Disabled
+  cloudInstances:
+    classReference:
+      kind: OpenStackInstanceClass
+      name: loadbalancer
+    maxPerZone: 3
+    minPerZone: 3
+  disruptions:
+    approvalMode: Automatic
+  nodeTemplate:
+    labels:
+      node-role/loadbalancer: ""
+      node-role/metallb: ""
+      okmeter.io/enabled: ""
+    taints:
+      - effect: NoExecute
+        key: dedicated
+        value: loadbalancer
+  nodeType: CloudEphemeral
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  name: d8-frontend
+spec:
+  chaos:
+    mode: Disabled
+  cloudInstances:
+    classReference:
+      kind: OpenStackInstanceClass
+      name: d8-frontend
+    maxPerZone: 1
+    minPerZone: 1
+  disruptions:
+    approvalMode: Automatic
+  nodeTemplate:
+    labels:
+      node-role/d8-loadbalancer: ""
+      node-role/metallb: ""
+      okmeter.io/enabled: ""
+    taints:
+      - effect: NoExecute
+        key: dedicated
+        value: d8-loadbalancer
+  nodeType: CloudEphemeral
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  name: d8-loki
+spec:
+  chaos:
+    mode: Disabled
+  cloudInstances:
+    classReference:
+      kind: OpenStackInstanceClass
+      name: d8-loki
+    maxPerZone: 1
+    minPerZone: 1
+    zones:
+      - PROD_AZ_1
+  disruptions:
+    approvalMode: Automatic
+  nodeTemplate:
+    labels:
+      node-role/d8-loki: ""
+    taints:
+      - effect: NoExecute
+        key: dedicated
+        value: d8-loki
+  nodeType: CloudEphemeral
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  name: master
+spec:
+  disruptions:
+    approvalMode: Manual
+  nodeTemplate:
+    labels:
+      node-role.kubernetes.io/control-plane: ""
+      node-role.kubernetes.io/master: ""
+      okmeter.io/enabled: ""
+    taints:
+      - effect: NoSchedule
+        key: node-role.kubernetes.io/control-plane
+      - effect: NoSchedule
+        key: node-role.kubernetes.io/master
+  nodeType: CloudPermanent
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  name: otel-system
+spec:
+  cloudInstances:
+    classReference:
+      kind: OpenStackInstanceClass
+      name: otel-system
+    maxPerZone: 1
+    minPerZone: 1
+    zones:
+      - PROD_AZ_1
+  disruptions:
+    approvalMode: Automatic
+  nodeTemplate:
+    labels:
+      node-role/otel-system: ""
+    taints:
+      - key: dedicated
+        value: otel-system
+        effect: NoSchedule
+  nodeType: CloudEphemeral

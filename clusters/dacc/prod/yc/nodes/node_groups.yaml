@@ -1,0 +1,139 @@
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  name: opendistro
+spec:
+  cloudInstances:
+    classReference:
+      kind: YandexInstanceClass
+      name: elastic
+    maxPerZone: 3
+    minPerZone: 1
+    priority: 90
+    zones:
+      - ru-central1-a
+      - ru-central1-b
+  disruptions:
+    approvalMode: Manual
+  cri:
+    type: Containerd
+  nodeTemplate:
+    labels:
+      node-role/opendistro: ""
+    taints:
+      - effect: NoSchedule
+        key: dedicated
+        value: opendistro
+  nodeType: CloudEphemeral
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  name: odfe-common
+spec:
+  cloudInstances:
+    classReference:
+      kind: YandexInstanceClass
+      name: odfe-common
+    maxPerZone: 2
+    minPerZone: 1
+    zones:
+      - ru-central1-a
+      - ru-central1-b
+  disruptions:
+    approvalMode: Automatic
+  cri:
+    type: Containerd
+  nodeTemplate:
+    labels:
+      node-role/opendistro-common: ""
+    taints:
+      - effect: NoSchedule
+        key: dedicated
+        value: opendistro-common
+  nodeType: CloudEphemeral
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  name: prod
+spec:
+  cloudInstances:
+    classReference:
+      kind: YandexInstanceClass
+      name: prod
+    maxPerZone: 7
+    minPerZone: 4
+    standby: 1
+    standbyHolder:
+      notHeldResources:
+        cpu: 30m
+        memory: 700Mi
+    zones:
+      - ru-central1-b
+  disruptions:
+    approvalMode: Automatic
+  cri:
+    type: Containerd
+  nodeTemplate:
+    labels:
+      environment: prod
+      node-role.k8s.lmru.tech/application: ''
+  nodeType: CloudEphemeral
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  name: system
+spec:
+  chaos:
+    mode: Disabled
+  cloudInstances:
+    classReference:
+      kind: YandexInstanceClass
+      name: system
+    maxPerZone: 3
+    minPerZone: 3
+    zones:
+      - ru-central1-b
+  disruptions:
+    approvalMode: Automatic
+  cri:
+    type: Containerd
+  nodeTemplate:
+    labels:
+      node-role.deckhouse.io/system: ""
+    taints:
+      - effect: NoExecute
+        key: dedicated.deckhouse.io
+        value: system
+  nodeType: CloudEphemeral
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  name: deckhouse
+spec:
+  chaos:
+    mode: Disabled
+  cloudInstances:
+    classReference:
+      kind: YandexInstanceClass
+      name: deckhouse
+    maxPerZone: 1
+    minPerZone: 1
+    zones:
+      - ru-central1-b
+  disruptions:
+    approvalMode: Automatic
+  cri:
+    type: Containerd
+  nodeTemplate:
+    labels:
+      node-role.deckhouse.io/deckhouse: ""
+    taints:
+      - effect: NoExecute
+        key: dedicated.deckhouse.io
+        value: deckhouse
+  nodeType: CloudEphemeral

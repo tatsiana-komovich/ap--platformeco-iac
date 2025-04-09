@@ -1,0 +1,26 @@
+{{- $drift_value := (print "0.05") }}
+{{- if hasKey .Values.alerts "ntpDriftCustom" }}
+{{- $drift_value = .Values.alerts.ntpDriftCustom.driftValue }}
+{{- end }}
+{{- $drift_value_ms := (mulf $drift_value 1000) }}
+---
+apiVersion: deckhouse.io/v1
+kind: CustomPrometheusRules
+metadata:
+  labels:
+    component: rules
+    prometheus: main
+  name: ntp-drift-high
+spec:
+  groups:
+    - name: ntp-drift-high
+      rules:
+        - alert: NTPDriftHigh
+          for: 5m
+          expr: abs(avg_over_time(node_ntp_offset_seconds{node!~".*system.*"}[1m])) > {{ $drift_value }}
+          labels:
+            severity_level: "3"
+          annotations:
+            description: "Node {{`{{$labels.node}}`}} has time drift higher than {{ $drift_value_ms }} ms for 5m. Needs to be fixed ASAP."
+            plk_markup_format: markdown
+            plk_protocol_version: "1"

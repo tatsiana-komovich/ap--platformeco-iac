@@ -1,0 +1,102 @@
+---
+opendistro:
+  filebeat:
+    kubernetesyml: |-
+      - type: container
+        paths:
+          - /var/log/containers/*.log
+        exclude_files: ['^\/var\/log\/containers\/logstash.+\.log$']
+        multiline.pattern: '^(((([a-zA-Z\-0-9]+)_([a-zA-Z\-0-9]+)\s)|(([a-zA-Z\-0-9]+)\s)|(.{0}))(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\.\d{3}) \[)|^(\{\s{0,1}\")|^(\d{2}-\w{3}-\d{4}\s\d{2}:\d{2}:\d{2}\.{0,1}\d{2,3})\s(\w+)|^([A-Z][0-9]{0,4}\s\d{2}:\d{2}:\d{2}\.\d{0,6})|^(\d{2}.\d{2}.\d{2},\s\d{2}:\d{2})|(\d{4}\/\d{2}\/\d{2} \d{2}:\d{2}:\d{2}\ \[\w{0,8}\])'
+        multiline.negate: true
+        multiline.match: after
+        processors:
+          - add_kubernetes_metadata:
+              in_cluster: true
+              matchers:
+              - logs_path:
+                  logs_path: "/var/log/containers/"
+          - drop_event:
+              when:
+                or:
+                  - equals:
+                      kubernetes.namespace: "backup"
+                  - equals:
+                      kubernetes.namespace: "infra-sentry"
+                  - equals:
+                      kubernetes.namespace: "devops-core-argocd"
+                  - equals:
+                      kubernetes.namespace: "aqua"
+                  - regexp:
+                      kubernetes.namespace: "kube-*"
+                  - equals:
+                      kubernetes.container.name: "istio-proxy"
+                  - and:
+                      - not.equals:
+                          kubernetes.container.name: "curator"
+                      - not.equals:
+                          kubernetes.container.name: "updater"
+                      - regexp:
+                          kubernetes.namespace: "infra-elklogs"
+                  - and:
+                      - not.equals:
+                          kubernetes.namespace: "d8-ingress-nginx"
+                      - not.equals:
+                          kubernetes.namespace: "d8-monitoring"
+                      - not.equals:
+                          kubernetes.namespace: "eventrouter"
+                      - regexp:
+                          kubernetes.namespace: "d8-*"
+                  - and:
+                      - equals:
+                          kubernetes.namespace: "d8-monitoring"
+                      - not.equals:
+                          kubernetes.container.name: "events-exporter"
+                  - and:
+                      - equals:
+                          kubernetes.container.name: "token-checker"
+                      - regexp:
+                          kubernetes.namespace: "ausweis-*"
+                  - and:
+                      - equals:
+                          kubernetes.container.name: "management"
+                      - regexp:
+                          kubernetes.namespace: "ausweis-*"
+          - decode_json_fields:
+              when:
+                or:
+                  - equals:
+                      kubernetes.namespace: "d8-ingress-nginx"
+              fields: ['message']
+              target: 'ingress'
+              max_depth: 1
+          - decode_json_fields:
+              when:
+                or:
+                  - equals:
+                      kubernetes.namespace: "eventrouter"
+              fields: ['message']
+              target: 'k8sEvent'
+              max_depth: 1
+          - decode_json_fields:
+              when:
+                or:
+                  - equals:
+                      kubernetes.container.name: "curator"
+              fields: ['message']
+              target: 'curator'
+              max_depth: 1
+          - decode_json_fields:
+              when:
+                or:
+                  - equals:
+                      kubernetes.container.name: "updater"
+              fields: ['message']
+              target: 'updater'
+              max_depth: 1
+          - drop_event:
+              when:
+                and:
+                  - equals:
+                      kubernetes.namespace: "d8-ingress-nginx"
+                  - not.has_fields:
+                      - ingress

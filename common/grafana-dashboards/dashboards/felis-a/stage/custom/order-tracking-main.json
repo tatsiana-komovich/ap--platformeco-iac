@@ -1,0 +1,2780 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": {
+          "type": "datasource",
+          "uid": "grafana"
+        },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "target": {
+          "limit": 100,
+          "matchAny": false,
+          "tags": [],
+          "type": "dashboard"
+        },
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "id": 58,
+  "links": [],
+  "liveNow": false,
+  "panels": [
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "id": 46,
+      "panels": [],
+      "title": "Order Tracking services status",
+      "type": "row"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "P0D6E4079E36703EB"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 5,
+        "x": 0,
+        "y": 1
+      },
+      "id": 47,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "10.4.5",
+      "targets": [
+        {
+          "$$hashKey": "object:25",
+          "aggregation": "Last",
+          "alias": "latency",
+          "crit": 1,
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P0D6E4079E36703EB"
+          },
+          "decimals": 2,
+          "displayAliasType": "Always",
+          "displayType": "Regular",
+          "displayValueWithAlias": "When Alias Displayed",
+          "editorMode": "code",
+          "expr": "kubernetes:service_location_namespace:request_latency_seconds:p99_rate5m{service=\"oms-orders-post-v2\", namespace=~\"$namespace\"}",
+          "hide": false,
+          "legendFormat": "latency",
+          "range": true,
+          "refId": "B",
+          "units": "none",
+          "valueHandler": "Number Threshold",
+          "warn": 0.5
+        },
+        {
+          "$$hashKey": "object:522",
+          "aggregation": "Last",
+          "alias": "error",
+          "crit": 1,
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P0D6E4079E36703EB"
+          },
+          "decimals": 2,
+          "displayAliasType": "Always",
+          "displayType": "Regular",
+          "displayValueWithAlias": "When Alias Displayed",
+          "editorMode": "code",
+          "expr": "kubernetes:service_location_namespace:errors_per_responses:ratio_rate5m{service=\"oms-orders-post-v2\", namespace=~\"$namespace\"}",
+          "hide": false,
+          "legendFormat": "error",
+          "range": true,
+          "refId": "D",
+          "units": "none",
+          "valueHandler": "Number Threshold",
+          "warn": 0.1
+        }
+      ],
+      "title": "Create Order",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "P0D6E4079E36703EB"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 5,
+        "x": 5,
+        "y": 1
+      },
+      "id": 48,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "10.4.5",
+      "targets": [
+        {
+          "$$hashKey": "object:24",
+          "aggregation": "Last",
+          "alias": "rate",
+          "crit": 200,
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P0D6E4079E36703EB"
+          },
+          "decimals": 2,
+          "displayAliasType": "Always",
+          "displayType": "Regular",
+          "displayValueWithAlias": "When Alias Displayed",
+          "editorMode": "code",
+          "expr": "sum(\n  rate(\n    grpc_server_handled_total{service=\"oms-storage\",grpc_type=\"unary\", namespace=~\"$namespace\"}[$span]\n  )\n)",
+          "hide": false,
+          "legendFormat": "rate",
+          "range": true,
+          "refId": "A",
+          "units": "none",
+          "valueHandler": "Number Threshold",
+          "warn": 100
+        },
+        {
+          "$$hashKey": "object:25",
+          "aggregation": "Last",
+          "alias": "latency",
+          "crit": 1,
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P0D6E4079E36703EB"
+          },
+          "decimals": 2,
+          "displayAliasType": "Always",
+          "displayType": "Regular",
+          "displayValueWithAlias": "When Alias Displayed",
+          "editorMode": "code",
+          "expr": "histogram_quantile(\n    0.95,\n    sum(\n        rate(\n            grpc_server_handling_seconds_bucket{service=\"oms-storage\", grpc_type=\"unary\", namespace=~\"$namespace\"}[$span]\n        )\n    ) by (le)\n)",
+          "hide": false,
+          "legendFormat": "latency",
+          "range": true,
+          "refId": "B",
+          "units": "none",
+          "valueHandler": "Number Threshold",
+          "warn": 0.5
+        },
+        {
+          "$$hashKey": "object:522",
+          "aggregation": "Last",
+          "alias": "error",
+          "crit": 1,
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P0D6E4079E36703EB"
+          },
+          "decimals": 2,
+          "displayAliasType": "Always",
+          "displayType": "Regular",
+          "displayValueWithAlias": "When Alias Displayed",
+          "editorMode": "code",
+          "expr": "sum(\n  rate(\n    grpc_server_handled_total{service=\"oms-storage\",grpc_type=\"unary\", namespace=~\"$namespace\",grpc_code!~\"OK\" }[$span]\n  )\n)",
+          "hide": false,
+          "legendFormat": "error",
+          "range": true,
+          "refId": "D",
+          "units": "none",
+          "valueHandler": "Number Threshold",
+          "warn": 0.1
+        }
+      ],
+      "title": "Legacy Storage",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "P0D6E4079E36703EB"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 5,
+        "x": 10,
+        "y": 1
+      },
+      "id": 43,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "10.4.5",
+      "targets": [
+        {
+          "$$hashKey": "object:24",
+          "aggregation": "Last",
+          "alias": "rate",
+          "crit": 200,
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P0D6E4079E36703EB"
+          },
+          "decimals": 2,
+          "displayAliasType": "Always",
+          "displayType": "Regular",
+          "displayValueWithAlias": "When Alias Displayed",
+          "editorMode": "code",
+          "expr": "sum (\n    rate(\n        http_request_duration_seconds_count{namespace=~\"$namespace\", service=\"oms-storage-v3\"}[$span]\n    )\n)",
+          "hide": false,
+          "legendFormat": "rate",
+          "range": true,
+          "refId": "A",
+          "units": "none",
+          "valueHandler": "Number Threshold",
+          "warn": 100
+        },
+        {
+          "$$hashKey": "object:25",
+          "aggregation": "Last",
+          "alias": "latency",
+          "crit": 1,
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P0D6E4079E36703EB"
+          },
+          "decimals": 2,
+          "displayAliasType": "Always",
+          "displayType": "Regular",
+          "displayValueWithAlias": "When Alias Displayed",
+          "editorMode": "code",
+          "expr": "histogram_quantile(\n    0.99,\n    sum(\n        rate(\n            http_request_duration_seconds_bucket{service=\"oms-storage-v3\", namespace=~\"$namespace\"}[$span]\n        )\n    ) by (le)\n)",
+          "hide": false,
+          "legendFormat": "latency",
+          "range": true,
+          "refId": "B",
+          "units": "none",
+          "valueHandler": "Number Threshold",
+          "warn": 0.5
+        },
+        {
+          "$$hashKey": "object:522",
+          "aggregation": "Last",
+          "alias": "error",
+          "crit": 1,
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P0D6E4079E36703EB"
+          },
+          "decimals": 2,
+          "displayAliasType": "Always",
+          "displayType": "Regular",
+          "displayValueWithAlias": "When Alias Displayed",
+          "editorMode": "code",
+          "expr": "sum (\n    rate(\n        http_request_duration_seconds_count{namespace=~\"$namespace\", service=\"oms-storage-v3\", status_code!~\"200|201|204\"}[$span]\n    )\n)",
+          "hide": false,
+          "legendFormat": "error",
+          "range": true,
+          "refId": "D",
+          "units": "none",
+          "valueHandler": "Number Threshold",
+          "warn": 0.1
+        }
+      ],
+      "title": "Storage",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "P0D6E4079E36703EB"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 5,
+        "x": 15,
+        "y": 1
+      },
+      "id": 50,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "10.4.5",
+      "targets": [
+        {
+          "$$hashKey": "object:24",
+          "aggregation": "Last",
+          "alias": "rate",
+          "crit": 200,
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P0D6E4079E36703EB"
+          },
+          "decimals": 2,
+          "displayAliasType": "Always",
+          "displayType": "Regular",
+          "displayValueWithAlias": "When Alias Displayed",
+          "editorMode": "code",
+          "expr": "sum(\n    rate(\n        ingress_nginx_detail_requests_total{job=\"nginx-ingress-controller\", service=\"oms-camunda-api\"}[$span]\n    )\n)",
+          "hide": false,
+          "legendFormat": "rate",
+          "range": true,
+          "refId": "A",
+          "units": "reqps",
+          "valueHandler": "Number Threshold",
+          "warn": 100
+        },
+        {
+          "$$hashKey": "object:25",
+          "aggregation": "Last",
+          "alias": "latency",
+          "crit": 1,
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P0D6E4079E36703EB"
+          },
+          "decimals": 2,
+          "displayAliasType": "Always",
+          "displayType": "Regular",
+          "displayValueWithAlias": "When Alias Displayed",
+          "editorMode": "code",
+          "expr": "kubernetes:service_location_namespace:request_latency_seconds:p99_rate5m{service=\"oms-camunda-api\", namespace=~\"$namespace\"}",
+          "hide": false,
+          "legendFormat": "latency",
+          "range": true,
+          "refId": "B",
+          "units": "s",
+          "valueHandler": "Number Threshold",
+          "warn": 0.5
+        },
+        {
+          "$$hashKey": "object:522",
+          "aggregation": "Last",
+          "alias": "error",
+          "crit": 1,
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P0D6E4079E36703EB"
+          },
+          "decimals": 2,
+          "displayAliasType": "Always",
+          "displayType": "Regular",
+          "displayValueWithAlias": "When Alias Displayed",
+          "editorMode": "code",
+          "expr": "kubernetes:service_location_namespace:errors_per_responses:ratio_rate5m{service=\"oms-camunda-api\", namespace=~\"$namespace\"}",
+          "hide": false,
+          "legendFormat": "error",
+          "range": true,
+          "refId": "D",
+          "units": "none",
+          "valueHandler": "Number Threshold",
+          "warn": 0.1
+        }
+      ],
+      "title": "Camunda API",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "P0D6E4079E36703EB"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 5,
+        "x": 0,
+        "y": 6
+      },
+      "id": 52,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "10.4.5",
+      "targets": [
+        {
+          "$$hashKey": "object:24",
+          "aggregation": "Last",
+          "alias": "rate",
+          "crit": 200,
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P0D6E4079E36703EB"
+          },
+          "decimals": 2,
+          "displayAliasType": "Always",
+          "displayType": "Regular",
+          "displayValueWithAlias": "When Alias Displayed",
+          "editorMode": "code",
+          "expr": "sum(\n    rate(\n        http_request_duration_seconds_bucket{namespace=~\"$namespace\", service=\"order-tracking-api\"}[$span]\n    )\n)",
+          "hide": false,
+          "legendFormat": "rate",
+          "range": true,
+          "refId": "A",
+          "units": "reqps",
+          "valueHandler": "Number Threshold",
+          "warn": 100
+        },
+        {
+          "$$hashKey": "object:25",
+          "aggregation": "Last",
+          "alias": "latency",
+          "crit": 1,
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P0D6E4079E36703EB"
+          },
+          "decimals": 2,
+          "displayAliasType": "Always",
+          "displayType": "Regular",
+          "displayValueWithAlias": "When Alias Displayed",
+          "editorMode": "code",
+          "expr": "histogram_quantile(\n    0.95, \n    sum(\n        rate(\n            http_request_duration_seconds_bucket{namespace=~\"$namespace\", service=\"order-tracking-api\"}[$span]\n        )\n    )\n    by (le)\n)",
+          "hide": false,
+          "legendFormat": "latency",
+          "range": true,
+          "refId": "B",
+          "units": "s",
+          "valueHandler": "Number Threshold",
+          "warn": 0.5
+        },
+        {
+          "$$hashKey": "object:522",
+          "aggregation": "Last",
+          "alias": "error",
+          "crit": 1,
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P0D6E4079E36703EB"
+          },
+          "decimals": 2,
+          "displayAliasType": "Always",
+          "displayType": "Regular",
+          "displayValueWithAlias": "When Alias Displayed",
+          "editorMode": "code",
+          "expr": "sum(\n    rate(\n        http_request_duration_seconds_bucket{namespace=~\"$namespace\", service=\"order-tracking-api\", status_code!=\"201\"}[$span]\n    )\n)",
+          "hide": false,
+          "legendFormat": "error",
+          "range": true,
+          "refId": "D",
+          "units": "none",
+          "valueHandler": "Number Threshold",
+          "warn": 0.1
+        }
+      ],
+      "title": "Logistic Statuses WMS",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "P0D6E4079E36703EB"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 5,
+        "x": 5,
+        "y": 6
+      },
+      "id": 49,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "10.4.5",
+      "targets": [
+        {
+          "$$hashKey": "object:24",
+          "aggregation": "Last",
+          "alias": "rate",
+          "crit": 200,
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P0D6E4079E36703EB"
+          },
+          "decimals": 2,
+          "displayAliasType": "Always",
+          "displayType": "Regular",
+          "displayValueWithAlias": "When Alias Displayed",
+          "editorMode": "code",
+          "expr": "sum (\n    rate(\n        camunda_messages_handling_seconds_bucket{namespace=~\"$namespace\"}[$span]\n    )\n)",
+          "hide": false,
+          "legendFormat": "rate",
+          "range": true,
+          "refId": "A",
+          "units": "reqps",
+          "valueHandler": "Number Threshold",
+          "warn": 100
+        },
+        {
+          "$$hashKey": "object:25",
+          "aggregation": "Last",
+          "alias": "latency",
+          "crit": 1,
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P0D6E4079E36703EB"
+          },
+          "decimals": 2,
+          "displayAliasType": "Always",
+          "displayType": "Regular",
+          "displayValueWithAlias": "When Alias Displayed",
+          "editorMode": "code",
+          "expr": "histogram_quantile(\n    0.95, \n    sum(\n        rate(\n            camunda_messages_handling_seconds_bucket{namespace=~\"$namespace\"}[$span]\n        )\n    )\n    by (le)\n)",
+          "hide": false,
+          "legendFormat": "latency",
+          "range": true,
+          "refId": "B",
+          "units": "s",
+          "valueHandler": "Number Threshold",
+          "warn": 0.5
+        },
+        {
+          "$$hashKey": "object:522",
+          "aggregation": "Last",
+          "alias": "error",
+          "crit": 1,
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P0D6E4079E36703EB"
+          },
+          "decimals": 2,
+          "displayAliasType": "Always",
+          "displayType": "Regular",
+          "displayValueWithAlias": "When Alias Displayed",
+          "editorMode": "code",
+          "expr": "sum(\n    rate(\n        camunda_incidents_count{service=\"camunda-metrics-exporter\", namespace=~\"$namespace\"}[$span]\n    )\n)",
+          "hide": false,
+          "legendFormat": "error",
+          "range": true,
+          "refId": "D",
+          "units": "none",
+          "valueHandler": "Number Threshold",
+          "warn": 0.1
+        }
+      ],
+      "title": "Camunda REST API",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "P0D6E4079E36703EB"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 5,
+        "x": 10,
+        "y": 6
+      },
+      "id": 51,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "10.4.5",
+      "targets": [
+        {
+          "$$hashKey": "object:24",
+          "aggregation": "Last",
+          "alias": "rate",
+          "crit": 200,
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P0D6E4079E36703EB"
+          },
+          "decimals": 2,
+          "displayAliasType": "Always",
+          "displayType": "Regular",
+          "displayValueWithAlias": "When Alias Displayed",
+          "editorMode": "code",
+          "expr": "sum(\n    rate(\n        delrep_status_checker_process_count{namespace=~\"$namespace\", service=\"delrep-rabbit-statuses\"}[$span]\n    )\n)",
+          "hide": false,
+          "legendFormat": "rate",
+          "range": true,
+          "refId": "A",
+          "units": "reqps",
+          "valueHandler": "Number Threshold",
+          "warn": 100
+        },
+        {
+          "$$hashKey": "object:25",
+          "aggregation": "Last",
+          "alias": "latency",
+          "crit": 1,
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P0D6E4079E36703EB"
+          },
+          "decimals": 2,
+          "displayAliasType": "Always",
+          "displayType": "Regular",
+          "displayValueWithAlias": "When Alias Displayed",
+          "editorMode": "code",
+          "expr": "histogram_quantile(\n    0.95, \n    sum(\n        rate(\n            delrep_status_checker_process_bucket{namespace=~\"$namespace\", service=\"delrep-rabbit-statuses\"}[$span]\n        )\n    )\n    by (le)\n)",
+          "hide": false,
+          "legendFormat": "latency",
+          "range": true,
+          "refId": "B",
+          "units": "s",
+          "valueHandler": "Number Threshold",
+          "warn": 0.5
+        },
+        {
+          "$$hashKey": "object:522",
+          "aggregation": "Last",
+          "alias": "error",
+          "crit": 1,
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P0D6E4079E36703EB"
+          },
+          "decimals": 2,
+          "displayAliasType": "Always",
+          "displayType": "Regular",
+          "displayValueWithAlias": "When Alias Displayed",
+          "editorMode": "code",
+          "expr": "sum(\n    rate(\n        delrep_status_checker_process_bucket{namespace=~\"$namespace\", service=\"delrep-rabbit-statuses\", status!=\"ok\"}[$span]\n    )\n)",
+          "hide": false,
+          "legendFormat": "error",
+          "range": true,
+          "refId": "D",
+          "units": "none",
+          "valueHandler": "Number Threshold",
+          "warn": 0.1
+        },
+        {
+          "$$hashKey": "object:2409",
+          "aggregation": "Last",
+          "alias": "DLQ",
+          "crit": 0.2,
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P0D6E4079E36703EB"
+          },
+          "decimals": 2,
+          "displayAliasType": "Always",
+          "displayType": "Regular",
+          "displayValueWithAlias": "When Alias Displayed",
+          "editorMode": "code",
+          "expr": "sum(\n    rate(\n        delrep_status_checker_dead_letter_queue{namespace=~\"$namespace\", service=\"delrep-rabbit-statuses\"}[$span]\n    )\n)",
+          "hide": false,
+          "legendFormat": "DLQ",
+          "range": true,
+          "refId": "C",
+          "units": "none",
+          "valueHandler": "Number Threshold",
+          "warn": 0.1
+        }
+      ],
+      "title": "Logistic Statuses DelRep",
+      "type": "stat"
+    },
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 11
+      },
+      "id": 4,
+      "panels": [],
+      "title": "OrdersPostV2 - create new order",
+      "type": "row"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "P0D6E4079E36703EB"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 12,
+        "x": 0,
+        "y": 12
+      },
+      "id": 2,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P0D6E4079E36703EB"
+          },
+          "editorMode": "code",
+          "expr": "kubernetes:service_location_namespace:errors_per_responses:ratio_rate5m{service=\"oms-orders-post-v2\", namespace=~\"$namespace\"}",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "Error, 5m",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "P0D6E4079E36703EB"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "s"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 12,
+        "x": 12,
+        "y": 12
+      },
+      "id": 6,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P0D6E4079E36703EB"
+          },
+          "editorMode": "code",
+          "exemplar": false,
+          "expr": "kubernetes:service_location_namespace:request_latency_seconds:p90_rate5m{service=\"oms-orders-post-v2\", namespace=~\"$namespace\"}",
+          "legendFormat": "Latency p90",
+          "range": true,
+          "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P0D6E4079E36703EB"
+          },
+          "editorMode": "code",
+          "expr": "kubernetes:service_location_namespace:request_latency_seconds:p99_rate5m{service=\"oms-orders-post-v2\", namespace=~\"$namespace\"}",
+          "hide": false,
+          "legendFormat": "Latency p99",
+          "range": true,
+          "refId": "B"
+        }
+      ],
+      "title": "Latency, 5m",
+      "type": "timeseries"
+    },
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 21
+      },
+      "id": 8,
+      "panels": [],
+      "title": "Camunda",
+      "type": "row"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "P0D6E4079E36703EB"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 22
+      },
+      "id": 10,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "table",
+          "placement": "right",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P0D6E4079E36703EB"
+          },
+          "editorMode": "code",
+          "expr": "rate(\r\n    camunda_active_incidents{service=\"camunda-monitoring\", namespace=~\"$namespace\"}[$span]\r\n)",
+          "hide": false,
+          "legendFormat": "{{definition_key}} v{{definition_version}}, `{{activity_name}}`",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "Incident Rate",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "P0D6E4079E36703EB"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "s"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 22
+      },
+      "id": 12,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "table",
+          "placement": "right",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P0D6E4079E36703EB"
+          },
+          "editorMode": "code",
+          "expr": "histogram_quantile(\r\n    0.95, \r\n    sum(\r\n        rate(\r\n            camunda_messages_handling_seconds_bucket{namespace=~\"$namespace\"}[$span]\r\n        )\r\n    )\r\n    by (topic_name, status, le)\r\n)",
+          "legendFormat": "{{topic_name}} {{status}}",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "Worker latency p95",
+      "type": "timeseries"
+    },
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 30
+      },
+      "id": 14,
+      "panels": [],
+      "title": "Oms storage - grpc api server",
+      "type": "row"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "P0D6E4079E36703EB"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "reqps"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 24,
+        "x": 0,
+        "y": 31
+      },
+      "id": 16,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "table",
+          "placement": "right",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P0D6E4079E36703EB"
+          },
+          "editorMode": "code",
+          "expr": "sum(\r\n  rate(\r\n    grpc_server_handled_total{service=\"oms-storage\",grpc_type=\"unary\", namespace=~\"$namespace\"}[$span]\r\n  )\r\n) by (grpc_service, grpc_code)",
+          "legendFormat": "{{grpc_service}} {{grpc_code}}",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "Request Rate",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "P0D6E4079E36703EB"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "s"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 24,
+        "x": 0,
+        "y": 39
+      },
+      "id": 18,
+      "options": {
+        "legend": {
+          "calcs": [
+            "min",
+            "mean",
+            "max"
+          ],
+          "displayMode": "table",
+          "placement": "right",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P0D6E4079E36703EB"
+          },
+          "editorMode": "code",
+          "expr": "histogram_quantile(\r\n    0.95,\r\n    sum(\r\n        rate(\r\n            grpc_server_handling_seconds_bucket{service=\"oms-storage\", grpc_type=\"unary\", namespace=~\"$namespace\"}[$span]\r\n        )\r\n    ) by (grpc_service, grpc_method, le)\r\n)",
+          "legendFormat": "{{grpc_service}} {{grpc_method}}",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "Latency p95",
+      "type": "timeseries"
+    },
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 47
+      },
+      "id": 20,
+      "panels": [],
+      "title": "Oms storage v3 - http api server",
+      "type": "row"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "P0D6E4079E36703EB"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "reqps"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 48
+      },
+      "id": 22,
+      "options": {
+        "legend": {
+          "calcs": [
+            "min",
+            "mean",
+            "max"
+          ],
+          "displayMode": "table",
+          "placement": "right",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P0D6E4079E36703EB"
+          },
+          "editorMode": "code",
+          "expr": "sum (\r\n    rate(\r\n        http_request_duration_seconds_count{namespace=~\"$namespace\", service=\"oms-storage-v3\"}[$span]\r\n    )\r\n) by (path, status_code)",
+          "legendFormat": "{{path}} {{status_code}}",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "Request Rate",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "P0D6E4079E36703EB"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "s"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 48
+      },
+      "id": 24,
+      "options": {
+        "legend": {
+          "calcs": [
+            "min",
+            "mean",
+            "max"
+          ],
+          "displayMode": "table",
+          "placement": "right",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P0D6E4079E36703EB"
+          },
+          "editorMode": "code",
+          "expr": "histogram_quantile(\r\n    0.95,\r\n    sum(\r\n        rate(\r\n            http_request_duration_seconds_bucket{service=\"oms-storage-v3\", namespace=~\"$namespace\"}[$span]\r\n        )\r\n    ) by (path, status_code, le)\r\n)",
+          "legendFormat": "{{path}} {{status_code}}",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "Handling time, p95",
+      "type": "timeseries"
+    },
+    {
+      "collapsed": true,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 56
+      },
+      "id": 28,
+      "panels": [],
+      "title": "Logistic statuses",
+      "type": "row"
+    },
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 57
+      },
+      "id": 60,
+      "panels": [],
+      "title": "Date recalculation",
+      "type": "row"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "P0D6E4079E36703EB"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "req"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Error"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "red",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 58
+      },
+      "id": 37,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P0D6E4079E36703EB"
+          },
+          "editorMode": "code",
+          "expr": "sum(\r\n    rate(\r\n        delrep_status_checker_process_bucket{namespace=~\"$namespace\", service=\"delrep-rabbit-statuses\", status!=\"ok\"}[$span]\r\n    )\r\n)",
+          "hide": false,
+          "legendFormat": "Error",
+          "range": true,
+          "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P0D6E4079E36703EB"
+          },
+          "editorMode": "code",
+          "expr": "sum(\n    rate(\n        delrep_status_checker_dead_letter_queue{namespace=~\"$namespace\", service=\"delrep-rabbit-statuses\"}[$span]\n    )\n)",
+          "hide": false,
+          "legendFormat": "DLQ",
+          "range": true,
+          "refId": "B"
+        }
+      ],
+      "title": "Errors",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "P0D6E4079E36703EB"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "red",
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          },
+          "unit": "reqps"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Dead Letter"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "red",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 58
+      },
+      "id": 29,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "right",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P0D6E4079E36703EB"
+          },
+          "editorMode": "code",
+          "expr": "sum(\r\n    rate(\r\n        delrep_status_checker_dead_letter_queue{namespace=~\"$namespace\", service=\"delrep-rabbit-statuses\"}[$span]\r\n    )\r\n)",
+          "hide": false,
+          "legendFormat": "Dead Letter",
+          "range": true,
+          "refId": "B"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P0D6E4079E36703EB"
+          },
+          "editorMode": "code",
+          "expr": "sum(\r\n    rate(\r\n        delrep_status_checker_process_count{namespace=~\"$namespace\", service=\"delrep-rabbit-statuses\"}[$span]\r\n    )\r\n) by (del_rep_status, status)",
+          "hide": false,
+          "legendFormat": "{{del_rep_status}} - {{status}}",
+          "range": true,
+          "refId": "C"
+        }
+      ],
+      "title": "DelRerp queue consumption",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "P0D6E4079E36703EB"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "req"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Error"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "red",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 66
+      },
+      "id": 61,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P0D6E4079E36703EB"
+          },
+          "editorMode": "code",
+          "expr": "sum(\r\n    rate(\r\n        data_recalculation_task_cancels_failed{namespace=~\"scdp-ofl-ot-preprod\"}[$span]\r\n    )\r\n)",
+          "hide": false,
+          "legendFormat": "Cancel fails",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "Cancel fails",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "P0D6E4079E36703EB"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "s"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 10,
+        "w": 24,
+        "x": 0,
+        "y": 74
+      },
+      "id": 26,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P0D6E4079E36703EB"
+          },
+          "editorMode": "code",
+          "expr": "histogram_quantile(\r\n    0.95, \r\n    sum(\r\n        rate(\r\n            delrep_status_checker_process_bucket{namespace=~\"$namespace\", service=\"delrep-rabbit-statuses\"}[$span]\r\n        )\r\n    )\r\n    by (del_rep_status, status, le)\r\n)",
+          "hide": false,
+          "legendFormat": "{{del_rep_status}} - {{status}}",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "DelRep status processing latenncy",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "P0D6E4079E36703EB"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "req"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Error"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "red",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 84
+      },
+      "id": 38,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P0D6E4079E36703EB"
+          },
+          "editorMode": "code",
+          "expr": "sum(\r\n    rate(\r\n        http_request_duration_seconds_bucket{namespace=~\"$namespace\", service=\"order-tracking-api\", status_code!=\"201\"}[$span]\r\n    )\r\n)",
+          "hide": false,
+          "legendFormat": "Error",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "WMS Errors",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "P0D6E4079E36703EB"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "s"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 84
+      },
+      "id": 30,
+      "options": {
+        "legend": {
+          "calcs": [
+            "min",
+            "max"
+          ],
+          "displayMode": "list",
+          "placement": "right",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P0D6E4079E36703EB"
+          },
+          "editorMode": "code",
+          "expr": "histogram_quantile(\r\n    0.95, \r\n    sum(\r\n        rate(\r\n            http_request_duration_seconds_bucket{namespace=~\"$namespace\", service=\"order-tracking-api\"}[$span]\r\n        )\r\n    )\r\n    by (method, path, status, le)\r\n)",
+          "hide": false,
+          "legendFormat": "{{method}}  {{path}}: {{status}}",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "WMS status processing latenncy",
+      "type": "timeseries"
+    },
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 92
+      },
+      "id": 34,
+      "panels": [],
+      "title": "Camunda api",
+      "type": "row"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "P0D6E4079E36703EB"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 12,
+        "x": 0,
+        "y": 93
+      },
+      "id": 35,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P0D6E4079E36703EB"
+          },
+          "editorMode": "code",
+          "expr": "kubernetes:service_location_namespace:errors_per_responses:ratio_rate5m{service=\"oms-camunda-api\", namespace=~\"$namespace\"}",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "Error, 5m",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "P0D6E4079E36703EB"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "s"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 12,
+        "x": 12,
+        "y": 93
+      },
+      "id": 36,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P0D6E4079E36703EB"
+          },
+          "editorMode": "code",
+          "exemplar": false,
+          "expr": "kubernetes:service_location_namespace:request_latency_seconds:p90_rate5m{service=\"oms-camunda-api\", namespace=~\"$namespace\"}",
+          "legendFormat": "Latency p90",
+          "range": true,
+          "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P0D6E4079E36703EB"
+          },
+          "editorMode": "code",
+          "expr": "kubernetes:service_location_namespace:request_latency_seconds:p99_rate5m{service=\"oms-camunda-api\", namespace=~\"$namespace\"}",
+          "hide": false,
+          "legendFormat": "Latency p99",
+          "range": true,
+          "refId": "B"
+        }
+      ],
+      "title": "Latency, 5m",
+      "type": "timeseries"
+    }
+  ],
+  "schemaVersion": 39,
+  "tags": [],
+  "templating": {
+    "list": [
+      {
+        "current": {
+          "selected": true,
+          "text": [
+            "scdp-ofl-ot-preprod"
+          ],
+          "value": [
+            "scdp-ofl-ot-preprod"
+          ]
+        },
+        "datasource": {
+          "type": "prometheus",
+          "uid": "P0D6E4079E36703EB"
+        },
+        "definition": "label_values(ingress_nginx_detail_responses_total,namespace)",
+        "hide": 0,
+        "includeAll": false,
+        "multi": true,
+        "name": "namespace",
+        "options": [],
+        "query": {
+          "qryType": 1,
+          "query": "label_values(ingress_nginx_detail_responses_total,namespace)",
+          "refId": "PrometheusVariableQueryEditor-VariableQuery"
+        },
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
+        "type": "query"
+      },
+      {
+        "auto": false,
+        "auto_count": 30,
+        "auto_min": "10s",
+        "current": {
+          "selected": false,
+          "text": "5m",
+          "value": "5m"
+        },
+        "hide": 0,
+        "name": "span",
+        "options": [
+          {
+            "selected": false,
+            "text": "1m",
+            "value": "1m"
+          },
+          {
+            "selected": true,
+            "text": "5m",
+            "value": "5m"
+          },
+          {
+            "selected": false,
+            "text": "10m",
+            "value": "10m"
+          },
+          {
+            "selected": false,
+            "text": "30m",
+            "value": "30m"
+          },
+          {
+            "selected": false,
+            "text": "1h",
+            "value": "1h"
+          },
+          {
+            "selected": false,
+            "text": "6h",
+            "value": "6h"
+          },
+          {
+            "selected": false,
+            "text": "12h",
+            "value": "12h"
+          },
+          {
+            "selected": false,
+            "text": "1d",
+            "value": "1d"
+          },
+          {
+            "selected": false,
+            "text": "7d",
+            "value": "7d"
+          },
+          {
+            "selected": false,
+            "text": "14d",
+            "value": "14d"
+          },
+          {
+            "selected": false,
+            "text": "30d",
+            "value": "30d"
+          }
+        ],
+        "query": "1m,5m,10m,30m,1h,6h,12h,1d,7d,14d,30d",
+        "queryValue": "",
+        "refresh": 2,
+        "skipUrlSync": false,
+        "type": "interval"
+      }
+    ]
+  },
+  "time": {
+    "from": "now-6h",
+    "to": "now"
+  },
+  "timepicker": {},
+  "timezone": "",
+  "title": "Order Tracking Main",
+  "uid": "order-tracking-main",
+  "version": 3,
+  "weekStart": ""
+}

@@ -1,0 +1,70 @@
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: inventory-generator
+spec:
+  schedule: "0 * * * *"  # Запускать каждый час
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: inventory-generator
+            image: docker-remote-docker-io.art.lmru.tech/alpine/k8s:1.31.6
+            env:
+            - name: USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: inventory-secrets
+                  key: username
+            - name: PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: inventory-secrets
+                  key: password
+            command:
+            - /bin/bash
+            - -c
+            - |
+              apk add \
+                  curl \
+                  jq \
+                  git \
+                  openssh-client \
+                  && rm -rf /var/lib/apt/lists/*
+
+              curl -sSLo /usr/local/bin/yq https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 && \
+                  chmod +x /usr/local/bin/yq
+ 
+              export KUBECONFIG=/tmp/kubeconfig.yaml
+
+              git config --global user.name "svc-lmru-devops"
+              git config --global user.email "svc-lmru-devops@lemanapro.ru"
+              mkdir /root/.ssh
+              touch /root/.ssh/known_hosts
+              cp /ssh/id_rsa /root/.ssh/id_rsa
+              chmod 600 /root/.ssh/id_rsa
+              eval "$(ssh-agent -s)"
+              ssh-add /root/.ssh/id_rsa
+              ssh-keyscan -H github.lmru.tech >> ~/.ssh/known_hosts
+
+              /tmp/generate_inventory.sh
+            volumeMounts:
+            - name: ssh-key-volume
+              mountPath: /ssh
+            - name: script-volume
+              mountPath: /tmp/generate_inventory.sh
+              subPath: generate_inventory.sh
+          volumes:
+          - name: ssh-key-volume
+            secret:
+              secretName: awx-k8s-proj
+              items:
+              - key: id_rsa
+                path: id_rsa
+          - name: script-volume
+            configMap:
+              name: inventory-script
+              defaultMode: 0744
+          restartPolicy: OnFailure

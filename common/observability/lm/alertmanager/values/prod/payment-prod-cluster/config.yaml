@@ -1,0 +1,200 @@
+---
+alertmanager:
+  templates:
+    alertmanager.tmpl: |-
+      '{{ define "generator.url" }} {{ (index .Alerts 0).GeneratorURL | reReplaceAll "&g0.tab=1$" "&g0.tab=0" }} {{ end }}'
+
+  config:
+    global:
+      smtp_from: 'alertmanager@leroy-merlin.ru'
+      smtp_smarthost: 'massmail.hq.ru.corp.leroymerlin.com:25'
+      smtp_require_tls: false
+
+    templates:
+      - '/etc/alertmanager/*.tmpl'
+
+    route:
+      group_by: ['alertname', 'job']
+      receiver: 'void'
+      repeat_interval: 4h
+
+  ## Add your Alertmanager configuration below
+
+      routes:
+        ### WFM ###
+        - matchers:
+            - product_id="P0461"
+          receiver: 'wteff-grafana-oncall-src'
+          group_by: ['...']
+        ### BILLING ###
+        - matchers:
+            - product_id="P0948"
+          receiver: 'blg-grafana-oncall-psp'
+          group_by: ['...']
+        - matchers:
+            - product_id="P0949"
+          receiver: 'blg-grafana-oncall-rap'
+          group_by: ['...']
+        - matchers:
+            - product_id="P0950"
+          receiver: 'blg-grafana-oncall-src'
+          group_by: ['...']
+        # for sloth slo
+        - matchers:
+            - product="billing"
+            - sloth_service!~"billing-rap.*|billing-src.*|billing-acq.*"
+          receiver: 'blg-grafana-oncall-psp'
+          group_by: ['...']
+        - matchers:
+            - product="billing"
+            - sloth_service=~"billing-rap.*"
+          receiver: 'blg-grafana-oncall-rap'
+          group_by: ['...']
+        - matchers:
+            - product="billing"
+            - sloth_service=~"billing-src.*|billing-acq.*"
+          receiver: 'blg-grafana-oncall-src'
+          group_by: ['...']
+        - matchers:
+            - product_id="P0165"
+          receiver: 'payment-brick'
+        - matchers:
+            - sloth_service="payment-brick"
+          receiver: 'payment-brick'
+        - matchers:
+            - product_id="P0510"
+          receiver: 'payment-document-manager'
+        - matchers:
+            - product="pdm"
+          receiver: 'payment-document-manager'
+        - matchers:
+            - product_id="P0717"
+          receiver: 'payment-online'
+        - matchers:
+            - product="pon"
+          receiver: 'payment-online'
+        - matchers:
+            - product_id="P0084"
+          receiver: 'payment-big-boss'
+        - matchers:
+            - product="pbb"
+          receiver: 'payment-big-boss'
+        - matchers:
+            - product_id="P0445"
+          receiver: 'payment-task-manager'
+        - matchers:
+            - product="ptm"
+          receiver: 'payment-task-manager'
+        - matchers:
+            - product_id="P0405"
+          receiver: 'wallet'
+        - matchers:
+            - product="wallet"
+          receiver: 'wallet'
+        - matchers:
+            - product_id=~"P0647|P0648|P0531|P0167|P0168|P0709|P0846|P1042"
+          receiver: 'payment-in-store'
+        ### MARKET PLACE ###
+        - matchers:
+            - product_id="P0137"
+          receiver: 'mpd-grafana-oncall-payment-brick-linker'
+        ### Credit products ###
+        - matchers:
+            - product_id=~"P0673|P0636"
+          receiver: 'lnpdt-grafana-oncall-credit-products'
+        ### SRE alerts ###
+        - matchers:
+            - product_id="P0339"
+          receiver: 'tpmn-grafana-oncall'
+          group_by: ['...']
+        - matchers:
+            - alertname="PrometheusRuleEvaluationFailing"
+          receiver: 'tpmn-grafana-oncall'
+          group_by: ['...']
+
+    inhibit_rules:
+      - source_matchers:
+          - alertname = "CamundaPaymentBrickTokensDelegates"
+          - severity_level = "1"
+        target_matchers:
+          - alertname = "CamundaPaymentBrickTokensDelegates"
+          - severity_level =~ "2|3"
+        equal: [alertname, activity_id, definition_id, process]
+      - source_matchers:
+          - alertname = "CamundaPaymentBrickTokensDelegates"
+          - severity_level = "2"
+        target_matchers:
+          - alertname = "CamundaPaymentBrickTokensDelegates"
+          - severity_level =~ "3"
+        equal: [alertname, activity_id, definition_id, process]
+      - source_matchers:
+          - sloth_severity = "page"
+        target_matchers:
+          - sloth_severity = "ticket"
+        equal: [alertname, sloth_id, sloth_service, sloth_slo]
+      - source_matchers:
+          - alertname = "PosUnsentDocuments"
+          - severity_level = "1"
+        target_matchers:
+          - alertname = "PosUnsentDocuments"
+          - severity_level ="3"
+        equal: [alertname]
+
+    receivers:
+      - name: 'void'
+      - name: 'payment-brick'
+        webhook_configs:
+          - url: 'https://obs-grafana-oncall-yc-techno.apps.lmru.tech/42/integrations/v1/alertmanager/gnFsFPWxPMALbexeiIQNui7tt/'
+            send_resolved: true
+      - name: 'payment-document-manager'
+        webhook_configs:
+          - url: 'https://obs-grafana-oncall-yc-techno.apps.lmru.tech/115/integrations/v1/alertmanager/nv4jR0aE5Id36eBKuwDoj9Yju/'
+            send_resolved: true
+      - name: 'payment-online'
+        webhook_configs:
+          - url: 'https://obs-grafana-oncall-yc-techno.apps.lmru.tech/42/integrations/v1/alertmanager/NVgHpf4vsLJvtxg1agmeKIHjC/'
+            send_resolved: true
+      - name: 'payment-big-boss'
+        webhook_configs:
+          - url: 'https://obs-grafana-oncall-yc-techno.apps.lmru.tech/42/integrations/v1/alertmanager/Ah6bpmsMoI34QjfPNjjwTbBxz/'
+            send_resolved: true
+      - name: 'payment-task-manager'
+        webhook_configs:
+          - url: 'https://obs-grafana-oncall-yc-techno.apps.lmru.tech/42/integrations/v1/alertmanager/5DDjYiYFIa2L0oq0nrwuVoYcF/'
+            send_resolved: true
+      - name: 'wallet'
+        webhook_configs:
+          - url: 'https://obs-grafana-oncall-yc-techno.apps.lmru.tech/119/integrations/v1/alertmanager/119z38wFHH3L2HK6Zr9zSBWfv/'
+            send_resolved: true
+      - name: 'payment-in-store'
+        webhook_configs:
+          - url: 'https://obs-grafana-oncall-yc-techno.apps.lmru.tech/40/integrations/v1/alertmanager/em1QfSgligujRsNxtmySi9WRn/'
+            send_resolved: true
+      - name: 'mpd-grafana-oncall-payment-brick-linker'
+        webhook_configs:
+          - url: 'https://obs-grafana-oncall-yc-techno.apps.lmru.tech/89/integrations/v1/alertmanager/YOpRPsmwrbpgLfB1OdMGh2UOb/'
+            send_resolved: true
+      - name: 'lnpdt-grafana-oncall-credit-products'
+        webhook_configs:
+          - url: 'https://obs-grafana-oncall-yc-techno.apps.lmru.tech/118/integrations/v1/alertmanager/I3vpt9NlUcJyDvNUNxviOzNB0/'
+            send_resolved: true
+      - name: 'blg-grafana-oncall-psp'
+        webhook_configs:
+          - url: 'https://obs-grafana-oncall-yc-techno.apps.lmru.tech/43/integrations/v1/alertmanager/yq3i4xKPBnVBsJdm1ysUAwUIX/'
+            send_resolved: true
+      - name: 'blg-grafana-oncall-rap'
+        webhook_configs:
+          - url: 'https://obs-grafana-oncall-yc-techno.apps.lmru.tech/43/integrations/v1/alertmanager/drdVMGSgyiOfezSya8azZ5QBm/'
+            send_resolved: true
+      - name: 'blg-grafana-oncall-src'
+        webhook_configs:
+          - url: 'https://obs-grafana-oncall-yc-techno.apps.lmru.tech/43/integrations/v1/alertmanager/d2dSrY3VVkjtYkwUWSFYshzok/'
+            send_resolved: true
+      - name: 'wteff-grafana-oncall-src'
+        webhook_configs:
+          - url: 'https://obs-grafana-oncall-yc-techno.apps.lmru.tech/41/integrations/v1/alertmanager/KgBF4USM7l7V1n4G7C2xcv5Oq/'
+            send_resolved: true
+      - name: 'tpmn-grafana-oncall'
+        webhook_configs:
+          - url: 'https://obs-grafana-oncall-yc-techno.apps.lmru.tech/15/integrations/v1/alertmanager/Yo3y6G0HgMVVJPrcFXmxFdCDn/'
+            send_resolved: true

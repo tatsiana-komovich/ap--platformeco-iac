@@ -1,0 +1,14 @@
+clusterName: "k8s-intraru3-prod"
+
+aquaSecret:
+  kubeEnforcerToken: enforcer-intraru3-k8s
+
+enforcer:
+  enforcerToken: enforcer-intraru3
+  nodeSelector:
+    node-role.k8s.lmru.tech/application: ''
+  tolerations:
+    - key: dedicated
+      operator: Equal
+      effect: "NoExecute"
+      value: dam

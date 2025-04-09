@@ -1,0 +1,37 @@
+{{- if .Values.webhooks.mutatingWebhook.enabled }}
+{{- if not .Values.certsSecret.autoGenerate }}
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingWebhookConfiguration
+metadata:
+  name: {{ .Values.webhooks.mutatingWebhook.name }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    role: {{ .Release.Name }}
+    app: {{ include "kube-enforcer.fullname" . }}
+    aqua.component: kubeenforcer
+{{ include "aqua.labels" . | indent 4 }}
+{{- if .Values.webhooks.mutatingWebhook.annotations }}
+  annotations:
+{{ toYaml .Values.webhooks.mutatingWebhook.annotations | indent 4 }}
+{{- end }}
+webhooks:
+  - name: microenforcer.aquasec.com
+    sideEffects: "None"
+    failurePolicy: {{ .Values.webhooks.failurePolicy }}
+    rules:
+      - operations: ["CREATE", "UPDATE"]
+        apiGroups: ["*"]
+        apiVersions: ["*"]
+        resources: ["pods"]
+    clientConfig:
+      {{- if not .Values.webhooks.certManager }}
+      caBundle: {{ template "caBundle" . }}
+      {{- end }}
+      service:
+        namespace: {{ .Release.Namespace }}
+        name: {{ include "kube-enforcer.fullname" . }}
+        path: "/mutate"
+    timeoutSeconds: {{ .Values.webhooks.mutatingWebhook.timeout }}
+    admissionReviewVersions: ["v1beta1"]
+{{- end }}
+{{- end }}

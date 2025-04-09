@@ -1,0 +1,14 @@
+clusterName: "k8s-wezen-a-stage"
+
+aquaSecret:
+  kubeEnforcerToken: enforcer-wezen-a-stage-k8s
+
+enforcer:
+  enforcerToken: enforcer-wezen-a-stage
+  nodeSelector:
+    node-role.k8s.lmru.tech/application: ''
+  tolerations:
+    - key: dedicated
+      operator: Equal
+      effect: "NoExecute"
+      value: application-nodes-2404

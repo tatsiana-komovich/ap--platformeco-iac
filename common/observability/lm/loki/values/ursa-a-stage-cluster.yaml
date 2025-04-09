@@ -1,0 +1,34 @@
+---
+lokiConfig:
+  size: 100
+  retention: 672
+  storage: network-ssd
+  memoryRequest: 5Gi
+  nodeSelector:
+    node-role/d8-loki: ""
+  tolerations:
+    - effect: NoExecute
+      key: dedicated
+      operator: Equal
+      value: d8-loki
+  storeSystemLogs: false
+
+loggingConfig:
+  enabled: true
+  custom:
+    byNsLabel:
+      type: KubernetesPods
+      kubernetesPods:
+        namespaceSelector:
+          labelSelector:
+            matchLabels:
+              log-shipping: enabled
+    byPodLabel:
+      type: KubernetesPods
+      kubernetesPods:
+        labelSelector:
+          matchLabels:
+            log-shipping: enabled
+
+eventsExporterPod:
+  enabled: false

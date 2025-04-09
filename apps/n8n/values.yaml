@@ -1,0 +1,19 @@
+---
+app:
+  name: devops-core-n8n
+  image:
+    repository: docker-devops.art.lmru.tech/n8nio/n8n
+    tag: "1.85.4"
+secrets:
+  DB_TYPE: "postgresdb"
+  DB_POSTGRESDB_HOST: "p-pg-k8s-rundeck-db-01.ru-central1.internal"
+  DB_POSTGRESDB_PORT: "5435"
+  DB_POSTGRESDB_DATABASE: "n8n"
+  DB_POSTGRESDB_USER: "n8n"
+  DB_POSTGRESDB_PASSWORD: '<path:services/data/devops-core-n8n#n8n_pg_password>'
+  N8N_PROTOCOL: http
+  N8N_PORT: "5678"
+  N8N_METRICS: "true"
+  QUEUE_HEALTH_CHECK_ACTIVE: "true"
+  N8N_RUNNERS_ENABLED: "true"
+  N8N_EDITOR_BASE_URL: "https://n8n-dors-a.apps.lmru.tech"

@@ -1,0 +1,23 @@
+clusterName: "k8s-yc-obs-traces-stage"
+
+aquaSecret:
+  kubeEnforcerToken: enforcer-yc-obs-traces-stage-k8s
+
+nodeSelector:
+  node-role.k8s.lmru.tech/application: ''
+tolerations:
+  - key: dedicated
+    operator: Equal
+    effect: "NoSchedule"
+    value: tempo
+  - key: dedicated
+    operator: Equal
+    effect: "NoSchedule"
+    value: tempo-ingestion
+  - key: dedicated
+    operator: Equal
+    effect: "NoSchedule"
+    value: k6
+
+enforcer:
+  enforcerToken: enforcer-yc-obs-traces-stage

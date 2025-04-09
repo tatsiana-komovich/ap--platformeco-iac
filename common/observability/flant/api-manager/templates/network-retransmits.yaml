@@ -1,0 +1,42 @@
+{{- if hasKey .Values "alerts" }}
+{{- if hasKey .Values.alerts "network_retransmits" }}
+{{- if .Values.alerts.network_retransmits.enabled }}
+---
+apiVersion: deckhouse.io/v1
+kind: CustomPrometheusRules
+metadata:
+  labels:
+    component: rules
+    prometheus: main
+  name: network-retransmits
+spec:
+  groups:
+    - name: high-network-retransmits
+      rules:
+      - alert: HighNetworkRetransmitsSegments
+        annotations:
+          description: |-
+            The rate of TCP segment retransmissions exceeds 15 per second over the last minute on {{`{{ $labels.node }}`}} Node
+          plk_protocol_version: "1"
+          plk_markup_format: markdown
+          summary: High rate of TCP retransmissions detected.
+        expr: rate(node_netstat_Tcp_RetransSegs{job="node-exporter"}[1m]) > {{ $.Values.alerts.network_retransmits.limit.segments }}
+        for: 5m
+        labels:
+          severity_level: "{{ $.Values.alerts.network_retransmits.severity_level }}"
+          tier: cluster
+      - alert: HighNetworkRetransmitsSyn
+        annotations:
+          description: |-
+            The rate of TCP SYN packet retransmissions exceeds 1 per second over the last minute on {{`{{ $labels.node }}`}} Node
+          plk_protocol_version: "1"
+          plk_markup_format: markdown
+          summary: High rate of TCP SYN retransmissions detected on {{`{{ $labels.node }}`}} Node
+        expr: rate(node_netstat_TcpExt_TCPSynRetrans{job="node-exporter"}[1m]) > {{ $.Values.alerts.network_retransmits.limit.syn }}
+        for: 5m
+        labels:
+          severity_level: "{{ $.Values.alerts.network_retransmits.severity_level }}"
+          tier: cluster
+{{- end }}
+{{- end }}
+{{- end }}

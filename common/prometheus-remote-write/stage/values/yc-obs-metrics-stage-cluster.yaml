@@ -1,0 +1,14 @@
+---
+k8s_prometheus_remote_write:
+  vminsert-devops-lmru-tech-custom-remote-write:
+    url:
+      _default: https://vminsert.devops.lmru.tech/insert/0/prometheus/
+    writeRelabelConfigs: {}
+  promaas-shared-custom-remote-write:
+    url:
+      _default: https://shared-wasat-a.obs.lmru.tech/prometheus/api/v1/write
+    writeRelabelConfigs:
+      _default:
+        - sourceLabels: [__name__]
+          regex: d8_gatekeeper_exporter_constraint_violations
+          action: "keep"

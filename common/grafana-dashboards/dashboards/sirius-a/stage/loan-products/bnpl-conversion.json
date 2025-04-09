@@ -1,0 +1,475 @@
+{
+    "annotations": {
+      "list": [
+        {
+          "builtIn": 1,
+          "datasource": {
+            "type": "grafana",
+            "uid": "-- Grafana --"
+          },
+          "enable": true,
+          "hide": true,
+          "iconColor": "rgba(0, 211, 255, 1)",
+          "name": "Annotations & Alerts",
+          "target": {
+            "limit": 100,
+            "matchAny": false,
+            "tags": [],
+            "type": "dashboard"
+          },
+          "type": "dashboard"
+        }
+      ]
+    },
+    "editable": true,
+    "fiscalYearStartMonth": 0,
+    "graphTooltip": 0,
+    "id": 102,
+    "iteration": 1709122404457,
+    "links": [],
+    "liveNow": false,
+    "panels": [
+      {
+        "datasource": {
+          "type": "prometheus",
+          "uid": "P0D6E4079E36703EB"
+        },
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "palette-classic"
+            },
+            "custom": {
+              "axisLabel": "",
+              "axisPlacement": "auto",
+              "barAlignment": 0,
+              "drawStyle": "line",
+              "fillOpacity": 0,
+              "gradientMode": "none",
+              "hideFrom": {
+                "legend": false,
+                "tooltip": false,
+                "viz": false
+              },
+              "lineInterpolation": "linear",
+              "lineWidth": 1,
+              "pointSize": 5,
+              "scaleDistribution": {
+                "type": "linear"
+              },
+              "showPoints": "auto",
+              "spanNulls": false,
+              "stacking": {
+                "group": "A",
+                "mode": "none"
+              },
+              "thresholdsStyle": {
+                "mode": "off"
+              }
+            },
+            "mappings": [],
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green",
+                  "value": null
+                },
+                {
+                  "color": "red",
+                  "value": 80
+                }
+              ]
+            },
+            "unit": "percentunit"
+          },
+          "overrides": [
+            {
+              "__systemRef": "hideSeriesFrom",
+              "matcher": {
+                "id": "byNames",
+                "options": {
+                  "mode": "exclude",
+                  "names": [
+                    "{storeId=\"35\"}"
+                  ],
+                  "prefix": "All except:",
+                  "readOnly": true
+                }
+              },
+              "properties": [
+                {
+                  "id": "custom.hideFrom",
+                  "value": {
+                    "legend": false,
+                    "tooltip": false,
+                    "viz": false
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        "gridPos": {
+          "h": 8,
+          "w": 12,
+          "x": 0,
+          "y": 0
+        },
+        "id": 2,
+        "options": {
+          "legend": {
+            "calcs": [],
+            "displayMode": "list",
+            "placement": "bottom"
+          },
+          "tooltip": {
+            "mode": "single",
+            "sort": "none"
+          }
+        },
+        "targets": [
+          {
+            "datasource": {
+              "type": "prometheus",
+              "uid": "P0D6E4079E36703EB"
+            },
+            "expr": "sum by(storeId)(increase(bnpl_payments_holded_total{namespace='payment-credit-test', service='bnpl'}[$window])) \r\n/ sum by(storeId)(increase(bnpl_payments_created_total {namespace='payment-credit-test', service='bnpl'}[$window]))",
+            "refId": "A"
+          }
+        ],
+        "title": "Stores  (period $window)",
+        "type": "timeseries"
+      },
+      {
+        "datasource": {
+          "type": "prometheus",
+          "uid": "P0D6E4079E36703EB"
+        },
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "thresholds"
+            },
+            "mappings": [],
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green",
+                  "value": null
+                },
+                {
+                  "color": "red",
+                  "value": 10
+                }
+              ]
+            },
+            "unit": "percentunit"
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 8,
+          "w": 12,
+          "x": 12,
+          "y": 0
+        },
+        "id": 4,
+        "options": {
+          "colorMode": "value",
+          "graphMode": "area",
+          "justifyMode": "auto",
+          "orientation": "auto",
+          "reduceOptions": {
+            "calcs": [
+              "lastNotNull"
+            ],
+            "fields": "",
+            "values": false
+          },
+          "textMode": "auto"
+        },
+        "pluginVersion": "8.5.13",
+        "targets": [
+          {
+            "datasource": {
+              "type": "prometheus",
+              "uid": "P0D6E4079E36703EB"
+            },
+            "expr": "sum by(storeId)(increase(bnpl_payments_holded_total{namespace='payment-credit-test', service='bnpl'}[$window])) \r\n/ sum by(storeId)(increase(bnpl_payments_created_total {namespace='payment-credit-test', service='bnpl'}[$window] offset 5m))",
+            "refId": "A"
+          }
+        ],
+        "title": "Conversion (period $window)",
+        "type": "stat"
+      },
+      {
+        "datasource": {
+          "type": "prometheus",
+          "uid": "P0D6E4079E36703EB"
+        },
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "thresholds"
+            },
+            "mappings": [],
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green",
+                  "value": null
+                },
+                {
+                  "color": "red",
+                  "value": 800
+                }
+              ]
+            }
+          },
+          "overrides": [
+            {
+              "matcher": {
+                "id": "byName",
+                "options": "35"
+              },
+              "properties": [
+                {
+                  "id": "displayName",
+                  "value": "Store 35"
+                }
+              ]
+            },
+            {
+              "matcher": {
+                "id": "byName",
+                "options": "{storeId=\"2\"}"
+              },
+              "properties": [
+                {
+                  "id": "displayName",
+                  "value": "Store 2"
+                }
+              ]
+            }
+          ]
+        },
+        "gridPos": {
+          "h": 8,
+          "w": 12,
+          "x": 0,
+          "y": 8
+        },
+        "id": 6,
+        "options": {
+          "colorMode": "value",
+          "graphMode": "area",
+          "justifyMode": "auto",
+          "orientation": "vertical",
+          "reduceOptions": {
+            "calcs": [
+              "lastNotNull"
+            ],
+            "fields": "",
+            "values": false
+          },
+          "text": {},
+          "textMode": "value_and_name"
+        },
+        "pluginVersion": "8.5.13",
+        "targets": [
+          {
+            "datasource": {
+              "type": "prometheus",
+              "uid": "P0D6E4079E36703EB"
+            },
+            "editorMode": "code",
+            "exemplar": false,
+            "expr": "sum by(storeId)(increase(bnpl_payments_created_total {storeId='35', namespace='payment-credit-test', service='bnpl'}[$window]))",
+            "instant": false,
+            "legendFormat": "__auto",
+            "range": true,
+            "refId": "A"
+          },
+          {
+            "datasource": {
+              "type": "prometheus",
+              "uid": "P0D6E4079E36703EB"
+            },
+            "expr": "sum by(storeId)(increase(bnpl_payments_created_total {storeId='2', namespace='payment-credit-test', service='bnpl'}[$window]))",
+            "hide": false,
+            "refId": "B"
+          }
+        ],
+        "title": "Created  (period $window)",
+        "type": "stat"
+      },
+      {
+        "datasource": {
+          "type": "prometheus",
+          "uid": "P0D6E4079E36703EB"
+        },
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "thresholds"
+            },
+            "mappings": [],
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green",
+                  "value": null
+                },
+                {
+                  "color": "red",
+                  "value": 80
+                }
+              ]
+            }
+          },
+          "overrides": [
+            {
+              "matcher": {
+                "id": "byName",
+                "options": "{storeId=\"2\"}"
+              },
+              "properties": [
+                {
+                  "id": "displayName",
+                  "value": "Store 2"
+                }
+              ]
+            },
+            {
+              "matcher": {
+                "id": "byName",
+                "options": "{storeId=\"35\"}"
+              },
+              "properties": [
+                {
+                  "id": "displayName",
+                  "value": "Store 35"
+                }
+              ]
+            }
+          ]
+        },
+        "gridPos": {
+          "h": 8,
+          "w": 12,
+          "x": 12,
+          "y": 8
+        },
+        "id": 8,
+        "options": {
+          "colorMode": "value",
+          "graphMode": "area",
+          "justifyMode": "auto",
+          "orientation": "auto",
+          "reduceOptions": {
+            "calcs": [
+              "lastNotNull"
+            ],
+            "fields": "",
+            "values": false
+          },
+          "textMode": "auto"
+        },
+        "pluginVersion": "8.5.13",
+        "targets": [
+          {
+            "datasource": {
+              "type": "prometheus",
+              "uid": "P0D6E4079E36703EB"
+            },
+            "expr": "sum by(storeId)(increase(bnpl_payments_holded_total {storeId='35', namespace='payment-credit-test', service='bnpl'}[$window]))",
+            "refId": "A"
+          },
+          {
+            "datasource": {
+              "type": "prometheus",
+              "uid": "P0D6E4079E36703EB"
+            },
+            "expr": "sum by(storeId)(increase(bnpl_payments_holded_total {storeId='2', namespace='payment-credit-test', service='bnpl'}[$window]))",
+            "hide": false,
+            "refId": "B"
+          }
+        ],
+        "title": "Holded  (period $window)",
+        "type": "stat"
+      }
+    ],
+    "refresh": false,
+    "schemaVersion": 36,
+    "style": "dark",
+    "tags": [],
+    "templating": {
+      "list": [
+        {
+          "auto": false,
+          "auto_count": 30,
+          "auto_min": "10s",
+          "current": {
+            "selected": false,
+            "text": "3d",
+            "value": "3d"
+          },
+          "description": " Временное окно",
+          "hide": 0,
+          "label": "window",
+          "name": "window",
+          "options": [
+            {
+              "selected": true,
+              "text": "3d",
+              "value": "3d"
+            },
+            {
+              "selected": false,
+              "text": "7d",
+              "value": "7d"
+            },
+            {
+              "selected": false,
+              "text": "30d",
+              "value": "30d"
+            },
+            {
+              "selected": false,
+              "text": "90d",
+              "value": "90d"
+            },
+            {
+              "selected": false,
+              "text": "180d",
+              "value": "180d"
+            },
+            {
+              "selected": false,
+              "text": "360d",
+              "value": "360d"
+            }
+          ],
+          "query": "3d, 7d, 30d, 90d, 180d, 360d",
+          "queryValue": "",
+          "refresh": 2,
+          "skipUrlSync": false,
+          "type": "interval"
+        }
+      ]
+    },
+    "time": {
+      "from": "now-24h",
+      "to": "now"
+    },
+    "timepicker": {},
+    "timezone": "",
+    "title": "Payment Loan(BNPL) - Conversion",
+    "uid": "fc0XUyoIk",
+    "version": 19,
+    "weekStart": ""
+  }

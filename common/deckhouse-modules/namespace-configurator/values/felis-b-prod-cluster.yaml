@@ -1,0 +1,67 @@
+---
+extended_monitoring_enable_on_all_ns: {}
+
+products:
+  - product-id: P0620
+    namespace_pattern:
+      - ^scdp-ofl-ffp-.*$
+  - product-id: P0525
+    namespace_pattern:
+      - ^scdp-ofl-procurement-.*$
+  - product-id: P0303
+    namespace_pattern:
+      - ^scdp-ofl-ots-.*$
+  - product-id: P0856
+    namespace_pattern:
+      - ^scdp-ofl-rom-.*$
+  - product-id: P0591
+    namespace_pattern:
+      - ^scdp-ofl-rtn-.*$
+  - product-id: P0074
+    namespace_pattern:
+      - ^scdp-ofl-ffman-prod$
+  - product-id: P0186
+    namespace_pattern:
+      - ^scdp-ofl-booking-prod$
+  - product-id: P0555
+    namespace_pattern:
+      - ^scdp-ofl-lc-prod$
+  - product-id: P0718
+    namespace_pattern:
+      - ^scdp-ofl-ot-prod$
+  - product-id: P0716
+    namespace_pattern:
+      - ^scdp-ofl-mo-prod$
+  - product-id: P0174
+    namespace_pattern:
+      - ^scdp-ofl-ries-.*$
+
+istio:
+  - istio-injection: enabled
+    namespace_pattern:
+      - ^scdp-ofl-ffp-prod$
+      - ^scdp-ofl-procurement-prod$
+  - istio.deckhouse.io/auto-upgrade: "true"
+    namespace_pattern:
+      - ^scdp-ofl-ffp-prod$
+      - ^scdp-ofl-procurement-prod$
+
+infra-elklogs:
+  - security.deckhouse.io/pod-policy: privileged
+    namespace_pattern:
+      - ^infra-elklogs$
+
+coroot:
+  - security.deckhouse.io/pod-policy: privileged
+    namespace_pattern:
+      - ^coroot$
+
+devops-core-vector:
+  - security.deckhouse.io/pod-policy-action: warn
+    namespace_pattern:
+      - ^devops-core-vector$
+
+jaeger:
+  - security.deckhouse.io/pod-policy: privileged
+    namespace_pattern:
+      - ^jaeger$

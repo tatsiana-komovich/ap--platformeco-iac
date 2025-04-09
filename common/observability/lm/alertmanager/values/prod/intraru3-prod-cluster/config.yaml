@@ -1,0 +1,70 @@
+---
+alertmanager:
+  templates:
+    alertmanager.tmpl: |-
+      '{{ define "generator.url" }} {{ (index .Alerts 0).GeneratorURL | reReplaceAll "&g0.tab=1$" "&g0.tab=0" }} {{ end }}'
+
+  config:
+    global:
+      smtp_from: 'alertmanager@leroy-merlin.ru'
+      smtp_smarthost: 'massmail.hq.ru.corp.leroymerlin.com:25'
+      smtp_require_tls: false
+
+    templates:
+      - '/etc/alertmanager/*.tmpl'
+
+    route:
+      group_by: ['alertname', 'job']
+      receiver: 'void'
+      repeat_interval: 4h
+
+  ## Add your Alertmanager configuration below
+
+      routes:
+        - matchers:
+            - opsgenie_team_id="cc8aa0cf-e173-48c7-ab93-524a760f1854"
+          receiver: 'intraru-oncall-webhook'
+        - matchers:
+            - product_id="P0112"
+          receiver: 'pocmn-grafana-oncall-P0112'
+        - matchers:
+            - product_id="P0736"
+          receiver: 'eja-grafana-oncall-my-way-2'
+        - matchers:
+            - namespace="my-way-2-prod"
+          receiver: 'eja-grafana-oncall-my-way-2'
+        - matchers:
+            - product_id="P0674"
+          receiver: 'eja-grafana-oncall-mydev'
+        - matchers:
+            - namespace="mydev-prod"
+          receiver: 'eja-grafana-oncall-mydev'
+        - matchers:
+            - product_id="P0091"
+          receiver: 'sltl-grafana-oncall-rabotalm'
+        - matchers:
+            - namespace="rabotalm"
+          receiver: 'sltl-grafana-oncall-rabotalm'
+
+    receivers:
+      - name: 'void'
+      - name: 'intraru-oncall-webhook'
+        webhook_configs:
+          - url: 'https://obs-grafana-oncall-yc-techno.apps.lmru.tech/64/integrations/v1/alertmanager/FFn9yvWr6HxPX4Q3zHewBsmXY/'
+            send_resolved: true
+      - name: 'pocmn-grafana-oncall-P0112'
+        webhook_configs:
+          - url: 'https://obs-grafana-oncall-yc-techno.apps.lmru.tech/79/integrations/v1/alertmanager/9vllmY9yvIB1zLKELCngUrUXi/'
+            send_resolved: true
+      - name: 'eja-grafana-oncall-my-way-2'
+        webhook_configs:
+          - url: 'https://obs-grafana-oncall-yc-techno.apps.lmru.tech/108/integrations/v1/alertmanager/7H04mIO9mxWBnHBV8sRFXvWnQ/'
+            send_resolved: true
+      - name: 'eja-grafana-oncall-mydev'
+        webhook_configs:
+          - url: 'https://obs-grafana-oncall-yc-techno.apps.lmru.tech/108/integrations/v1/alertmanager/gJOp89YzdFjtgwcE8f9dW0UGE/'
+            send_resolved: true
+      - name: 'sltl-grafana-oncall-rabotalm'
+        webhook_configs:
+          - url: 'https://obs-grafana-oncall-yc-techno.apps.lmru.tech/112/integrations/v1/alertmanager/9xrTxTMrNSeuI2C67oeQWaHX3/'
+            send_resolved: true

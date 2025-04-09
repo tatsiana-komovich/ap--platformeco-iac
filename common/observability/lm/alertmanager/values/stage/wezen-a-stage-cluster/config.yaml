@@ -1,0 +1,66 @@
+---
+alertmanager:
+  templates:
+    alertmanager.tmpl: |-
+      '{{ define "generator.url" }} {{ (index .Alerts 0).GeneratorURL | reReplaceAll "&g0.tab=1$" "&g0.tab=0" }} {{ end }}'
+
+  config:
+    global:
+      smtp_from: 'alertmanager@leroy-merlin.ru'
+      smtp_smarthost: 'massmail.hq.ru.corp.leroymerlin.com:25'
+      smtp_require_tls: false
+
+    templates:
+      - '/etc/alertmanager/*.tmpl'
+
+    route:
+      group_by: ['alertname', 'job']
+      receiver: 'void'
+      repeat_interval: 4h
+
+  ## Add your Alertmanager configuration below
+
+      routes:
+        - matchers:
+            - product_id = "P0486"
+          receiver: 'wms-reception'
+          group_by: [alertname, datacenter, app]
+        - matchers:
+            - product_id = "P0487"
+          receiver: 'adst-grafana-oncall'
+        - matchers:
+            - product_id = "P0487"
+          receiver: 'wms-sie'
+          group_by: [alertname, datacenter, app]
+        - matchers:
+            - product_id = "P0075"
+          receiver: 'picking'
+          group_by: [alertname, datacenter, app]
+        - matchers:
+            - product_id = "P0585"
+          receiver: 'handover'
+          group_by: [alertname, datacenter, app]
+
+    receivers:
+      - name: 'void'
+
+      - name: 'wms-reception'
+        webhook_configs:
+          - url: https://obs-grafana-oncall-yc-techno.apps.lmru.tech/44/integrations/v1/alertmanager/vUFyRYh7Vy8qEBWxUEUieXUVT/
+            send_resolved: true
+      - name: 'wms-sie'
+        webhook_configs:
+          - url: https://obs-grafana-oncall-yc-techno.apps.lmru.tech/46/integrations/v1/alertmanager/Oeet6I0NnjQb5JT1yB5gs6Hc0/
+            send_resolved: true
+      - name: 'picking'
+        webhook_configs:
+          - url: https://obs-grafana-oncall-yc-techno.apps.lmru.tech/47/integrations/v1/alertmanager/MKtMNCtp3hHsJaNn341yWuCCW/
+            send_resolved: true
+      - name: 'handover'
+        webhook_configs:
+          - url: https://obs-grafana-oncall-yc-techno.apps.lmru.tech/47/integrations/v1/alertmanager/MKtMNCtp3hHsJaNn341yWuCCW/
+            send_resolved: true
+      - name: 'adst-grafana-oncall'
+        webhook_configs:
+          - url: https://obs-grafana-oncall-yc-techno.apps.lmru.tech/46/integrations/v1/alertmanager/Oeet6I0NnjQb5JT1yB5gs6Hc0/
+            send_resolved: true

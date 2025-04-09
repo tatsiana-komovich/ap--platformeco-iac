@@ -1,0 +1,311 @@
+---
+opendistro:
+  security:
+    multitenancy: true
+    tenants:
+      - name: flant
+        indices: ["filebeat-*", "infra-*", "d8-*"]
+        roles:
+          - name: flant_rw
+            type: rw
+            groups: ["crowd-flant-golf-admin", "crowd-flant-rnd", "crowd-flant-bravo", "ALL-LMRU-Svc"]
+      - name: obs
+        indices: ["lmru-p0395-*"]
+        roles:
+          - name: obs_rw
+            type: rw
+            groups: ["crowd-obs-admin", "crowd-obs-rw"]
+          - name: obs_ro
+            type: ro
+            groups: ["crowd-obs-ro"]
+      - name: ctc
+        indices: ["lmru-p0145-*"]
+        roles:
+          - name: ctc_rw
+            type: rw
+            groups: ["crowd-wecare-admin", "crowd-wecare-rw", "crowd-crm-admin", "crowd-crm-rw"]
+          - name: ctc_ro
+            type: ro
+            groups: ["crowd-wecare-ro", "crowd-crm-ro"]
+      - name: cts
+        indices: ["lmru-p0864-*"]
+        roles:
+          - name: cts_rw
+            type: rw
+            groups: ["crowd-corp-scheduler-admin"]
+      - name: psedv
+        indices: ["lmru-p0853-*"]
+        roles:
+          - name: psedv_rw
+            type: rw
+            groups: ["crowd-gha-rw", "crowd-gha-admin"]
+          - name: psedv_ro
+            type: ro
+            groups: ["crowd-gha-ro"]
+      - name: itop-adds
+        indices: ["lmru-p0222-adds-*"]
+        roles:
+          - name: itop-adds_rw
+            type: rw
+            groups: ["itop-l2", "itopsw"]
+          - name: itop-adds_ro
+            type: ro
+            groups: ["itop-l1", "department-702", "department-703", "l1-supportteam", "l2-contractors", "it_division1_sec", "it_division2_sec", "it_division3_sec", "it_division4_sec", "it_division5_sec", "it_division6_sec", "it_division7_sec", "it_division8_sec", "it_division9_sec", "it_division10_sec", "it_division11_sec", "l2-st-infra-access"]
+      - name: itop-common
+        indices: ["lmru-p0204-activeroles-*", "lmru-p0205-adfs-*", "lmru-p0229-exchange-*", "lmru-p0224-dhcp-*"]
+        roles:
+          - name: itop-activeroles_rw
+            type: rw
+            groups: ["itop-l2", "itopsw"]
+          - name: itop-activeroles_ro
+            type: ro
+            groups: ["itop-l1", department-702"]
+      - name: sctl
+        indices: ["lmru-p0356-*"]
+        roles:
+          - name: sctl_rw
+            type: rw
+            groups: ["crowd-search-navigation-admin", "crowd-search-navigation-rw"]
+          - name: sctl_ro
+            type: ro
+            groups: ["crowd-search-navigation-ro"]
+      - name: feeds
+        indices: ["lmru-p0891-*"]
+        roles:
+          - name: feeds_rw
+            type: rw
+            groups: ["crowd-feeds-generator-admin", "crowd-feeds-generator-rw"]
+          - name: feeds_ro
+            type: ro
+            groups: ["crowd-feeds-generator-ro"]
+      - name: itam
+        indices:
+          - "lmru-p0627-keycloak-partner-prod-2-*"
+          - "lmru-p0627-keycloak-customer-prod-*"
+          - "lmru-p0627-keycloak-employee-prod-*"
+          - "lmru-p0627-keycloak-ldap-generator-prod-*"
+          - "lmru-p0627-keycloak-partner-account-manager-prod-*"
+          - "lmru-p0527-ausweis-*"
+        roles:
+          - name: itam_rw
+            type: rw
+            groups: ["crowd-keycloak-admin", "crowd-keycloak-rw"]
+          - name: itam_ro
+            type: ro
+            groups: ["crowd-keycloak-ro"]
+      - name: openstack
+        indices: ["lmru-p714-openstack-prod-*", "lmru-p714-openstack-dev-*", "elastiflow-flow-*"]
+        roles:
+          - name: openstack_rw
+            type: rw
+            groups: ["crowd-openstack-admin", "department-714", "p-openstack-admins"]
+      - name: tpmn-mtools
+        indices: ["lmru-p0551-mtools-prod-*", "lmru-p0551-mtools-test-*"]
+        roles:
+          - name: tpmn_mtools_rw
+            type: rw
+            groups: ["crowd-mtools-admin"]
+          - name: tpmn_mtools_ro
+            type: ro
+            groups: ["crowd-mtools-ro"]
+      - name: tpmn-payment
+        indices: ["lmru-p0339-payment-*", "lmru-p0445-payment-*"]
+        roles:
+          - name: tpmn-payment_rw
+            type: rw
+            groups: ["crowd-payment-admin", "crowd-payment-rw"]
+          - name: tpmn-payment_ro
+            type: ro
+            groups: ["crowd-payment-ro"]
+      - name: quality-qcms
+        indices: ["lmru-p0860-qcms-*"]
+        roles:
+          - name: qcms_rw
+            type: rw
+            groups: ["crowd-qcms-admin", " crowd-qcms-rw"]
+          - name: qcms_ro
+            type: ro
+            groups: ["crowd-qcms-ro"]
+      - name: cfm
+        indices: ["lmru-p0076-*"]
+        roles:
+          - name: cfm_rw
+            type: rw
+            groups: ["crowd-cdsng-admin", " crowd-cdsng-rw"]
+          - name: cfm_ro
+            type: ro
+            groups: ["crowd-cdsng-ro"]
+      - name: gtsst-carrier-portal
+        indices: ["lmru-p0665-*"]
+        roles:
+          - name: gtsst-carrier-portal_rw
+            type: rw
+            groups: ["crowd-carrier-portal-admin", " crowd-carrier-portal-rw"]
+          - name: gtsst-carrier-portal_ro
+            type: ro
+            groups: ["crowd-carrier-portal-ro"]
+      - name: gtsst-tms
+        indices: ["lmru-p0666-*"]
+        roles:
+          - name: gtsst-tms_rw
+            type: rw
+            groups: ["crowd-gts-tms-admin", " crowd-gts-tms-rw"]
+          - name: gtsst-tms_ro
+            type: ro
+            groups: ["crowd-gts-tms-ro"]
+      - name: ss-oper
+        indices: ["lmru-p0482-*"]
+        roles:
+          - name: ss-oper_rw
+            type: rw
+            groups: ["crowd-dnp-admin", " crowd-dnp-rw"]
+          - name: ss-oper_ro
+            type: ro
+            groups: ["crowd-dnp-ro"]
+      - name: ss-sell
+        indices: ["lmru-p0479-*"]
+        roles:
+          - name: ss-sell_rw
+            type: rw
+            groups: ["crowd-dnp-admin", " crowd-dnp-rw"]
+          - name: ss-sell_ro
+            type: ro
+            groups: ["crowd-dnp-ro"]
+      - name: dsa-repo
+        indices: ["lmru-p0442-*"]
+        roles:
+          - name: dsa-repo_rw
+            type: rw
+            groups: ["crowd-dnp-admin", " crowd-dnp-rw"]
+          - name: dsa-repo_ro
+            type: ro
+            groups: ["crowd-dnp-ro"]
+      - name: dsa-pickup-point
+        indices: ["lmru-p0752-*"]
+        roles:
+          - name: dsa-pickup-point_rw
+            type: rw
+            groups: ["crowd-dnp-admin", " crowd-dnp-rw"]
+          - name: dsa-pickup-point_ro
+            type: ro
+            groups: ["crowd-dnp-ro"]
+      - name: ip-network-configuration
+        indices: ["lmru-p0955-*"]
+        roles:
+          - name: ip-network-configuration_rw
+            type: rw
+            groups: ["crowd-networkconfiguration-admin", "crowd-networkconfiguration-rw"]
+          - name: ip-network-configuration_ro
+            type: ro
+            groups: ["crowd-networkconfiguration-ro"]
+      - name: ip-stockrepo
+        indices: ["lmru-p0188-*"]
+        roles:
+          - name: ip-stockrepo_rw
+            type: rw
+            groups: ["crowd-cfp-admin", "crowd-cfp-rw", "crowd-stockrepository-admin", "crowd-stockrepository-rw"]
+          - name: ip-stockrepo_ro
+            type: ro
+            groups: ["crowd-cfp-ro", "crowd-stockrepository-ro"]
+      - name: ip-almaz
+        indices: ["lmru-p0767-*"]
+        roles:
+          - name: ip-almaz_rw
+            type: rw
+            groups: ["crowd-replenishment-admin", " crowd-replenishment-rw"]
+          - name: ip_almaz_ro
+            type: ro
+            groups: ["crowd-replenishment-ro"]
+      - name: offer-repository
+        indices: ["lmru-p1148-offer-repository-*"]
+        roles:
+          - name: offer_rw
+            type: rw
+            groups: ["crowd-offer-repository-admin", "crowd-offer-repository-rw"]
+          - name: offer_ro
+            type: ro
+            groups: ["crowd-offer-repository-ro"]
+      - name: ip-alfor
+        indices: ["lmru-p0702-*"]
+        roles:
+          - name: ip-alfor-rw
+            type: rw
+            groups: ["crowd-sf-admin", "crowd-sf-rw"]
+          - name: ip-alfor-ro
+            type: ro
+            groups: ["crowd-sf-ro"]
+      - name: ip-locrep
+        indices: ["lmru-p1168-*"]
+        roles:
+          - name: ip-locrep_rw
+            type: rw
+            groups: ["crowd-location-repository-admin", "crowd-location-repository-rw"]
+          - name: ip_locrep_ro
+            type: ro
+            groups: ["crowd-location-repository-ro"]
+      - name: ip-logservices
+        indices: ["lmru-p1183-*"]
+        roles:
+          - name: ip-logservices_rw
+            type: rw
+            groups: ["crowd-logistic-service-cat-admin", "crowd-logistic-service-cat-rw"]
+          - name: ip_logservices_ro
+            type: ro
+            groups: ["crowd-logistic-service-cat-ro"]
+      - name: ip-quota
+        indices: ["lmru-p0177-*"]
+        roles:
+          - name: ip-quota_rw
+            type: rw
+            groups: ["crowd-quota-admin", "crowd-quota-rw"]
+          - name: ip_quota_ro
+            type: ro
+            groups: ["crowd-quota-ro"]
+      - name: ip-logbonus
+        indices: ["lmru-p0614-*"]
+        roles:
+          - name: ip-logbonus_rw
+            type: rw
+            groups: ["crowd-logbonus-admin", "crowd-logbonus-rw"]
+          - name: ip-logbonus_ro
+            type: ro
+            groups: ["crowd-logbonus-ro"]
+      - name: trlsv
+        indices: ["lmru-p0179-*"]
+        roles:
+          - name: trlsv_rw
+            type: rw
+            groups: ["crowd-services-platform-admin", "crowd-services-platform-rw"]
+          - name: trlsv_ro
+            type: ro
+            groups: ["crowd-services-platform-ro"]
+      - name: wecare
+        indices: ["lmru-p0567-*"]
+        roles:
+          - name: wecare_rw
+            type: rw
+            groups: ["crowd-wecare-admin", "crowd-wecare-rw"]
+      - name: baget
+        indices: ["lmru-p0890-*"]
+        roles:
+          - name: baget_rw
+            type: rw
+            groups: ["crowd-search-navigation-admin", "crowd-search-navigation-rw"]
+          - name: baget_ro
+            type: ro
+            groups: ["crowd-search-navigation-ro"]
+      - name: powerbi-onprem
+        indices: ["lmru-p0818-*"]
+        roles:
+          - name: powerbi-onprem_rw
+            type: rw
+            groups: ["department-713"]
+      - name: cdcalendar
+        indices: ["lmru-p0499-*"]
+        roles:
+          - name: ip-cdcalendar_rw
+            type: rw
+            groups: ["crowd-cdcalendar-admin", "crowd-cdcalendar-rw"]
+          - name: ip_cdcalendar_ro
+            type: ro
+            groups: ["crowd-cdcalendar-ro"]

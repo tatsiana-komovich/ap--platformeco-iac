@@ -1,0 +1,5499 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": "-- Grafana --",
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": true,
+  "gnetId": null,
+  "graphTooltip": 0,
+  "iteration": 1632314287987,
+  "links": [],
+  "panels": [
+    {
+      "collapsed": false,
+      "datasource": null,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "id": 8,
+      "panels": [],
+      "title": "Общий",
+      "type": "row"
+    },
+    {
+      "datasource": null,
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {},
+          "decimals": 4,
+          "mappings": [
+            {
+              "from": "",
+              "id": 1,
+              "text": "",
+              "to": "",
+              "type": 1,
+              "value": ""
+            }
+          ],
+          "max": 1,
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "red",
+                "value": null
+              },
+              {
+                "color": "green",
+                "value": 0.99999
+              }
+            ]
+          },
+          "unit": "percentunit"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 4,
+        "x": 0,
+        "y": 1
+      },
+      "id": 2,
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showThresholdLabels": false,
+        "showThresholdMarkers": true,
+        "text": {}
+      },
+      "pluginVersion": "7.4.2",
+      "targets": [
+        {
+          "expr": "sum(increase(ingress_nginx_detail_responses_total{namespace=\"$namespace\", status!~\"5..\", uri!~\"$excluded_urls\"}[$__range:])) / sum(increase(ingress_nginx_detail_responses_total{namespace=\"$namespace\", uri!~\"$excluded_urls\"}[$__range:]))",
+          "instant": true,
+          "interval": "",
+          "legendFormat": "{{namespace}}",
+          "queryType": "randomWalk",
+          "refId": "A"
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Availability",
+      "type": "gauge"
+    },
+    {
+      "datasource": null,
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {},
+          "decimals": 3,
+          "mappings": [
+            {
+              "from": "",
+              "id": 1,
+              "text": "",
+              "to": "",
+              "type": 1,
+              "value": ""
+            }
+          ],
+          "max": 1,
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "red",
+                "value": null
+              },
+              {
+                "color": "green",
+                "value": 0.99999
+              }
+            ]
+          },
+          "unit": "percentunit"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 20,
+        "x": 4,
+        "y": 1
+      },
+      "id": 3,
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "last"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showThresholdLabels": false,
+        "showThresholdMarkers": true,
+        "text": {}
+      },
+      "pluginVersion": "7.4.2",
+      "targets": [
+        {
+          "expr": "sum(increase(ingress_nginx_detail_responses_total{namespace=\"$namespace\", status!~\"5..\", uri!~\"$excluded_urls\"}[$__range:])) by (service) / sum(increase(ingress_nginx_detail_responses_total{namespace=\"$namespace\", uri!~\"$excluded_urls\"}[$__range:])) by (service)",
+          "instant": true,
+          "interval": "",
+          "legendFormat": "{{service}}",
+          "queryType": "randomWalk",
+          "refId": "A"
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Availability by service",
+      "type": "gauge"
+    },
+    {
+      "collapsed": true,
+      "datasource": null,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 10
+      },
+      "id": 11,
+      "panels": [
+        {
+          "datasource": null,
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "custom": {},
+              "decimals": 4,
+              "mappings": [],
+              "max": 1,
+              "min": 0,
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "red",
+                    "value": null
+                  },
+                  {
+                    "color": "green",
+                    "value": 0.99999
+                  }
+                ]
+              },
+              "unit": "percentunit"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 7,
+            "w": 4,
+            "x": 0,
+            "y": 11
+          },
+          "id": 12,
+          "maxPerRow": 3,
+          "options": {
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "showThresholdLabels": false,
+            "showThresholdMarkers": true,
+            "text": {}
+          },
+          "pluginVersion": "7.4.2",
+          "repeat": "slo_interval",
+          "repeatDirection": "h",
+          "targets": [
+            {
+              "expr": "sum(increase(ingress_nginx_detail_responses_total{namespace=\"$namespace\", status!~\"5..\", location=~\"$slo_url_availability\"}[$__range:])) by (namespace) / sum(increase(ingress_nginx_detail_responses_total{namespace=\"$namespace\", location=~\"$slo_url_availability\"}[$__range:])) by (namespace)",
+              "instant": true,
+              "interval": "1h",
+              "legendFormat": "availabilityMethods",
+              "refId": "A"
+            }
+          ],
+          "title": "Availability",
+          "type": "gauge"
+        },
+        {
+          "datasource": null,
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "custom": {},
+              "mappings": [],
+              "max": 0.4,
+              "min": 0,
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  },
+                  {
+                    "color": "yellow",
+                    "value": 0.2
+                  },
+                  {
+                    "color": "red",
+                    "value": 0.3
+                  }
+                ]
+              },
+              "unit": "s"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 7,
+            "w": 4,
+            "x": 4,
+            "y": 11
+          },
+          "id": 6,
+          "options": {
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "showThresholdLabels": false,
+            "showThresholdMarkers": true,
+            "text": {}
+          },
+          "pluginVersion": "7.4.2",
+          "targets": [
+            {
+              "expr": "histogram_quantile(0.99, sum(rate(ingress_nginx_detail_request_seconds_bucket{namespace=\"$namespace\", location=~\"$slo_url_availability\"}[$__range:])) by (le))",
+              "instant": true,
+              "interval": "",
+              "legendFormat": "",
+              "refId": "A"
+            }
+          ],
+          "title": "99 percentile",
+          "type": "gauge"
+        },
+        {
+          "datasource": null,
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "custom": {},
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "red",
+                    "value": null
+                  },
+                  {
+                    "color": "green",
+                    "value": 0
+                  }
+                ]
+              },
+              "unit": "none"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 7,
+            "w": 4,
+            "x": 8,
+            "y": 11
+          },
+          "id": 19,
+          "options": {
+            "colorMode": "value",
+            "graphMode": "area",
+            "justifyMode": "auto",
+            "orientation": "auto",
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "text": {},
+            "textMode": "auto"
+          },
+          "pluginVersion": "7.4.2",
+          "targets": [
+            {
+              "expr": "(1-$SLA)*sum(increase(ingress_nginx_detail_responses_total{namespace=\"$namespace\", location=~\"$slo_url_availability\"}[$__range:]))",
+              "instant": false,
+              "interval": "",
+              "legendFormat": "",
+              "refId": "A"
+            }
+          ],
+          "title": "Bad requests error budget",
+          "type": "stat"
+        },
+        {
+          "datasource": null,
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "custom": {},
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "red",
+                    "value": null
+                  },
+                  {
+                    "color": "green",
+                    "value": 0
+                  }
+                ]
+              },
+              "unit": "none"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 7,
+            "w": 4,
+            "x": 12,
+            "y": 11
+          },
+          "id": 35,
+          "options": {
+            "colorMode": "value",
+            "graphMode": "area",
+            "justifyMode": "auto",
+            "orientation": "auto",
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "text": {},
+            "textMode": "auto"
+          },
+          "pluginVersion": "7.4.2",
+          "targets": [
+            {
+              "expr": "(1-$SLA)*sum(increase(ingress_nginx_detail_responses_total{namespace=\"$namespace\", location=~\"$slo_url_availability\"}[$__range:]))-(sum(increase(ingress_nginx_detail_responses_total{namespace=\"$namespace\", location=~\"$slo_url_availability\", status=~\"5..\"}[$__range:])) or vector(0))",
+              "instant": false,
+              "interval": "",
+              "legendFormat": "",
+              "refId": "A"
+            }
+          ],
+          "title": "Available error requests",
+          "type": "stat"
+        }
+      ],
+      "repeat": null,
+      "title": "Получение доступных способов оплаты",
+      "type": "row"
+    },
+    {
+      "collapsed": true,
+      "datasource": null,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 11
+      },
+      "id": 22,
+      "panels": [
+        {
+          "datasource": null,
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "custom": {},
+              "decimals": 4,
+              "mappings": [],
+              "max": 1,
+              "min": 0,
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "red",
+                    "value": null
+                  },
+                  {
+                    "color": "green",
+                    "value": 0.99999
+                  }
+                ]
+              },
+              "unit": "percentunit"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 7,
+            "w": 4,
+            "x": 0,
+            "y": 12
+          },
+          "id": 23,
+          "maxPerRow": 3,
+          "options": {
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "showThresholdLabels": false,
+            "showThresholdMarkers": true,
+            "text": {}
+          },
+          "pluginVersion": "7.4.2",
+          "repeatDirection": "h",
+          "targets": [
+            {
+              "expr": "sum(increase(ingress_nginx_detail_responses_total{namespace=\"$namespace\", status!~\"5..\", location=~\"$slo_url_process\"}[$__range:])) by (namespace) / sum(increase(ingress_nginx_detail_responses_total{namespace=\"$namespace\", location=~\"$slo_url_process\"}[$__range:])) by (namespace)",
+              "instant": true,
+              "interval": "1h",
+              "legendFormat": "",
+              "refId": "A"
+            }
+          ],
+          "title": "Availability",
+          "type": "gauge"
+        },
+        {
+          "datasource": null,
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "custom": {},
+              "mappings": [],
+              "max": 0.4,
+              "min": 0,
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  },
+                  {
+                    "color": "yellow",
+                    "value": 0.2
+                  },
+                  {
+                    "color": "red",
+                    "value": 0.3
+                  }
+                ]
+              },
+              "unit": "s"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 7,
+            "w": 4,
+            "x": 4,
+            "y": 12
+          },
+          "id": 25,
+          "options": {
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "showThresholdLabels": false,
+            "showThresholdMarkers": true,
+            "text": {}
+          },
+          "pluginVersion": "7.4.2",
+          "targets": [
+            {
+              "expr": "histogram_quantile(0.99, sum(rate(ingress_nginx_detail_request_seconds_bucket{namespace=\"$namespace\", location=~\"$slo_url_process\"}[$__range:])) by (le))",
+              "instant": true,
+              "interval": "",
+              "legendFormat": "",
+              "refId": "A"
+            }
+          ],
+          "title": "99 percentile",
+          "type": "gauge"
+        },
+        {
+          "datasource": null,
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "custom": {},
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "red",
+                    "value": null
+                  },
+                  {
+                    "color": "green",
+                    "value": 0
+                  }
+                ]
+              },
+              "unit": "none"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 7,
+            "w": 4,
+            "x": 8,
+            "y": 12
+          },
+          "id": 27,
+          "options": {
+            "colorMode": "value",
+            "graphMode": "area",
+            "justifyMode": "auto",
+            "orientation": "auto",
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "text": {},
+            "textMode": "auto"
+          },
+          "pluginVersion": "7.4.2",
+          "targets": [
+            {
+              "expr": "(1-$SLA)*sum(increase(ingress_nginx_detail_responses_total{namespace=\"$namespace\", location=~\"$slo_url_process\"}[$__range:]))",
+              "instant": false,
+              "interval": "",
+              "legendFormat": "",
+              "refId": "A"
+            }
+          ],
+          "title": "Bad requests error budget",
+          "type": "stat"
+        },
+        {
+          "datasource": null,
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "custom": {},
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "red",
+                    "value": null
+                  },
+                  {
+                    "color": "green",
+                    "value": 0
+                  }
+                ]
+              },
+              "unit": "none"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 7,
+            "w": 4,
+            "x": 12,
+            "y": 12
+          },
+          "id": 36,
+          "options": {
+            "colorMode": "value",
+            "graphMode": "area",
+            "justifyMode": "auto",
+            "orientation": "auto",
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "text": {},
+            "textMode": "auto"
+          },
+          "pluginVersion": "7.4.2",
+          "targets": [
+            {
+              "expr": "(1-$SLA)*sum(increase(ingress_nginx_detail_responses_total{namespace=\"$namespace\", location=~\"$slo_url_process\"}[$__range:]))-(sum(increase(ingress_nginx_detail_responses_total{namespace=\"$namespace\", location=~\"$slo_url_process\", status=~\"5..\"}[$__range:])) or vector(0))",
+              "instant": false,
+              "interval": "",
+              "legendFormat": "",
+              "refId": "A"
+            }
+          ],
+          "title": "Available error requests",
+          "type": "stat"
+        },
+        {
+          "datasource": null,
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "custom": {},
+              "decimals": 4,
+              "mappings": [],
+              "max": 1,
+              "min": 0,
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "red",
+                    "value": null
+                  },
+                  {
+                    "color": "green",
+                    "value": 0.99999
+                  }
+                ]
+              },
+              "unit": "percentunit"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 7,
+            "w": 8,
+            "x": 0,
+            "y": 19
+          },
+          "id": 80,
+          "maxPerRow": 3,
+          "options": {
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "showThresholdLabels": false,
+            "showThresholdMarkers": true,
+            "text": {}
+          },
+          "pluginVersion": "7.4.2",
+          "repeatDirection": "h",
+          "targets": [
+            {
+              "expr": "sum(increase(http_client_requests_seconds_count{namespace=\"$namespace\", status!~\"5..\", uri=~\"$slo_process_sberbank\"}[$__range:])) by (namespace, uri) / sum(increase(http_client_requests_seconds_count{namespace=\"$namespace\", uri=~\"$slo_process_sberbank\"}[$__range:])) by (namespace, uri)",
+              "instant": true,
+              "interval": "1h",
+              "legendFormat": "{{uri}}",
+              "refId": "A"
+            }
+          ],
+          "title": "Availability sberbank",
+          "type": "gauge"
+        },
+        {
+          "datasource": null,
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "custom": {},
+              "mappings": [],
+              "max": 0.4,
+              "min": 0,
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  },
+                  {
+                    "color": "yellow",
+                    "value": 0.2
+                  },
+                  {
+                    "color": "red",
+                    "value": 0.3
+                  }
+                ]
+              },
+              "unit": "s"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 7,
+            "w": 8,
+            "x": 8,
+            "y": 19
+          },
+          "id": 85,
+          "options": {
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "showThresholdLabels": false,
+            "showThresholdMarkers": true,
+            "text": {}
+          },
+          "pluginVersion": "7.4.2",
+          "targets": [
+            {
+              "expr": "histogram_quantile(0.99, sum(rate(http_client_requests_seconds_bucket{namespace=\"$namespace\",  uri=~\"$slo_process_sberbank\"}[$__range:])) by (le, uri))",
+              "instant": true,
+              "interval": "",
+              "legendFormat": "{{uri}}",
+              "refId": "A"
+            }
+          ],
+          "title": "99 percentile sberbank",
+          "type": "gauge"
+        }
+      ],
+      "title": "Процессинг платежа",
+      "type": "row"
+    },
+    {
+      "collapsed": true,
+      "datasource": null,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 12
+      },
+      "id": 41,
+      "panels": [
+        {
+          "datasource": null,
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "custom": {},
+              "decimals": 4,
+              "mappings": [],
+              "max": 1,
+              "min": 0,
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "red",
+                    "value": null
+                  },
+                  {
+                    "color": "green",
+                    "value": 0.99999
+                  }
+                ]
+              },
+              "unit": "percentunit"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 7,
+            "w": 4,
+            "x": 0,
+            "y": 34
+          },
+          "id": 48,
+          "maxPerRow": 3,
+          "options": {
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "showThresholdLabels": false,
+            "showThresholdMarkers": true,
+            "text": {}
+          },
+          "pluginVersion": "7.4.2",
+          "repeatDirection": "h",
+          "targets": [
+            {
+              "expr": "sum(increase(ingress_nginx_detail_responses_total{namespace=\"$namespace\", status!~\"5..\", location=~\"$slo_url_task\"}[$__range:])) by (namespace) / sum(increase(ingress_nginx_detail_responses_total{namespace=\"$namespace\", location=~\"$slo_url_task\"}[$__range:])) by (namespace)",
+              "instant": true,
+              "interval": "1h",
+              "legendFormat": "availabilityMethods",
+              "refId": "A"
+            }
+          ],
+          "title": "Availability",
+          "type": "gauge"
+        },
+        {
+          "datasource": null,
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "custom": {},
+              "mappings": [],
+              "max": 0.4,
+              "min": 0,
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  },
+                  {
+                    "color": "yellow",
+                    "value": 0.2
+                  },
+                  {
+                    "color": "red",
+                    "value": 0.3
+                  }
+                ]
+              },
+              "unit": "s"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 7,
+            "w": 4,
+            "x": 4,
+            "y": 34
+          },
+          "id": 50,
+          "options": {
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "showThresholdLabels": false,
+            "showThresholdMarkers": true,
+            "text": {}
+          },
+          "pluginVersion": "7.4.2",
+          "targets": [
+            {
+              "expr": "histogram_quantile(0.99, sum(rate(ingress_nginx_detail_request_seconds_bucket{namespace=\"$namespace\", location=~\"$slo_url_task\"}[$__range:])) by (le))",
+              "instant": true,
+              "interval": "",
+              "legendFormat": "",
+              "refId": "A"
+            }
+          ],
+          "title": "99 percentile",
+          "type": "gauge"
+        },
+        {
+          "datasource": null,
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "custom": {},
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "red",
+                    "value": null
+                  },
+                  {
+                    "color": "green",
+                    "value": 0
+                  }
+                ]
+              },
+              "unit": "none"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 7,
+            "w": 4,
+            "x": 8,
+            "y": 34
+          },
+          "id": 52,
+          "options": {
+            "colorMode": "value",
+            "graphMode": "area",
+            "justifyMode": "auto",
+            "orientation": "auto",
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "text": {},
+            "textMode": "auto"
+          },
+          "pluginVersion": "7.4.2",
+          "targets": [
+            {
+              "expr": "(1-$SLA)*sum(increase(ingress_nginx_detail_responses_total{namespace=\"$namespace\", location=~\"$slo_url_task\"}[$__range:]))",
+              "instant": false,
+              "interval": "",
+              "legendFormat": "",
+              "refId": "A"
+            }
+          ],
+          "title": "Bad requests error budget",
+          "type": "stat"
+        },
+        {
+          "datasource": null,
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "custom": {},
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "red",
+                    "value": null
+                  },
+                  {
+                    "color": "green",
+                    "value": 0
+                  }
+                ]
+              },
+              "unit": "none"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 7,
+            "w": 4,
+            "x": 12,
+            "y": 34
+          },
+          "id": 53,
+          "options": {
+            "colorMode": "value",
+            "graphMode": "area",
+            "justifyMode": "auto",
+            "orientation": "auto",
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "text": {},
+            "textMode": "auto"
+          },
+          "pluginVersion": "7.4.2",
+          "targets": [
+            {
+              "expr": "(1-$SLA)*sum(increase(ingress_nginx_detail_responses_total{namespace=\"$namespace\", location=~\"$slo_url_task\"}[$__range:]))-(sum(increase(ingress_nginx_detail_responses_total{namespace=\"$namespace\", location=~\"$slo_url_task\", status=~\"5..\"}[$__range:])) or vector(0))",
+              "instant": false,
+              "interval": "",
+              "legendFormat": "",
+              "refId": "A"
+            }
+          ],
+          "title": "Available error requests",
+          "type": "stat"
+        },
+        {
+          "datasource": null,
+          "description": "",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "custom": {},
+              "decimals": 4,
+              "mappings": [],
+              "max": 1,
+              "min": 0,
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "red",
+                    "value": null
+                  },
+                  {
+                    "color": "green",
+                    "value": 0.99999
+                  }
+                ]
+              },
+              "unit": "percentunit"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 7,
+            "w": 4,
+            "x": 0,
+            "y": 41
+          },
+          "id": 62,
+          "maxPerRow": 3,
+          "options": {
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "showThresholdLabels": false,
+            "showThresholdMarkers": true,
+            "text": {}
+          },
+          "pluginVersion": "7.4.2",
+          "repeatDirection": "h",
+          "targets": [
+            {
+              "expr": "sum by (name) (increase(spring_integration_send_seconds_count{namespace=\"$namespace\", name=~\"$slo_task_queue\", result=\"success\"}[$__range])) /  sum by (name) (increase(spring_integration_send_seconds_count{namespace=\"$namespace\", name=~\"$slo_task_queue\"}[$__range]))",
+              "instant": true,
+              "interval": "1h",
+              "legendFormat": "{{name}}",
+              "refId": "A"
+            }
+          ],
+          "title": "Availability queue",
+          "type": "gauge"
+        },
+        {
+          "datasource": null,
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "custom": {},
+              "mappings": [],
+              "max": 0.4,
+              "min": 0,
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  },
+                  {
+                    "color": "yellow",
+                    "value": 0.2
+                  },
+                  {
+                    "color": "red",
+                    "value": 0.3
+                  }
+                ]
+              },
+              "unit": "s"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 7,
+            "w": 4,
+            "x": 4,
+            "y": 41
+          },
+          "id": 63,
+          "options": {
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "showThresholdLabels": false,
+            "showThresholdMarkers": true,
+            "text": {}
+          },
+          "pluginVersion": "7.4.2",
+          "targets": [
+            {
+              "expr": "sum by (name) (increase(spring_integration_send_seconds_sum{namespace=\"$namespace\", name=~\"$slo_task_queue\"}[$__range])) /  sum by (name) (increase(spring_integration_send_seconds_count{namespace=\"$namespace\", name=~\"$slo_task_queue\"}[$__range]))",
+              "instant": true,
+              "interval": "",
+              "legendFormat": "",
+              "refId": "A"
+            }
+          ],
+          "title": "Average queue",
+          "type": "gauge"
+        },
+        {
+          "datasource": null,
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "custom": {},
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "red",
+                    "value": null
+                  },
+                  {
+                    "color": "green",
+                    "value": 0
+                  }
+                ]
+              },
+              "unit": "none"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 7,
+            "w": 4,
+            "x": 8,
+            "y": 41
+          },
+          "id": 86,
+          "options": {
+            "colorMode": "value",
+            "graphMode": "area",
+            "justifyMode": "auto",
+            "orientation": "auto",
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "text": {},
+            "textMode": "auto"
+          },
+          "pluginVersion": "7.4.2",
+          "targets": [
+            {
+              "expr": "(1-$SLA)*sum(increase(spring_integration_send_seconds_count{namespace=\"$namespace\", name=~\"$slo_task_queue\"}[$__range]))",
+              "instant": false,
+              "interval": "",
+              "legendFormat": "",
+              "refId": "A"
+            }
+          ],
+          "title": "Bad requests error budget",
+          "type": "stat"
+        },
+        {
+          "datasource": null,
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "custom": {},
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "red",
+                    "value": null
+                  },
+                  {
+                    "color": "green",
+                    "value": 0
+                  }
+                ]
+              },
+              "unit": "none"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 7,
+            "w": 4,
+            "x": 12,
+            "y": 41
+          },
+          "id": 87,
+          "options": {
+            "colorMode": "value",
+            "graphMode": "area",
+            "justifyMode": "auto",
+            "orientation": "auto",
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "text": {},
+            "textMode": "auto"
+          },
+          "pluginVersion": "7.4.2",
+          "targets": [
+            {
+              "expr": "(1-$SLA)*sum(increase(spring_integration_send_seconds_count{namespace=\"$namespace\", name=~\"$slo_task_queue\"}[$__range]))-(sum(increase(spring_integration_send_seconds_count{namespace=\"$namespace\", name=~\"$slo_task_queue\", result!~\"success\"}[$__range])) or vector(0))",
+              "instant": false,
+              "interval": "",
+              "legendFormat": "",
+              "refId": "A"
+            }
+          ],
+          "title": "Available error requests",
+          "type": "stat"
+        },
+        {
+          "datasource": null,
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "custom": {},
+              "decimals": 4,
+              "mappings": [],
+              "max": 1,
+              "min": 0,
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "red",
+                    "value": null
+                  },
+                  {
+                    "color": "green",
+                    "value": 0.99999
+                  }
+                ]
+              },
+              "unit": "percentunit"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 7,
+            "w": 4,
+            "x": 0,
+            "y": 48
+          },
+          "id": 60,
+          "maxPerRow": 3,
+          "options": {
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "showThresholdLabels": false,
+            "showThresholdMarkers": true,
+            "text": {}
+          },
+          "pluginVersion": "7.4.2",
+          "repeatDirection": "h",
+          "targets": [
+            {
+              "expr": "sum(increase(http_client_requests_seconds_count{namespace=\"$namespace\", status!~\"5..\", service=\"tasks\", uri=~\"$slo_url_task_opus\"}[$__range:])) by (namespace) / sum(increase(http_client_requests_seconds_count{namespace=\"$namespace\", service=\"tasks\", uri=~\"$slo_url_task_opus\"}[$__range:])) by (namespace)",
+              "instant": true,
+              "interval": "1h",
+              "legendFormat": "Availability",
+              "refId": "A"
+            }
+          ],
+          "title": "Availability OPUS",
+          "type": "gauge"
+        },
+        {
+          "datasource": null,
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "custom": {},
+              "mappings": [],
+              "max": 0.9,
+              "min": 0,
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  },
+                  {
+                    "color": "yellow",
+                    "value": 0.3
+                  },
+                  {
+                    "color": "red",
+                    "value": 0.6
+                  }
+                ]
+              },
+              "unit": "s"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 7,
+            "w": 4,
+            "x": 4,
+            "y": 48
+          },
+          "id": 61,
+          "maxPerRow": 3,
+          "options": {
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "showThresholdLabels": false,
+            "showThresholdMarkers": true,
+            "text": {}
+          },
+          "pluginVersion": "7.4.2",
+          "repeatDirection": "h",
+          "targets": [
+            {
+              "expr": "histogram_quantile(0.99, sum(rate(http_client_requests_seconds_bucket{namespace=\"$namespace\",  service=\"tasks\", uri=~\"$slo_url_task_opus\"}[$__range:])) by (le))",
+              "hide": false,
+              "interval": "",
+              "legendFormat": "",
+              "refId": "B"
+            }
+          ],
+          "title": "99 percentile OPUS",
+          "type": "gauge"
+        }
+      ],
+      "title": "Создание Payment Task",
+      "type": "row"
+    },
+    {
+      "collapsed": true,
+      "datasource": null,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 13
+      },
+      "id": 29,
+      "panels": [
+        {
+          "datasource": null,
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "custom": {},
+              "decimals": 4,
+              "mappings": [],
+              "max": 1,
+              "min": 0,
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "red",
+                    "value": null
+                  },
+                  {
+                    "color": "green",
+                    "value": 0.99999
+                  }
+                ]
+              },
+              "unit": "percentunit"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 7,
+            "w": 4,
+            "x": 0,
+            "y": 56
+          },
+          "id": 30,
+          "maxPerRow": 3,
+          "options": {
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "showThresholdLabels": false,
+            "showThresholdMarkers": true,
+            "text": {}
+          },
+          "pluginVersion": "7.4.2",
+          "repeatDirection": "h",
+          "targets": [
+            {
+              "expr": "sum(increase(http_server_requests_seconds_count{namespace=\"$namespace\", status!~\"5..\", uri=~\"$slo_url_bv\"}[$__range:])) by (namespace) / sum(increase(http_server_requests_seconds_count{namespace=\"$namespace\", uri=~\"$slo_url_bv\"}[$__range:])) by (namespace)",
+              "instant": true,
+              "interval": "1h",
+              "legendFormat": "{{uri}}",
+              "refId": "A"
+            }
+          ],
+          "title": "Availability",
+          "type": "gauge"
+        },
+        {
+          "datasource": null,
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "custom": {},
+              "mappings": [],
+              "max": 0.9,
+              "min": 0,
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  },
+                  {
+                    "color": "yellow",
+                    "value": 0.3
+                  },
+                  {
+                    "color": "red",
+                    "value": 0.6
+                  }
+                ]
+              },
+              "unit": "s"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 7,
+            "w": 4,
+            "x": 4,
+            "y": 56
+          },
+          "id": 31,
+          "maxPerRow": 3,
+          "options": {
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "showThresholdLabels": false,
+            "showThresholdMarkers": true,
+            "text": {}
+          },
+          "pluginVersion": "7.4.2",
+          "repeatDirection": "h",
+          "targets": [
+            {
+              "expr": "histogram_quantile(0.99, sum(rate(http_server_requests_seconds_bucket{namespace=\"$namespace\", uri=~\"$slo_url_bv\"}[$__range:])) by (le))",
+              "hide": false,
+              "interval": "",
+              "legendFormat": "",
+              "refId": "B"
+            }
+          ],
+          "title": "99 percentile",
+          "type": "gauge"
+        },
+        {
+          "datasource": null,
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "custom": {},
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "red",
+                    "value": null
+                  },
+                  {
+                    "color": "green",
+                    "value": 0
+                  }
+                ]
+              },
+              "unit": "none"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 7,
+            "w": 4,
+            "x": 8,
+            "y": 56
+          },
+          "id": 34,
+          "options": {
+            "colorMode": "value",
+            "graphMode": "area",
+            "justifyMode": "auto",
+            "orientation": "auto",
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "text": {},
+            "textMode": "auto"
+          },
+          "pluginVersion": "7.4.2",
+          "targets": [
+            {
+              "expr": "(1-$SLA)*sum(increase(http_server_requests_seconds_count{namespace=\"$namespace\", uri=~\"$slo_url_bv\"}[$__range:]))",
+              "instant": false,
+              "interval": "",
+              "legendFormat": "",
+              "refId": "A"
+            }
+          ],
+          "title": "Bad requests error budget",
+          "type": "stat"
+        },
+        {
+          "datasource": null,
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "custom": {},
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "red",
+                    "value": null
+                  },
+                  {
+                    "color": "green",
+                    "value": 0
+                  }
+                ]
+              },
+              "unit": "none"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 7,
+            "w": 4,
+            "x": 12,
+            "y": 56
+          },
+          "id": 37,
+          "options": {
+            "colorMode": "value",
+            "graphMode": "area",
+            "justifyMode": "auto",
+            "orientation": "auto",
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "text": {},
+            "textMode": "auto"
+          },
+          "pluginVersion": "7.4.2",
+          "targets": [
+            {
+              "expr": "(1-$SLA)*sum(increase(http_server_requests_seconds_count{namespace=\"$namespace\", uri=~\"$slo_url_bv\"}[$__range:]))-(sum(increase(http_server_requests_seconds_count{namespace=\"$namespace\", uri=~\"$slo_url_bv\", status=~\"5..\"}[$__range:])) or vector(0))",
+              "instant": false,
+              "interval": "",
+              "legendFormat": "",
+              "refId": "A"
+            }
+          ],
+          "title": "Available error requests",
+          "type": "stat"
+        },
+        {
+          "datasource": null,
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "custom": {},
+              "decimals": 4,
+              "mappings": [],
+              "max": 1,
+              "min": 0,
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "red",
+                    "value": null
+                  },
+                  {
+                    "color": "green",
+                    "value": 0.99999
+                  }
+                ]
+              },
+              "unit": "percentunit"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 7,
+            "w": 4,
+            "x": 0,
+            "y": 63
+          },
+          "id": 55,
+          "maxPerRow": 3,
+          "options": {
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "showThresholdLabels": false,
+            "showThresholdMarkers": true,
+            "text": {}
+          },
+          "pluginVersion": "7.4.2",
+          "repeatDirection": "h",
+          "targets": [
+            {
+              "expr": "sum(increase(http_client_requests_seconds_count{namespace=\"$namespace\", status!~\"5..\", uri=~\"$slo_url_solution\"}[$__range:])) by (namespace) / sum(increase(http_client_requests_seconds_count{namespace=\"$namespace\", uri=~\"$slo_url_solution\"}[$__range:])) by (namespace)",
+              "instant": true,
+              "interval": "1h",
+              "legendFormat": "Availability",
+              "refId": "A"
+            }
+          ],
+          "title": "Availability solution",
+          "type": "gauge"
+        },
+        {
+          "datasource": null,
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "custom": {},
+              "mappings": [],
+              "max": 0.9,
+              "min": 0,
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  },
+                  {
+                    "color": "yellow",
+                    "value": 0.3
+                  },
+                  {
+                    "color": "red",
+                    "value": 0.6
+                  }
+                ]
+              },
+              "unit": "s"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 7,
+            "w": 4,
+            "x": 4,
+            "y": 63
+          },
+          "id": 54,
+          "maxPerRow": 3,
+          "options": {
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "showThresholdLabels": false,
+            "showThresholdMarkers": true,
+            "text": {}
+          },
+          "pluginVersion": "7.4.2",
+          "repeatDirection": "h",
+          "targets": [
+            {
+              "expr": "histogram_quantile(0.99, sum(rate(http_client_requests_seconds_bucket{namespace=\"$namespace\", service=\"tp-net-interaction\", uri=~\"$slo_url_solution\"}[$__range:])) by (le))",
+              "hide": false,
+              "interval": "",
+              "legendFormat": "",
+              "refId": "B"
+            }
+          ],
+          "title": "99 percentile solution",
+          "type": "gauge"
+        }
+      ],
+      "title": "Оплата бланка заказа в магазине",
+      "type": "row"
+    },
+    {
+      "collapsed": true,
+      "datasource": null,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 14
+      },
+      "id": 39,
+      "panels": [
+        {
+          "datasource": null,
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "custom": {},
+              "decimals": 4,
+              "mappings": [],
+              "max": 1,
+              "min": 0,
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "red",
+                    "value": null
+                  },
+                  {
+                    "color": "green",
+                    "value": 0.99999
+                  }
+                ]
+              },
+              "unit": "percentunit"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 7,
+            "w": 4,
+            "x": 0,
+            "y": 71
+          },
+          "id": 42,
+          "maxPerRow": 3,
+          "options": {
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "showThresholdLabels": false,
+            "showThresholdMarkers": true,
+            "text": {}
+          },
+          "pluginVersion": "7.4.2",
+          "repeatDirection": "h",
+          "targets": [
+            {
+              "expr": "sum(increase(http_server_requests_seconds_count{namespace=\"$namespace\", status!~\"5..\", uri=~\"$slo_url_bv2\"}[$__range:])) by (namespace) / sum(increase(http_server_requests_seconds_count{namespace=\"$namespace\", uri=~\"$slo_url_bv2\"}[$__range:])) by (namespace)",
+              "instant": true,
+              "interval": "1h",
+              "legendFormat": "{{uri}}",
+              "refId": "A"
+            }
+          ],
+          "title": "Availability",
+          "type": "gauge"
+        },
+        {
+          "datasource": null,
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "custom": {},
+              "mappings": [],
+              "max": 0.9,
+              "min": 0,
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  },
+                  {
+                    "color": "yellow",
+                    "value": 0.3
+                  },
+                  {
+                    "color": "red",
+                    "value": 0.6
+                  }
+                ]
+              },
+              "unit": "s"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 7,
+            "w": 4,
+            "x": 4,
+            "y": 71
+          },
+          "id": 43,
+          "maxPerRow": 3,
+          "options": {
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "showThresholdLabels": false,
+            "showThresholdMarkers": true,
+            "text": {}
+          },
+          "pluginVersion": "7.4.2",
+          "repeatDirection": "h",
+          "targets": [
+            {
+              "expr": "histogram_quantile(0.99, sum(rate(http_server_requests_seconds_bucket{namespace=\"$namespace\", uri=~\"$slo_url_bv2\"}[$__range:])) by (le))",
+              "hide": false,
+              "interval": "",
+              "legendFormat": "",
+              "refId": "B"
+            }
+          ],
+          "title": "99 percentile",
+          "type": "gauge"
+        },
+        {
+          "datasource": null,
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "custom": {},
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "red",
+                    "value": null
+                  },
+                  {
+                    "color": "green",
+                    "value": 0
+                  }
+                ]
+              },
+              "unit": "none"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 7,
+            "w": 4,
+            "x": 8,
+            "y": 71
+          },
+          "id": 46,
+          "options": {
+            "colorMode": "value",
+            "graphMode": "area",
+            "justifyMode": "auto",
+            "orientation": "auto",
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "text": {},
+            "textMode": "auto"
+          },
+          "pluginVersion": "7.4.2",
+          "targets": [
+            {
+              "expr": "(1-$SLA)*sum(increase(http_server_requests_seconds_count{namespace=\"$namespace\", uri=~\"$slo_url_bv2\"}[$__range:]))",
+              "instant": false,
+              "interval": "",
+              "legendFormat": "",
+              "refId": "A"
+            }
+          ],
+          "title": "Bad requests error budget",
+          "type": "stat"
+        },
+        {
+          "datasource": null,
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "custom": {},
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "red",
+                    "value": null
+                  },
+                  {
+                    "color": "green",
+                    "value": 0
+                  }
+                ]
+              },
+              "unit": "none"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 7,
+            "w": 4,
+            "x": 12,
+            "y": 71
+          },
+          "id": 47,
+          "options": {
+            "colorMode": "value",
+            "graphMode": "area",
+            "justifyMode": "auto",
+            "orientation": "auto",
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "text": {},
+            "textMode": "auto"
+          },
+          "pluginVersion": "7.4.2",
+          "targets": [
+            {
+              "expr": "(1-$SLA)*sum(increase(http_server_requests_seconds_count{namespace=\"$namespace\", uri=~\"$slo_url_bv2\"}[$__range:]))-(sum(increase(http_server_requests_seconds_count{namespace=\"$namespace\", uri=~\"$slo_url_bv2\", status=~\"5..\"}[$__range:])) or vector(0))",
+              "instant": false,
+              "interval": "",
+              "legendFormat": "",
+              "refId": "A"
+            }
+          ],
+          "title": "Available error requests",
+          "type": "stat"
+        },
+        {
+          "datasource": null,
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "custom": {},
+              "decimals": 4,
+              "mappings": [],
+              "max": 1,
+              "min": 0,
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "red",
+                    "value": null
+                  },
+                  {
+                    "color": "green",
+                    "value": 0.99999
+                  }
+                ]
+              },
+              "unit": "percentunit"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 7,
+            "w": 4,
+            "x": 0,
+            "y": 78
+          },
+          "id": 56,
+          "maxPerRow": 3,
+          "options": {
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "showThresholdLabels": false,
+            "showThresholdMarkers": true,
+            "text": {}
+          },
+          "pluginVersion": "7.4.2",
+          "repeatDirection": "h",
+          "targets": [
+            {
+              "expr": "sum(increase(http_client_requests_seconds_count{namespace=\"$namespace\", status!~\"5..\", uri=~\"$slo_url_solution\"}[$__range:])) by (namespace) / sum(increase(http_client_requests_seconds_count{namespace=\"$namespace\", uri=~\"$slo_url_solution\"}[$__range:])) by (namespace)",
+              "instant": true,
+              "interval": "1h",
+              "legendFormat": "Availability",
+              "refId": "A"
+            }
+          ],
+          "title": "Availability solution",
+          "type": "gauge"
+        },
+        {
+          "datasource": null,
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "custom": {},
+              "mappings": [],
+              "max": 0.9,
+              "min": 0,
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  },
+                  {
+                    "color": "yellow",
+                    "value": 0.3
+                  },
+                  {
+                    "color": "red",
+                    "value": 0.6
+                  }
+                ]
+              },
+              "unit": "s"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 7,
+            "w": 4,
+            "x": 4,
+            "y": 78
+          },
+          "id": 57,
+          "maxPerRow": 3,
+          "options": {
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "showThresholdLabels": false,
+            "showThresholdMarkers": true,
+            "text": {}
+          },
+          "pluginVersion": "7.4.2",
+          "repeatDirection": "h",
+          "targets": [
+            {
+              "expr": "histogram_quantile(0.99, sum(rate(http_client_requests_seconds_bucket{namespace=\"$namespace\", service=\"tp-net-interaction\", uri=~\"$slo_url_solution\"}[$__range:])) by (le))",
+              "hide": false,
+              "interval": "",
+              "legendFormat": "",
+              "refId": "B"
+            }
+          ],
+          "title": "99 percentile solution",
+          "type": "gauge"
+        },
+        {
+          "datasource": null,
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "custom": {},
+              "decimals": 4,
+              "mappings": [],
+              "max": 1,
+              "min": 0,
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "red",
+                    "value": null
+                  },
+                  {
+                    "color": "green",
+                    "value": 0.99999
+                  }
+                ]
+              },
+              "unit": "percentunit"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 7,
+            "w": 4,
+            "x": 8,
+            "y": 78
+          },
+          "id": 58,
+          "maxPerRow": 3,
+          "options": {
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "showThresholdLabels": false,
+            "showThresholdMarkers": true,
+            "text": {}
+          },
+          "pluginVersion": "7.4.2",
+          "repeatDirection": "h",
+          "targets": [
+            {
+              "expr": "sum(increase(http_client_requests_seconds_count{namespace=\"$namespace\", status!~\"5..\", uri=~\"$slo_url_opus\"}[$__range:])) by (namespace) / sum(increase(http_client_requests_seconds_count{namespace=\"$namespace\", uri=~\"$slo_url_opus\"}[$__range:])) by (namespace)",
+              "instant": true,
+              "interval": "1h",
+              "legendFormat": "Availability",
+              "refId": "A"
+            }
+          ],
+          "title": "Availability OPUS",
+          "type": "gauge"
+        },
+        {
+          "datasource": null,
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "custom": {},
+              "mappings": [],
+              "max": 0.9,
+              "min": 0,
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  },
+                  {
+                    "color": "yellow",
+                    "value": 0.3
+                  },
+                  {
+                    "color": "red",
+                    "value": 0.6
+                  }
+                ]
+              },
+              "unit": "s"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 7,
+            "w": 4,
+            "x": 12,
+            "y": 78
+          },
+          "id": 59,
+          "maxPerRow": 3,
+          "options": {
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "showThresholdLabels": false,
+            "showThresholdMarkers": true,
+            "text": {}
+          },
+          "pluginVersion": "7.4.2",
+          "repeatDirection": "h",
+          "targets": [
+            {
+              "expr": "histogram_quantile(0.99, sum(rate(http_client_requests_seconds_bucket{namespace=\"$namespace\", service=\"tp-net-interaction\", uri=~\"$slo_url_opus\"}[$__range:])) by (le))",
+              "hide": false,
+              "interval": "",
+              "legendFormat": "",
+              "refId": "B"
+            }
+          ],
+          "title": "99 percentile OPUS",
+          "type": "gauge"
+        }
+      ],
+      "title": "Оплата бланка продажи в магазине",
+      "type": "row"
+    },
+    {
+      "collapsed": true,
+      "datasource": null,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 15
+      },
+      "id": 65,
+      "panels": [
+        {
+          "datasource": null,
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "custom": {},
+              "decimals": 4,
+              "mappings": [],
+              "max": 1,
+              "min": 0,
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "red",
+                    "value": null
+                  },
+                  {
+                    "color": "green",
+                    "value": 0.99999
+                  }
+                ]
+              },
+              "unit": "percentunit"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 7,
+            "w": 4,
+            "x": 0,
+            "y": 16
+          },
+          "id": 66,
+          "maxPerRow": 3,
+          "options": {
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "showThresholdLabels": false,
+            "showThresholdMarkers": true,
+            "text": {}
+          },
+          "pluginVersion": "7.4.2",
+          "repeatDirection": "h",
+          "targets": [
+            {
+              "expr": "sum(increase(http_server_requests_seconds_count{namespace=\"$namespace\", status!~\"5..\", uri=~\"$slo_atol_url\"}[$__range:])) by (namespace) / sum(increase(http_server_requests_seconds_count{namespace=\"$namespace\", uri=~\"$slo_atol_url\"}[$__range:])) by (namespace)",
+              "instant": true,
+              "interval": "1h",
+              "legendFormat": "{{uri}}",
+              "refId": "A"
+            }
+          ],
+          "title": "Availability",
+          "type": "gauge"
+        },
+        {
+          "datasource": null,
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "custom": {},
+              "mappings": [],
+              "max": 0.9,
+              "min": 0,
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  },
+                  {
+                    "color": "yellow",
+                    "value": 0.3
+                  },
+                  {
+                    "color": "red",
+                    "value": 0.6
+                  }
+                ]
+              },
+              "unit": "s"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 7,
+            "w": 4,
+            "x": 4,
+            "y": 16
+          },
+          "id": 67,
+          "maxPerRow": 3,
+          "options": {
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "showThresholdLabels": false,
+            "showThresholdMarkers": true,
+            "text": {}
+          },
+          "pluginVersion": "7.4.2",
+          "repeatDirection": "h",
+          "targets": [
+            {
+              "expr": "histogram_quantile(0.99, sum(rate(http_server_requests_seconds_bucket{namespace=\"$namespace\", uri=~\"$slo_atol_url\"}[$__range:])) by (le))",
+              "hide": false,
+              "interval": "",
+              "legendFormat": "",
+              "refId": "B"
+            }
+          ],
+          "title": "99 percentile",
+          "type": "gauge"
+        },
+        {
+          "datasource": null,
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "custom": {},
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "red",
+                    "value": null
+                  },
+                  {
+                    "color": "green",
+                    "value": 0
+                  }
+                ]
+              },
+              "unit": "none"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 7,
+            "w": 4,
+            "x": 8,
+            "y": 16
+          },
+          "id": 68,
+          "options": {
+            "colorMode": "value",
+            "graphMode": "area",
+            "justifyMode": "auto",
+            "orientation": "auto",
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "text": {},
+            "textMode": "auto"
+          },
+          "pluginVersion": "7.4.2",
+          "targets": [
+            {
+              "expr": "(1-$SLA)*sum(increase(http_server_requests_seconds_count{namespace=\"$namespace\", uri=~\"$slo_atol_url\"}[$__range:]))",
+              "instant": false,
+              "interval": "",
+              "legendFormat": "",
+              "refId": "A"
+            }
+          ],
+          "title": "Bad requests error budget",
+          "type": "stat"
+        },
+        {
+          "datasource": null,
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "custom": {},
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "red",
+                    "value": null
+                  },
+                  {
+                    "color": "green",
+                    "value": 0
+                  }
+                ]
+              },
+              "unit": "none"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 7,
+            "w": 4,
+            "x": 12,
+            "y": 16
+          },
+          "id": 69,
+          "options": {
+            "colorMode": "value",
+            "graphMode": "area",
+            "justifyMode": "auto",
+            "orientation": "auto",
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "text": {},
+            "textMode": "auto"
+          },
+          "pluginVersion": "7.4.2",
+          "targets": [
+            {
+              "expr": "(1-$SLA)*sum(increase(http_server_requests_seconds_count{namespace=\"$namespace\", uri=~\"$slo_atol_url\"}[$__range:]))-(sum(increase(http_server_requests_seconds_count{namespace=\"$namespace\", uri=~\"$slo_atol_url\", status=~\"5..\"}[$__range:]))  or vector(0))",
+              "instant": false,
+              "interval": "",
+              "legendFormat": "",
+              "refId": "A"
+            }
+          ],
+          "title": "Available error requests",
+          "type": "stat"
+        },
+        {
+          "datasource": null,
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "custom": {},
+              "decimals": 4,
+              "mappings": [],
+              "max": 1,
+              "min": 0,
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "red",
+                    "value": null
+                  },
+                  {
+                    "color": "green",
+                    "value": 0.99999
+                  }
+                ]
+              },
+              "unit": "percentunit"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 7,
+            "w": 4,
+            "x": 0,
+            "y": 23
+          },
+          "id": 70,
+          "maxPerRow": 3,
+          "options": {
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "showThresholdLabels": false,
+            "showThresholdMarkers": true,
+            "text": {}
+          },
+          "pluginVersion": "7.4.2",
+          "repeatDirection": "h",
+          "targets": [
+            {
+              "expr": "sum(increase(http_client_requests_seconds_count{namespace=\"$namespace\", status!~\"5..|429\", uri=~\"$slo_atol_atol\"}[$__range:])) by (namespace) / sum(increase(http_client_requests_seconds_count{namespace=\"$namespace\", uri=~\"$slo_atol_atol\"}[$__range:])) by (namespace)",
+              "instant": true,
+              "interval": "1h",
+              "legendFormat": "Availability",
+              "refId": "A"
+            }
+          ],
+          "title": "Availability ATOL",
+          "type": "gauge"
+        },
+        {
+          "datasource": null,
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "custom": {},
+              "mappings": [],
+              "max": 0.9,
+              "min": 0,
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  },
+                  {
+                    "color": "yellow",
+                    "value": 0.3
+                  },
+                  {
+                    "color": "red",
+                    "value": 0.6
+                  }
+                ]
+              },
+              "unit": "s"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 7,
+            "w": 4,
+            "x": 4,
+            "y": 23
+          },
+          "id": 71,
+          "maxPerRow": 3,
+          "options": {
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "showThresholdLabels": false,
+            "showThresholdMarkers": true,
+            "text": {}
+          },
+          "pluginVersion": "7.4.2",
+          "repeatDirection": "h",
+          "targets": [
+            {
+              "expr": "histogram_quantile(0.99, sum(rate(http_client_requests_seconds_bucket{namespace=\"$namespace\", uri=~\"$slo_atol_atol\"}[$__range:])) by (le))",
+              "hide": false,
+              "interval": "",
+              "legendFormat": "",
+              "refId": "B"
+            }
+          ],
+          "title": "99 percentile ATOL",
+          "type": "gauge"
+        }
+      ],
+      "title": "Регистрация чеков в АТОЛ-Онлайн",
+      "type": "row"
+    },
+    {
+      "collapsed": true,
+      "datasource": null,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 16
+      },
+      "id": 73,
+      "panels": [
+        {
+          "datasource": null,
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "custom": {},
+              "decimals": 4,
+              "mappings": [],
+              "max": 1,
+              "min": 0,
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "red",
+                    "value": null
+                  },
+                  {
+                    "color": "green",
+                    "value": 0.99999
+                  }
+                ]
+              },
+              "unit": "percentunit"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 7,
+            "w": 4,
+            "x": 0,
+            "y": 17
+          },
+          "id": 74,
+          "maxPerRow": 3,
+          "options": {
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "showThresholdLabels": false,
+            "showThresholdMarkers": true,
+            "text": {}
+          },
+          "pluginVersion": "7.4.2",
+          "repeatDirection": "h",
+          "targets": [
+            {
+              "expr": "sum(increase(http_server_requests_seconds_count{namespace=\"$namespace\", status!~\"5..\", uri=~\"$slo_money_uri\"}[$__range:])) by (namespace) / sum(increase(http_server_requests_seconds_count{namespace=\"$namespace\", uri=~\"$slo_money_uri\"}[$__range:])) by (namespace)",
+              "instant": true,
+              "interval": "1h",
+              "legendFormat": "{{uri}}",
+              "refId": "A"
+            }
+          ],
+          "title": "Availability",
+          "type": "gauge"
+        },
+        {
+          "datasource": null,
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "custom": {},
+              "mappings": [],
+              "max": 0.9,
+              "min": 0,
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  },
+                  {
+                    "color": "yellow",
+                    "value": 0.3
+                  },
+                  {
+                    "color": "red",
+                    "value": 0.6
+                  }
+                ]
+              },
+              "unit": "s"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 7,
+            "w": 4,
+            "x": 4,
+            "y": 17
+          },
+          "id": 75,
+          "maxPerRow": 3,
+          "options": {
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "showThresholdLabels": false,
+            "showThresholdMarkers": true,
+            "text": {}
+          },
+          "pluginVersion": "7.4.2",
+          "repeatDirection": "h",
+          "targets": [
+            {
+              "expr": "histogram_quantile(0.99, sum(rate(http_server_requests_seconds_bucket{namespace=\"$namespace\", uri=~\"$slo_money_uri\"}[$__range:])) by (le))",
+              "hide": false,
+              "interval": "",
+              "legendFormat": "",
+              "refId": "B"
+            }
+          ],
+          "title": "99 percentile",
+          "type": "gauge"
+        },
+        {
+          "datasource": null,
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "custom": {},
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "red",
+                    "value": null
+                  },
+                  {
+                    "color": "green",
+                    "value": 0
+                  }
+                ]
+              },
+              "unit": "none"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 7,
+            "w": 4,
+            "x": 8,
+            "y": 17
+          },
+          "id": 76,
+          "options": {
+            "colorMode": "value",
+            "graphMode": "area",
+            "justifyMode": "auto",
+            "orientation": "auto",
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "text": {},
+            "textMode": "auto"
+          },
+          "pluginVersion": "7.4.2",
+          "targets": [
+            {
+              "expr": "(1-$SLA)*sum(increase(http_server_requests_seconds_count{namespace=\"$namespace\", uri=~\"$slo_money_uri\"}[$__range:]))",
+              "instant": false,
+              "interval": "",
+              "legendFormat": "",
+              "refId": "A"
+            }
+          ],
+          "title": "Bad requests error budget",
+          "type": "stat"
+        },
+        {
+          "datasource": null,
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "custom": {},
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "red",
+                    "value": null
+                  },
+                  {
+                    "color": "green",
+                    "value": 0
+                  }
+                ]
+              },
+              "unit": "none"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 7,
+            "w": 4,
+            "x": 12,
+            "y": 17
+          },
+          "id": 77,
+          "options": {
+            "colorMode": "value",
+            "graphMode": "area",
+            "justifyMode": "auto",
+            "orientation": "auto",
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "text": {},
+            "textMode": "auto"
+          },
+          "pluginVersion": "7.4.2",
+          "targets": [
+            {
+              "expr": "(1-$SLA)*sum(increase(http_server_requests_seconds_count{namespace=\"$namespace\", uri=~\"$slo_money_uri\"}[$__range:]))-(sum(increase(http_server_requests_seconds_count{namespace=\"$namespace\", uri=~\"$slo_atol_url\", status=~\"5..\"}[$__range:])) or vector(0))",
+              "instant": false,
+              "interval": "",
+              "legendFormat": "",
+              "refId": "A"
+            }
+          ],
+          "title": "Available error requests",
+          "type": "stat"
+        },
+        {
+          "datasource": null,
+          "description": "",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "custom": {},
+              "decimals": 4,
+              "mappings": [],
+              "max": 1,
+              "min": 0,
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "red",
+                    "value": null
+                  },
+                  {
+                    "color": "green",
+                    "value": 0.99999
+                  }
+                ]
+              },
+              "unit": "percentunit"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 7,
+            "w": 4,
+            "x": 0,
+            "y": 24
+          },
+          "id": 78,
+          "maxPerRow": 3,
+          "options": {
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "showThresholdLabels": false,
+            "showThresholdMarkers": true,
+            "text": {}
+          },
+          "pluginVersion": "7.4.2",
+          "repeatDirection": "h",
+          "targets": [
+            {
+              "expr": "sum  (increase(spring_integration_send_seconds_count{namespace=\"$namespace\", name=~\"$slo_money_queue\", result=\"success\"}[$__range])) /  sum (increase(spring_integration_send_seconds_count{namespace=\"$namespace\", name=~\"$slo_money_queue\"}[$__range]))",
+              "instant": true,
+              "interval": "1h",
+              "legendFormat": "{{name}}",
+              "refId": "A"
+            }
+          ],
+          "title": "Availability queue",
+          "type": "gauge"
+        },
+        {
+          "datasource": null,
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "custom": {},
+              "mappings": [],
+              "max": 0.4,
+              "min": 0,
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  },
+                  {
+                    "color": "yellow",
+                    "value": 0.2
+                  },
+                  {
+                    "color": "red",
+                    "value": 0.3
+                  }
+                ]
+              },
+              "unit": "s"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 7,
+            "w": 4,
+            "x": 4,
+            "y": 24
+          },
+          "id": 79,
+          "options": {
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "showThresholdLabels": false,
+            "showThresholdMarkers": true,
+            "text": {}
+          },
+          "pluginVersion": "7.4.2",
+          "targets": [
+            {
+              "expr": "sum (increase(spring_integration_send_seconds_sum{namespace=\"$namespace\", name=~\"$slo_money_queue\"}[$__range])) /  sum (increase(spring_integration_send_seconds_count{namespace=\"$namespace\", name=~\"$slo_money_queue\"}[$__range]))",
+              "hide": false,
+              "interval": "",
+              "legendFormat": "",
+              "refId": "A"
+            }
+          ],
+          "title": "Average queue",
+          "type": "gauge"
+        },
+        {
+          "datasource": null,
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "custom": {},
+              "decimals": 4,
+              "mappings": [],
+              "max": 1,
+              "min": 0,
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "red",
+                    "value": null
+                  },
+                  {
+                    "color": "green",
+                    "value": 0.99999
+                  }
+                ]
+              },
+              "unit": "percentunit"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 7,
+            "w": 4,
+            "x": 0,
+            "y": 31
+          },
+          "id": 83,
+          "maxPerRow": 3,
+          "options": {
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "showThresholdLabels": false,
+            "showThresholdMarkers": true,
+            "text": {}
+          },
+          "pluginVersion": "7.4.2",
+          "repeatDirection": "h",
+          "targets": [
+            {
+              "expr": "sum(increase(http_client_requests_seconds_count{namespace=\"$namespace\", status!~\"5..\", uri=~\"$slo_money_sberbank\"}[$__range:])) by (namespace) / sum(increase(http_client_requests_seconds_count{namespace=\"$namespace\", uri=~\"$slo_money_sberbank\"}[$__range:])) by (namespace)",
+              "instant": true,
+              "interval": "1h",
+              "legendFormat": "Availability",
+              "refId": "A"
+            }
+          ],
+          "title": "Availability sberbank",
+          "type": "gauge"
+        },
+        {
+          "datasource": null,
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "custom": {},
+              "mappings": [],
+              "max": 0.9,
+              "min": 0,
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  },
+                  {
+                    "color": "yellow",
+                    "value": 0.3
+                  },
+                  {
+                    "color": "red",
+                    "value": 0.6
+                  }
+                ]
+              },
+              "unit": "s"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 7,
+            "w": 4,
+            "x": 4,
+            "y": 31
+          },
+          "id": 81,
+          "maxPerRow": 3,
+          "options": {
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "showThresholdLabels": false,
+            "showThresholdMarkers": true,
+            "text": {}
+          },
+          "pluginVersion": "7.4.2",
+          "repeatDirection": "h",
+          "targets": [
+            {
+              "expr": "histogram_quantile(0.99, sum(rate(http_client_requests_seconds_bucket{namespace=\"$namespace\", uri=~\"$slo_money_sberbank\"}[$__range:])) by (le))",
+              "hide": false,
+              "interval": "",
+              "legendFormat": "",
+              "refId": "B"
+            }
+          ],
+          "title": "99 percentile sberbank",
+          "type": "gauge"
+        }
+      ],
+      "title": "Списание денег",
+      "type": "row"
+    },
+    {
+      "collapsed": true,
+      "datasource": null,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 17
+      },
+      "id": 89,
+      "panels": [
+        {
+          "datasource": null,
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "custom": {},
+              "decimals": 4,
+              "mappings": [],
+              "max": 1,
+              "min": 0,
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "red",
+                    "value": null
+                  },
+                  {
+                    "color": "green",
+                    "value": 0.99999
+                  }
+                ]
+              },
+              "unit": "percentunit"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 7,
+            "w": 4,
+            "x": 0,
+            "y": 18
+          },
+          "id": 90,
+          "maxPerRow": 3,
+          "options": {
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "showThresholdLabels": false,
+            "showThresholdMarkers": true,
+            "text": {}
+          },
+          "pluginVersion": "7.4.2",
+          "repeatDirection": "h",
+          "targets": [
+            {
+              "expr": "sum(increase(http_server_requests_seconds_count{namespace=\"$namespace\", status!~\"5..\", uri=~\"$slo_notification_rui\"}[$__range:])) by (namespace) / sum(increase(http_server_requests_seconds_count{namespace=\"$namespace\", uri=~\"$slo_notification_rui\"}[$__range:])) by (namespace)",
+              "instant": true,
+              "interval": "1h",
+              "legendFormat": "{{uri}}",
+              "refId": "A"
+            }
+          ],
+          "title": "Availability",
+          "type": "gauge"
+        },
+        {
+          "datasource": null,
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "custom": {},
+              "mappings": [],
+              "max": 0.9,
+              "min": 0,
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  },
+                  {
+                    "color": "yellow",
+                    "value": 0.3
+                  },
+                  {
+                    "color": "red",
+                    "value": 0.6
+                  }
+                ]
+              },
+              "unit": "s"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 7,
+            "w": 4,
+            "x": 4,
+            "y": 18
+          },
+          "id": 91,
+          "maxPerRow": 3,
+          "options": {
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "showThresholdLabels": false,
+            "showThresholdMarkers": true,
+            "text": {}
+          },
+          "pluginVersion": "7.4.2",
+          "repeatDirection": "h",
+          "targets": [
+            {
+              "expr": "histogram_quantile(0.99, sum(rate(http_server_requests_seconds_bucket{namespace=\"$namespace\", uri=~\"$slo_notification_rui\"}[$__range:])) by (le))",
+              "hide": false,
+              "interval": "",
+              "legendFormat": "",
+              "refId": "B"
+            }
+          ],
+          "title": "99 percentile",
+          "type": "gauge"
+        },
+        {
+          "datasource": null,
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "custom": {},
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "red",
+                    "value": null
+                  },
+                  {
+                    "color": "green",
+                    "value": 0
+                  }
+                ]
+              },
+              "unit": "none"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 7,
+            "w": 4,
+            "x": 8,
+            "y": 18
+          },
+          "id": 92,
+          "options": {
+            "colorMode": "value",
+            "graphMode": "area",
+            "justifyMode": "auto",
+            "orientation": "auto",
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "text": {},
+            "textMode": "auto"
+          },
+          "pluginVersion": "7.4.2",
+          "targets": [
+            {
+              "expr": "(1-$SLA)*sum(increase(http_server_requests_seconds_count{namespace=\"$namespace\", uri=~\"$slo_notification_rui\"}[$__range:]))",
+              "instant": false,
+              "interval": "",
+              "legendFormat": "",
+              "refId": "A"
+            }
+          ],
+          "title": "Bad requests error budget",
+          "type": "stat"
+        },
+        {
+          "datasource": null,
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "custom": {},
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "red",
+                    "value": null
+                  },
+                  {
+                    "color": "green",
+                    "value": 0
+                  }
+                ]
+              },
+              "unit": "none"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 7,
+            "w": 4,
+            "x": 12,
+            "y": 18
+          },
+          "id": 93,
+          "options": {
+            "colorMode": "value",
+            "graphMode": "area",
+            "justifyMode": "auto",
+            "orientation": "auto",
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "text": {},
+            "textMode": "auto"
+          },
+          "pluginVersion": "7.4.2",
+          "targets": [
+            {
+              "expr": "(1-$SLA)*sum(increase(http_server_requests_seconds_count{namespace=\"$namespace\", uri=~\"$slo_notification_rui\"}[$__range:]))-(sum(increase(http_server_requests_seconds_count{namespace=\"$namespace\", uri=~\"$slo_notification_rui\", status=~\"5..\"}[$__range:])) or vector(0))",
+              "instant": false,
+              "interval": "",
+              "legendFormat": "",
+              "refId": "A"
+            }
+          ],
+          "title": "Available error requests",
+          "type": "stat"
+        }
+      ],
+      "title": "Получение нотификации об оплате заказа",
+      "type": "row"
+    },
+    {
+      "collapsed": true,
+      "datasource": null,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 18
+      },
+      "id": 95,
+      "panels": [
+        {
+          "datasource": null,
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "custom": {},
+              "decimals": 4,
+              "mappings": [],
+              "max": 1,
+              "min": 0,
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "red",
+                    "value": null
+                  },
+                  {
+                    "color": "green",
+                    "value": 0.99999
+                  }
+                ]
+              },
+              "unit": "percentunit"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 7,
+            "w": 4,
+            "x": 0,
+            "y": 19
+          },
+          "id": 96,
+          "maxPerRow": 3,
+          "options": {
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "showThresholdLabels": false,
+            "showThresholdMarkers": true,
+            "text": {}
+          },
+          "pluginVersion": "7.4.2",
+          "repeatDirection": "h",
+          "targets": [
+            {
+              "expr": "sum(increase(http_server_requests_seconds_count{namespace=\"$namespace\", status!~\"5..\", uri=~\"$slo_refund_url\"}[$__range:])) by (namespace) / sum(increase(http_server_requests_seconds_count{namespace=\"$namespace\", uri=~\"$slo_refund_url\"}[$__range:])) by (namespace)",
+              "instant": true,
+              "interval": "1h",
+              "legendFormat": "{{uri}}",
+              "refId": "A"
+            }
+          ],
+          "title": "Availability",
+          "type": "gauge"
+        },
+        {
+          "datasource": null,
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "custom": {},
+              "mappings": [],
+              "max": 0.9,
+              "min": 0,
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  },
+                  {
+                    "color": "yellow",
+                    "value": 0.3
+                  },
+                  {
+                    "color": "red",
+                    "value": 0.6
+                  }
+                ]
+              },
+              "unit": "s"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 7,
+            "w": 4,
+            "x": 4,
+            "y": 19
+          },
+          "id": 97,
+          "maxPerRow": 3,
+          "options": {
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "showThresholdLabels": false,
+            "showThresholdMarkers": true,
+            "text": {}
+          },
+          "pluginVersion": "7.4.2",
+          "repeatDirection": "h",
+          "targets": [
+            {
+              "expr": "histogram_quantile(0.99, sum(rate(http_server_requests_seconds_bucket{namespace=\"$namespace\", uri=~\"$slo_refund_url\"}[$__range:])) by (le))",
+              "hide": false,
+              "interval": "",
+              "legendFormat": "",
+              "refId": "B"
+            }
+          ],
+          "title": "99 percentile",
+          "type": "gauge"
+        },
+        {
+          "datasource": null,
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "custom": {},
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "red",
+                    "value": null
+                  },
+                  {
+                    "color": "green",
+                    "value": 0
+                  }
+                ]
+              },
+              "unit": "none"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 7,
+            "w": 4,
+            "x": 8,
+            "y": 19
+          },
+          "id": 98,
+          "options": {
+            "colorMode": "value",
+            "graphMode": "area",
+            "justifyMode": "auto",
+            "orientation": "auto",
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "text": {},
+            "textMode": "auto"
+          },
+          "pluginVersion": "7.4.2",
+          "targets": [
+            {
+              "expr": "(1-$SLA)*sum(increase(http_server_requests_seconds_count{namespace=\"$namespace\", uri=~\"$slo_refund_url\"}[$__range:]))",
+              "instant": false,
+              "interval": "",
+              "legendFormat": "",
+              "refId": "A"
+            }
+          ],
+          "title": "Bad requests error budget",
+          "type": "stat"
+        },
+        {
+          "datasource": null,
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "custom": {},
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "red",
+                    "value": null
+                  },
+                  {
+                    "color": "green",
+                    "value": 0
+                  }
+                ]
+              },
+              "unit": "none"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 7,
+            "w": 4,
+            "x": 12,
+            "y": 19
+          },
+          "id": 99,
+          "options": {
+            "colorMode": "value",
+            "graphMode": "area",
+            "justifyMode": "auto",
+            "orientation": "auto",
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "text": {},
+            "textMode": "auto"
+          },
+          "pluginVersion": "7.4.2",
+          "targets": [
+            {
+              "expr": "(1-$SLA)*sum(increase(http_server_requests_seconds_count{namespace=\"$namespace\", uri=~\"$slo_refund_url\"}[$__range:]))-(sum(increase(http_server_requests_seconds_count{namespace=\"$namespace\", uri=~\"$slo_refund_url\", status=~\"5..\"}[$__range:])) or vector(0))",
+              "instant": false,
+              "interval": "",
+              "legendFormat": "",
+              "refId": "A"
+            }
+          ],
+          "title": "Available error requests",
+          "type": "stat"
+        },
+        {
+          "datasource": null,
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "custom": {},
+              "decimals": 4,
+              "mappings": [],
+              "max": 1,
+              "min": 0,
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "red",
+                    "value": null
+                  },
+                  {
+                    "color": "green",
+                    "value": 0.99999
+                  }
+                ]
+              },
+              "unit": "percentunit"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 7,
+            "w": 4,
+            "x": 0,
+            "y": 26
+          },
+          "id": 100,
+          "maxPerRow": 3,
+          "options": {
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "showThresholdLabels": false,
+            "showThresholdMarkers": true,
+            "text": {}
+          },
+          "pluginVersion": "7.4.2",
+          "repeatDirection": "h",
+          "targets": [
+            {
+              "expr": "sum(increase(http_client_requests_seconds_count{namespace=\"$namespace\", status!~\"5..\", uri=~\"$slo_refund_sberbank\"}[$__range:])) by (namespace) / sum(increase(http_client_requests_seconds_count{namespace=\"$namespace\", uri=~\"$slo_refund_sberbank\"}[$__range:])) by (namespace)",
+              "instant": true,
+              "interval": "1h",
+              "legendFormat": "Availability",
+              "refId": "A"
+            }
+          ],
+          "title": "Availability sberbank",
+          "type": "gauge"
+        },
+        {
+          "datasource": null,
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "custom": {},
+              "mappings": [],
+              "max": 0.9,
+              "min": 0,
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  },
+                  {
+                    "color": "yellow",
+                    "value": 0.3
+                  },
+                  {
+                    "color": "red",
+                    "value": 0.6
+                  }
+                ]
+              },
+              "unit": "s"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 7,
+            "w": 4,
+            "x": 4,
+            "y": 26
+          },
+          "id": 101,
+          "maxPerRow": 3,
+          "options": {
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "showThresholdLabels": false,
+            "showThresholdMarkers": true,
+            "text": {}
+          },
+          "pluginVersion": "7.4.2",
+          "repeatDirection": "h",
+          "targets": [
+            {
+              "expr": "histogram_quantile(0.99, sum(rate(http_client_requests_seconds_bucket{namespace=\"$namespace\", uri=~\"$slo_refund_sberbank\"}[$__range:])) by (le))",
+              "hide": false,
+              "interval": "",
+              "legendFormat": "",
+              "refId": "B"
+            }
+          ],
+          "title": "99 percentile sberbank",
+          "type": "gauge"
+        }
+      ],
+      "title": "Возврат заказа в банке",
+      "type": "row"
+    },
+    {
+      "collapsed": true,
+      "datasource": null,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 19
+      },
+      "id": 121,
+      "panels": [
+        {
+          "datasource": null,
+          "description": "",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "custom": {},
+              "decimals": 4,
+              "mappings": [],
+              "max": 1,
+              "min": 0,
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "red",
+                    "value": null
+                  },
+                  {
+                    "color": "green",
+                    "value": 0.99999
+                  }
+                ]
+              },
+              "unit": "percentunit"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 7,
+            "w": 4,
+            "x": 0,
+            "y": 20
+          },
+          "id": 122,
+          "maxPerRow": 3,
+          "options": {
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "showThresholdLabels": false,
+            "showThresholdMarkers": true,
+            "text": {}
+          },
+          "pluginVersion": "7.4.2",
+          "repeatDirection": "h",
+          "targets": [
+            {
+              "expr": "sum  (increase(spring_integration_send_seconds_count{namespace=\"$namespace\", name=~\"$slo_tpnet_reg_queue\", result=\"success\"}[$__range])) /  sum (increase(spring_integration_send_seconds_count{namespace=\"$namespace\", name=~\"$slo_tpnet_reg_queue\"}[$__range]))",
+              "instant": true,
+              "interval": "1h",
+              "legendFormat": "{{name}}",
+              "refId": "A"
+            }
+          ],
+          "title": "Availability queue",
+          "type": "gauge"
+        },
+        {
+          "datasource": null,
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "custom": {},
+              "mappings": [],
+              "max": 0.4,
+              "min": 0,
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  },
+                  {
+                    "color": "yellow",
+                    "value": 0.2
+                  },
+                  {
+                    "color": "red",
+                    "value": 0.3
+                  }
+                ]
+              },
+              "unit": "s"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 7,
+            "w": 4,
+            "x": 4,
+            "y": 20
+          },
+          "id": 123,
+          "options": {
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "showThresholdLabels": false,
+            "showThresholdMarkers": true,
+            "text": {}
+          },
+          "pluginVersion": "7.4.2",
+          "targets": [
+            {
+              "expr": "sum (increase(spring_integration_send_seconds_sum{namespace=\"$namespace\", name=~\"$slo_tpnet_queue\"}[$__range])) /  sum (increase(spring_integration_send_seconds_count{namespace=\"$namespace\", name=~\"$slo_tpnet_queue\"}[$__range]))",
+              "hide": false,
+              "interval": "",
+              "legendFormat": "",
+              "refId": "A"
+            }
+          ],
+          "title": "Average queue",
+          "type": "gauge"
+        }
+      ],
+      "title": "Регистрация транзакций в TpNet",
+      "type": "row"
+    },
+    {
+      "collapsed": true,
+      "datasource": null,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 20
+      },
+      "id": 103,
+      "panels": [
+        {
+          "datasource": null,
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "custom": {},
+              "decimals": 4,
+              "mappings": [],
+              "max": 1,
+              "min": 0,
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "red",
+                    "value": null
+                  },
+                  {
+                    "color": "green",
+                    "value": 0.99999
+                  }
+                ]
+              },
+              "unit": "percentunit"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 7,
+            "w": 4,
+            "x": 0,
+            "y": 21
+          },
+          "id": 104,
+          "maxPerRow": 3,
+          "options": {
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "showThresholdLabels": false,
+            "showThresholdMarkers": true,
+            "text": {}
+          },
+          "pluginVersion": "7.4.2",
+          "repeatDirection": "h",
+          "targets": [
+            {
+              "expr": "sum(increase(http_server_requests_seconds_count{namespace=\"$namespace\", status!~\"5..\", uri=~\"$slo_confirmation_url\"}[$__range:])) by (namespace) / sum(increase(http_server_requests_seconds_count{namespace=\"$namespace\", uri=~\"$slo_confirmation_url\"}[$__range:])) by (namespace)",
+              "instant": true,
+              "interval": "1h",
+              "legendFormat": "{{uri}}",
+              "refId": "A"
+            }
+          ],
+          "title": "Availability",
+          "type": "gauge"
+        },
+        {
+          "datasource": null,
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "custom": {},
+              "mappings": [],
+              "max": 0.9,
+              "min": 0,
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  },
+                  {
+                    "color": "yellow",
+                    "value": 0.3
+                  },
+                  {
+                    "color": "red",
+                    "value": 0.6
+                  }
+                ]
+              },
+              "unit": "s"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 7,
+            "w": 4,
+            "x": 4,
+            "y": 21
+          },
+          "id": 105,
+          "maxPerRow": 3,
+          "options": {
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "showThresholdLabels": false,
+            "showThresholdMarkers": true,
+            "text": {}
+          },
+          "pluginVersion": "7.4.2",
+          "repeatDirection": "h",
+          "targets": [
+            {
+              "expr": "histogram_quantile(0.99, sum(rate(http_server_requests_seconds_bucket{namespace=\"$namespace\", uri=~\"$slo_confirmation_url\"}[$__range:])) by (le))",
+              "hide": false,
+              "interval": "",
+              "legendFormat": "",
+              "refId": "B"
+            }
+          ],
+          "title": "99 percentile",
+          "type": "gauge"
+        },
+        {
+          "datasource": null,
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "custom": {},
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "red",
+                    "value": null
+                  },
+                  {
+                    "color": "green",
+                    "value": 0
+                  }
+                ]
+              },
+              "unit": "none"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 7,
+            "w": 4,
+            "x": 8,
+            "y": 21
+          },
+          "id": 106,
+          "options": {
+            "colorMode": "value",
+            "graphMode": "area",
+            "justifyMode": "auto",
+            "orientation": "auto",
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "text": {},
+            "textMode": "auto"
+          },
+          "pluginVersion": "7.4.2",
+          "targets": [
+            {
+              "expr": "(1-$SLA)*sum(increase(http_server_requests_seconds_count{namespace=\"$namespace\", uri=~\"$slo_confirmation_url\"}[$__range:]))",
+              "instant": false,
+              "interval": "",
+              "legendFormat": "",
+              "refId": "A"
+            }
+          ],
+          "title": "Bad requests error budget",
+          "type": "stat"
+        },
+        {
+          "datasource": null,
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "custom": {},
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "red",
+                    "value": null
+                  },
+                  {
+                    "color": "green",
+                    "value": 0
+                  }
+                ]
+              },
+              "unit": "none"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 7,
+            "w": 4,
+            "x": 12,
+            "y": 21
+          },
+          "id": 107,
+          "options": {
+            "colorMode": "value",
+            "graphMode": "area",
+            "justifyMode": "auto",
+            "orientation": "auto",
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "text": {},
+            "textMode": "auto"
+          },
+          "pluginVersion": "7.4.2",
+          "targets": [
+            {
+              "expr": "(1-$SLA)*sum(increase(http_server_requests_seconds_count{namespace=\"$namespace\", uri=~\"$slo_confirmation_url\"}[$__range:]))-(sum(increase(http_server_requests_seconds_count{namespace=\"$namespace\", uri=~\"$slo_confirmation_url\", status=~\"5..\"}[$__range:])) or vector(0))",
+              "instant": false,
+              "interval": "",
+              "legendFormat": "",
+              "refId": "A"
+            }
+          ],
+          "title": "Available error requests",
+          "type": "stat"
+        },
+        {
+          "datasource": null,
+          "description": "",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "custom": {},
+              "decimals": 4,
+              "mappings": [],
+              "max": 1,
+              "min": 0,
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "red",
+                    "value": null
+                  },
+                  {
+                    "color": "green",
+                    "value": 0.99999
+                  }
+                ]
+              },
+              "unit": "percentunit"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 7,
+            "w": 4,
+            "x": 0,
+            "y": 28
+          },
+          "id": 124,
+          "maxPerRow": 3,
+          "options": {
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "showThresholdLabels": false,
+            "showThresholdMarkers": true,
+            "text": {}
+          },
+          "pluginVersion": "7.4.2",
+          "repeatDirection": "h",
+          "targets": [
+            {
+              "expr": "sum  (increase(spring_integration_send_seconds_count{namespace=\"$namespace\", name=~\"$slo_confirmation_queue\", result=\"success\"}[$__range])) /  sum (increase(spring_integration_send_seconds_count{namespace=\"$namespace\", name=~\"$slo_confirmation_queue\"}[$__range]))",
+              "instant": true,
+              "interval": "1h",
+              "legendFormat": "{{name}}",
+              "refId": "A"
+            }
+          ],
+          "title": "Availability queue",
+          "type": "gauge"
+        },
+        {
+          "datasource": null,
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "custom": {},
+              "mappings": [],
+              "max": 0.4,
+              "min": 0,
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  },
+                  {
+                    "color": "yellow",
+                    "value": 0.2
+                  },
+                  {
+                    "color": "red",
+                    "value": 0.3
+                  }
+                ]
+              },
+              "unit": "s"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 7,
+            "w": 4,
+            "x": 4,
+            "y": 28
+          },
+          "id": 125,
+          "options": {
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "showThresholdLabels": false,
+            "showThresholdMarkers": true,
+            "text": {}
+          },
+          "pluginVersion": "7.4.2",
+          "targets": [
+            {
+              "expr": "sum (increase(spring_integration_send_seconds_sum{namespace=\"$namespace\", name=~\"$slo_confirmation_queue\"}[$__range])) /  sum (increase(spring_integration_send_seconds_count{namespace=\"$namespace\", name=~\"$slo_confirmation_queue\"}[$__range]))",
+              "hide": false,
+              "interval": "",
+              "legendFormat": "",
+              "refId": "A"
+            }
+          ],
+          "title": "Average queue",
+          "type": "gauge"
+        }
+      ],
+      "title": "Подтверждение от TpNet",
+      "type": "row"
+    },
+    {
+      "collapsed": true,
+      "datasource": null,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 21
+      },
+      "id": 109,
+      "panels": [
+        {
+          "datasource": null,
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "custom": {},
+              "decimals": 4,
+              "mappings": [],
+              "max": 1,
+              "min": 0,
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "red",
+                    "value": null
+                  },
+                  {
+                    "color": "green",
+                    "value": 0.99999
+                  }
+                ]
+              },
+              "unit": "percentunit"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 7,
+            "w": 4,
+            "x": 0,
+            "y": 22
+          },
+          "id": 110,
+          "maxPerRow": 3,
+          "options": {
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "showThresholdLabels": false,
+            "showThresholdMarkers": true,
+            "text": {}
+          },
+          "pluginVersion": "7.4.2",
+          "repeatDirection": "h",
+          "targets": [
+            {
+              "expr": "sum(increase(http_server_requests_seconds_count{namespace=\"$namespace\", status!~\"5..\", uri=~\"$slo_giveaway_url\"}[$__range:])) by (namespace) / sum(increase(http_server_requests_seconds_count{namespace=\"$namespace\", uri=~\"$slo_giveaway_url\"}[$__range:])) by (namespace)",
+              "instant": true,
+              "interval": "1h",
+              "legendFormat": "{{uri}}",
+              "refId": "A"
+            }
+          ],
+          "title": "Availability",
+          "type": "gauge"
+        },
+        {
+          "datasource": null,
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "custom": {},
+              "mappings": [],
+              "max": 0.9,
+              "min": 0,
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  },
+                  {
+                    "color": "yellow",
+                    "value": 0.3
+                  },
+                  {
+                    "color": "red",
+                    "value": 0.6
+                  }
+                ]
+              },
+              "unit": "s"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 7,
+            "w": 4,
+            "x": 4,
+            "y": 22
+          },
+          "id": 111,
+          "maxPerRow": 3,
+          "options": {
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "showThresholdLabels": false,
+            "showThresholdMarkers": true,
+            "text": {}
+          },
+          "pluginVersion": "7.4.2",
+          "repeatDirection": "h",
+          "targets": [
+            {
+              "expr": "histogram_quantile(0.99, sum(rate(http_server_requests_seconds_bucket{namespace=\"$namespace\", uri=~\"$slo_giveaway_url\"}[$__range:])) by (le))",
+              "hide": false,
+              "interval": "",
+              "legendFormat": "",
+              "refId": "B"
+            }
+          ],
+          "title": "99 percentile",
+          "type": "gauge"
+        },
+        {
+          "datasource": null,
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "custom": {},
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "red",
+                    "value": null
+                  },
+                  {
+                    "color": "green",
+                    "value": 0
+                  }
+                ]
+              },
+              "unit": "none"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 7,
+            "w": 4,
+            "x": 8,
+            "y": 22
+          },
+          "id": 112,
+          "options": {
+            "colorMode": "value",
+            "graphMode": "area",
+            "justifyMode": "auto",
+            "orientation": "auto",
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "text": {},
+            "textMode": "auto"
+          },
+          "pluginVersion": "7.4.2",
+          "targets": [
+            {
+              "expr": "(1-$SLA)*sum(increase(http_server_requests_seconds_count{namespace=\"$namespace\", uri=~\"$slo_giveaway_url\"}[$__range:]))",
+              "instant": false,
+              "interval": "",
+              "legendFormat": "",
+              "refId": "A"
+            }
+          ],
+          "title": "Bad requests error budget",
+          "type": "stat"
+        },
+        {
+          "datasource": null,
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "custom": {},
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "red",
+                    "value": null
+                  },
+                  {
+                    "color": "green",
+                    "value": 0
+                  }
+                ]
+              },
+              "unit": "none"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 7,
+            "w": 4,
+            "x": 12,
+            "y": 22
+          },
+          "id": 113,
+          "options": {
+            "colorMode": "value",
+            "graphMode": "area",
+            "justifyMode": "auto",
+            "orientation": "auto",
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "text": {},
+            "textMode": "auto"
+          },
+          "pluginVersion": "7.4.2",
+          "targets": [
+            {
+              "expr": "(1-$SLA)*sum(increase(http_server_requests_seconds_count{namespace=\"$namespace\", uri=~\"$slo_giveaway_url\"}[$__range:]))-(sum(increase(http_server_requests_seconds_count{namespace=\"$namespace\", uri=~\"$slo_giveaway_url\", status=~\"5..\"}[$__range:])) or vector(0))",
+              "instant": false,
+              "interval": "",
+              "legendFormat": "",
+              "refId": "A"
+            }
+          ],
+          "title": "Available error requests",
+          "type": "stat"
+        }
+      ],
+      "title": "Создание выдачи",
+      "type": "row"
+    },
+    {
+      "collapsed": true,
+      "datasource": null,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 22
+      },
+      "id": 115,
+      "panels": [
+        {
+          "datasource": null,
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "custom": {},
+              "decimals": 4,
+              "mappings": [],
+              "max": 1,
+              "min": 0,
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "red",
+                    "value": null
+                  },
+                  {
+                    "color": "green",
+                    "value": 0.99999
+                  }
+                ]
+              },
+              "unit": "percentunit"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 7,
+            "w": 4,
+            "x": 0,
+            "y": 23
+          },
+          "id": 116,
+          "maxPerRow": 3,
+          "options": {
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "showThresholdLabels": false,
+            "showThresholdMarkers": true,
+            "text": {}
+          },
+          "pluginVersion": "7.4.2",
+          "repeatDirection": "h",
+          "targets": [
+            {
+              "expr": "sum(increase(http_server_requests_seconds_count{namespace=\"$namespace\", status!~\"5..\", uri=~\"$slo_changestatus_url\"}[$__range:])) by (namespace) / sum(increase(http_server_requests_seconds_count{namespace=\"$namespace\", uri=~\"$slo_changestatus_url\"}[$__range:])) by (namespace)",
+              "instant": true,
+              "interval": "1h",
+              "legendFormat": "{{uri}}",
+              "refId": "A"
+            }
+          ],
+          "title": "Availability",
+          "type": "gauge"
+        },
+        {
+          "datasource": null,
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "custom": {},
+              "mappings": [],
+              "max": 0.9,
+              "min": 0,
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  },
+                  {
+                    "color": "yellow",
+                    "value": 0.3
+                  },
+                  {
+                    "color": "red",
+                    "value": 0.6
+                  }
+                ]
+              },
+              "unit": "s"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 7,
+            "w": 4,
+            "x": 4,
+            "y": 23
+          },
+          "id": 117,
+          "maxPerRow": 3,
+          "options": {
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "showThresholdLabels": false,
+            "showThresholdMarkers": true,
+            "text": {}
+          },
+          "pluginVersion": "7.4.2",
+          "repeatDirection": "h",
+          "targets": [
+            {
+              "expr": "histogram_quantile(0.99, sum(rate(http_server_requests_seconds_bucket{namespace=\"$namespace\", uri=~\"$slo_changestatus_url\"}[$__range:])) by (le))",
+              "hide": false,
+              "interval": "",
+              "legendFormat": "",
+              "refId": "B"
+            }
+          ],
+          "title": "99 percentile",
+          "type": "gauge"
+        },
+        {
+          "datasource": null,
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "custom": {},
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "red",
+                    "value": null
+                  },
+                  {
+                    "color": "green",
+                    "value": 0
+                  }
+                ]
+              },
+              "unit": "none"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 7,
+            "w": 4,
+            "x": 8,
+            "y": 23
+          },
+          "id": 118,
+          "options": {
+            "colorMode": "value",
+            "graphMode": "area",
+            "justifyMode": "auto",
+            "orientation": "auto",
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "text": {},
+            "textMode": "auto"
+          },
+          "pluginVersion": "7.4.2",
+          "targets": [
+            {
+              "expr": "(1-$SLA)*sum(increase(http_server_requests_seconds_count{namespace=\"$namespace\", uri=~\"$slo_changestatus_url\"}[$__range:]))",
+              "instant": false,
+              "interval": "",
+              "legendFormat": "",
+              "refId": "A"
+            }
+          ],
+          "title": "Bad requests error budget",
+          "type": "stat"
+        },
+        {
+          "datasource": null,
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "custom": {},
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "red",
+                    "value": null
+                  },
+                  {
+                    "color": "green",
+                    "value": 0
+                  }
+                ]
+              },
+              "unit": "none"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 7,
+            "w": 4,
+            "x": 12,
+            "y": 23
+          },
+          "id": 119,
+          "options": {
+            "colorMode": "value",
+            "graphMode": "area",
+            "justifyMode": "auto",
+            "orientation": "auto",
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "text": {},
+            "textMode": "auto"
+          },
+          "pluginVersion": "7.4.2",
+          "targets": [
+            {
+              "expr": "(1-$SLA)*sum(increase(http_server_requests_seconds_count{namespace=\"$namespace\", uri=~\"$slo_changestatus_url\"}[$__range:]))-(sum(increase(http_server_requests_seconds_count{namespace=\"$namespace\", uri=~\"$slo_changestatus_url\", status=~\"5..\"}[$__range:])) or vector(0))",
+              "instant": false,
+              "interval": "",
+              "legendFormat": "",
+              "refId": "A"
+            }
+          ],
+          "title": "Available error requests",
+          "type": "stat"
+        },
+        {
+          "datasource": null,
+          "description": "",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "custom": {},
+              "decimals": 4,
+              "mappings": [],
+              "max": 1,
+              "min": 0,
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "red",
+                    "value": null
+                  },
+                  {
+                    "color": "green",
+                    "value": 0.99999
+                  }
+                ]
+              },
+              "unit": "percentunit"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 7,
+            "w": 4,
+            "x": 0,
+            "y": 30
+          },
+          "id": 126,
+          "maxPerRow": 3,
+          "options": {
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "showThresholdLabels": false,
+            "showThresholdMarkers": true,
+            "text": {}
+          },
+          "pluginVersion": "7.4.2",
+          "repeatDirection": "h",
+          "targets": [
+            {
+              "expr": "sum  (increase(spring_integration_send_seconds_count{namespace=\"$namespace\", name=~\"$slo_changestatus_queue\", result=\"success\"}[$__range])) /  sum (increase(spring_integration_send_seconds_count{namespace=\"$namespace\", name=~\"$slo_changestatus_queue\"}[$__range]))",
+              "instant": true,
+              "interval": "1h",
+              "legendFormat": "{{name}}",
+              "refId": "A"
+            }
+          ],
+          "title": "Availability queue",
+          "type": "gauge"
+        },
+        {
+          "datasource": null,
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "custom": {},
+              "mappings": [],
+              "max": 0.4,
+              "min": 0,
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  },
+                  {
+                    "color": "yellow",
+                    "value": 0.2
+                  },
+                  {
+                    "color": "red",
+                    "value": 0.3
+                  }
+                ]
+              },
+              "unit": "s"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 7,
+            "w": 4,
+            "x": 4,
+            "y": 30
+          },
+          "id": 127,
+          "options": {
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "showThresholdLabels": false,
+            "showThresholdMarkers": true,
+            "text": {}
+          },
+          "pluginVersion": "7.4.2",
+          "targets": [
+            {
+              "expr": "sum (increase(spring_integration_send_seconds_sum{namespace=\"$namespace\", name=~\"$slo_changestatus_queue\"}[$__range])) /  sum (increase(spring_integration_send_seconds_count{namespace=\"$namespace\", name=~\"$slo_changestatus_queue\"}[$__range]))",
+              "hide": false,
+              "interval": "",
+              "legendFormat": "",
+              "refId": "A"
+            }
+          ],
+          "title": "Average queue",
+          "type": "gauge"
+        }
+      ],
+      "title": "Отправка сообщения о смене статуса в Solution",
+      "type": "row"
+    }
+  ],
+  "schemaVersion": 27,
+  "style": "dark",
+  "tags": [],
+  "templating": {
+    "list": [
+      {
+        "description": null,
+        "error": null,
+        "hide": 2,
+        "label": null,
+        "name": "namespace",
+        "query": "payment-pb-prod",
+        "skipUrlSync": false,
+        "type": "constant"
+      },
+      {
+        "description": null,
+        "error": null,
+        "hide": 2,
+        "label": null,
+        "name": "excluded_urls",
+        "query": "/actuator.*|.*api-docs.*|.*swagger.*|/metrics|.*webjars.*",
+        "skipUrlSync": false,
+        "type": "constant"
+      },
+      {
+        "description": null,
+        "error": null,
+        "hide": 2,
+        "label": null,
+        "name": "slo_url_availability",
+        "query": ".*availability.*",
+        "skipUrlSync": false,
+        "type": "constant"
+      },
+      {
+        "allValue": null,
+        "current": {
+          "selected": false,
+          "text": "0.99999",
+          "value": "0.99999"
+        },
+        "description": null,
+        "error": null,
+        "hide": 0,
+        "includeAll": false,
+        "label": null,
+        "multi": false,
+        "name": "SLA",
+        "options": [
+          {
+            "selected": false,
+            "text": "0.9",
+            "value": "0.9"
+          },
+          {
+            "selected": false,
+            "text": "0.99",
+            "value": "0.99"
+          },
+          {
+            "selected": false,
+            "text": "0.999",
+            "value": "0.999"
+          },
+          {
+            "selected": false,
+            "text": "0.9999",
+            "value": "0.9999"
+          },
+          {
+            "selected": true,
+            "text": "0.99999",
+            "value": "0.99999"
+          }
+        ],
+        "query": "0.9,0.99,0.999,0.9999,0.99999",
+        "queryValue": "",
+        "skipUrlSync": false,
+        "type": "custom"
+      },
+      {
+        "description": null,
+        "error": null,
+        "hide": 2,
+        "label": null,
+        "name": "slo_url_process",
+        "query": ".*process.*|.*v1/link/.*",
+        "skipUrlSync": false,
+        "type": "constant"
+      },
+      {
+        "description": null,
+        "error": null,
+        "hide": 2,
+        "label": null,
+        "name": "slo_url_bv",
+        "query": "/v1/stores/{storeCode}/pin-code|/v1/stores/{storeCode}/customer-order/{solutionId}",
+        "skipUrlSync": false,
+        "type": "constant"
+      },
+      {
+        "description": null,
+        "error": null,
+        "hide": 2,
+        "label": null,
+        "name": "slo_url_bv2",
+        "query": "/v1/stores/{storeCode}/pin-code|/v1/stores/{storeCode}/sales-order/{solutionId}",
+        "skipUrlSync": false,
+        "type": "constant"
+      },
+      {
+        "description": null,
+        "error": null,
+        "hide": 2,
+        "label": null,
+        "name": "slo_url_task",
+        "query": ".*task.*",
+        "skipUrlSync": false,
+        "type": "constant"
+      },
+      {
+        "description": null,
+        "error": null,
+        "hide": 2,
+        "label": null,
+        "name": "slo_url_solution",
+        "query": "/orders/solution-repository/v2/solutions/{solutionId}",
+        "skipUrlSync": false,
+        "type": "constant"
+      },
+      {
+        "description": null,
+        "error": null,
+        "hide": 2,
+        "label": null,
+        "name": "slo_url_opus",
+        "query": "/opus/api/productrepository/products",
+        "skipUrlSync": false,
+        "type": "constant"
+      },
+      {
+        "description": null,
+        "error": null,
+        "hide": 2,
+        "label": null,
+        "name": "slo_url_task_opus",
+        "query": "/product/v1/products|/products/artmagrepository/nomenclature/v1/stores",
+        "skipUrlSync": false,
+        "type": "constant"
+      },
+      {
+        "description": null,
+        "error": null,
+        "hide": 2,
+        "label": null,
+        "name": "slo_task_queue",
+        "query": "createPaymentTaskInput",
+        "skipUrlSync": false,
+        "type": "constant"
+      },
+      {
+        "description": null,
+        "error": null,
+        "hide": 2,
+        "label": null,
+        "name": "slo_atol_url",
+        "query": "/register-giveaway|/register-refund|/register-sale",
+        "skipUrlSync": false,
+        "type": "constant"
+      },
+      {
+        "description": null,
+        "error": null,
+        "hide": 2,
+        "label": null,
+        "name": "slo_atol_atol",
+        "query": ".*possystem.*",
+        "skipUrlSync": false,
+        "type": "constant"
+      },
+      {
+        "description": null,
+        "error": null,
+        "hide": 2,
+        "label": null,
+        "name": "slo_money_queue",
+        "query": "createSberbankDepositTransactionInput|createSberbankDepositTransactionOutput",
+        "skipUrlSync": false,
+        "type": "constant"
+      },
+      {
+        "description": null,
+        "error": null,
+        "hide": 2,
+        "label": null,
+        "name": "slo_money_uri",
+        "query": "/v1/task/change-status/{taskId}|/v1/task/{taskId}",
+        "skipUrlSync": false,
+        "type": "constant"
+      },
+      {
+        "description": null,
+        "error": null,
+        "hide": 2,
+        "label": null,
+        "name": "slo_money_sberbank",
+        "query": "/payment/rest/deposit.do",
+        "skipUrlSync": false,
+        "type": "constant"
+      },
+      {
+        "description": null,
+        "error": null,
+        "hide": 2,
+        "label": null,
+        "name": "slo_process_sberbank",
+        "query": "/payment/{paymentInstrument}/payment.do|/payment/rest/registerPreAuth.do",
+        "skipUrlSync": false,
+        "type": "constant"
+      },
+      {
+        "description": null,
+        "error": null,
+        "hide": 2,
+        "label": null,
+        "name": "slo_notification_rui",
+        "query": "/notification",
+        "skipUrlSync": false,
+        "type": "constant"
+      },
+      {
+        "description": null,
+        "error": null,
+        "hide": 2,
+        "label": null,
+        "name": "slo_refund_url",
+        "query": "/transaction-refund/{orderId}",
+        "skipUrlSync": false,
+        "type": "constant"
+      },
+      {
+        "description": null,
+        "error": null,
+        "hide": 2,
+        "label": null,
+        "name": "slo_refund_sberbank",
+        "query": "/payment/rest/reverse.do|/payment/rest/refund.do",
+        "skipUrlSync": false,
+        "type": "constant"
+      },
+      {
+        "description": null,
+        "error": null,
+        "hide": 2,
+        "label": null,
+        "name": "slo_confirmation_url",
+        "query": "/v1/task/change-status/{taskId}|/v1/task/edit-quantity/{taskId}|/v1/task/update-deposit-info",
+        "skipUrlSync": false,
+        "type": "constant"
+      },
+      {
+        "description": null,
+        "error": null,
+        "hide": 2,
+        "label": null,
+        "name": "slo_giveaway_url",
+        "query": "/v1/orchestrator/{taskId}/start-give-away|/v1/task/{taskId}/give-away",
+        "skipUrlSync": false,
+        "type": "constant"
+      },
+      {
+        "description": null,
+        "error": null,
+        "hide": 2,
+        "label": null,
+        "name": "slo_changestatus_url",
+        "query": "/v1/task/change-status/{taskId}",
+        "skipUrlSync": false,
+        "type": "constant"
+      },
+      {
+        "description": null,
+        "error": null,
+        "hide": 2,
+        "label": null,
+        "name": "slo_tpnet_reg_queue",
+        "query": ".*processTpnet.*",
+        "skipUrlSync": false,
+        "type": "constant"
+      },
+      {
+        "description": null,
+        "error": null,
+        "hide": 2,
+        "label": null,
+        "name": "slo_confirmation_queue",
+        "query": "tpnetTransactionDepositedInput|tpnetTransactionGivenAwayInput|salesOrderCheckOutInput",
+        "skipUrlSync": false,
+        "type": "constant"
+      },
+      {
+        "description": null,
+        "error": null,
+        "hide": 2,
+        "label": null,
+        "name": "slo_changestatus_queue",
+        "query": "paymentTaskModifiedOutboxedOutput",
+        "skipUrlSync": false,
+        "type": "constant"
+      }
+    ]
+  },
+  "time": {
+    "from": "now-24h",
+    "to": "now"
+  },
+  "timepicker": {},
+  "timezone": "",
+  "title": "SLO",
+  "uid": "OFqc3R47k",
+  "version": 1
+}

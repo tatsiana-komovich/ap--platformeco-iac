@@ -1,0 +1,215 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    role: {{ .Release.Name }}
+    app: {{ include "kube-enforcer.fullname" . }}
+    aqua.component: kubeenforcer
+{{ include "aqua.labels" . | indent 4 }}
+  name: {{ include "kube-enforcer.fullname" . }}
+  namespace: {{ .Release.Namespace }}
+spec:
+  replicas: {{ .Values.ke_ReplicaCount | default "1" }}
+  template:
+    metadata:
+      annotations:
+        checksum/config: {{ printf "%s-%s" (include (print $.Template.BasePath "/kube-enforcer-configmap.yaml") . | sha256sum) (include (print $.Template.BasePath "/kube-enforcer-certs.yaml") . | sha256sum) | sha256sum }}
+      {{- if and (.Values.tolerations) (semverCompare "<1.6-0" .Capabilities.KubeVersion.GitVersion) }}
+        scheduler.alpha.kubernetes.io/tolerations: '{{ toJson .Values.tolerations }}'
+      {{- end }}
+      {{- with .Values.podAnnotations }}
+      {{- range $key,$value := . }}
+        {{ $key }}: {{ $value | quote }}
+      {{- end }}
+      {{- end }}
+      {{- if .Values.vaultSecret.enabled }}
+      {{- with .Values.vaultAnnotations }}
+{{ toYaml . | indent 8 }}
+      {{- end }}
+      {{- end }}
+      labels:
+        role: {{ .Release.Name }}
+        app: {{ include "kube-enforcer.fullname" . }}
+        {{- range $key, $value := .Values.podLabels }}
+        {{- printf "%s: %s" $key (tpl $value $ | quote) | nindent 8 }}
+        {{- end }}
+{{ include "aqua.labels" . | indent 8 }}
+    spec:
+      {{- if .Values.global.dnsNdots }}
+      dnsConfig:
+        options:
+          - name: ndots
+            value: {{ int .Values.global.dnsNdots | quote }}
+      {{- end }}
+      {{- with .Values.securityContext }}
+      securityContext:
+{{ toYaml . | indent 8 }}
+      {{- end }}
+      {{- if or .Values.priorityClass.create .Values.priorityClass.name }}
+      priorityClassName: {{ template "priorityClass" . }}
+      {{- end }}
+      serviceAccountName: {{ template "serviceAccount" . }}
+      containers:
+        - name: kube-enforcer
+          {{- with .Values.container_securityContext }}
+          securityContext:
+{{ toYaml . | indent 12 }}
+          {{- end }}
+          image: "{{ .Values.global.imageCredentials.repositoryUriPrefix }}/{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: "{{ .Values.image.pullPolicy }}"
+          {{- if .Values.vaultSecret.enabled }}
+          command: ["/bin/sh"]
+          args: ["-c", "source {{ .Values.vaultSecret.vaultFilepath }} && ./kubenf "]
+          {{- end }}
+          envFrom:
+            - configMapRef:
+                name: aqua-csp-kube-enforcer
+          env:
+          - name: POD_NAME
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.name
+          {{- if not .Values.vaultSecret.enabled }}
+          - name: AQUA_TOKEN
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Values.aquaSecret.name }}
+                key: token
+          {{- end }}
+          {{- include "extraEnvironmentVars" .Values | nindent 10 }}
+          {{- include "extraSecretEnvironmentVars" .Values | nindent 10 }}
+          ports:
+          {{- if not .Values.kubeEnforcerAdvance.enable }}
+            - containerPort: 8443
+          {{- else }}
+            - containerPort: 8449
+            - containerPort: 8442
+          {{- end }}
+          {{- if not .Values.kubeEnforcerAdvance.enable }}
+          {{- with .Values.livenessProbe }}
+          livenessProbe:
+          {{ toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.readinessProbe }}
+          readinessProbe:
+          {{ toYaml . | nindent 12 }}
+          {{- end }}
+          {{- end }}
+          {{- if and (not .Values.resources) .Values.enforcer.expressMode }}
+          resources:
+            requests:
+              cpu: "200m"
+              memory: "125Mi"
+            limits:
+              cpu: "800m"
+              memory: "750Mi"
+          {{- else }}
+          resources: {{ toYaml .Values.resources | nindent 12 }}
+          {{- end }}
+          volumeMounts:
+            {{- with .Values.extraVolumeMounts }}
+              {{- toYaml . | nindent 12 }}
+            {{- end }}
+            - name: "certs"
+              mountPath: "/certs"
+{{- if .Values.kubeEnforcerAdvance.enable }}
+            - name: "envoy-shared"
+              mountPath: "/etc/aquasec/envoy"
+{{- end }}
+{{- if .Values.TLS.enabled }}
+            - name: "{{ .Values.TLS.secretName }}"
+              mountPath: "/opt/aquasec/ssl/"
+              readOnly: true
+{{- end }}
+{{- if .Values.kubeEnforcerAdvance.enable }}
+        - name: envoy
+          image: "{{ .Values.global.imageCredentials.repositoryUriPrefix }}/{{ .Values.kubeEnforcerAdvance.envoy.image.repository }}:{{ .Values.kubeEnforcerAdvance.envoy.image.tag }}"
+          imagePullPolicy: "{{ .Values.kubeEnforcerAdvance.envoy.image.pullPolicy }}"
+          command: ["/bin/sh", "-c", "cp /etc/envoy/cds.yaml /etc/aquasec/envoy/cds.yaml && touch /etc/aquasec/envoy/ca-certificates.crt && envoy -c /etc/envoy/envoy.yaml"]
+          ports:
+          - containerPort: 8443
+            protocol: TCP
+          volumeMounts:
+          - mountPath: /etc/envoy
+            name: envoy-config
+          - name: "envoy-shared"
+            mountPath: "/etc/aquasec/envoy"
+          - mountPath: "/etc/ssl/envoy"
+            readOnly: true
+{{- if .Values.kubeEnforcerAdvance.envoy.TLS.listener.enabled }}
+            name: "{{ .Values.kubeEnforcerAdvance.envoy.TLS.listener.secretName}}"
+{{- else }}
+            name: "certs"
+{{- end }}
+{{- with .Values.kubeEnforcerAdvance.envoy.livenessProbe }}
+          livenessProbe:
+{{ toYaml . | indent 12 }}
+{{- end }}
+{{- with .Values.kubeEnforcerAdvance.envoy.readinessProbe }}
+          readinessProbe:
+{{ toYaml . | indent 12 }}
+{{- end }}
+{{- with .Values.kubeEnforcerAdvance.envoy.resources }}
+          resources:
+{{ toYaml . | indent 12 }}
+{{- end }}
+{{- end }}
+      volumes:
+        {{- with .Values.extraVolumes }}
+          {{- toYaml . | nindent 8 }}
+        {{- end }}
+        - name: "certs"
+          secret:
+            secretName: {{ .Values.certsSecret.name }}
+{{- if .Values.kubeEnforcerAdvance.enable }}
+        - name: "envoy-config"
+          configMap:
+            name: "{{ .Release.Name }}-envoy-conf"
+        - name: "envoy-shared"
+          emptyDir: {}
+{{- end }}
+        {{- if .Values.TLS.enabled }}
+        - name: "{{ .Values.TLS.secretName }}"
+          secret:
+            defaultMode: 420
+            secretName: {{ .Values.TLS.secretName }}
+            items:
+            - key: {{ .Values.TLS.publicKey_fileName }}
+              path: cert.pem
+            - key: {{ .Values.TLS.privateKey_fileName }}
+              path: key.pem
+            {{- if .Values.TLS.rootCA_fileName }}
+            - key: {{ .Values.TLS.rootCA_fileName }}
+              path: ca.pem
+            {{- end }}
+        {{- end }}
+        {{- if .Values.kubeEnforcerAdvance.envoy.TLS.listener.enabled }}
+        - name: "{{ .Values.kubeEnforcerAdvance.envoy.TLS.listener.secretName}}"
+          secret:
+            defaultMode: 420
+            secretName: {{ .Values.kubeEnforcerAdvance.envoy.TLS.listener.secretName }}
+            items:
+            - key: {{ .Values.kubeEnforcerAdvance.envoy.TLS.listener.publicKey_fileName }}
+              path: server.crt
+            - key: {{ .Values.kubeEnforcerAdvance.envoy.TLS.listener.privateKey_fileName }}
+              path: server.key
+            {{- if .Values.kubeEnforcerAdvance.envoy.TLS.listener.rootCA_fileName }}
+            - key: {{ .Values.kubeEnforcerAdvance.envoy.TLS.listener.rootCA_fileName }}
+              path: rootCA.crt
+            {{- end }}
+        {{- end }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{ toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{ toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{ toYaml . | nindent 8 }}
+      {{ end }}
+  selector:
+    matchLabels:
+      app: {{ include "kube-enforcer.fullname" . }}

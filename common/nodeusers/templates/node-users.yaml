@@ -1,0 +1,11 @@
+{{ range $key, $vol := $.Values.nodeusers }}
+---
+apiVersion: deckhouse.io/v1alpha1
+kind: NodeUser
+metadata:
+  name: {{ $vol.name }}
+spec:
+{{- range $key, $value := $vol.spec }}
+{{- toYaml $key | nindent 2 }}: {{ tpl ($value | toString) $ }}
+{{- end }}
+{{ end }}

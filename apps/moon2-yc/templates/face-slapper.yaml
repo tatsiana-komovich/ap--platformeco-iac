@@ -1,0 +1,49 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: face-slapper
+  namespace: moon
+spec:
+  concurrencyPolicy: Forbid
+  failedJobsHistoryLimit: 3
+  jobTemplate:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: face-slapper
+    spec:
+      template:
+        metadata:
+          creationTimestamp: null
+        spec:
+          containers:
+          - command:
+            - /bin/bash
+            - -c
+            - kubectl get pod -n moon -l moon=browser -ojson |
+              jq -r '.items[] | select(.metadata.creationTimestamp | fromdateiso8601+8000
+              < '`date -u +%s`') | "kubectl delete pod -n " + .metadata.namespace
+              + " " + .metadata.name' | bash
+            image: docker.art.lmru.tech/bitnami/kubectl:1.19.10
+            imagePullPolicy: IfNotPresent
+            name: face-slapper
+            resources:
+              limits:
+                memory: 296Mi
+              requests:
+                memory: 296Mi
+            securityContext:
+              runAsUser: 0
+            terminationMessagePath: /dev/termination-log
+            terminationMessagePolicy: File
+          dnsPolicy: ClusterFirst
+          restartPolicy: Never
+          schedulerName: default-scheduler
+          securityContext: {}
+          serviceAccount: face-slapper-service-account
+          serviceAccountName: face-slapper-service-account
+          terminationGracePeriodSeconds: 30
+  schedule: '*/20 * * * *'
+  startingDeadlineSeconds: 100
+  successfulJobsHistoryLimit: 3
+  suspend: false

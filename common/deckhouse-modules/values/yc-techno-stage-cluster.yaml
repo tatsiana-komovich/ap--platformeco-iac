@@ -1,0 +1,151 @@
+---
+admission-policy-engine:
+  spec:
+    version: 1
+    enabled: true
+  internal-lb-policy: true
+  artifactory-repos:
+    enforcementAction: deny
+
+global:
+  settings:
+    modules:
+      ingressClass: nginx-d8s
+
+istio:
+  enabled: true
+  settings:
+    globalVersion: "1.19"
+    controlPlane:
+      resourcesManagement:
+        vpa:
+          mode: Initial
+    sidecar:
+      resourcesManagement:
+        mode: Static
+        static:
+          limits:
+            cpu: "10"
+            memory: 10Gi
+          requests:
+            cpu: 100m
+            memory: 128Mi
+    alliance:
+      ingressGateway:
+        inlet: LoadBalancer
+        serviceAnnotations:
+          yandex.cpi.flant.com/listener-subnet-id: e2l6nn0el6dm1e5p73ki
+          yandex.cpi.flant.com/target-group-network-id: enpofm2o1fd0e01e2rfb
+        nodeSelector:
+          node-role.deckhouse.io/frontend: ""
+        tolerations:
+          - effect: NoExecute
+            key: dedicated.deckhouse.io
+            operator: Equal
+            value: frontend
+    dataPlane:
+      trafficRedirectionSetupMode: CNIPlugin
+    federation:
+      enabled: true
+    multicluster:
+      enabled: true
+  version: 2
+
+user-authn:
+  enabled: true
+  settings:
+    publishAPI:
+      enabled: true
+      https:
+        global:
+          kubeconfigGeneratorMasterCA: ""
+        mode: Global
+  version: 2
+
+prometheus:
+  enabled: true
+  settings:
+    externalLabels:
+      k8s_cluster: yc-techno-stage
+      project_name: techno
+      datacenter: yc
+      environment: stage
+      platform: yandex
+    highAvailability: false
+    vpa:
+      maxCPU: 4
+      maxMemory: 8Gi
+      longtermMaxCPU: 4
+      longtermMaxMemory: 8Gi
+  version: 2
+
+monitoring-ping:
+  enabled: true
+  settings:
+    externalTargets:
+      - host: api-apim.apps.lmru.tech
+      - host: api-apim-stage.apps.lmru.tech
+      - host: api-yc-elk-kong.apim.lmru.tech
+      - host: api-metrics.platformeco.lmru.tech
+      - host: api-yc.platformeco.lmru.tech
+      - host: api.platformeco.lmru.tech
+      - host: api-stage.platformeco.lmru.tech
+      - host: api-x1.platformeco.lmru.tech
+      - host: api-x1-stage.platformeco.lmru.tech
+      - host: api-x1-kong.apim.lmru.tech
+      - host: api-x1-kong-stage.apim.lmru.tech
+      - host: api-yc-kong.apim.lmru.tech
+      - host: api-x2-kong.apim.lmru.tech
+      - host: api-yc-cloud-studio.platformeco.lmru.tech
+  version: 1
+
+cert-manager:
+  enabled: true
+  settings:
+    enableCAInjector: true
+  version: 1
+
+control-plane-manager:
+  enabled: true
+  settings:
+    apiserver:
+      auditPolicyEnabled: true
+      certSANs:
+        - kubernetes.default.svc.yc-techno-stage.s.mesh
+        - kubernetes.default.svc.techno.s.mesh
+  version: 1
+
+okmeter:
+  enabled: true
+  settings:
+    apiKey: cc8793ea-5f11-462a-98a6-9994ab9fa3ea
+    nodeSelector:
+      node-role.kubernetes.io/control-plane: ""
+    tolerations:
+      - key: node-role.kubernetes.io/control-plane
+        operator: Exists
+      - key: node-role.kubernetes.io/master
+        operator: Exists
+      - key: dedicated
+        operator: Equal
+        value: router
+  version: 1
+
+chrony:
+  enabled: true
+  settings:
+    ntpServers:
+      - time.lmru.tech
+  version: 1
+
+logShipper:
+  enabled: false
+  version: 1
+
+extended-monitoring:
+  enabled: true
+  settings:
+    events:
+      exporterEnabled: true
+      severityLevel: All
+  version: 2

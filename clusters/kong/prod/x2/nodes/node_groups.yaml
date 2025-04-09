@@ -1,0 +1,123 @@
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  name: application-nodes
+spec:
+  chaos:
+    mode: Disabled
+  cloudInstances:
+    classReference:
+      kind: OpenStackInstanceClass
+      name: application-nodes
+    maxPerZone: 2
+    minPerZone: 2
+  disruptions:
+    approvalMode: Automatic
+  nodeType: CloudEphemeral
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  name: loadbalancer
+spec:
+  chaos:
+    mode: Disabled
+  cloudInstances:
+    classReference:
+      kind: OpenStackInstanceClass
+      name: loadbalancer
+    maxPerZone: 4
+    minPerZone: 2
+    maxUnavailablePerZone: 1
+  disruptions:
+    approvalMode: Manual
+  nodeTemplate:
+    labels:
+      node-role/loadbalancer: ""
+    taints:
+      - effect: NoExecute
+        key: dedicated
+        value: loadbalancer
+  nodeType: CloudEphemeral
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  name: system
+spec:
+  chaos:
+    mode: Disabled
+  cloudInstances:
+    classReference:
+      kind: OpenStackInstanceClass
+      name: system
+    maxPerZone: 1
+    minPerZone: 1
+    zones:
+      - PROD_AZ_3
+      - PROD_AZ_2
+  disruptions:
+    approvalMode: Manual
+  kubelet:
+    containerLogMaxFiles: 4
+    containerLogMaxSize: 50Mi
+    resourceReservation:
+      mode: "Off"
+  nodeTemplate:
+    labels:
+      node-role.deckhouse.io/system: ""
+    taints:
+      - effect: NoExecute
+        key: dedicated.deckhouse.io
+        value: system
+  nodeType: CloudEphemeral
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  name: otel-collector
+spec:
+  cloudInstances:
+    classReference:
+      kind: OpenStackInstanceClass
+      name: otel-collector
+    maxPerZone: 2
+    minPerZone: 2
+    zones:
+      - PROD_AZ_1
+      - PROD_AZ_2
+  disruptions:
+    approvalMode: Automatic
+  nodeTemplate:
+    labels:
+      node-role.kubernetes.io/otel-collector: ""
+    taints:
+      - key: dedicated.kubernetes.io
+        value: otel-collector
+        effect: NoExecute
+  nodeType: CloudEphemeral
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  name: otel-system
+spec:
+  cloudInstances:
+    classReference:
+      kind: OpenStackInstanceClass
+      name: otel-system
+    maxPerZone: 1
+    minPerZone: 1
+    zones:
+      - PROD_AZ_1
+  disruptions:
+    approvalMode: Automatic
+  nodeTemplate:
+    labels:
+      node-role/otel-system: ""
+    taints:
+      - key: dedicated
+        value: otel-system
+        effect: NoSchedule
+  nodeType: CloudEphemeral

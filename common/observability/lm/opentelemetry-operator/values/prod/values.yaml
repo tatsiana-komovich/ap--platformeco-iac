@@ -1,0 +1,86 @@
+---
+# Configuration for `open-telemetry/operator` helm chart.
+#
+# Chart repository: https://github.com/open-telemetry/opentelemetry-helm-charts/tree/main/charts/opentelemetry-operator.
+#
+# This config contains only options with non-default values.
+# See the rest in the original config file: https://github.com/open-telemetry/opentelemetry-helm-charts/blob/main/charts/opentelemetry-operator/values.yaml.
+opentelemetry-operator:
+  # Default name from ArgoCD not complaint with DNS-1035.
+  fullnameOverride: "opentelemetry-operator-prod"
+
+  # The operator is used to inject AutoInstrumentation in pods, so it requires stable operation.
+  replicaCount: 2
+
+  ## Pod Disruption Budget configuration
+  pdb:
+    ## Enable/disable a Pod Disruption Budget creation
+    create: true
+    ## Minimum number/percentage of pods that should remain scheduled
+    minAvailable: 1
+
+  ## Run operator only on dedicated nodes.
+  # Keep values in sync with `otel-system` NodeGroup values for clusters.
+  #
+  ## Node labels for pod assignment.
+  # ref: https://kubernetes.io/docs/user-guide/node-selection/
+  nodeSelector:
+    node-role/otel-system: ""
+  ## Tolerations for pod assignment.
+  # ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
+  tolerations:
+    - key: dedicated
+      value: otel-system
+      operator: Equal
+      effect: NoSchedule
+
+  ## Provide OpenTelemetry Operator manager container image and resources.
+  manager:
+    image:
+      repository: docker-remote-ghcrio.art.lmru.tech/open-telemetry/opentelemetry-operator/opentelemetry-operator
+    collectorImage:
+      repository: docker.art.lmru.tech/otel/opentelemetry-collector-contrib
+    # TODO(OBS-2175): Use `art.lmru.tech` for all InstrumentationImages.
+    autoInstrumentationImage:
+    # Feature Gates are a a comma-delimited list of feature gate identifiers.
+    # Prefix a gate with '-' to disable support.
+    # Prefixing a gate with '+' or no prefix will enable support.
+    # A full list of valud identifiers can be found here: https://github.com/open-telemetry/opentelemetry-operator/blob/main/pkg/featuregate/featuregate.go
+    # TODO(OBS-2175): check list.
+    featureGates: ""
+
+    resources:
+      limits:
+        memory: 256Mi
+      requests:
+        cpu: 100m
+        memory: 128Mi
+
+    ## Enable ServiceMonitor for Prometheus metrics scrape
+    serviceMonitor:
+      enabled: true
+      extraLabels:
+        prometheus: main
+
+    ## List of additional cli arguments to configure the manager
+    ## for example: --labels, etc.
+    # TODO(OBS-2175): check list.
+    extraArgs: []
+
+  ## Provide OpenTelemetry Operator kube-rbac-proxy container image.
+  kubeRBACProxy:
+    enabled: true
+    image:
+      repository: docker-remote-quay-io.art.lmru.tech/brancz/kube-rbac-proxy
+    ports:
+      proxyPort: 8443
+
+  ## Admission webhooks make sure only requests with correctly formatted rules will get into the Operator.
+  ## They also enable the sidecar injection for OpenTelemetryCollector and Instrumentation CR's
+  admissionWebhooks:
+    ## https://github.com/open-telemetry/opentelemetry-helm-charts/blob/main/charts/opentelemetry-operator/README.md#tls-certificate-requirement
+    ## TLS Certificate Option 1: Use certManager to generate self-signed certificate.
+    ## certManager must be enabled. If enabled, always takes precendence over options 2 and 3.
+    certManager:
+      # We have a dedicated cert-manager in our cluster so we can disable it here.
+      enabled: false

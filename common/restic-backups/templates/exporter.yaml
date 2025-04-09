@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: restic-exporter
+  annotations:
+    avp.kubernetes.io/path: "{{ .Values.avp_path }}"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: restic-exporter
+  template:
+    metadata:
+      labels:
+        app: restic-exporter
+        prometheus.deckhouse.io/custom-target: backups-restic
+    spec:
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: node-role.k8s.lmru.tech/application
+                    operator: DoesNotExist
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              preference:
+                matchExpressions:
+                  - key: node-role.kubernetes.io/system
+                    operator: Exists
+      imagePullSecrets:
+      - name: regsecret
+      tolerations:
+      - effect: NoSchedule
+        operator: Exists
+      containers:
+      - name: backup
+        command: ["/bin/restic-exporter"]
+        args:
+        - "-listen-address"
+        - ":9137"
+        image: {{ .Values.exporter_image }}
+        imagePullPolicy: IfNotPresent
+        env:
+        {{ include "envs" $ | nindent 10 }}
+        ports:
+        - name: http-metrics
+          containerPort: 9137
+        resources:
+          requests:
+            cpu: 100m
+            memory: 200Mi

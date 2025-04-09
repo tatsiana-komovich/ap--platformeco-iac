@@ -1,0 +1,40 @@
+{{- with $.Values.apiVersion | default "deckhouse.io/v1alpha1" }}
+apiVersion: {{ . }}
+{{- end }}
+kind: DexProvider
+metadata:
+  name: crowd
+  annotations:
+    avp.kubernetes.io/path: "services/data/argocd-secrets"
+spec:
+  crowd:
+    baseURL: https://crowd.lmru.tech/crowd
+    clientID: {{ .Values.DexProvider.clientID }}
+    clientSecret: "<{{ .Values.DexProvider.clientSecret }}>"
+    enableBasicAuth: true
+    groups:
+    {{- if .Values.cluster_authorization.crowd }}
+      {{- range $key, $value := .Values.cluster_authorization.crowd.groups }}
+    - {{ $key }}
+      {{- end }}
+    {{- end }}
+    - it-platform_devops
+    - crowd-sa-devops
+    - crowd-devops-java-admin
+    - crowd-flant-rnd
+    - crowd-flant-alfa
+    - crowd-flant-bravo
+    - crowd-flant-charlie
+    - crowd-flant-echo
+    - crowd-flant-golf
+    - crowd-elk-test-ro
+    - crowd-elk-test-rw
+    - crowd-devops-core-admin
+    - crowd-lm-sre-ro
+    - crowd-grafana-users
+    - crowd-itsec-ro-global
+    - crowd-qacc-rw
+    - crowd-sa-qacc
+    usernamePrompt: Crowd username
+  displayName: Crowd Atlassian
+  type: Crowd

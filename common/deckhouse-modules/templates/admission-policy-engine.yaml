@@ -1,0 +1,194 @@
+{{- with (get .Values "admission-policy-engine") }}
+---
+apiVersion: deckhouse.io/v1alpha1
+kind: ModuleConfig
+metadata:
+  name: admission-policy-engine
+spec:
+  {{- toYaml .spec | nindent 2 }}
+---
+apiVersion: templates.gatekeeper.sh/v1
+kind: ConstraintTemplate
+metadata:
+  annotations:
+    description: Requires container images to match glob pattern from the specified list.
+    metadata.gatekeeper.sh/title: Allowed Repositories
+    metadata.gatekeeper.sh/version: 1.0.0
+    argocd.argoproj.io/hook: PreSync
+  name: d8allowedreposglob
+spec:
+  crd:
+    spec:
+      names:
+        kind: D8AllowedReposGlob
+      validation:
+        legacySchema: false
+        openAPIV3Schema:
+          properties:
+            repos:
+              description: The list of glob patterns a container image is allowed to have. Glob uses the dot '.' as separator by default.
+              items:
+                type: string
+              type: array
+          type: object
+  targets:
+    - rego: |
+        package d8.lmru.tech.operation_policies
+        
+        import future.keywords.in
+        
+        violation[{"msg": msg}] {
+          container := input.review.object.spec.containers[_]
+          satisfied := [result | repo := input.parameters.repos[_]; result := glob.match(repo, null, container.image)]
+          not true in satisfied
+          msg := sprintf("container <%v> has an invalid image repo <%v>, allowed repos are %v", [container.name, container.image, input.parameters.repos])
+        }
+        
+        violation[{"msg": msg}] {
+          container := input.review.object.spec.initContainers[_]
+          satisfied := [result | repo := input.parameters.repos[_]; result := glob.match(repo, null, container.image)]
+          not true in satisfied
+          msg := sprintf("initContainer <%v> has an invalid image repo <%v>, allowed repos are %v", [container.name, container.image, input.parameters.repos])
+        }
+        
+        violation[{"msg": msg}] {
+          container := input.review.object.spec.ephemeralContainers[_]
+          satisfied := [result | repo := input.parameters.repos[_]; result := glob.match(repo, null, container.image)]
+          not true in satisfied
+          msg := sprintf("ephemeralContainer <%v> has an invalid image repo <%v>, allowed repos are %v", [container.name, container.image, input.parameters.repos])
+        }
+      target: admission.k8s.gatekeeper.sh
+---
+apiVersion: constraints.gatekeeper.sh/v1beta1
+kind: D8AllowedReposGlob
+metadata:
+  name: restrict-non-artifactory-repos
+  annotations:
+    argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true
+spec:
+  enforcementAction: {{ dig "artifactory-repos" "enforcementAction" "warn" . }}
+  match:
+    kinds:
+      - apiGroups: [""]
+        kinds: ["Pod"]
+    excludedNamespaces:
+      - kube-*
+      - d8-*
+      - allure
+      - jaeger
+      {{- with (dig "artifactory-repos" "excludedNamespaces" nil .) }}
+        {{- toYaml . | nindent 6}}
+      {{- end }}
+  parameters:
+    repos:
+      - "*.art.lmru.tech/*"
+      {{- with (dig "artifactory-repos" "repos" nil .) }}
+          {{- toYaml . | nindent 6 }}
+      {{- end }}
+
+{{- if (get . "internal-lb-policy") }}
+---
+apiVersion: templates.gatekeeper.sh/v1
+kind: ConstraintTemplate
+metadata:
+  name: k8srequiredannotations
+  annotations:
+    metadata.gatekeeper.sh/title: "Required Annotations"
+    metadata.gatekeeper.sh/version: 1.0.0
+    argocd.argoproj.io/hook: PreSync
+    description: >-
+      Requires resources to contain specified annotations, with values matching
+      provided regular expressions.
+spec:
+  crd:
+    spec:
+      names:
+        kind: K8sRequiredAnnotations
+      validation:
+        openAPIV3Schema:
+          type: object
+          properties:
+            message:
+              type: string
+            annotations:
+              type: array
+              description: >-
+                A list of annotations and values the object must specify.
+              items:
+                type: object
+                properties:
+                  key:
+                    type: string
+                    description: >-
+                      The required annotation.
+                  allowedRegex:
+                    type: string
+                    description: >-
+                      If specified, a regular expression the annotation's value
+                      must match. The value must contain at least one match for
+                      the regular expression.
+  targets:
+    - target: admission.k8s.gatekeeper.sh
+      rego: |
+        package k8srequiredannotations
+        violation[{"msg": msg, "details": {"missing_annotations": missing}}] {
+            input.review.kind.kind == "Service"
+            input.review.object.spec.type == "LoadBalancer"
+            provided := {annotation | input.review.object.metadata.annotations[annotation]}
+            required := {annotation | annotation := input.parameters.annotations[_].key}
+            missing := required - provided
+            count(missing) > 0
+            msg := sprintf("you must provide annotation(s): %v", [missing])
+        }
+        violation[{"msg": msg}] {
+          input.review.kind.kind == "Service"
+          input.review.object.spec.type == "LoadBalancer"
+          value := input.review.object.metadata.annotations[key]
+          expected := input.parameters.annotations[_]
+          expected.key == key
+          expected.allowedRegex != ""
+          not re_match(expected.allowedRegex, value)
+          msg := sprintf("Annotation <%v: %v> does not satisfy allowed regex: %v", [key, value, expected.allowedRegex])
+        }
+---
+apiVersion: constraints.gatekeeper.sh/v1beta1
+kind: K8sRequiredAnnotations
+metadata:
+  name: check-lb-annotation
+  annotations:
+    argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true
+spec:
+  match:
+    kinds:
+      - apiGroups: [""]
+        kinds: ["Service"]
+    excludedNamespaces:
+      - kube-*
+      - d8-*
+  parameters:
+    message: "All services must have annotations for internal LB"
+    annotations:
+      - key: "yandex.cpi.flant.com/listener-subnet-id"
+        allowedRegex: ^[A-Za-z0-9]+$
+{{- end }}
+---
+apiVersion: constraints.gatekeeper.sh/v1beta1
+kind: D8DisallowedTags
+metadata:
+  name: disallow-latest-tag
+spec:
+  enforcementAction: {{ dig "disallowed-tags" "enforcementAction" "warn" . }} # TODO: to change 'enforcementAction' to 'deny' someday
+  match:
+    kinds:
+      - apiGroups: [""]
+        kinds: ["Pod"]
+    excludedNamespaces:
+      - d8-*
+      - okmeter
+  {{- with (dig "disallowed-tags" "excludedNamespaces" "" .) }}
+    {{- toYaml . | nindent 6 }}
+  {{- end }}
+  parameters:
+    tags:
+      - latest
+{{- end }}

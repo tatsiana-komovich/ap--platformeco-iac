@@ -1,0 +1,58 @@
+---
+alertmanager:
+  templates:
+    alertmanager.tmpl: |-
+      '{{ define "generator.url" }} {{ (index .Alerts 0).GeneratorURL | reReplaceAll "&g0.tab=1$" "&g0.tab=0" }} {{ end }}'
+
+  config:
+    global:
+      smtp_from: 'alertmanager@leroy-merlin.ru'
+      smtp_smarthost: 'massmail.hq.ru.corp.leroymerlin.com:25'
+      smtp_require_tls: false
+
+    templates:
+      - '/etc/alertmanager/*.tmpl'
+
+    route:
+      group_by: ['alertname', 'job']
+      receiver: 'void'
+      repeat_interval: 4h
+
+  ## Add your Alertmanager configuration below
+
+      routes:
+        # Transportation - Selling Shipping (by product id)
+        - receiver: 'ss-grafana-oncall'
+          group_by: ['alertname', 'job', 'namespace']
+          matchers:
+            - product_id=~"P0316|P0482|P0745|P0746|P0747|P0748|P0749|P0750|P0751|P0752|P0753|P0442|P0479"
+
+        # Transportation - Delivery to Customer
+        - receiver: 'cds-grafana-oncall'
+          group_by: ['alertname', 'job', 'namespace']
+          matchers:
+            - product_id="P0076"
+
+        # Transportation - GTS
+        - receiver: 'gtsst-grafana-oncall-gts'
+          group_by: ['alertname', 'job', 'namespace']
+          matchers:
+            - product_id=~"P0665|P0666"
+
+    receivers:
+      - name: 'void'
+
+      - name: 'ss-grafana-oncall'
+        webhook_configs:
+          - url: 'https://obs-grafana-oncall-yc-techno.apps.lmru.tech/35/integrations/v1/alertmanager/1Q504TBZNMBZlSa06N0z5r9pU/'
+            send_resolved: true
+
+      - name: 'cds-grafana-oncall'
+        webhook_configs:
+          - url: 'https://obs-grafana-oncall-yc-techno.apps.lmru.tech/95/integrations/v1/alertmanager/rWmka1qQ1klMkOq2980cAgr2n/'
+            send_resolved: true
+
+      - name: 'gtsst-grafana-oncall-gts'
+        webhook_configs:
+          - url: 'https://obs-grafana-oncall-yc-techno.apps.lmru.tech/87/integrations/v1/alertmanager/ZmqL2OPI29Ap1i8Lb4pnltwp4/'
+            send_resolved: true

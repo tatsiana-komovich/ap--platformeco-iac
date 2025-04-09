@@ -1,0 +1,29 @@
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: aqua-bearer-token
+  namespace: aqua
+type: Opaque
+data:
+  bearer_token: '<path:monitoring/data/aqua#aqua-bearer-token-prod|base64encode>'
+
+---
+apiVersion: monitoring.coreos.com/v1alpha1
+kind: ScrapeConfig
+metadata:
+  labels:
+    app: aqua-server-console
+    prometheus: main
+  name: aqua-metrics-main
+spec:
+  authorization:
+    credentials:
+      key: bearer_token
+      name: aqua-bearer-token
+  honorLabels: true
+  metricsPath: /metrics
+  scheme: HTTP
+  staticConfigs:
+    - targets:
+        - aqua-server-console-svc.aqua.svc.techno.p.mesh.:8080

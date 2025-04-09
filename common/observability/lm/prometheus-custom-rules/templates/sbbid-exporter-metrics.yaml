@@ -1,0 +1,19 @@
+apiVersion: deckhouse.io/v1
+kind: CustomPrometheusRules
+metadata:
+  name: lmru-devops-sbbid-exporter-metrics
+spec:
+  groups:
+    - name: lmru-devops.sbbid-exporter.all
+      rules:
+        - expr: |-
+            group (
+              sbbid_exporter_products
+                * on (product_team_id) 
+                group_left (product_team_name, domain_id, cost_center)
+                sbbid_exporter_product_teams
+                  * on (domain_id) group_left (domain_name)
+                  sbbid_exporter_domains
+            )
+            without(pod, service, namespace)
+          record: sbbid_exporter:products:full

@@ -1,0 +1,194 @@
+---
+cluster_authorization:
+  defaults:
+    default_sa_permissions: &default
+      accessLevel: User
+      limitNamespaces:
+        - default
+      allowScale: true
+      allowAccessToSystemNamespaces: true
+      portForwarding: true
+  crowd:
+    groups:
+      crowd-obs-ro:
+        <<: *default
+        accessLevel: User
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+        limitNamespaces:
+          - .*
+      crowd-obs-rw:
+        <<: *default
+        accessLevel: Editor
+        allowScale: true
+        allowAccessToSystemNamespaces: false
+        portForwarding: true
+        limitNamespaces:
+          - .*
+      crowd-obs-admin:
+        <<: *default
+        accessLevel: Admin
+        allowScale: true
+        allowAccessToSystemNamespaces: true
+        portForwarding: true
+        limitNamespaces:
+          - .*
+      crowd-sa-obs:
+        <<: *default
+        accessLevel: SuperAdmin
+        allowAccessToSystemNamespaces: true
+        limitNamespaces:
+          - .*
+      crowd-promaas-ro:
+        <<: *default
+        accessLevel: User
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+        limitNamespaces:
+          - promaas-.*
+      crowd-promaas-rw:
+        <<: *default
+        accessLevel: Editor
+        allowScale: true
+        allowAccessToSystemNamespaces: false
+        portForwarding: true
+        limitNamespaces:
+          - promaas-.*
+      crowd-promaas-admin:
+        <<: *default
+        accessLevel: Admin
+        allowScale: true
+        allowAccessToSystemNamespaces: true
+        portForwarding: true
+        limitNamespaces:
+          - promaas-.*
+      crowd-sa-promaas:
+        <<: *default
+        accessLevel: SuperAdmin
+        allowAccessToSystemNamespaces: true
+        limitNamespaces:
+          - promaas-.*
+      # service level management system
+      crowd-slms-admin:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - slms-.*
+        allowScale: true
+        allowAccessToSystemNamespaces: false
+        portForwarding: true
+      crowd-sa-slms:
+        <<: *default
+        accessLevel: SuperAdmin
+        limitNamespaces:
+          - slms-.*
+        allowScale: true
+        allowAccessToSystemNamespaces: true
+        portForwarding: true
+
+ClusterRole:
+  prometheus-service-levels-user:
+    metadata:
+      annotations:
+        user-authz.deckhouse.io/access-level: User
+      name: prometheus-service-levels:user
+    rules:
+      - apiGroups:
+          - "sloth.slok.dev"
+        resources:
+          - prometheusservicelevels
+        verbs:
+          - get
+          - list
+          - watch
+  prometheus-service-levels-editor:
+    metadata:
+      annotations:
+        user-authz.deckhouse.io/access-level: Editor
+      name: prometheus-service-levels:editor
+    rules:
+      - apiGroups:
+          - "sloth.slok.dev"
+        resources:
+          - prometheusservicelevels
+        verbs:
+          - get
+          - list
+          - watch
+          - update
+          - patch
+          - create
+  prometheus-service-levels-admin:
+    metadata:
+      annotations:
+        user-authz.deckhouse.io/access-level: Admin
+      name: prometheus-service-levels:admin
+    rules:
+      - apiGroups:
+          - "sloth.slok.dev"
+        resources:
+          - prometheusservicelevels
+        verbs:
+          - get
+          - list
+          - watch
+          - update
+          - patch
+          - create
+          - delete
+  #prom rule
+  prometheus-rules-user:
+    metadata:
+      annotations:
+        user-authz.deckhouse.io/access-level: User
+      name: prometheus-rules:user
+    rules:
+      - apiGroups:
+          - "monitoring.coreos.com"
+        resources:
+          - prometheusrules
+        verbs:
+          - get
+          - list
+          - watch
+  prometheus-rules-editor:
+    metadata:
+      annotations:
+        user-authz.deckhouse.io/access-level: Editor
+      name: prometheus-rules:editor
+    rules:
+      - apiGroups:
+          - "monitoring.coreos.com"
+        resources:
+          - prometheusrules
+        verbs:
+          - get
+          - list
+          - watch
+          - update
+          - patch
+          - create
+  prometheus-rules-admin:
+    metadata:
+      annotations:
+        user-authz.deckhouse.io/access-level: Admin
+      name: prometheus-rules:admin
+    rules:
+      - apiGroups:
+          - "monitoring.coreos.com"
+        resources:
+          - prometheusrules
+        verbs:
+          - get
+          - list
+          - watch
+          - update
+          - patch
+          - create
+          - delete
+
+DexProvider:
+  clientID: k8s-yc-obs-metrics-prod
+  clientSecret: crowd_app_k8s-yc-obs-metrics-prod

@@ -1,0 +1,165 @@
+---
+extended_monitoring_enable_on_all_ns: {}
+
+infra-elklogs:
+  - security.deckhouse.io/pod-policy: privileged
+    namespace_pattern:
+      - ^infra-elklogs$
+
+products:
+  - product-id: P0471
+    namespace_pattern:
+      - ^devops-core-vector$
+
+  - product-id: P0164
+    namespace_pattern:
+      - ^billing-.*
+      - ^billing$
+      - ^infra-billing-.*
+  - product-id: P0948
+    namespace_pattern:
+      - ^psp-.*
+      - ^psp$
+  - product-id: P0949
+    namespace_pattern:
+      - ^rap-.*
+      - ^rap$
+  - product-id: P0950
+    namespace_pattern:
+      - ^src-.*
+      - ^src$
+  - product-id: P1169
+    namespace_pattern:
+      - ^b2bm-.*
+      - ^b2bm$
+  - product-id: P1042
+    namespace_pattern:
+      - ^cashoffice-.*
+      - ^cashoffice$
+  - product-id: P0510
+    namespace_pattern:
+      - ^payment-pdm-.*
+      - ^payment-pdm$
+  - product-id: P0165
+    namespace_pattern:
+      - ^payment-pb-.*
+      - ^payment-pb$
+  - product-id: P0445
+    namespace_pattern:
+      - ^payment-ptm-.*
+      - ^payment-ptm$
+  - product-id: P0405
+    namespace_pattern:
+      - ^payment-wallet-.*
+      - ^payment-wallet$
+  - product-id: P0444
+    namespace_pattern:
+      - ^payment-amc-.*
+      - ^payment-amc$
+  - product-id: P0636
+    namespace_pattern:
+      - ^payment-credit-.*
+      - ^payment-credit$
+  - product-id: P0171
+    namespace_pattern:
+      - ^payment-wfm-.*
+      - ^payment-wfm$
+  - product-id: P0339
+    namespace_pattern:
+      - ^payment-akhq-.*
+      - ^payment-akhq$
+      - ^payment-sre-.*
+      - ^payment-sre$
+      - ^payment-reward-.*
+      - ^payment-reward$
+      - ^payment-devops-.*
+      - ^payment-devops$
+      - ^payment-monitoring-.*
+      - ^payment-monitoring$
+  - product-id: P0717
+    namespace_pattern:
+      - ^payment-pon-.*
+      - ^payment-pon$
+  - product-id: P0084
+    namespace_pattern:
+      - ^pbb-.*
+      - ^pbb$
+  - product-id: P0709
+    namespace_pattern:
+      - ^payment-pof-.*
+      - ^payment-pof$
+  - product-id: P0406
+    namespace_pattern:
+      - ^payment-rf-.*
+      - ^payment-rf$
+  - product-id: P0551
+    namespace_pattern:
+      - ^payment-mtools-.*
+  - product-id: p0461
+    namespace_pattern:
+      - ^payment-staff-calc-.*
+      - ^payment-staff-calc$
+  - product-id: p0191
+    namespace_pattern:
+      - ^bcless-cat$
+
+  - product-id: P0471
+    namespace_pattern:
+      - ^okmeter$
+
+  - product-id: P0729
+    namespace_pattern:
+      - ^otel-opentelemetry$
+
+istio:
+  - istio-injection: enabled
+    namespace_pattern:
+      - ^payment-pof-dev$
+      - ^payment-pof-test$
+      - ^payment-pof-preprod$
+      - ^payment-pon-dev$
+      - ^payment-pon-test$
+      - ^payment-pon-preprod$
+      - ^payment-ptm-dev$
+      - ^payment-ptm-test$
+      - ^payment-ptm-preprod$
+      - ^payment-pb-dev$
+      - ^payment-pb-test$
+      - ^payment-pb-preprod$
+      - ^payment-pdm-dev$
+      - ^payment-pdm-test$
+      - ^payment-pdm-preprod$
+      - ^payment-pdm-perf$
+      - ^payment-wallet-dev$
+      - ^payment-wallet-test$
+      - ^payment-wallet-preprod$
+      - ^payment-wallet-perf$
+      - ^payment-wallet-feature$
+  - istio.deckhouse.io/auto-upgrade: "true"
+    namespace_pattern:
+      - ^payment-pof-dev$
+      - ^payment-pof-test$
+      - ^payment-pof-preprod$
+      - ^payment-pon-dev$
+      - ^payment-pon-test$
+      - ^payment-pon-preprod$
+      - ^payment-ptm-dev$
+      - ^payment-ptm-test$
+      - ^payment-ptm-preprod$
+      - ^payment-pb-dev$
+      - ^payment-pb-test$
+      - ^payment-pb-preprod$
+      - ^payment-pdm-dev$
+      - ^payment-pdm-test$
+      - ^payment-pdm-preprod$
+      - ^payment-pdm-perf$
+      - ^payment-wallet-dev$
+      - ^payment-wallet-test$
+      - ^payment-wallet-preprod$
+      - ^payment-wallet-perf$
+      - ^payment-wallet-feature$
+
+devops-core-vector:
+  - security.deckhouse.io/pod-policy-action: warn
+    namespace_pattern:
+      - ^devops-core-vector$

@@ -1,0 +1,18 @@
+clusterName: "k8s-nav-prod"
+
+aquaSecret:
+  kubeEnforcerToken: enforcer-nav-k8s
+
+enforcer:
+  enforcerToken: enforcer-nav
+  nodeSelector:
+    node-role.k8s.lmru.tech/application: ''
+  tolerations:
+    - key: dedicated
+      operator: Equal
+      effect: "NoSchedule"
+      value: node-ml
+    - key: dedicated
+      operator: Equal
+      effect: "NoExecute"
+      value: custom-sorts

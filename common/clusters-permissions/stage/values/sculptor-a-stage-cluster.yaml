@@ -1,0 +1,68 @@
+---
+cluster_authorization:
+  defaults:
+    default_sa_permissions: &default
+      accessLevel: User
+      limitNamespaces:
+        - default
+      allowScale: true
+      allowAccessToSystemNamespaces: false
+      portForwarding: true
+  crowd:
+    groups:
+      crowd-services-platform-admin:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - obs-loki
+          - obs-promtail
+          - services-platform-.*
+          - services-platform
+      crowd-services-platform-ro:
+        <<: *default
+        accessLevel: User
+        limitNamespaces:
+          - services-platform-.*
+          - services-platform
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+      crowd-services-platform-rw:
+        <<: *default
+        accessLevel: Editor
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - services-platform-.*
+          - services-platform
+      crowd-sa-services-platform:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - services-platform-.*
+          - services-platform
+      crowd-blender-admin:
+        <<: *default
+        accessLevel: SuperAdmin
+        limitNamespaces:
+          - .*
+      crowd-obs-ro:
+        <<: *default
+        accessLevel: User
+        limitNamespaces:
+          - .*
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+      crowd-obs-admin:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - obs.*
+          - scylla.*
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+
+DexProvider:
+  clientID: k8s-argocd
+  clientSecret: crowd_app_k8s-argocd

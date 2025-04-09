@@ -1,0 +1,327 @@
+{
+    "annotations": {
+      "list": [
+        {
+          "builtIn": 1,
+          "datasource": {
+            "type": "grafana",
+            "uid": "-- Grafana --"
+          },
+          "enable": true,
+          "hide": true,
+          "iconColor": "rgba(0, 211, 255, 1)",
+          "name": "Annotations & Alerts",
+          "target": {
+            "limit": 100,
+            "matchAny": false,
+            "tags": [],
+            "type": "dashboard"
+          },
+          "type": "dashboard"
+        }
+      ]
+    },
+    "editable": true,
+    "fiscalYearStartMonth": 0,
+    "graphTooltip": 0,
+    "id": 58745,
+    "links": [],
+    "liveNow": false,
+    "panels": [
+      {
+        "datasource": {
+          "type": "prometheus",
+          "uid": "ap297gXIz"
+        },
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "palette-classic"
+            },
+            "custom": {
+              "axisCenteredZero": false,
+              "axisColorMode": "text",
+              "axisLabel": "",
+              "axisPlacement": "auto",
+              "barAlignment": 0,
+              "drawStyle": "line",
+              "fillOpacity": 0,
+              "gradientMode": "none",
+              "hideFrom": {
+                "legend": false,
+                "tooltip": false,
+                "viz": false
+              },
+              "lineInterpolation": "linear",
+              "lineWidth": 1,
+              "pointSize": 5,
+              "scaleDistribution": {
+                "type": "linear"
+              },
+              "showPoints": "auto",
+              "spanNulls": false,
+              "stacking": {
+                "group": "A",
+                "mode": "none"
+              },
+              "thresholdsStyle": {
+                "mode": "off"
+              }
+            },
+            "mappings": [],
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green"
+                },
+                {
+                  "color": "red",
+                  "value": 80
+                }
+              ]
+            }
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 8,
+          "w": 12,
+          "x": 0,
+          "y": 0
+        },
+        "id": 4,
+        "options": {
+          "legend": {
+            "calcs": [],
+            "displayMode": "list",
+            "placement": "bottom",
+            "showLegend": true
+          },
+          "tooltip": {
+            "mode": "single",
+            "sort": "none"
+          }
+        },
+        "targets": [
+          {
+            "datasource": {
+              "type": "prometheus",
+              "uid": "ap297gXIz"
+            },
+            "editorMode": "code",
+            "expr": "up{job=\"simpleoffice_monitor_metrics_job\"}",
+            "legendFormat": "{{__name__}}",
+            "range": true,
+            "refId": "A"
+          }
+        ],
+        "title": "Simple office Monitor Up/Down",
+        "type": "timeseries"
+      },
+      {
+        "datasource": {
+          "type": "prometheus",
+          "uid": "ap297gXIz"
+        },
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "thresholds"
+            },
+            "mappings": [],
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green"
+                },
+                {
+                  "color": "green",
+                  "value": 200
+                },
+                {
+                  "color": "yellow",
+                  "value": 400
+                },
+                {
+                  "color": "red",
+                  "value": 500
+                }
+              ]
+            }
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 8,
+          "w": 12,
+          "x": 0,
+          "y": 8
+        },
+        "id": 2,
+        "options": {
+          "colorMode": "value",
+          "graphMode": "area",
+          "justifyMode": "auto",
+          "orientation": "auto",
+          "reduceOptions": {
+            "calcs": [
+              "lastNotNull"
+            ],
+            "fields": "",
+            "values": false
+          },
+          "textMode": "auto"
+        },
+        "pluginVersion": "9.4.12",
+        "targets": [
+          {
+            "datasource": {
+              "type": "prometheus",
+              "uid": "ap297gXIz"
+            },
+            "editorMode": "code",
+            "exemplar": false,
+            "expr": "CANCEL_RESERVE_MEETING_ROOM{job=\"simpleoffice_monitor_metrics_job\", env=~\"${env:value}\"}",
+            "instant": true,
+            "legendFormat": "{{__name__}}",
+            "range": false,
+            "refId": "A"
+          },
+          {
+            "datasource": {
+              "type": "prometheus",
+              "uid": "ap297gXIz"
+            },
+            "editorMode": "code",
+            "exemplar": false,
+            "expr": "CANCEL_WORKPLACE_RESERVE{job=\"simpleoffice_monitor_metrics_job\", env=~\"${env:value}\"}",
+            "hide": false,
+            "instant": true,
+            "legendFormat": "{{__name__}}}",
+            "range": false,
+            "refId": "B"
+          },
+          {
+            "datasource": {
+              "type": "prometheus",
+              "uid": "ap297gXIz"
+            },
+            "editorMode": "code",
+            "exemplar": false,
+            "expr": "GET_ACCESS_TOKEN{job=\"simpleoffice_monitor_metrics_job\", env=~\"${env:value}\"}",
+            "hide": false,
+            "instant": true,
+            "legendFormat": "{{__name__}}",
+            "range": false,
+            "refId": "C"
+          },
+          {
+            "datasource": {
+              "type": "prometheus",
+              "uid": "ap297gXIz"
+            },
+            "editorMode": "code",
+            "exemplar": false,
+            "expr": "GET_EMPLOYEE{job=\"simpleoffice_monitor_metrics_job\", env=~\"${env:value}\"}",
+            "hide": false,
+            "instant": true,
+            "legendFormat": "{{__name__}}",
+            "range": false,
+            "refId": "D"
+          },
+          {
+            "datasource": {
+              "type": "prometheus",
+              "uid": "ap297gXIz"
+            },
+            "editorMode": "code",
+            "exemplar": false,
+            "expr": "MEETING_ROOM_RESERVE{job=\"simpleoffice_monitor_metrics_job\", env=~\"${env:value}\"}",
+            "hide": false,
+            "instant": true,
+            "legendFormat": "{{__name__}}",
+            "range": false,
+            "refId": "E"
+          },
+          {
+            "datasource": {
+              "type": "prometheus",
+              "uid": "ap297gXIz"
+            },
+            "editorMode": "code",
+            "exemplar": false,
+            "expr": "OFFICE_ENTRY{job=\"simpleoffice_monitor_metrics_job\", env=~\"${env:value}\"}",
+            "hide": false,
+            "instant": true,
+            "legendFormat": "{{__name__}}",
+            "range": false,
+            "refId": "F"
+          },
+          {
+            "datasource": {
+              "type": "prometheus",
+              "uid": "ap297gXIz"
+            },
+            "editorMode": "code",
+            "exemplar": false,
+            "expr": "WORKPLACE_RESERVE{job=\"simpleoffice_monitor_metrics_job\", env=~\"${env:value}\"}",
+            "hide": false,
+            "instant": true,
+            "legendFormat": "{{__name__}}",
+            "range": false,
+            "refId": "G"
+          }
+        ],
+        "title": "Simple Office Monitor Status Code",
+        "type": "stat"
+      }
+    ],
+    "refresh": "",
+    "revision": 1,
+    "schemaVersion": 38,
+    "style": "dark",
+    "tags": [],
+    "templating": {
+      "list": [
+        {
+          "current": {
+            "selected": false,
+            "text": "test",
+            "value": "test"
+          },
+          "hide": 0,
+          "includeAll": false,
+          "multi": false,
+          "name": "env",
+          "options": [
+            {
+              "selected": true,
+              "text": "test",
+              "value": "test"
+            },
+            {
+              "selected": false,
+              "text": "prod",
+              "value": "prod"
+            }
+          ],
+          "query": "test, prod",
+          "queryValue": "",
+          "skipUrlSync": false,
+          "type": "custom"
+        }
+      ]
+    },
+    "time": {
+      "from": "now-6h",
+      "to": "now"
+    },
+    "timepicker": {},
+    "timezone": "",
+    "title": "Simple Office Monitor",
+    "uid": "kvgunRuSk",
+    "version": 3,
+    "weekStart": ""
+  }

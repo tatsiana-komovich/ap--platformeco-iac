@@ -1,0 +1,36 @@
+---
+infra-elklogs:
+  - security.deckhouse.io/pod-policy: privileged
+    namespace_pattern:
+      - ^infra-elklogs$
+products:
+  - product-id: P0471
+    namespace_pattern:
+      - ^devops-core-vector$
+
+  - product-id: P0442
+    namespace_pattern:
+      - ^del-repo-.*
+  - product-id: P0479
+    namespace_pattern:
+      - ^del-sell-.*
+  - product-id: P0482
+    namespace_pattern:
+      - ^del-oper-.*
+  - product-id: P0076
+    namespace_pattern:
+      - ^pnr-.*
+  - product-id: P0665
+    namespace_pattern:
+      - ^carrier-portal-.*
+  - product-id: P0666
+    namespace_pattern:
+      - ^gts-.*
+  - product-id: P0752  # Pickup Point
+    namespace_pattern:
+      - ^pickup-point-.*$
+
+devops-core-vector:
+  - security.deckhouse.io/pod-policy-action: warn
+    namespace_pattern:
+      - ^devops-core-vector$

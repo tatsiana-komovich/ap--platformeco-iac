@@ -1,0 +1,17 @@
+apiVersion: deckhouse.io/v1
+kind: ClusterAuthorizationRule
+metadata:
+  name: crowd-qacc-rw
+spec:
+  accessLevel: Admin
+  allowAccessToSystemNamespaces: false
+  allowScale: false
+  # TODO: Switch to namespaceSelector after upgdate deckhouse to v1.53.*
+  limitNamespaces:
+    - lmru-qa-stress-test
+  portForwarding: true
+  subjects:
+    - kind: Group
+      name: crowd-qacc-rw
+    - kind: Group
+      name: crowd-sa-qacc

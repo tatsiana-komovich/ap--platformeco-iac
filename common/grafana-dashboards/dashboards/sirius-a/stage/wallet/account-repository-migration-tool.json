@@ -1,0 +1,1294 @@
+{
+    "annotations": {
+      "list": [
+        {
+          "builtIn": 1,
+          "datasource": {
+            "type": "grafana",
+            "uid": "-- Grafana --"
+          },
+          "enable": true,
+          "hide": true,
+          "iconColor": "rgba(0, 211, 255, 1)",
+          "name": "Annotations & Alerts",
+          "type": "dashboard"
+        }
+      ]
+    },
+    "editable": true,
+    "fiscalYearStartMonth": 0,
+    "graphTooltip": 0,
+    "id": 66,
+    "links": [],
+    "panels": [
+      {
+        "gridPos": {
+          "h": 1,
+          "w": 24,
+          "x": 0,
+          "y": 0
+        },
+        "id": 7,
+        "title": "Processing",
+        "type": "row"
+      },
+      {
+        "datasource": {
+          "type": "prometheus",
+          "uid": "P0D6E4079E36703EB"
+        },
+        "description": "",
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "palette-classic"
+            },
+            "custom": {
+              "axisBorderShow": false,
+              "axisCenteredZero": false,
+              "axisColorMode": "text",
+              "axisLabel": "",
+              "axisPlacement": "auto",
+              "axisSoftMax": 10,
+              "axisSoftMin": 0,
+              "barAlignment": -1,
+              "drawStyle": "bars",
+              "fillOpacity": 50,
+              "gradientMode": "none",
+              "hideFrom": {
+                "legend": false,
+                "tooltip": false,
+                "viz": false
+              },
+              "insertNulls": false,
+              "lineInterpolation": "stepBefore",
+              "lineStyle": {
+                "fill": "solid"
+              },
+              "lineWidth": 0,
+              "pointSize": 5,
+              "scaleDistribution": {
+                "linearThreshold": 10,
+                "log": 10,
+                "type": "symlog"
+              },
+              "showPoints": "never",
+              "spanNulls": false,
+              "stacking": {
+                "group": "A",
+                "mode": "none"
+              },
+              "thresholdsStyle": {
+                "mode": "off"
+              }
+            },
+            "fieldMinMax": false,
+            "mappings": [],
+            "min": 0,
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green",
+                  "value": null
+                },
+                {
+                  "color": "red",
+                  "value": 80
+                }
+              ]
+            },
+            "unit": "locale"
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 12,
+          "w": 12,
+          "x": 0,
+          "y": 1
+        },
+        "id": 8,
+        "maxDataPoints": 50,
+        "options": {
+          "legend": {
+            "calcs": [],
+            "displayMode": "list",
+            "placement": "bottom",
+            "showLegend": true
+          },
+          "tooltip": {
+            "mode": "multi",
+            "sort": "desc"
+          }
+        },
+        "targets": [
+          {
+            "datasource": {
+              "type": "prometheus",
+              "uid": "P0D6E4079E36703EB"
+            },
+            "disableTextWrap": false,
+            "editorMode": "code",
+            "exemplar": false,
+            "expr": "clamp_min(\r\n  sum(service_process_events_total{pod=~\"$pod\", namespace=\"$namespace\", service=\"$app\", process=\"Migration\", event=\"processed\", entity=\"Account\"} OR vector(0))\r\n  - sum(service_process_events_total{pod=~\"$pod\", namespace=\"$namespace\", service=\"$app\", process=\"Migration\", event=\"processed\", entity=\"Account\"} offset $__interval OR vector(0)) \r\n, 0)",
+            "format": "time_series",
+            "fullMetaSearch": false,
+            "includeNullMetadata": false,
+            "instant": false,
+            "interval": "$__interval",
+            "legendFormat": "Processed Accounts",
+            "range": true,
+            "refId": "A",
+            "useBackend": false
+          },
+          {
+            "datasource": {
+              "type": "prometheus",
+              "uid": "P0D6E4079E36703EB"
+            },
+            "editorMode": "code",
+            "expr": "clamp_min(\r\n  sum(service_process_events_total{pod=~\"$pod\", namespace=\"$namespace\", service=\"$app\", process=\"Migration\", event=\"processed\", entity=\"Transaction\"} OR vector(0))\r\n  - sum(service_process_events_total{pod=~\"$pod\", namespace=\"$namespace\", service=\"$app\", process=\"Migration\", event=\"processed\", entity=\"Transaction\"} offset $__interval OR vector(0)) \r\n, 0)",
+            "hide": false,
+            "instant": false,
+            "interval": "$__interval",
+            "legendFormat": "Processed Transactions",
+            "range": true,
+            "refId": "B"
+          }
+        ],
+        "title": "Migration (band width: $__interval)",
+        "type": "timeseries"
+      },
+      {
+        "datasource": {
+          "type": "prometheus",
+          "uid": "P0D6E4079E36703EB"
+        },
+        "description": "",
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "palette-classic"
+            },
+            "custom": {
+              "axisBorderShow": false,
+              "axisCenteredZero": false,
+              "axisColorMode": "text",
+              "axisLabel": "",
+              "axisPlacement": "auto",
+              "axisSoftMax": 10,
+              "axisSoftMin": 0,
+              "barAlignment": -1,
+              "drawStyle": "bars",
+              "fillOpacity": 51,
+              "gradientMode": "none",
+              "hideFrom": {
+                "legend": false,
+                "tooltip": false,
+                "viz": false
+              },
+              "insertNulls": false,
+              "lineInterpolation": "stepBefore",
+              "lineStyle": {
+                "fill": "solid"
+              },
+              "lineWidth": 0,
+              "pointSize": 5,
+              "scaleDistribution": {
+                "linearThreshold": 10,
+                "log": 10,
+                "type": "symlog"
+              },
+              "showPoints": "never",
+              "spanNulls": false,
+              "stacking": {
+                "group": "A",
+                "mode": "none"
+              },
+              "thresholdsStyle": {
+                "mode": "off"
+              }
+            },
+            "fieldMinMax": false,
+            "mappings": [],
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green",
+                  "value": null
+                },
+                {
+                  "color": "red",
+                  "value": 80
+                }
+              ]
+            },
+            "unit": "locale"
+          },
+          "overrides": [
+            {
+              "matcher": {
+                "id": "byName",
+                "options": "Verification error by Accounts"
+              },
+              "properties": [
+                {
+                  "id": "custom.barAlignment",
+                  "value": -1
+                },
+                {
+                  "id": "custom.fillOpacity",
+                  "value": 80
+                },
+                {
+                  "id": "color",
+                  "value": {
+                    "fixedColor": "dark-red",
+                    "mode": "fixed"
+                  }
+                }
+              ]
+            },
+            {
+              "matcher": {
+                "id": "byName",
+                "options": "Verification error by Transactions"
+              },
+              "properties": [
+                {
+                  "id": "custom.barAlignment",
+                  "value": -1
+                },
+                {
+                  "id": "custom.fillOpacity",
+                  "value": 80
+                },
+                {
+                  "id": "color",
+                  "value": {
+                    "fixedColor": "dark-orange",
+                    "mode": "fixed"
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        "gridPos": {
+          "h": 12,
+          "w": 12,
+          "x": 12,
+          "y": 1
+        },
+        "id": 9,
+        "maxDataPoints": 50,
+        "options": {
+          "legend": {
+            "calcs": [],
+            "displayMode": "list",
+            "placement": "bottom",
+            "showLegend": true
+          },
+          "tooltip": {
+            "mode": "multi",
+            "sort": "desc"
+          }
+        },
+        "targets": [
+          {
+            "datasource": {
+              "type": "prometheus",
+              "uid": "P0D6E4079E36703EB"
+            },
+            "editorMode": "code",
+            "expr": "clamp_min(\r\n  sum(service_process_events_total{pod=~\"$pod\", namespace=\"$namespace\", service=\"$app\", process=\"Verification\", event=\"processed\", entity=\"Account\"} OR vector(0))\r\n  - sum(service_process_events_total{pod=~\"$pod\", namespace=\"$namespace\", service=\"$app\", process=\"Verification\", event=\"processed\", entity=\"Account\"} offset $__interval OR vector(0)) \r\n, 0)",
+            "hide": false,
+            "instant": false,
+            "interval": "$__interval",
+            "legendFormat": "Processed Accounts",
+            "range": true,
+            "refId": "A"
+          },
+          {
+            "datasource": {
+              "type": "prometheus",
+              "uid": "P0D6E4079E36703EB"
+            },
+            "editorMode": "code",
+            "expr": "clamp_min(\r\n  sum(service_process_events_total{pod=~\"$pod\", namespace=\"$namespace\", service=\"$app\", process=\"Verification\", event=\"processed\", entity=\"Transaction\"} OR vector(0))\r\n  - sum(service_process_events_total{pod=~\"$pod\", namespace=\"$namespace\", service=\"$app\", process=\"Verification\", event=\"processed\", entity=\"Transaction\"} offset $__interval OR vector(0)) \r\n, 0)",
+            "hide": false,
+            "instant": false,
+            "interval": "$__interval",
+            "legendFormat": "Processed Transactions",
+            "range": true,
+            "refId": "B"
+          },
+          {
+            "datasource": {
+              "type": "prometheus",
+              "uid": "P0D6E4079E36703EB"
+            },
+            "editorMode": "code",
+            "expr": "clamp_min(\r\n  sum(service_process_events_total{pod=~\"$pod\", namespace=\"$namespace\", service=\"$app\", process=\"Verification\", event=\"verification-error\", entity=\"Account\"} OR vector(0))\r\n  - sum(service_process_events_total{pod=~\"$pod\", namespace=\"$namespace\", service=\"$app\", process=\"Verification\", event=\"verification-error\", entity=\"Account\"} offset $__interval OR vector(0)) \r\n, 0)",
+            "hide": false,
+            "instant": false,
+            "interval": "$__interval",
+            "legendFormat": "Verification error by Accounts",
+            "range": true,
+            "refId": "C"
+          },
+          {
+            "datasource": {
+              "type": "prometheus",
+              "uid": "P0D6E4079E36703EB"
+            },
+            "editorMode": "code",
+            "expr": "clamp_min(\r\n  sum(service_process_events_total{pod=~\"$pod\", namespace=\"$namespace\", service=\"$app\", process=\"Verification\", event=\"verification-error\", entity=\"Transaction\"} OR vector(0))\r\n  - sum(service_process_events_total{pod=~\"$pod\", namespace=\"$namespace\", service=\"$app\", process=\"Verification\", event=\"verification-error\", entity=\"Transaction\"} offset $__interval OR vector(0)) \r\n, 0)",
+            "hide": false,
+            "instant": false,
+            "interval": "$__interval",
+            "legendFormat": "Verification error by Transactions",
+            "range": true,
+            "refId": "D"
+          }
+        ],
+        "title": "Verification (band width: $__interval)",
+        "type": "timeseries"
+      },
+      {
+        "datasource": {
+          "type": "prometheus",
+          "uid": "P0D6E4079E36703EB"
+        },
+        "description": "",
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "palette-classic"
+            },
+            "custom": {
+              "axisBorderShow": false,
+              "axisCenteredZero": false,
+              "axisColorMode": "text",
+              "axisLabel": "",
+              "axisPlacement": "auto",
+              "axisSoftMax": 3,
+              "axisSoftMin": 0,
+              "barAlignment": -1,
+              "drawStyle": "bars",
+              "fillOpacity": 50,
+              "gradientMode": "none",
+              "hideFrom": {
+                "legend": false,
+                "tooltip": false,
+                "viz": false
+              },
+              "insertNulls": false,
+              "lineInterpolation": "stepBefore",
+              "lineStyle": {
+                "fill": "solid"
+              },
+              "lineWidth": 0,
+              "pointSize": 5,
+              "scaleDistribution": {
+                "linearThreshold": 10,
+                "type": "linear"
+              },
+              "showPoints": "never",
+              "spanNulls": false,
+              "stacking": {
+                "group": "A",
+                "mode": "normal"
+              },
+              "thresholdsStyle": {
+                "mode": "off"
+              }
+            },
+            "fieldMinMax": false,
+            "mappings": [],
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green",
+                  "value": null
+                },
+                {
+                  "color": "red",
+                  "value": 80
+                }
+              ]
+            },
+            "unit": "locale"
+          },
+          "overrides": [
+            {
+              "matcher": {
+                "id": "byName",
+                "options": "Failed for Accounts"
+              },
+              "properties": [
+                {
+                  "id": "custom.fillOpacity",
+                  "value": 100
+                },
+                {
+                  "id": "color",
+                  "value": {
+                    "fixedColor": "dark-red",
+                    "mode": "fixed"
+                  }
+                }
+              ]
+            },
+            {
+              "matcher": {
+                "id": "byName",
+                "options": "Failed for Transactions"
+              },
+              "properties": [
+                {
+                  "id": "custom.fillOpacity",
+                  "value": 100
+                },
+                {
+                  "id": "color",
+                  "value": {
+                    "fixedColor": "dark-orange",
+                    "mode": "fixed"
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        "gridPos": {
+          "h": 5,
+          "w": 12,
+          "x": 0,
+          "y": 13
+        },
+        "id": 11,
+        "maxDataPoints": 50,
+        "options": {
+          "legend": {
+            "calcs": [],
+            "displayMode": "list",
+            "placement": "bottom",
+            "showLegend": true
+          },
+          "tooltip": {
+            "mode": "multi",
+            "sort": "desc"
+          }
+        },
+        "targets": [
+          {
+            "datasource": {
+              "type": "prometheus",
+              "uid": "P0D6E4079E36703EB"
+            },
+            "editorMode": "code",
+            "expr": "clamp_min(\r\n  sum(service_process_events_total{pod=~\"$pod\", namespace=\"$namespace\", service=\"$app\", process=\"Migration\", event=\"started\", entity=\"Account\"} OR vector(0))\r\n  - sum(service_process_events_total{pod=~\"$pod\", namespace=\"$namespace\", service=\"$app\", process=\"Migration\", event=\"started\", entity=\"Account\"} offset $__interval OR vector(0)) \r\n, 0)",
+            "hide": false,
+            "instant": false,
+            "interval": "$__interval",
+            "legendFormat": "Started for Accounts",
+            "range": true,
+            "refId": "A"
+          },
+          {
+            "datasource": {
+              "type": "prometheus",
+              "uid": "P0D6E4079E36703EB"
+            },
+            "editorMode": "code",
+            "expr": "clamp_min(\r\n  sum(service_process_events_total{pod=~\"$pod\", namespace=\"$namespace\", service=\"$app\", process=\"Migration\", event=\"started\", entity=\"Transaction\"} OR vector(0))\r\n  - sum(service_process_events_total{pod=~\"$pod\", namespace=\"$namespace\", service=\"$app\", process=\"Migration\", event=\"started\", entity=\"Transaction\"} offset $__interval OR vector(0)) \r\n, 0)",
+            "hide": false,
+            "instant": false,
+            "interval": "$__interval",
+            "legendFormat": "Started for Transactions",
+            "range": true,
+            "refId": "B"
+          },
+          {
+            "datasource": {
+              "type": "prometheus",
+              "uid": "P0D6E4079E36703EB"
+            },
+            "editorMode": "code",
+            "expr": "clamp_min(\r\n  sum(service_process_events_total{pod=~\"$pod\", namespace=\"$namespace\", service=\"$app\", process=\"Migration\", event=\"completed\", entity=\"Account\"} OR vector(0))\r\n  - sum(service_process_events_total{pod=~\"$pod\", namespace=\"$namespace\", service=\"$app\", process=\"Migration\", event=\"completed\", entity=\"Account\"} offset $__interval OR vector(0)) \r\n, 0)",
+            "hide": false,
+            "instant": false,
+            "interval": "$__interval",
+            "legendFormat": "Completed for Accounts",
+            "range": true,
+            "refId": "C"
+          },
+          {
+            "datasource": {
+              "type": "prometheus",
+              "uid": "P0D6E4079E36703EB"
+            },
+            "editorMode": "code",
+            "expr": "clamp_min(\r\n  sum(service_process_events_total{pod=~\"$pod\", namespace=\"$namespace\", service=\"$app\", process=\"Migration\", event=\"completed\", entity=\"Transaction\"} OR vector(0))\r\n  - sum(service_process_events_total{pod=~\"$pod\", namespace=\"$namespace\", service=\"$app\", process=\"Migration\", event=\"completed\", entity=\"Transaction\"} offset $__interval OR vector(0)) \r\n, 0)",
+            "hide": false,
+            "instant": false,
+            "interval": "$__interval",
+            "legendFormat": "Completed for Transactions",
+            "range": true,
+            "refId": "D"
+          },
+          {
+            "datasource": {
+              "type": "prometheus",
+              "uid": "P0D6E4079E36703EB"
+            },
+            "editorMode": "code",
+            "expr": "clamp_min(\r\n  sum(service_process_events_total{pod=~\"$pod\", namespace=\"$namespace\", service=\"$app\", process=\"Migration\", event=\"failed\", entity=\"Account\"} OR vector(0))\r\n  - sum(service_process_events_total{pod=~\"$pod\", namespace=\"$namespace\", service=\"$app\", process=\"Migration\", event=\"failed\", entity=\"Account\"} offset $__interval OR vector(0)) \r\n, 0)",
+            "hide": false,
+            "instant": false,
+            "interval": "$__interval",
+            "legendFormat": "Failed for Accounts",
+            "range": true,
+            "refId": "E"
+          },
+          {
+            "datasource": {
+              "type": "prometheus",
+              "uid": "P0D6E4079E36703EB"
+            },
+            "editorMode": "code",
+            "expr": "clamp_min(\r\n  sum(service_process_events_total{pod=~\"$pod\", namespace=\"$namespace\", service=\"$app\", process=\"Migration\", event=\"failed\", entity=\"Transaction\"} OR vector(0))\r\n  - sum(service_process_events_total{pod=~\"$pod\", namespace=\"$namespace\", service=\"$app\", process=\"Migration\", event=\"failed\", entity=\"Transaction\"} offset $__interval OR vector(0)) \r\n, 0)",
+            "hide": false,
+            "instant": false,
+            "interval": "$__interval",
+            "legendFormat": "Failed for Transactions",
+            "range": true,
+            "refId": "F"
+          }
+        ],
+        "title": "Migration events (band width: $__interval)",
+        "type": "timeseries"
+      },
+      {
+        "datasource": {
+          "type": "prometheus",
+          "uid": "P0D6E4079E36703EB"
+        },
+        "description": "",
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "palette-classic"
+            },
+            "custom": {
+              "axisBorderShow": false,
+              "axisCenteredZero": false,
+              "axisColorMode": "text",
+              "axisLabel": "",
+              "axisPlacement": "auto",
+              "axisSoftMax": 3,
+              "axisSoftMin": 0,
+              "barAlignment": -1,
+              "drawStyle": "bars",
+              "fillOpacity": 50,
+              "gradientMode": "none",
+              "hideFrom": {
+                "legend": false,
+                "tooltip": false,
+                "viz": false
+              },
+              "insertNulls": false,
+              "lineInterpolation": "stepBefore",
+              "lineStyle": {
+                "fill": "solid"
+              },
+              "lineWidth": 0,
+              "pointSize": 5,
+              "scaleDistribution": {
+                "linearThreshold": 10,
+                "type": "linear"
+              },
+              "showPoints": "never",
+              "spanNulls": false,
+              "stacking": {
+                "group": "A",
+                "mode": "normal"
+              },
+              "thresholdsStyle": {
+                "mode": "off"
+              }
+            },
+            "fieldMinMax": false,
+            "mappings": [],
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green",
+                  "value": null
+                },
+                {
+                  "color": "red",
+                  "value": 80
+                }
+              ]
+            },
+            "unit": "locale"
+          },
+          "overrides": [
+            {
+              "matcher": {
+                "id": "byName",
+                "options": "Failed for Accounts"
+              },
+              "properties": [
+                {
+                  "id": "custom.fillOpacity",
+                  "value": 100
+                },
+                {
+                  "id": "color",
+                  "value": {
+                    "fixedColor": "dark-red",
+                    "mode": "fixed"
+                  }
+                }
+              ]
+            },
+            {
+              "matcher": {
+                "id": "byName",
+                "options": "Failed for Transactions"
+              },
+              "properties": [
+                {
+                  "id": "custom.fillOpacity",
+                  "value": 100
+                },
+                {
+                  "id": "color",
+                  "value": {
+                    "fixedColor": "dark-orange",
+                    "mode": "fixed"
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        "gridPos": {
+          "h": 5,
+          "w": 12,
+          "x": 12,
+          "y": 13
+        },
+        "id": 10,
+        "maxDataPoints": 50,
+        "options": {
+          "legend": {
+            "calcs": [],
+            "displayMode": "list",
+            "placement": "bottom",
+            "showLegend": true
+          },
+          "tooltip": {
+            "mode": "multi",
+            "sort": "desc"
+          }
+        },
+        "targets": [
+          {
+            "datasource": {
+              "type": "prometheus",
+              "uid": "P0D6E4079E36703EB"
+            },
+            "editorMode": "code",
+            "expr": "clamp_min(\r\n  sum(service_process_events_total{pod=~\"$pod\", namespace=\"$namespace\", service=\"$app\", process=\"Verification\", event=\"started\", entity=\"Account\"} OR vector(0))\r\n  - sum(service_process_events_total{pod=~\"$pod\", namespace=\"$namespace\", service=\"$app\", process=\"Verification\", event=\"started\", entity=\"Account\"} offset $__interval OR vector(0)) \r\n, 0)",
+            "hide": false,
+            "instant": false,
+            "interval": "$__interval",
+            "legendFormat": "Started for Accounts",
+            "range": true,
+            "refId": "A"
+          },
+          {
+            "datasource": {
+              "type": "prometheus",
+              "uid": "P0D6E4079E36703EB"
+            },
+            "editorMode": "code",
+            "expr": "clamp_min(\r\n  sum(service_process_events_total{pod=~\"$pod\", namespace=\"$namespace\", service=\"$app\", process=\"Verification\", event=\"started\", entity=\"Transaction\"} OR vector(0))\r\n  - sum(service_process_events_total{pod=~\"$pod\", namespace=\"$namespace\", service=\"$app\", process=\"Verification\", event=\"started\", entity=\"Transaction\"} offset $__interval OR vector(0)) \r\n, 0)",
+            "hide": false,
+            "instant": false,
+            "interval": "$__interval",
+            "legendFormat": "Started for Transactions",
+            "range": true,
+            "refId": "B"
+          },
+          {
+            "datasource": {
+              "type": "prometheus",
+              "uid": "P0D6E4079E36703EB"
+            },
+            "editorMode": "code",
+            "expr": "clamp_min(\r\n  sum(service_process_events_total{pod=~\"$pod\", namespace=\"$namespace\", service=\"$app\", process=\"Verification\", event=\"completed\", entity=\"Account\"} OR vector(0))\r\n  - sum(service_process_events_total{pod=~\"$pod\", namespace=\"$namespace\", service=\"$app\", process=\"Verification\", event=\"completed\", entity=\"Account\"} offset $__interval OR vector(0)) \r\n, 0)",
+            "hide": false,
+            "instant": false,
+            "interval": "$__interval",
+            "legendFormat": "Completed for Accounts",
+            "range": true,
+            "refId": "C"
+          },
+          {
+            "datasource": {
+              "type": "prometheus",
+              "uid": "P0D6E4079E36703EB"
+            },
+            "editorMode": "code",
+            "expr": "clamp_min(\r\n  sum(service_process_events_total{pod=~\"$pod\", namespace=\"$namespace\", service=\"$app\", process=\"Verification\", event=\"completed\", entity=\"Transaction\"} OR vector(0))\r\n  - sum(service_process_events_total{pod=~\"$pod\", namespace=\"$namespace\", service=\"$app\", process=\"Verification\", event=\"completed\", entity=\"Transaction\"} offset $__interval OR vector(0)) \r\n, 0)",
+            "hide": false,
+            "instant": false,
+            "interval": "$__interval",
+            "legendFormat": "Completed for Transactions",
+            "range": true,
+            "refId": "D"
+          },
+          {
+            "datasource": {
+              "type": "prometheus",
+              "uid": "P0D6E4079E36703EB"
+            },
+            "editorMode": "code",
+            "expr": "clamp_min(\r\n  sum(service_process_events_total{pod=~\"$pod\", namespace=\"$namespace\", service=\"$app\", process=\"Verification\", event=\"failed\", entity=\"Account\"} OR vector(0))\r\n  - sum(service_process_events_total{pod=~\"$pod\", namespace=\"$namespace\", service=\"$app\", process=\"Verification\", event=\"failed\", entity=\"Account\"} offset $__interval OR vector(0)) \r\n, 0)",
+            "hide": false,
+            "instant": false,
+            "interval": "$__interval",
+            "legendFormat": "Failed for Accounts",
+            "range": true,
+            "refId": "E"
+          },
+          {
+            "datasource": {
+              "type": "prometheus",
+              "uid": "P0D6E4079E36703EB"
+            },
+            "editorMode": "code",
+            "expr": "clamp_min(\r\n  sum(service_process_events_total{pod=~\"$pod\", namespace=\"$namespace\", service=\"$app\", process=\"Verification\", event=\"failed\", entity=\"Transaction\"} OR vector(0))\r\n  - sum(service_process_events_total{pod=~\"$pod\", namespace=\"$namespace\", service=\"$app\", process=\"Verification\", event=\"failed\", entity=\"Transaction\"} offset $__interval OR vector(0)) \r\n, 0)",
+            "hide": false,
+            "instant": false,
+            "interval": "$__interval",
+            "legendFormat": "Failed for Transactions",
+            "range": true,
+            "refId": "F"
+          }
+        ],
+        "title": "Verification events (band width: $__interval)",
+        "type": "timeseries"
+      },
+      {
+        "datasource": {
+          "type": "prometheus",
+          "uid": "P0D6E4079E36703EB"
+        },
+        "description": "",
+        "fieldConfig": {
+          "defaults": {
+            "custom": {
+              "hideFrom": {
+                "legend": false,
+                "tooltip": false,
+                "viz": false
+              },
+              "scaleDistribution": {
+                "type": "linear"
+              }
+            },
+            "fieldMinMax": false
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 7,
+          "w": 24,
+          "x": 0,
+          "y": 18
+        },
+        "id": 12,
+        "maxDataPoints": 160,
+        "options": {
+          "calculate": false,
+          "cellGap": 1,
+          "color": {
+            "exponent": 0.5,
+            "fill": "dark-orange",
+            "min": 0,
+            "mode": "scheme",
+            "reverse": false,
+            "scale": "exponential",
+            "scheme": "OrRd",
+            "steps": 64
+          },
+          "exemplars": {
+            "color": "rgba(255,0,255,0.7)"
+          },
+          "filterValues": {
+            "le": 1e-9
+          },
+          "legend": {
+            "show": true
+          },
+          "rowsFrame": {
+            "layout": "auto"
+          },
+          "tooltip": {
+            "mode": "single",
+            "showColorScale": false,
+            "yHistogram": false
+          },
+          "yAxis": {
+            "axisPlacement": "left",
+            "reverse": true,
+            "unit": "locale"
+          }
+        },
+        "pluginVersion": "10.4.5",
+        "targets": [
+          {
+            "datasource": {
+              "type": "prometheus",
+              "uid": "P0D6E4079E36703EB"
+            },
+            "editorMode": "code",
+            "expr": "clamp_min(\r\n  sum(service_process_events_total{pod=~\"$pod\", namespace=\"$namespace\", service=\"$app\", process=\"Verification\", event=\"verification-error\", entity=\"Account\"} OR vector(0))\r\n  - sum(service_process_events_total{pod=~\"$pod\", namespace=\"$namespace\", service=\"$app\", process=\"Verification\", event=\"verification-error\", entity=\"Account\"} offset $__interval OR vector(0)) \r\n, 0)",
+            "instant": false,
+            "interval": "$__interval",
+            "legendFormat": "Accounts",
+            "range": true,
+            "refId": "A"
+          },
+          {
+            "datasource": {
+              "type": "prometheus",
+              "uid": "P0D6E4079E36703EB"
+            },
+            "editorMode": "code",
+            "expr": "clamp_min(\r\n  sum(service_process_events_total{pod=~\"$pod\", namespace=\"$namespace\", service=\"$app\", process=\"Verification\", event=\"verification-error\", entity=\"Transaction\"} OR vector(0))\r\n  - sum(service_process_events_total{pod=~\"$pod\", namespace=\"$namespace\", service=\"$app\", process=\"Verification\", event=\"verification-error\", entity=\"Transaction\"} offset $__interval OR vector(0)) \r\n, 0)",
+            "hide": false,
+            "instant": false,
+            "interval": "$__interval",
+            "legendFormat": "Transactions",
+            "range": true,
+            "refId": "B"
+          }
+        ],
+        "title": "Verification errors (band width: $__interval)",
+        "type": "heatmap"
+      },
+      {
+        "collapsed": false,
+        "gridPos": {
+          "h": 1,
+          "w": 24,
+          "x": 0,
+          "y": 25
+        },
+        "id": 2,
+        "panels": [],
+        "title": "CRUD Services",
+        "type": "row"
+      },
+      {
+        "datasource": {
+          "type": "prometheus",
+          "uid": "P0D6E4079E36703EB"
+        },
+        "description": "",
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "palette-classic"
+            },
+            "custom": {
+              "axisBorderShow": false,
+              "axisCenteredZero": false,
+              "axisColorMode": "text",
+              "axisGridShow": true,
+              "axisLabel": "",
+              "axisPlacement": "auto",
+              "barAlignment": 0,
+              "drawStyle": "line",
+              "fillOpacity": 0,
+              "gradientMode": "none",
+              "hideFrom": {
+                "legend": false,
+                "tooltip": false,
+                "viz": false
+              },
+              "insertNulls": false,
+              "lineInterpolation": "linear",
+              "lineStyle": {
+                "fill": "solid"
+              },
+              "lineWidth": 1,
+              "pointSize": 5,
+              "scaleDistribution": {
+                "type": "linear"
+              },
+              "showPoints": "never",
+              "spanNulls": false,
+              "stacking": {
+                "group": "A",
+                "mode": "none"
+              },
+              "thresholdsStyle": {
+                "mode": "off"
+              }
+            },
+            "mappings": [],
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green",
+                  "value": null
+                },
+                {
+                  "color": "red",
+                  "value": 80
+                }
+              ]
+            }
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 13,
+          "w": 12,
+          "x": 0,
+          "y": 26
+        },
+        "id": 5,
+        "options": {
+          "legend": {
+            "calcs": [
+              "max",
+              "mean",
+              "sum"
+            ],
+            "displayMode": "table",
+            "placement": "bottom",
+            "showLegend": true
+          },
+          "tooltip": {
+            "mode": "multi",
+            "sort": "desc"
+          }
+        },
+        "targets": [
+          {
+            "datasource": {
+              "type": "prometheus",
+              "uid": "P0D6E4079E36703EB"
+            },
+            "disableTextWrap": false,
+            "editorMode": "code",
+            "exemplar": false,
+            "expr": "sum by (simple_class, method, connection) (rate(service_crud_seconds_count{pod=~\"$pod\", namespace=\"$namespace\", service=\"$app\", connection=~\"$db_connection\", simple_class=~\"$crud_service\"}[$__rate_interval])) * 60",
+            "format": "heatmap",
+            "fullMetaSearch": false,
+            "includeNullMetadata": false,
+            "instant": false,
+            "interval": "",
+            "legendFormat": "{{simple_class}}.{{method}}({{connection}})",
+            "range": true,
+            "refId": "A",
+            "useBackend": false
+          }
+        ],
+        "title": "Rate per minute (RPM)",
+        "type": "timeseries"
+      },
+      {
+        "datasource": {
+          "type": "prometheus",
+          "uid": "P0D6E4079E36703EB"
+        },
+        "description": "",
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "palette-classic"
+            },
+            "custom": {
+              "axisBorderShow": false,
+              "axisCenteredZero": false,
+              "axisColorMode": "text",
+              "axisLabel": "",
+              "axisPlacement": "auto",
+              "barAlignment": 0,
+              "drawStyle": "line",
+              "fillOpacity": 0,
+              "gradientMode": "none",
+              "hideFrom": {
+                "legend": false,
+                "tooltip": false,
+                "viz": false
+              },
+              "insertNulls": false,
+              "lineInterpolation": "linear",
+              "lineWidth": 1,
+              "pointSize": 5,
+              "scaleDistribution": {
+                "type": "linear"
+              },
+              "showPoints": "never",
+              "spanNulls": false,
+              "stacking": {
+                "group": "A",
+                "mode": "none"
+              },
+              "thresholdsStyle": {
+                "mode": "off"
+              }
+            },
+            "fieldMinMax": false,
+            "mappings": [],
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green",
+                  "value": null
+                },
+                {
+                  "color": "red",
+                  "value": 80
+                }
+              ]
+            },
+            "unit": "s"
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 13,
+          "w": 12,
+          "x": 12,
+          "y": 26
+        },
+        "id": 6,
+        "options": {
+          "legend": {
+            "calcs": [
+              "min",
+              "max",
+              "mean"
+            ],
+            "displayMode": "table",
+            "placement": "bottom",
+            "showLegend": true
+          },
+          "tooltip": {
+            "mode": "multi",
+            "sort": "desc"
+          }
+        },
+        "targets": [
+          {
+            "datasource": {
+              "type": "prometheus",
+              "uid": "P0D6E4079E36703EB"
+            },
+            "editorMode": "code",
+            "expr": "sum by (simple_class, method, connection) (increase(service_crud_seconds_sum{pod=~\"$pod\", namespace=\"$namespace\", service=\"$app\", connection=~\"$db_connection\", simple_class=~\"$crud_service\"}[$__rate_interval])) / sum by (simple_class, method, connection) (increase(service_crud_seconds_count{pod=~\"$pod\", namespace=\"$namespace\", service=\"$app\", connection=~\"$db_connection\", simple_class=~\"$crud_service\"}[$__rate_interval]))",
+            "instant": false,
+            "legendFormat": "{{simple_class}}.{{method}}({{connection}})",
+            "range": true,
+            "refId": "A"
+          }
+        ],
+        "title": "Duration (seconds) [1m]",
+        "type": "timeseries"
+      }
+    ],
+    "refresh": "30s",
+    "schemaVersion": 39,
+    "tags": [],
+    "templating": {
+      "list": [
+        {
+          "current": {
+            "selected": true,
+            "text": "payment-wallet-preprod",
+            "value": "payment-wallet-preprod"
+          },
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P0D6E4079E36703EB"
+          },
+          "definition": "query_result(jvm_classes_loaded_classes{namespace=~\"payment-wallet-.*\"})",
+          "hide": 0,
+          "includeAll": false,
+          "label": "Namespace",
+          "multi": false,
+          "name": "namespace",
+          "options": [],
+          "query": {
+            "qryType": 3,
+            "query": "query_result(jvm_classes_loaded_classes{namespace=~\"payment-wallet-.*\"})",
+            "refId": "PrometheusVariableQueryEditor-VariableQuery"
+          },
+          "refresh": 1,
+          "regex": ".*namespace=\"([a-zA-Z0-9\\-]*)\".*",
+          "skipUrlSync": false,
+          "sort": 1,
+          "type": "query"
+        },
+        {
+          "current": {
+            "selected": true,
+            "text": "account-repository-migration-tool",
+            "value": "account-repository-migration-tool"
+          },
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P0D6E4079E36703EB"
+          },
+          "definition": "query_result(jvm_classes_loaded_classes{namespace=\"$namespace\"})",
+          "hide": 0,
+          "includeAll": false,
+          "label": "Application",
+          "multi": false,
+          "name": "app",
+          "options": [],
+          "query": {
+            "qryType": 3,
+            "query": "query_result(jvm_classes_loaded_classes{namespace=\"$namespace\"})",
+            "refId": "PrometheusVariableQueryEditor-VariableQuery"
+          },
+          "refresh": 1,
+          "regex": ".*service=\"([a-zA-Z0-9\\-]*)\".*",
+          "skipUrlSync": false,
+          "sort": 1,
+          "type": "query"
+        },
+        {
+          "allValue": ".*",
+          "current": {
+            "selected": false,
+            "text": "All",
+            "value": "$__all"
+          },
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P0D6E4079E36703EB"
+          },
+          "definition": "query_result(jvm_classes_loaded_classes{namespace=\"$namespace\", service=\"$app\"})",
+          "hide": 0,
+          "includeAll": true,
+          "label": "Pod",
+          "multi": true,
+          "name": "pod",
+          "options": [],
+          "query": {
+            "qryType": 3,
+            "query": "query_result(jvm_classes_loaded_classes{namespace=\"$namespace\", service=\"$app\"})",
+            "refId": "PrometheusVariableQueryEditor-VariableQuery"
+          },
+          "refresh": 1,
+          "regex": ".*pod=\"([a-zA-Z0-9\\-]*)\".*",
+          "skipUrlSync": false,
+          "sort": 1,
+          "type": "query"
+        },
+        {
+          "allValue": ".*",
+          "current": {
+            "selected": false,
+            "text": "All",
+            "value": "$__all"
+          },
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P0D6E4079E36703EB"
+          },
+          "definition": "query_result(service_crud_seconds_count{pod=~\"$pod\", namespace=\"$namespace\", service=\"$app\"})",
+          "hide": 0,
+          "includeAll": true,
+          "label": "Database",
+          "multi": true,
+          "name": "db_connection",
+          "options": [],
+          "query": {
+            "qryType": 3,
+            "query": "query_result(service_crud_seconds_count{pod=~\"$pod\", namespace=\"$namespace\", service=\"$app\"})",
+            "refId": "PrometheusVariableQueryEditor-VariableQuery"
+          },
+          "refresh": 1,
+          "regex": ".*connection=\"([a-zA-Z0-9\\-]*)\".*",
+          "skipUrlSync": false,
+          "sort": 0,
+          "type": "query"
+        },
+        {
+          "allValue": ".*",
+          "current": {
+            "selected": true,
+            "text": [
+              "All"
+            ],
+            "value": [
+              "$__all"
+            ]
+          },
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P0D6E4079E36703EB"
+          },
+          "definition": "query_result(service_crud_seconds_count{pod=~\"$pod\", namespace=\"$namespace\", service=\"$app\"})",
+          "hide": 0,
+          "includeAll": true,
+          "label": "Crud Service",
+          "multi": true,
+          "name": "crud_service",
+          "options": [],
+          "query": {
+            "qryType": 3,
+            "query": "query_result(service_crud_seconds_count{pod=~\"$pod\", namespace=\"$namespace\", service=\"$app\"})",
+            "refId": "PrometheusVariableQueryEditor-VariableQuery"
+          },
+          "refresh": 1,
+          "regex": ".*class=\"[a-zA-Z0-9\\-\\.]*\\.([a-zA-Z0-9\\-]*)\".*",
+          "skipUrlSync": false,
+          "sort": 1,
+          "type": "query"
+        }
+      ]
+    },
+    "time": {
+      "from": "now-6h",
+      "to": "now"
+    },
+    "timepicker": {
+      "refresh_intervals": [
+        "10s",
+        "30s",
+        "1m",
+        "5m",
+        "15m",
+        "30m",
+        "1h",
+        "2h",
+        "1d"
+      ]
+    },
+    "timezone": "browser",
+    "title": "Account Repository Migration Tool",
+    "uid": "adwsxk37fvw8wc",
+    "version": 60,
+    "weekStart": ""
+  }

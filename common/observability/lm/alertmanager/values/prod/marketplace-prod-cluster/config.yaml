@@ -1,0 +1,98 @@
+---
+alertmanager:
+  templates:
+    alertmanager.tmpl: |-
+      '{{ define "generator.url" }} {{ (index .Alerts 0).GeneratorURL | reReplaceAll "&g0.tab=1$" "&g0.tab=0" }} {{ end }}'
+
+  config:
+    global:
+      smtp_from: 'alertmanager@leroy-merlin.ru'
+      smtp_smarthost: 'massmail.hq.ru.corp.leroymerlin.com:25'
+      smtp_require_tls: false
+
+    templates:
+      - '/etc/alertmanager/*.tmpl'
+
+    route:
+      group_by: ['alertname', 'job']
+      receiver: 'void'
+      repeat_interval: 4h
+
+  ## Add your Alertmanager configuration below
+
+      routes:
+      # Customer - Monitoring and Strategic Analysis of the Market
+        - matchers:
+            - opsgenie_team_id="25c5be09-5a73-4d81-bcb8-f9ab9706e425"
+            - product_id="P0355"
+          receiver: 'mr-crawler-grafana-oncall-webhook'
+      # Order Tracking - Order Flows (ex OMS)
+        - matchers:
+            - product_id="P0718"
+          receiver: 'order-tracking-grafana-oncall-webhook'
+
+      # Return flow control - Order Flows
+        - matchers:
+            - product_id="P0591"
+          receiver: 'returns-grafana-oncall-webhook'
+
+      # Logistic Calculator
+        - matchers:
+            - product_id="P0555"
+          receiver: 'logistic-calculator-grafana-oncall-webhook'
+
+      # Management of merchant orders - Order Flows
+        - matchers:
+            - product_id="P0716"
+          receiver: 'merchant-orders-grafana-oncall-webhook'
+
+      # LMRU Marketplace MAS project
+        - matchers:
+            - product_id="P0160"
+          receiver: 'dmpsl-grafana-oncall'
+
+      # Selling shipping
+        - matchers:
+            - product_id=~"P0442|P0752"
+          receiver: 'ss-grafana-oncall-webhook'
+
+    receivers:
+      - name: 'void'
+
+      - name: 'mr-crawler-grafana-oncall-webhook'
+        webhook_configs:
+          - url: 'https://obs-grafana-oncall-yc-techno.apps.lmru.tech/80/integrations/v1/alertmanager/mUFjViYAZuwUBGCl7Ky9OIUnR/'
+            send_resolved: true
+
+      - name: 'order-tracking-grafana-oncall-webhook'
+        webhook_configs:
+          - url: 'https://obs-grafana-oncall-yc-techno.apps.lmru.tech/93/integrations/v1/alertmanager/VMrsVQbWWgh6wF4X1gKRlU4uf/'
+            send_resolved: true
+
+      # Return flow control - Order Flows
+      - name: 'returns-grafana-oncall-webhook'
+        webhook_configs:
+          - url: 'https://obs-grafana-oncall-yc-techno.apps.lmru.tech/52/integrations/v1/alertmanager/zNbH8CkZ9yElBqtZbTlf3AVcv/'
+
+      - name: 'logistic-calculator-grafana-oncall-webhook'
+        webhook_configs:
+          - url: 'https://obs-grafana-oncall-yc-techno.apps.lmru.tech/94/integrations/v1/alertmanager/CjiSp0Xqccxj43hAGtnX3062B/'
+            send_resolved: true
+
+      # Management of merchant orders - Order Flows
+      - name: 'merchant-orders-grafana-oncall-webhook'
+        webhook_configs:
+          - url: 'https://obs-grafana-oncall-yc-techno.apps.lmru.tech/69/integrations/v1/alertmanager/qQHAEk6rGQBySef4cexLIk21t/'
+            send_resolved: true
+
+      # LMRU Marketplace MAS project
+      - name: 'dmpsl-grafana-oncall'
+        webhook_configs:
+          - url: 'https://obs-grafana-oncall-yc-techno.apps.lmru.tech/68/integrations/v1/alertmanager/uGc9crk7DsuaIJtywitH0yZUp/'
+            send_resolved: true
+
+      # Selling shipping
+      - name: 'ss-grafana-oncall-webhook'
+        webhook_configs:
+          - url: 'https://obs-grafana-oncall-yc-techno.apps.lmru.tech/35/integrations/v1/alertmanager/1Q504TBZNMBZlSa06N0z5r9pU/'
+            send_resolved: true

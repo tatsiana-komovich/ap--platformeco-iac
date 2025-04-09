@@ -1,0 +1,58 @@
+---
+# Default values for IngressNginxController.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+IngressNginxController:
+  main:
+    name: main
+    spec:
+      chaosMonkey: false
+      disableHTTP2: false
+      hsts: false
+      ingressClass: nginx
+      inlet: LoadBalancer
+      maxReplicas: 1
+      minReplicas: 1
+      underscoresInHeaders: false
+      validationEnabled: true
+      enableIstioSidecar: true
+    loadBalancer:
+      behindL7Proxy: true
+      realIPHeader: X-Forwarded-For
+    nodeSelector:
+      node-role/loadbalancer: ""
+    tolerations:
+      - effect: NoExecute
+        key: dedicated
+        operator: Equal
+        value: loadbalancer
+    resourcesRequests:
+      mode: Static
+      static:
+        cpu: 500m
+        memory: 500Mi
+
+  d8-main:
+    name: d8-main
+    spec:
+      chaosMonkey: false
+      disableHTTP2: false
+      hsts: false
+      ingressClass: nginx-d8s
+      inlet: LoadBalancer
+      maxReplicas: 1
+      minReplicas: 1
+      underscoresInHeaders: false
+      validationEnabled: true
+      waitLoadBalancerOnTerminating: 60
+      enableIstioSidecar: true
+    loadBalancer:
+      behindL7Proxy: true
+      realIPHeader: X-Forwarded-For
+    nodeSelector:
+      node-role/d8-loadbalancer: ""
+    tolerations:
+      - effect: NoExecute
+        key: dedicated
+        operator: Equal
+        value: d8-loadbalancer

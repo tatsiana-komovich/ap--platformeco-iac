@@ -1,0 +1,21 @@
+---
+tempo:
+  fullnameOverride: otel-tempo-self-monitoring
+  nodeSelector:
+    node-role/tempo: ""
+  tolerations:
+    - key: dedicated
+      value: tempo
+      operator: Equal
+      effect: NoSchedule
+  tempo:
+    reportingEnabled: false
+    repository: "docker.art.lmru.tech/grafana/tempo"
+    resources:
+      limits:
+        memory: 2Gi
+      requests:
+        cpu: "1000m"
+        memory: 2Gi
+    receivers:
+      otlp: null

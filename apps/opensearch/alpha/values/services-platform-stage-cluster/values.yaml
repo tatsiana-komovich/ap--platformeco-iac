@@ -1,0 +1,288 @@
+---
+opendistro:
+  tariff: basic
+
+  project: services
+
+  cluster: staging
+
+  node_pref: s
+
+  userlist:
+    services: ["admin", "filebeat", "logstash", "kibana", "read_only_filebeat", "apiuser"]
+
+  common:
+    nodegroup: opendistro-common
+
+  init:
+    image:
+      repo: "docker-flant.art.lmru.tech/lmru/devops/opensearch--"
+      name: "init-image"
+      tag: "0.0.2"
+
+  opendistro:
+    image:
+      repo: "docker-flant.art.lmru.tech/lmru/devops/opensearch--"
+      name: "opensearch"
+      tag: "2.16.0"
+    # custom - самодельные сертификаты только для старых серверов
+    # cluster - выписываются при помощи k8s
+    certificates: "custom"
+    pv_storageclass: 3par-1-lun81-3cbe4eda
+    pv_size: 200Gi
+    replicas: "3"
+    limits:
+      memory: 6Gi
+    requests:
+      cpu: 1
+      memory: 6Gi
+    s3_backup:
+      enabled: true
+      repos:
+        - repository: s3-backup-new
+          client: default
+          access_key: '<path:services/data/opensearch#services-platform.s3_backup_new.access_key.stage>'
+          secret_key: '<path:services/data/opensearch#services-platform.s3_backup_new.secret_key.stage>'
+          scheme: https
+          endpoint: "https://storage.yandexcloud.net"
+          region: ru-central1
+          max_snapshot_bytes_per_sec: "40m" # 40MB/s
+          max_restore_bytes_per_sec: "40m"
+          bucket: flant-services-platform-stage-opendistro-new
+    keystore:
+      - secretName: opendistro-s3-backup-new
+        items:
+          - key: s3.access_key
+            path: s3.client.default.access_key
+          - key: s3.secret_key
+            path: s3.client.default.secret_key
+    wait_cluster_green: true
+
+  exporter:
+    enabled: true
+    samplelimit: "200000"
+    image:
+      repo: "docker-flant.art.lmru.tech/lmru/devops/opensearch--"
+      name: "os-exporter"
+      tag: "0.0.2"
+
+  snapshot_exporter:
+    enabled: true
+    image:
+      repo: "docker-flant.art.lmru.tech/lmru/devops/opensearch--"
+      name: "os-snapshot-exporter"
+      tag: "0.0.1"
+
+  oneday_exporter:
+    enabled: true
+    image:
+      repo: "docker-flant.art.lmru.tech/lmru/devops/opensearch--"
+      name: "os-oneday-exporter"
+      tag: "0.0.2"
+
+  admin:
+    elasticsearch:
+      username: admin
+      roles:
+        - admin
+      password: '<path:services/data/opensearch#admin.elasticsearch.password.stage>'
+    madison_key: 3a2042f5c31341605077ba8a4285d96101e6907733dba9e320f62694adb3cf38
+    restore_madison_key: 5fa60adacb9f300d3e7ebc4d726ec9637dc35a80724a8e06fc41e927fbb67d87
+
+  apiuser:
+    elasticsearch:
+      password: '<path:services/data/opensearch#apiuser.elasticsearch.password.stage>'
+      username: apiuser
+      roles: []
+
+  read_only_filebeat:
+    elasticsearch:
+      username: read_only_filebeat
+      roles:
+        - readall
+        - kibanauser
+      password: '<path:services/data/opensearch#read_only_filebeat.elasticsearch.password.stage>'
+
+  csi:
+    enabled: true
+    attacher:
+      image:
+        repo: "docker-flant.art.lmru.tech/lmru/devops/opensearch--"
+        name: "csi-attacher"
+        tag: "0.0.1"
+    driver_registrar:
+      image:
+        repo: "docker-flant.art.lmru.tech/lmru/devops/opensearch--"
+        name: "csi-node-driver-registrar"
+        tag: "0.0.1"
+    provisioner:
+      image:
+        repo: "docker-flant.art.lmru.tech/lmru/devops/opensearch--"
+        name: "csi-provisioner"
+        tag: "0.0.1"
+    s3:
+      image:
+        repo: "docker-flant.art.lmru.tech/lmru/devops/opensearch--"
+        name: "csi-s3"
+        tag: "0.0.1"
+
+  vector:
+    enabled: false
+
+  recoverer:
+    enabled: false
+    image:
+      repo: "docker-flant.art.lmru.tech/lmru/devops/opensearch--"
+      name: "opensearch"
+      tag: "2.16.0"
+    sc_system_name: 3par-1-lun81-3cbe4eda
+
+  filebeat:
+    enabled: true
+    image:
+      repo: "docker-flant.art.lmru.tech/lmru/devops/opensearch--"
+      name: "filebeat"
+      tag: "0.0.2"
+    index_name: "stage-%{+yyyy.MM.dd}"
+    setup_name: "stage"
+    setup_pattern: "stage-*"
+
+  logstash:
+    enabled: true
+    image:
+      repo: "docker-flant.art.lmru.tech/lmru/devops/opensearch--"
+      name: "logstash"
+      tag: "0.0.1"
+    loadbalancer: {}
+    external:
+      enabled: true
+    replicas: 2
+    workers: 8
+    queuesize: 1900mb
+    loglevel: info
+    resources:
+      limits:
+        memory: 2Gi
+      requests:
+        cpu: 100m
+        memory: 2Gi
+    pv:
+      size: 2Gi
+      storageclass: 3par-1-lun81-3cbe4eda
+    elasticsearch:
+      username: logstash
+      password: '<path:services/data/opensearch#services-platform.logstash.password.stage>'
+      roles:
+        - filebeat
+        - logstash
+    sourceRanges:
+      - 10.9.68.67/32
+      - 10.9.68.76/32
+      - 10.9.68.77/32
+      - 10.9.68.78/32
+      - 10.9.68.79/32
+      - 10.9.68.80/32
+      - 10.203.97.138/32
+      - 10.203.97.148/32
+      - 10.203.97.150/32
+      - 10.203.97.152/32
+      - 10.203.97.154/32
+      - 10.203.97.155/32
+    nodePort: 31727
+    exporter:
+      enabled: true
+      image:
+        repo: "docker-flant.art.lmru.tech/lmru/devops/opensearch--"
+        name: "logstash-exporter"
+        tag: "0.0.1"
+
+  kibana:
+    enabled: true
+    image:
+      repo: "docker-flant.art.lmru.tech/lmru/devops/opensearch--"
+      name: "opensearch-dashboards"
+      tag: "2.16.0"
+    resources:
+      limits:
+        memory: 2Gi
+      requests:
+        cpu: 500m
+        memory: 1Gi
+    maxoldspacesize: 1000
+    host: kibana-services-stage.apps.lmru.tech
+    connecturl: dex-services-stage.apps.lmru.tech
+    auth: '<path:services/data/opensearch#services-platform.kibana.auth.stage>'
+    elasticsearch:
+      username: kibanaserver
+      password: '<path:services/data/opensearch#services-platform.kibana.password.stage>'
+      roles: [""]
+
+  shell_operator:
+    image:
+      repo: "docker-flant.art.lmru.tech/lmru/devops/opensearch--"
+      name: "shell-operator"
+      tag: "0.0.1"
+
+  pv_retain_operator:
+    enabled: true
+
+  cerebro:
+    enabled: true
+    image:
+      repo: "docker-flant.art.lmru.tech/lmru/devops/opensearch--"
+      name: "cerebro"
+      tag: "0.0.1"
+    host: cerebro-services-stage.apps.lmru.tech
+    secret: '<path:services/data/opensearch#services-platform.cerebro.secret.stage>'
+    auth: '<path:services/data/opensearch#services-platform.cerebro.auth.stage>'
+
+  xtractor:
+    enabled: true
+    image:
+      repo: "docker-flant.art.lmru.tech/lmru/devops/opensearch--"
+      name: "xtractor"
+      tag: "0.2.21"
+    host: xtractor-services-stage.apps.lmru.tech
+    kibana: "kibana-services-stage.apps.lmru.tech"
+
+  xkibana:
+    enabled: false
+
+  curator:
+    image:
+      repo: "docker-flant.art.lmru.tech/lmru/devops/opensearch--"
+      name: "os-curator"
+      tag: "0.0.1"
+
+  retention:
+    enabled: true
+
+  dereplicator:
+    enabled: true
+
+  danglingChecker:
+    enabled: true
+    schedule: "0 10 * * *"
+
+  madison:
+    key: 280ea36804f79a6d10943c7af3042a9d7fd63f8dee5f2b94fa9d63b5dcb40bab
+    project: lm-elk
+
+  node_updater:
+    enabled: true
+    image:
+      repo: "docker-flant.art.lmru.tech/lmru/devops/opensearch--"
+      name: "node-updater"
+      tag: "0.0.1"
+
+  sheet_reporter:
+    enabled: true
+    image:
+      repo: "docker-flant.art.lmru.tech/lmru/devops/opensearch--"
+      name: "sheet-reporter"
+      tag: "0.2.0"
+    job:
+      schedule: "30 22 * * *"
+
+billing-resource:
+  resourceName: opendistro

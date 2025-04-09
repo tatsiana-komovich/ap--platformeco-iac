@@ -1,0 +1,19 @@
+---
+cluster_authorization:
+  defaults:
+    default_sa_permissions: &default
+      accessLevel: User
+      limitNamespaces:
+        - default
+      allowScale: true
+      allowAccessToSystemNamespaces: true
+      portForwarding: true
+
+DexProvider:
+{{- if .UseCustomCrowdApp }}
+  clientID: k8s-{{ .Cluster }}-{{ .Environment }}
+  clientSecret: crowd_app_k8s-{{ .Cluster }}-{{ .Environment }}
+{{- else }}
+  clientID: k8s-argocd
+  clientSecret: crowd_app_k8s-argocd
+{{- end }}

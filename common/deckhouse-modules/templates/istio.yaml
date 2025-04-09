@@ -1,0 +1,9 @@
+{{- with (get .Values "istio") }}
+---
+apiVersion: deckhouse.io/v1alpha1
+kind: ModuleConfig
+metadata:
+  name: istio
+spec:
+  {{- toYaml . | nindent 2 }}
+{{- end }}

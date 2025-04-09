@@ -1,0 +1,32 @@
+---
+lokiConfig:
+  size: 600
+  retention: 720
+  storage: default
+  memoryRequest: 5Gi
+  nodeSelector:
+    node-role/d8-loki: ""
+  tolerations:
+    - effect: NoExecute
+      key: dedicated
+      operator: Equal
+      value: d8-loki
+  storeSystemLogs: false
+
+loggingConfig:
+  enabled: true
+  custom:
+    byFilePath:
+      type: File
+      file:
+        include:
+          - /var/log/kube-audit/audit.log
+    byNsName:
+      type: KubernetesPods
+      kubernetesPods:
+        namespaceSelector:
+          matchNames:
+            - d8-metallb
+
+eventsExporterPod:
+  enabled: true

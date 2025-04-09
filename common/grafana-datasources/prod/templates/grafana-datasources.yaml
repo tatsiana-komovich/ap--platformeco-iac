@@ -1,0 +1,14 @@
+{{- range $key, $vol := $.Values.datasources }}
+{{- $files := $.Files.Glob (printf "datasources/%s/*.yaml" $vol.path) }}
+{{- if $files }}
+{{- range $path, $fileContent := $files }}
+{{- $datasourceName := regexReplaceAll "(^.*/)(.*)\\.yaml$" $path "${2}" }}
+---
+apiVersion: deckhouse.io/v1
+kind: GrafanaAdditionalDatasource
+metadata:
+  name: {{ $datasourceName | quote | trunc 63 | trimSuffix "-" }}
+{{ $.Files.Get $path }}
+{{- end }}
+{{- end }}
+{{- end }}

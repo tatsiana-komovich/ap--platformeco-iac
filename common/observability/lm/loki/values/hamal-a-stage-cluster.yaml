@@ -1,0 +1,26 @@
+---
+lokiConfig:
+  size: 93
+  retention: 720
+  storage: network-ssd-nonreplicated
+  memoryRequest: 5Gi
+  nodeSelector:
+    node-role/d8-loki: ""
+  tolerations:
+    - effect: NoExecute
+      key: dedicated
+      operator: Equal
+      value: d8-loki
+  storeSystemLogs: false
+
+loggingConfig:
+  enabled: true
+  custom:
+    byFilePath:
+      type: File
+      file:
+        include:
+          - /var/log/kube-audit/audit.log
+
+eventsExporterPod:
+  enabled: true

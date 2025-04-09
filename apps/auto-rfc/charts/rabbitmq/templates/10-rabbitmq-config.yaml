@@ -1,0 +1,217 @@
+{{ $users := .Values.config.users }}
+{{ $mqUsers := .Values.config.mqUsers }}
+{{ $vhosts := .Values.config.commonVhosts }}
+{{ $adminUser := .Values.config.username }}
+{{ $adminPwd := .Values.config.password }}
+{{ $adminVhosts := .Values.config.adminVhost }}
+{{ $watermarkAbsolute := .Values.config.high_watermark.absolute }}
+{{ $return_per_object_metrics := .Values.prometheus.return_per_object_metrics }}
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: {{ include "chart.name" . }}
+stringData:
+  enabled_plugins: |
+{{- if hasKey .Values.config "enabled_plugins" }}
+      [{{- $.Values.config.enabled_plugins }}].
+{{- else}}
+      [rabbitmq_management,rabbitmq_peer_discovery_k8s,rabbitmq_prometheus].
+{{- end }}
+  rabbitmq.conf: |
+      cluster_formation.peer_discovery_backend  = rabbit_peer_discovery_k8s
+      cluster_formation.k8s.host = kubernetes.default.svc.cluster.local
+      cluster_formation.k8s.address_type = hostname
+      cluster_formation.node_cleanup.interval = 10
+      cluster_formation.node_cleanup.only_log_warning = true
+      cluster_partition_handling = autoheal
+      cluster_formation.k8s.service_name = {{ include "chart.name" . }}
+      queue_master_locator=min-masters
+      loopback_users.guest = false
+      vm_memory_high_watermark.absolute = {{ $watermarkAbsolute }}
+      {{- if $return_per_object_metrics }}
+      prometheus.return_per_object_metrics = true
+      {{- end }}
+  advanced.config: |
+      [
+        {rabbitmq_management,
+          [{listener, [{port, 15672}]},
+              {load_definitions, "/etc/rabbitmq/rabbitmq_definitions.json"}]
+        }
+      ].
+  rabbitmq_definitions.json: |
+      {
+{{- if hasKey .Values.config "exchanges" }}
+{{- $exchanges := .Values.config.exchanges }}
+        "exchanges": [
+{{- $lastIndex := sub (len $exchanges) 1 }}
+{{- range $index, $exchange := $exchanges }}
+{{- range $vhost := $vhosts}}
+          {
+            "name": "{{ $exchange }}",
+            "arguments": {},
+            "auto_delete": false,
+            "durable": true,
+            "type": "fanout",
+            "vhost": "{{ $vhost }}"
+          }{{- if ne $index $lastIndex }},{{- end -}}
+{{- end }}
+{{- end }}
+        ],
+{{- end }}
+{{- if hasKey .Values.config "queues" }}
+{{- $queues := .Values.config.queues }}
+        "queues": [
+{{- $lastIndex := sub (len $queues) 1 }}
+{{- range $index, $queue := $queues }}
+{{- range $vhost := $vhosts}}
+          {
+            "name": "{{ $queue }}",
+            "arguments": {},
+            "auto_delete": false,
+            "durable": true,
+            "type": "classic",
+            "vhost": "{{ $vhost }}"
+          }{{- if ne $index $lastIndex }},{{- end }}
+{{- end }}
+{{- end }}
+        ],
+{{- end }}
+{{- if hasKey .Values.config "bindings" }}
+        "bindings": [
+{{- $bindings := .Values.config.bindings }}
+{{- $lastBinding := last (keys $bindings) }}
+{{- range $binding, $prefs := $bindings }}
+{{- $destination := $prefs.destination }}
+{{- $source := $prefs.source }}
+{{- range $vhost := $vhosts}}
+          {
+            "arguments": {},
+            "destination": "{{ $destination }}",
+            "destination_type": "queue",
+            "routing_key": "",
+            "source": "{{ $source }}",
+            "vhost": "{{ $vhost }}"
+          }{{- if ne $binding $lastBinding }},{{- end }}
+{{- end }}
+{{- end }}
+        ],
+{{- end }}
+        "users": [
+{{- range $user, $prefs := $users }}
+{{- $pwd := $prefs.password }}
+{{- $tag := $prefs.tag }}
+          {
+            "name": "{{ $user }}",
+            "password": "{{ $pwd }}",
+            "tags": "{{ $tag }}"
+          },
+{{- end }}
+{{- range $mqUser, $mqPrefs := $mqUsers }}
+{{- $mqPwd := $mqPrefs.password }}
+{{- $mqTag := $mqPrefs.tag }}
+          {
+            "name": "{{ $mqUser }}",
+            "password": "{{ $mqPwd }}",
+            "tags": "{{ $mqTag }}"
+          },
+{{- end }}
+          {
+            "name": "{{ $adminUser }}",
+            "password": "{{ $adminPwd }}",
+            "tags": "administrator"
+          }
+        ],
+        "permissions": [
+{{- range $user, $prefs := $users }}
+{{- range $adminVhost := $adminVhosts }}
+          {
+            "user": "{{ $user }}",
+            "vhost": "{{ $adminVhost }}",
+            "configure": ".*",
+            "write": ".*",
+            "read": ".*"
+          },
+{{- end }}
+{{- range $vhost := $vhosts}}
+          {
+            "user": "{{ $user }}",
+            "vhost": "{{ $vhost }}",
+            "configure": ".*",
+            "write": ".*",
+            "read": ".*"
+          },
+{{- end }}
+{{- end }}
+{{- range $adminVhost := $adminVhosts }}
+          {
+            "user": "{{ $adminUser }}",
+            "vhost": "{{ $adminVhost }}",
+            "configure": ".*",
+            "write": ".*",
+            "read": ".*"
+          },
+{{- range $mqUser, $mqPrefs := $mqUsers }}
+          {
+            "user": "{{ $mqUser }}",
+            "vhost": "{{ $adminVhost }}",
+            "configure": ".*",
+            "write": ".*",
+            "read": ".*"
+          },
+{{- end }}
+{{- end }}
+{{- $lastIndex := sub (len $vhosts) 1 }}
+{{- range $index, $vhost := $vhosts}}
+          {
+            "user": "{{ $adminUser }}",
+            "vhost": "{{ $vhost }}",
+            "configure": ".*",
+            "write": ".*",
+            "read": ".*"
+          }{{- if ne $index $lastIndex }},{{- end }}
+{{- end }}
+        ],
+        "vhosts":[
+{{- range $adminVhost := $adminVhosts }}
+              {
+                "name": "{{ $adminVhost }}"
+              },
+{{- end }}
+{{- $lastIndex := sub (len $vhosts) 1 }}
+{{- range $index, $vhost := $vhosts}}
+              {
+                "name": "{{ $vhost }}"
+              }{{- if ne $index $lastIndex }},{{- end }}
+{{- end }}
+        ],
+        "policies":[
+{{- range $adminVhost := $adminVhosts }}
+              {
+                "vhost": "{{ $adminVhost }}",
+                "name": "{{ $adminVhost }}_ha",
+                "pattern": "",
+                "definition": {
+                  "ha-mode": "all",
+                  "ha-sync-mode": "automatic",
+                  "ha-sync-batch-size": 81920,
+                  "expires":259200000
+                }
+              },
+{{- end }}
+{{- $lastIndex := sub (len $vhosts) 1 }}
+{{- range $index, $vhost := $vhosts}}
+              {
+                "vhost": "{{ $vhost }}",
+                "name": "ha",
+                "pattern": "",
+                "definition": {
+                  "ha-mode": "all",
+                  "ha-sync-mode": "automatic",
+                  "ha-sync-batch-size": 81920,
+                  "expires":259200000
+                }
+              }{{- if ne $index $lastIndex }},{{- end }}
+{{- end }}
+        ]
+      }

@@ -1,0 +1,56 @@
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  name: loadbalancer
+spec:
+  chaos:
+    mode: Disabled
+  cloudInstances:
+    classReference:
+      kind: VsphereInstanceClass
+      name: loadbalancer
+    maxPerZone: 1
+    minPerZone: 1
+    zones:
+      - X2-A
+  cri:
+    type: Containerd
+  disruptions:
+    approvalMode: Automatic
+  kubelet:
+    containerLogMaxFiles: 4
+    containerLogMaxSize: 50Mi
+    resourceReservation:
+      mode: "Off"
+  nodeTemplate:
+    labels:
+      node-role/loadbalancer: ""
+      node-role/metallb-speaker: ""
+    taints:
+      - effect: NoExecute
+        key: dedicated
+        value: "loadbalancer"
+  nodeType: CloudEphemeral
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  name: application-nodes
+spec:
+  chaos:
+    mode: Disabled
+  cloudInstances:
+    classReference:
+      kind: VsphereInstanceClass
+      name: application-nodes
+    maxPerZone: 6
+    minPerZone: 1
+    zones:
+      - X2-A
+  disruptions:
+    approvalMode: Automatic
+  nodeType: CloudEphemeral
+  nodeTemplate:
+    labels:
+      node-role.k8s.lmru.tech/application: ''

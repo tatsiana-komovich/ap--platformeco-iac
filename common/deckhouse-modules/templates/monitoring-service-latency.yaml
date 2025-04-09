@@ -1,0 +1,9 @@
+{{- with (get .Values "monitoring-service-latency") }}
+---
+apiVersion: deckhouse.io/v1alpha1
+kind: ModuleConfig
+metadata:
+  name: monitoring-service-latency
+spec:
+  {{- toYaml . | nindent 2 }}
+{{- end }}

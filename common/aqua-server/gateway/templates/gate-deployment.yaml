@@ -1,0 +1,176 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-gateway
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: {{ .Release.Name }}-gateway
+    aqua.component: gateway
+{{ include "aqua.labels" . | indent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-gateway
+  template:
+    metadata:
+      annotations:
+        checksum/config: {{ include (print $.Template.BasePath "/gate-configmap.yaml") . | sha256sum }}
+      {{- if and (.Values.tolerations) (semverCompare "<1.6-0" .Capabilities.KubeVersion.GitVersion) }}
+        scheduler.alpha.kubernetes.io/tolerations: '{{ toJson .Values.tolerations }}'
+      {{- end }}
+      {{- with .Values.podAnnotations }}
+      {{- range $key,$value := . }}
+        {{ $key }}: {{ $value | quote }}
+      {{- end }}
+      {{- end }}
+      labels:
+        app: {{ .Release.Name }}-gateway
+        aqua.component: gateway
+        {{- range $key, $value := .Values.podLabels }}
+        {{- printf "%s: %s" $key (tpl $value $ | quote) | nindent 8 }}
+        {{- end }}
+{{ include "aqua.labels" . | indent 8 }}
+      name: {{ .Release.Name }}-gateway
+    spec:
+      {{- with .Values.securityContext }}
+      securityContext:
+{{ toYaml . | indent 8 }}
+      {{- end }}
+      serviceAccount: {{ template "gateway.serviceAccount" . }}
+      containers:
+      - name: gate
+        {{- with .Values.container_securityContext }}
+        securityContext:
+{{ toYaml . | indent 10 }}
+        {{- end }}
+        image: "{{ .Values.imageCredentials.repositoryUriPrefix }}/{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        imagePullPolicy: "{{ .Values.image.pullPolicy }}"
+        envFrom:
+        - configMapRef:
+            name: {{ .Release.Name }}-gateway-config
+        env:
+        {{- if .Values.global.db.passwordFromSecret.enabled }}
+        - name: SCALOCK_DBPASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Values.global.db.passwordFromSecret.dbPasswordName }}
+              key: {{ .Values.global.db.passwordFromSecret.dbPasswordKey }}
+          {{- else }}
+        - name: SCALOCK_DBPASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Release.Name }}-database-password
+              key: db-password
+          {{- end }}
+        - name: SCALOCK_AUDIT_DBPASSWORD
+          {{- if .Values.global.db.passwordFromSecret.enabled }}
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Values.global.db.passwordFromSecret.dbAuditPasswordName }}
+              key: {{ .Values.global.db.passwordFromSecret.dbAuditPasswordKey }}
+          {{- else if and ( not .Values.global.db.passwordFromSecret.enabled ) ( .Values.global.db.external.enabled ) }}
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Release.Name }}-database-password
+              {{- if .Values.global.db.external.auditPassword }}
+              key: audit-password
+              {{- else }}
+              key: db-password
+              {{- end }}
+          {{- else }}
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Release.Name }}-database-password
+              key: audit-password
+          {{- end }}
+        {{- if .Values.activeactive }}
+        {{- if .Values.global.db.passwordFromSecret.enabled }}
+        - name: AQUA_PUBSUB_DBPASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Values.global.db.passwordFromSecret.dbPubsubPasswordName }}
+              key: {{ .Values.global.db.passwordFromSecret.dbPubsubPasswordKey }}
+          {{- else }}
+        - name: AQUA_PUBSUB_DBPASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Release.Name }}-database-password
+              {{- if .Values.global.db.external.pubsubPassword }}
+              key: pubsub-password
+              {{- else }}
+              key: db-password
+              {{- end }}
+        {{- end }}
+        {{- end }}
+        {{- if .Values.global.db.externalDbCerts.enable }}
+        - name: SSL_CERT_DIR
+          value: "/etc/ext_db_certs:/etc/ssl/certs"
+        {{- end }}
+        {{- include "server.extraEnvironmentVars" .Values | nindent 8 }}
+        {{- include "server.extraSecretEnvironmentVars" .Values | nindent 8 }}
+        ports:
+        - containerPort: 3622
+          protocol: TCP
+        - containerPort: 8443
+          protocol: TCP
+{{- with .Values.livenessProbe }}
+        livenessProbe:
+{{ toYaml . | indent 10 }}
+{{- end }}
+{{- with .Values.readinessProbe }}
+        readinessProbe:
+{{ toYaml . | indent 10 }}
+{{- end }}
+        volumeMounts:
+{{- with .Values.extraVolumeMounts }}
+  {{- toYaml . | nindent 10 }}
+{{- end }}
+        {{- if .Values.TLS.enabled }}
+        - name: certs
+          mountPath: /opt/aquasec/ssl/
+          readOnly: true
+        {{- end }}
+        {{- if .Values.global.db.externalDbCerts.enable }}
+        - name: ext-db-cert
+          mountPath: /etc/ext_db_certs/
+          readOnly: true
+        {{- end }}
+        resources:
+{{ toYaml .Values.resources | indent 12 }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+{{ toYaml . | indent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+{{ toYaml . | indent 8 }}
+      {{- end }}
+      {{- if and (.Values.tolerations) (semverCompare "^1.6-0" .Capabilities.KubeVersion.GitVersion) }}
+      tolerations:
+{{ toYaml .Values.tolerations | indent 6 }}
+      {{- end }}
+      volumes:
+{{- with .Values.extraVolumes }}
+  {{- toYaml . | nindent 6 }}
+{{- end }}
+      {{- if .Values.TLS.enabled }}
+      - name: certs
+        secret:
+          defaultMode: 420
+          secretName: {{ .Values.TLS.secretName }}
+          items:
+          - key: {{ .Values.TLS.publicKey_fileName }}
+            path: cert.pem
+          - key: {{ .Values.TLS.privateKey_fileName }}
+            path: key.pem
+          {{- if .Values.TLS.rootCA_fileName }}
+          - key: {{ .Values.TLS.rootCA_fileName }}
+            path: ca.pem
+          {{- end }}
+      {{- end }}
+      {{- if .Values.global.db.externalDbCerts.enable }}
+      - name: ext-db-cert
+        secret:
+          secretName: {{ .Values.global.db.externalDbCerts.certSecretName }}
+      {{- end }}

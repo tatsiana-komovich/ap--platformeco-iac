@@ -1,0 +1,21 @@
+---
+apiVersion: deckhouse.io/v1alpha1
+kind: NodeGroupConfiguration
+metadata:
+  name: configure-sysctl.sh
+spec:
+  weight: 100
+  bundles: ["*"]
+  nodeGroups: ["router"]
+  content: |
+    param="net.netfilter.nf_conntrack_tcp_timeout_time_wait"
+    value="30"
+
+    if grep -q -E "^$param.*" /etc/sysctl.conf
+    then
+        echo "Parameter $param is already set"
+    else
+        echo "$param=$value" | tee -a /etc/sysctl.conf >/dev/null 2>&1
+    fi
+
+    sysctl -p >/dev/null 2>&1

@@ -1,0 +1,22 @@
+---
+k8s_prometheus_remote_write:
+  vminsert-devops-lmru-tech-custom-remote-write:
+    url:
+      _default: https://vminsert.devops.lmru.tech/insert/0/prometheus/
+    writeRelabelConfigs: {}
+  shared-prom-x1-p01:
+    url:
+      _default: http://p-prometheus-01.x1.obs.lmru.tech:9090/api/v1/write
+    writeRelabelConfigs:
+      _default:
+        - sourceLabels: [__name__]
+          regex: "^carriers_courier_choice_total$|^carriers_choice_requests_total$|^carriers_restrictions_total$"
+          action: "keep"
+  shared-prom-x2-p01:
+    url:
+      _default: http://p-prometheus-01.x2.obs.lmru.tech:9090/api/v1/write
+    writeRelabelConfigs:
+      _default:
+        - sourceLabels: [__name__]
+          regex: "^carriers_courier_choice_total$|^carriers_choice_requests_total$|^carriers_restrictions_total$"
+          action: "keep"

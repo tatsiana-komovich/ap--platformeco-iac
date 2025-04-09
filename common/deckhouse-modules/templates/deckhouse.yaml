@@ -1,0 +1,55 @@
+{{ if and .Values.clusterName  .Values.clusterDomain (empty .Values.deckhouseSpec )}}
+{{- with (get .Values "deckhouse") }}
+
+{{- $stageEnv := regexMatch "stage"  $.Values.clusterName }}
+{{- $releaseChannel := ternary "EarlyAccess" "Stable" $stageEnv }}
+{{- $updateMode :=  ternary "Auto" "Manual" $stageEnv }}
+
+
+{{ if .releaseChannel }}
+{{ $releaseChannel = .releaseChannel }}
+{{end}}
+
+{{ if .updateMode }}
+{{ $updateMode = .updateMode }}
+{{end}}
+
+{{ if or (and $stageEnv .disableAutoUpdateStage) (and (not $stageEnv) .disableAutoUpdateProd) }}
+{{ $updateMode = "Manual" }}
+{{ end }}
+
+
+---
+apiVersion: deckhouse.io/v1alpha1
+kind: ModuleConfig
+metadata:
+  name: deckhouse
+spec:
+  version: 1
+  settings:
+    releaseChannel: {{ $releaseChannel }}
+    update:
+      mode: {{ $updateMode }}
+{{- if not $stageEnv }}
+{{ $webhookReceiverUrl :=  print "http://auto-rfc-webhook-receiver.deckhouse-update-notifier.svc."  $.Values.clusterDomain "/" $.Values.clusterName }}
+{{- if .webhookReceiverUrl }}
+{{ $webhookReceiverUrl = print .webhookReceiverUrl "/" $.Values.clusterName }}
+{{- end }}
+      notification:
+        minimalNotificationTime: {{.minimalNotificationTime}}
+        webhook: {{$webhookReceiverUrl}}
+{{- end }}
+      windows:
+{{ .windows |  toYaml | indent 7  }}
+{{- end }}
+{{- end }}
+
+{{- with (get .Values "deckhouseSpec") }}
+---
+apiVersion: deckhouse.io/v1alpha1
+kind: ModuleConfig
+metadata:
+  name: deckhouse
+spec:
+  {{- toYaml . | nindent 2 }}
+{{- end }}

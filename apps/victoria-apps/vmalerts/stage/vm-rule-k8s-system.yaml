@@ -1,0 +1,29 @@
+---
+apiVersion: operator.victoriametrics.com/v1beta1
+kind: VMRule
+metadata:
+  name: vm-rule-k8s-system
+  namespace: devops-core-victoria-alerts
+spec:
+  groups:
+    - name: kubernetes.system
+      rules:
+        - alert: KubeETCDServerDown
+          expr: |
+                (sum by (job, pod, k8s_cluster) (up{job="kube-etcd3", k8s_cluster=~".*"} == 1 default 0)) == 0
+          for: 5m
+          labels:
+            severity: critical
+          annotations:
+            summary: "ETCD server in {{ $labels.k8s_cluster }} cluster is down"
+            description: "ETCD server in {{ $labels.k8s_cluster }} cluster is down"
+
+        - alert: KubeDNSDown
+          expr: |
+                (sum by (job, pod, k8s_cluster) (up{job="kube-dns", k8s_cluster=~".*"} == 1 default 0)) == 0
+          for: 5m
+          labels:
+            severity: warning
+          annotations:
+            summary: "KubeDNSin {{ $labels.k8s_cluster }} cluster is down"
+            description: "KubeDNSin {{ $labels.k8s_cluster }} cluster is down"

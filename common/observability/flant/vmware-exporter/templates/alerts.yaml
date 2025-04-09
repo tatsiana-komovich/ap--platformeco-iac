@@ -1,0 +1,122 @@
+---
+apiVersion: deckhouse.io/v1
+kind: CustomPrometheusRules
+metadata:
+  labels:
+    component: rules
+    prometheus: main
+  name: little-free-space-data-store
+spec:
+  groups:
+    - name: little-free-space-data-store
+      rules:
+      - alert: LittleFreeSpaceDataStore
+        annotations:
+          description: |-
+            В "{{`{{ $labels.ds_name }}`}}" заканчивается свободное место.
+          plk_protocol_version: "1"
+          plk_markup_format: markdown
+          summary: В datastore "{{`{{ $labels.ds_name }}`}}" свободного места меньше 70GB.
+        expr: vmware_datastore_freespace_size{dc_name="X2"} / 1024^3 < 70
+        for: 15m
+        labels:
+          severity_level: "3"
+
+---
+apiVersion: deckhouse.io/v1
+kind: CustomPrometheusRules
+metadata:
+  labels:
+    component: rules
+    prometheus: main
+  name: little-free-memory-prod
+spec:
+  groups:
+    - name: little-free-memory-prod
+      rules:
+      - alert: LittleFreeMemoryProd
+        annotations:
+          description: |-
+            В vSphere кластере "{{`{{ $labels.cluster_name }}`}}" высокое потребление памяти.
+          plk_protocol_version: "1"
+          plk_markup_format: markdown
+          summary: В vSphere кластере "{{`{{ $labels.cluster_name }}`}}" свободной памяти меньше 32GB.
+        expr: (sum(vmware_host_memory_max{cluster_name="x2_cl_k8s_prod",dc_name="X2"}) - sum(vmware_host_memory_usage{cluster_name="x2_cl_k8s_prod",dc_name="X2"})) / 1024 < 32
+        for: 15m
+        labels:
+          severity_level: "3"
+          cluster: "x2_cl_k8s_prod"
+
+---
+apiVersion: deckhouse.io/v1
+kind: CustomPrometheusRules
+metadata:
+  labels:
+    component: rules
+    prometheus: main
+  name: little-free-cpu-prod
+spec:
+  groups:
+    - name: little-free-cpu-prod
+      rules:
+      - alert: LittleFreeCpuProd
+        annotations:
+          description: |-
+            В vSphere кластере "{{`{{ $labels.cluster_name }}`}}" высокое потребление CPU.
+          plk_protocol_version: "1"
+          plk_markup_format: markdown
+          summary: В vSphere кластере "{{`{{ $labels.cluster_name }}`}}" используется больше 95% доступного CPU.
+        expr: sum(vmware_host_cpu_usage{dc_name="X2",cluster_name="x2_cl_k8s_prod"} * 100) / sum(vmware_host_cpu_max{dc_name="X2",cluster_name="x2_cl_k8s_prod"}) > 95
+        for: 15m
+        labels:
+          severity_level: "3"
+          cluster: "x2_cl_k8s_prod"
+
+---
+apiVersion: deckhouse.io/v1
+kind: CustomPrometheusRules
+metadata:
+  labels:
+    component: rules
+    prometheus: main
+  name: little-free-memory-stage
+spec:
+  groups:
+    - name: little-free-memory-stage
+      rules:
+      - alert: LittleFreeMemoryStage
+        annotations:
+          description: |-
+            В vSphere кластере "{{`{{ $labels.cluster_name }}`}}" высокое потребление памяти.
+          plk_protocol_version: "1"
+          plk_markup_format: markdown
+          summary: В vSphere кластере "{{`{{ $labels.cluster_name }}`}}" свободной памяти меньше 32GB.
+        expr: (sum(vmware_host_memory_max{cluster_name="x2_cl_k8s_stage",dc_name="X2"}) - sum(vmware_host_memory_usage{cluster_name="x2_cl_k8s_stage",dc_name="X2"})) / 1024 < 32
+        for: 15m
+        labels:
+          severity_level: "3"
+          cluster: "x2_cl_k8s_stage"
+---
+apiVersion: deckhouse.io/v1
+kind: CustomPrometheusRules
+metadata:
+  labels:
+    component: rules
+    prometheus: main
+  name: little-free-cpu-stage
+spec:
+  groups:
+    - name: little-free-cpu-stage
+      rules:
+      - alert: LittleFreeCpuStage
+        annotations:
+          description: |-
+            В vSphere кластере "{{`{{ $labels.cluster_name }}`}}" высокое потребление CPU.
+          plk_protocol_version: "1"
+          plk_markup_format: markdown
+          summary: В vSphere кластере "{{`{{ $labels.cluster_name }}`}}" используется больше 95% доступного CPU.
+        expr: sum(vmware_host_cpu_usage{dc_name="X2",cluster_name="x2_cl_k8s_stage"} * 100) / sum(vmware_host_cpu_max{dc_name="X2",cluster_name="x2_cl_k8s_stage"}) > 95
+        for: 15m
+        labels:
+          severity_level: "3"
+          cluster: "x2_cl_k8s_stage"

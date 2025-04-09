@@ -1,0 +1,56 @@
+---
+IngressNginxController:
+  main:
+    apiVersion: deckhouse.io/v1
+    name: main
+    acceptRequestsFrom: {}
+    spec:
+      chaosMonkey: false
+      disableHTTP2: false
+      hsts: false
+      maxReplicas: 1
+      minReplicas: 1
+      underscoresInHeaders: false
+      validationEnabled: true
+      ingressClass: nginx
+      inlet: LoadBalancer
+      enableIstioSidecar: true
+    config:
+      large-client-header-buffers: "4 64k"
+    loadBalancer:
+      annotations:
+        yandex.cloud/load-balancer-type: Internal
+        yandex.cpi.flant.com/listener-subnet-id: e9bfvdlpae4s3td7b153
+        yandex.cpi.flant.com/target-group-network-id: enpofm2o1fd0e01e2rfb
+      behindL7Proxy: true
+      realIPHeader: X-Forwarded-For
+
+  d8-main-a:
+    apiVersion: deckhouse.io/v1
+    name: d8-main-a
+    acceptRequestsFrom: {}
+    spec:
+      chaosMonkey: false
+      disableHTTP2: false
+      hsts: false
+      maxReplicas: 1
+      minReplicas: 1
+      underscoresInHeaders: false
+      validationEnabled: true
+      ingressClass: nginx-d8s
+      inlet: LoadBalancer
+      enableIstioSidecar: true
+    loadBalancer:
+      annotations:
+        yandex.cloud/load-balancer-type: Internal
+        yandex.cpi.flant.com/listener-subnet-id: e9bv8hrct60p3d1gmgs2
+        yandex.cpi.flant.com/target-group-network-id: enpofm2o1fd0e01e2rfb
+      behindL7Proxy: true
+      realIPHeader: X-Forwarded-For
+    nodeSelector:
+      node-role/d8-frontend: ""
+    tolerations:
+      - effect: NoExecute
+        key: dedicated
+        operator: Equal
+        value: d8-frontend

@@ -1,0 +1,17 @@
+spec:
+  access: Proxy
+  type: postgres
+  url: 't-pg-fam-db-01.ru-central1.internal:5435'
+  user: '<path:services/data/grafana-datasources#t-pg-fam-db-01-ro-user>'
+  database: 'oncall'
+  secureJsonData:
+    password: '<path:services/data/grafana-datasources#t-pg-fam-db-01-ro-password>'
+  jsonData:
+    database: 'oncall'
+    sslmode: 'disable'
+    maxOpenConns: 100 # Grafana v5.4+
+    maxIdleConns: 2 # Grafana v5.4+
+    maxIdleConnsAuto: true # Grafana v9.5.1+
+    connMaxLifetime: 14400 # Grafana v5.4+
+    postgresVersion: 1000 # 903=9.3, 904=9.4, 905=9.5, 906=9.6, 1000=10
+    timescaledb: false

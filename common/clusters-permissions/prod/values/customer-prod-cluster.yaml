@@ -1,0 +1,199 @@
+---
+cluster_authorization:
+  defaults:
+    default_sa_permissions: &default
+      accessLevel: User
+      limitNamespaces:
+        - default
+      allowScale: true
+      allowAccessToSystemNamespaces: true
+      portForwarding: true
+  crowd:
+    groups:
+      crowd-cr-devops-admin: &default
+        accessLevel: SuperAdmin
+        limitNamespaces:
+          - .*
+        allowScale: true
+        allowAccessToSystemNamespaces: true
+        portForwarding: true
+      crowd-flant-bravo-rw:
+        <<: *default
+        accessLevel: SuperAdmin
+        limitNamespaces:
+          - .*
+        allowScale: true
+        allowAccessToSystemNamespaces: true
+        portForwarding: true
+      crowd-cr-admin:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - cr-.*
+          - crm-auth-.*
+          - crm-b2-.*
+          - crm-legal-portal-.*
+      crowd-cr-ro:
+        <<: *default
+        accessLevel: User
+        limitNamespaces:
+          - cr-.*
+          - crm-auth-.*
+          - crm-b2-.*
+          - crm-legal-portal-.*
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+      crowd-cr-rw:
+        <<: *default
+        accessLevel: Editor
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - cr-.*
+          - crm-auth-.*
+          - crm-b2-.*
+          - crm-legal-portal-.*
+      crowd-sa-cr:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - cr-.*
+          - crm-auth-.*
+          - crm-b2-.*
+          - crm-legal-portal-.*
+      crowd-complatform-admin:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - complatform-.*
+          - crm-combrick2-.*
+      crowd-complatform-ro:
+        <<: *default
+        accessLevel: User
+        limitNamespaces:
+          - complatform-.*
+          - crm-combrick2-.*
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+      crowd-complatform-rw:
+        <<: *default
+        accessLevel: Editor
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - complatform-.*
+          - crm-combrick2-.*
+      crowd-sa-lys:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - cr-loyalty-lys-.*
+      crowd-sa-complatform:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - complatform-.*
+          - crm-combrick2-.*
+      crowd-cdp-admin:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - cdp-.*
+      crowd-cdp-ro:
+        <<: *default
+        accessLevel: User
+        limitNamespaces:
+          - cdp-.*
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+      crowd-cdp-rw:
+        <<: *default
+        accessLevel: Editor
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - cdp-.*
+      crowd-sa-cdp:
+        <<: *default
+        accessLevel: Admin
+        roles:
+          - redisoperator
+        limitNamespaces:
+          - cdp-.*
+      crowd-obs-ro:
+        <<: *default
+        accessLevel: User
+        limitNamespaces:
+          - .*
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+      # otel for tracing
+      crowd-otel-ro:
+        <<: *default
+        accessLevel: User
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+      crowd-otel-rw:
+        <<: *default
+        accessLevel: Editor
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - otel-.*
+      crowd-otel-admin:
+        <<: *default
+        accessLevel: Admin
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - otel-.*
+      crowd-sa-otel:
+        <<: *default
+        accessLevel: SuperAdmin
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - otel-.*
+
+DexProvider:
+  clientID: k8s-customer-prod
+  clientSecret: crowd_app_k8s-customer-prod
+
+ClusterRole:
+  hazelcast-cluster-role:
+    metadata:
+      name: hazelcast-cluster-role
+    rules:
+      - apiGroups:
+          - ""
+        resources:
+          - endpoints
+          - pods
+          - nodes
+          - services
+        verbs:
+          - get
+          - list
+  redis-failover-admin:
+    metadata:
+      annotations:
+        user-authz.deckhouse.io/access-level: Admin
+      name: redis-failover:admin
+    rules:
+      - apiGroups:
+          - "databases.spotahome.com"
+        resources:
+          - redisfailovers
+        verbs:
+          - "*"
+
+ClusterRoleBinding:
+  hazelcast-cluster-role-binding:
+    metadata:
+      name: hazelcast-cluster-role-binding
+    roleRef:
+      kind: ClusterRole
+      name: hazelcast-cluster-role
+    subjects:
+      - kind: ServiceAccount
+        name: hazelcast
+        namespace: crm-combrick2-master

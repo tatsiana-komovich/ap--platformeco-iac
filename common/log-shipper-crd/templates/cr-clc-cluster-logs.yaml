@@ -1,0 +1,16 @@
+---
+apiVersion: deckhouse.io/v1alpha1
+kind: ClusterLoggingConfig
+metadata:
+  name: cluster-logs
+spec:
+  destinationRefs:
+  - obs-elastic
+  labelFilter:
+  - field: namespace
+    operator: Regex
+    values:
+{{- range $k, $v := .Values.cluster.namespaces }}    
+    - {{ printf "%s.+" $v }} 
+{{- end }}
+  type: KubernetesPods

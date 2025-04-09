@@ -1,0 +1,64 @@
+---
+enabled: true
+
+namespace:
+  hybrid: opensearch-hybrid
+  mobileapp: opensearch-mobileapp
+  pdp: opensearch-pdp
+  trace: opensearch-trace
+  headerfoote: opensearch-headerfoote
+  carousel: opensearch-carousel
+  trace-stage: opensearch-trace-stage
+
+ng:
+  hybrid: opensearch-hybrid
+  mobileapp: opensearch-mobileapp
+  pdp: opensearch-pdp
+  trace: opensearch-trace
+  headerfoote: opensearch-hf
+  carousel: opensearch-crsel
+  trace-stage: opensearch-trace-s
+
+grafana: https://grafana-logs-a.platformeco.lmru.tech
+
+alerts:
+  enable:
+    _default: true
+  ElasticDown:
+    severity_level:
+      _default: 4
+  ElasticClusterRed:
+    severity_level:
+      _default: 4
+  ElasticClusterYellow:
+    severity_level:
+      _default: 4
+  ElasticReadOnlyIndex:
+    severity_level:
+      _default: 4
+  ElasticUnassignedShards:
+    severity_level:
+      _default: 4
+  ElasticHeapUsageTooHigh:
+    severity_level:
+      _default: 4
+  ElasticBackupIndiciesFailed:
+    severity_level:
+      _default: 4
+  ElasticCheckDisk:
+    severity_level: 5
+    limit: 85
+  ElkClusterDiskWriteLatencyTooHigh:
+    severity_level: 4
+    limit: 0.01
+
+watermark_exporter:
+  prometheus_threshold:
+    high:
+      _default: 3
+    flood_stage:
+      _default: 5
+    low:
+      _default: 10
+    crit_severity_level:
+      _default: 4

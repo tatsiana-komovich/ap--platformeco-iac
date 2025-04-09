@@ -1,0 +1,23 @@
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ .Values.app.name }}
+  namespace: {{ .Values.app.name }}
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: awx-dors-a.apps.lmru.tech
+    http:
+      paths:
+      - backend:
+          service:
+            name: {{ .Values.app.name }}-service
+            port:
+              number: 80
+        path: /
+        pathType: ImplementationSpecific
+  tls:
+  - hosts:
+    - awx-dors-a.apps.lmru.tech
+    secretName: ingress-tls

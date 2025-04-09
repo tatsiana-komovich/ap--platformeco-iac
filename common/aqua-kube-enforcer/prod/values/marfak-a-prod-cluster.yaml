@@ -1,0 +1,38 @@
+---
+clusterName: "k8s-marfak-a-prod"
+image:
+  tag: "2022.4.721"
+
+aquaSecret:
+  kubeEnforcerToken: enforcer-marfak-a-k8s
+
+enforcer:
+  enforcerToken: enforcer-marfak-a
+  nodeSelector:
+    node-role.k8s.lmru.tech/application: ''
+  tolerations:
+    - key: dedicated
+      operator: Equal
+      effect: "NoExecute"
+      value: gpu-a100
+    - key: dedicated
+      operator: Equal
+      effect: "NoExecute"
+      value: intenzo
+    - key: dedicated
+      operator: Equal
+      effect: "NoExecute"
+      value: lopus
+    - key: dedicated
+      operator: Equal
+      effect: "NoExecute"
+      value: lopus-family
+    - key: dedicated
+      operator: Equal
+      effect: "NoExecute"
+      value: chords
+  image:
+    tag: "2022.4.721"
+
+microEnforcerImage:
+  tag: "2022.4.721"

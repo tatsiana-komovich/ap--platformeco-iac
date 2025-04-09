@@ -1,0 +1,128 @@
+---
+alertmanager:
+  templates:
+    alertmanager.tmpl: |-
+      '{{ define "generator.url" }} {{ (index .Alerts 0).GeneratorURL | reReplaceAll "&g0.tab=1$" "&g0.tab=0" }} {{ end }}'
+
+  config:
+    global:
+      smtp_from: "alertmanager@leroy-merlin.ru"
+      smtp_smarthost: "massmail.hq.ru.corp.leroymerlin.com:25"
+      smtp_require_tls: false
+
+    templates:
+      - "/etc/alertmanager/*.tmpl"
+
+    route:
+      group_by: ["alertname", "job"]
+      receiver: "void"
+      repeat_interval: 4h
+
+      ## Add your Alertmanager configuration below
+
+      routes:
+        - matchers:
+            - namespace="scdp-ofl-ffp-prod"
+          receiver: "doo-grafana-oncall"
+          group_by: [alertname, datacenter, app]
+        - matchers:
+            - namespace="scdp-ofl-ffp-felis-prod"
+          receiver: "doo-grafana-oncall"
+          group_by: [alertname, datacenter, app]
+        - matchers:
+            - namespace="scdp-ofl-procurement-felis-prod"
+          receiver: "doo-grafana-oncall"
+          group_by: [alertname, datacenter, app]
+        - matchers:
+            - namespace="scdp-ofl-ffp-simulator-felis-prod"
+          receiver: "doo-grafana-oncall"
+          group_by: [alertname, datacenter, app]
+        - matchers:
+            - namespace="scdp-ofl-rom-prod"
+          receiver: "rom-grafana-oncall-webhook"
+          group_by: [alertname, datacenter, app]
+        - matchers:
+            - product_id = "P0074"
+          receiver: "ofm-grafana-oncall"
+          group_by: [alertname, app, namespace]
+        - matchers:
+            - product_id = "P0317"
+          receiver: "ofm-grafana-oncall"
+          group_by: [alertname, app, namespace]
+        - matchers:
+            - product_id = "P0186"
+          receiver: "ofm-grafana-oncall"
+          group_by: [alertname, app, namespace]
+        - matchers:
+            - product_id = "P0872"
+          receiver: "ofm-grafana-oncall"
+          group_by: [alertname, app, namespace]
+        - matchers:
+            - product_id="P0718"
+          receiver: "ot-grafana-oncall-webhook"
+        - matchers:
+            - product_id="P0591"
+          receiver: "lno-grafana-oncall-webhook"
+        - matchers:
+            - product_id="P0555"
+          receiver: "lc-grafana-oncall-webhook"
+        - matchers:
+            - product_id="P0716"
+          receiver: "momo-grafana-oncall-webhook"
+        - matchers:
+            - namespace="scdp-ofl-ots-prod"
+          receiver: "ots-grafana-oncall-webhook"
+        - matchers:
+            - product_id=~"P0844|P0174"
+          receiver: "import-grafana-oncall-ries"
+          group_by: ["alertname", "job", "namespace"]
+        - matchers:
+            - namespace="scdp-ofl-ries-prod"
+          receiver: "import-grafana-oncall-ries"
+          group_by: ["alertname", "job", "namespace"]
+        - matchers:
+            - oncall="OF-SRE"
+          receiver: "of-grafana-oncall-sre"
+          group_by: ["alertname"]
+
+    receivers:
+      - name: "void"
+      - name: "doo-grafana-oncall"
+        webhook_configs:
+          - url: https://obs-grafana-oncall-yc-techno.apps.lmru.tech/53/integrations/v1/alertmanager/bkCC6yGWscJj1ffY4twMSQlII/
+            send_resolved: true
+      - name: "ofm-grafana-oncall"
+        webhook_configs:
+          - url: https://obs-grafana-oncall-yc-techno.apps.lmru.tech/83/integrations/v1/alertmanager/zQFgZePRMxccbrlFpMiB65j9i/
+            send_resolved: true
+      - name: "ot-grafana-oncall-webhook"
+        webhook_configs:
+          - url: "https://obs-grafana-oncall-yc-techno.apps.lmru.tech/93/integrations/v1/alertmanager/VMrsVQbWWgh6wF4X1gKRlU4uf/"
+            send_resolved: true
+      - name: "lno-grafana-oncall-webhook"
+        webhook_configs:
+          - url: "https://obs-grafana-oncall-yc-techno.apps.lmru.tech/52/integrations/v1/alertmanager/zNbH8CkZ9yElBqtZbTlf3AVcv/"
+      - name: "lc-grafana-oncall-webhook"
+        webhook_configs:
+          - url: "https://obs-grafana-oncall-yc-techno.apps.lmru.tech/94/integrations/v1/alertmanager/CjiSp0Xqccxj43hAGtnX3062B/"
+            send_resolved: true
+      - name: "momo-grafana-oncall-webhook"
+        webhook_configs:
+          - url: "https://obs-grafana-oncall-yc-techno.apps.lmru.tech/69/integrations/v1/alertmanager/qQHAEk6rGQBySef4cexLIk21t/"
+            send_resolved: true
+      - name: "ots-grafana-oncall-webhook"
+        webhook_configs:
+          - url: "https://obs-grafana-oncall-yc-techno.apps.lmru.tech/98/integrations/v1/alertmanager/fcHIPZjuUV8VGCpRbPw3QBjok/"
+            send_resolved: true
+      - name: "import-grafana-oncall-ries"
+        webhook_configs:
+          - url: https://obs-grafana-oncall-yc-techno.apps.lmru.tech/78/integrations/v1/alertmanager/2URztawlnOKICeICwd9uB1FvD/
+            send_resolved: true
+      - name: "rom-grafana-oncall-webhook"
+        webhook_configs:
+          - url: "https://obs-grafana-oncall-yc-techno.apps.lmru.tech/98/integrations/v1/alertmanager/HvSbaDtimZGt1poR1VM9PnGJr/"
+            send_resolved: true
+      - name: "of-grafana-oncall-sre"
+        webhook_configs:
+          - url: https://obs-grafana-oncall-yc-techno.apps.lmru.tech/51/integrations/v1/alertmanager/GL97p4Ifp4ztdBFsOsYqKOhvZ/
+            send_resolved: true

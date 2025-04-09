@@ -1,0 +1,21 @@
+{{- range $key, $value := $.Values.crowd.groups }}
+---
+{{- with $.Values.apiVersion | default "deckhouse.io/v1alpha1" }}
+apiVersion: {{ . }}
+{{- end }}
+kind: ClusterAuthorizationRule
+metadata:
+  name: {{ $key | replace "_" "-"}}
+spec:
+  accessLevel: {{ $value.accessLevel }}
+  allowAccessToSystemNamespaces: {{ $value.allowAccessToSystemNamespaces }}
+  limitNamespaces:
+{{- range $k, $v := $value.limitNamespaces }}
+    - {{ $v }}
+{{- end }}
+  portForwarding: {{ $value.portForwarding }}
+  allowScale: {{ $value.allowScale }}
+  subjects:
+    - kind: Group
+      name: {{ $key }}
+{{- end }}

@@ -1,0 +1,116 @@
+---
+apiVersion: templates.gatekeeper.sh/v1
+kind: ConstraintTemplate
+metadata:
+  name: denyprivilegedcontainers
+  annotations:
+    description: Enforces security policies to restrict containers from enabling privileged mode or privilege escalation.
+    metadata.gatekeeper.sh/title: Privileged Container Security Policy Constraint
+    metadata.gatekeeper.sh/version: 1.0.0
+    argocd.argoproj.io/hook: PreSync
+spec:
+  crd:
+    spec:
+      names:
+        kind: DenyPrivilegedContainers
+      validation:
+        openAPIV3Schema:
+          type: object
+          properties:
+            allowPrivileged:
+              description: Controls the ability of any container to enable privileged mode. Corresponds to the `privileged` field in a PodSecurityPolicy.
+              type: boolean
+            allowPrivilegeEscalation:
+              description: Controls the ability of any container to allow privilege escalation. Corresponds to the `allowPrivilegeEscalation` field in a PodSecurityPolicy.
+              type: boolean
+  targets:
+    - target: admission.k8s.gatekeeper.sh
+      rego: |
+        package d8.privileged_containers
+
+        # Проверка на использование привилегированного режима
+        violation[{"msg": msg}] {
+          c := input_containers[_]
+          c.securityContext.privileged == true
+          not input.parameters.allowPrivileged
+          msg := sprintf("Privileged mode is not allowed in container: %v", [c.name])
+        }
+
+        # Проверка на использование Privilege Escalation
+        violation[{"msg": msg}] {
+          c := input_containers[_]
+          c.securityContext.allowPrivilegeEscalation == true
+          not input.parameters.allowPrivilegeEscalation
+          msg := sprintf("Privilege escalation is not allowed in container: %v", [c.name])
+        }
+
+        # Функция для получения всех контейнеров (включая init- и ephemeral- контейнеры)
+        input_containers[c] {
+          c := input.review.object.spec.containers[_]
+        }
+        input_containers[c] {
+          c := input.review.object.spec.initContainers[_]
+        }
+        input_containers[c] {
+          c := input.review.object.spec.ephemeralContainers[_]
+        }
+---
+apiVersion: constraints.gatekeeper.sh/v1beta1
+kind: DenyPrivilegedContainers
+metadata:
+  name: deny-privileged-containers
+  annotations:
+    argocd.argoproj.io/sync-options: "SkipDryRunOnMissingResource=true, Replace=true"
+spec:
+  enforcementAction: deny
+  parameters:
+    allowPrivileged: false
+    allowPrivilegeEscalation: false
+  match:
+    kinds:
+      - apiGroups: [""]
+        kinds: ["Pod"]
+      - apiGroups: ["apps"]
+        kinds: ["Deployment", "ReplicaSet", "StatefulSet", "DaemonSet"]
+    excludedNamespaces:
+      - kube-*
+      - d8-*
+      - aqua*
+      - lmru-*
+      - devops-core-*
+      - syn-github-actions-runner-controller #gha runners for synoptic p0602
+      - vspspr-*
+      - clickhouse-*
+      - coroot
+      - alfor-*
+      - asm-dev
+      - billing-preprod
+      - intraru-prod
+      - wecare-prod
+      - wecare-test
+      - fudzi
+      - carrier-portal-*
+      - pickup-point-*
+      - del-sell-*
+      - gts-tms-*
+      - pnr--alfa
+      - del-repo-*
+      - infra-elklogs*
+      - osaas-opensearch*
+      - osaas-logs-b-obs*
+      - jaeger*
+      - gitlab-runner*
+      - pim-*
+      - search-*
+      - mf
+      - chaos-mesh
+      - intraru-stage
+      - intraru-preprod
+      - elma-*
+      - dam-prod #intraru3-prod
+      - damint-prod #intraru3-prod
+      - bcless-cat-canary # shared
+      - bcless-cat # shared
+      - techgate-outline # x2-techno
+      - default # obs-logs-a
+      - trivy-operator

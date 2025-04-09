@@ -1,0 +1,9 @@
+{{- with (get .Values "node-manager") }}
+---
+apiVersion: deckhouse.io/v1alpha1
+kind: ModuleConfig
+metadata:
+  name: node-manager
+spec:
+  {{- toYaml . | nindent 2 }}
+{{- end }}

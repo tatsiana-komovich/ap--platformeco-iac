@@ -1,0 +1,364 @@
+---
+chrony:
+  enabled: true
+  settings:
+    ntpServers:
+      - time.lmru.tech
+  version: 1
+
+istio:
+  enabled: true
+  settings:
+    alliance:
+      ingressGateway:
+        inlet: LoadBalancer
+        nodeSelector:
+          node-role/loadbalancer: ""
+        tolerations:
+          - operator: Exists
+    federation:
+      enabled: true
+    globalVersion: "1.19"
+  version: 2
+
+cloud-provider-openstack:
+  enabled: true
+  settings:
+    additionalExternalNetworkNames:
+      - BGP-VLAN-3896-PROD
+    storageClass:
+      topologyEnabled: false
+  version: 1
+
+flant-integration:
+  enabled: true
+  settings:
+    kubeall:
+      host: lm-kong.p-kong-x2-ks-master-0
+      kubeconfig: /etc/kubernetes/admin.conf
+    licenseKey: dAdSjchEavTYcV1s3mxhKTtfMxTG8hHT
+    madisonAuthKey: cd052ae65875ec678d9958e799f29875c340938e43822fc4286c14e713b9d553
+  version: 1
+
+kube-dns:
+  enabled: true
+  settings:
+    clusterDomainAliases:
+      - cluster.local
+  version: 1
+
+metallb:
+  enabled: true
+  settings:
+    addressPools:
+      - addresses:
+          - 10.220.212.40/29
+        name: mypool
+        protocol: bgp
+    bgpPeers:
+      - hold-time: 3s
+        my-asn: 64995
+        peer-address: 10.220.211.252
+        peer-asn: 64600
+      - hold-time: 3s
+        my-asn: 64995
+        peer-address: 10.220.211.253
+        peer-asn: 64600
+    speaker:
+      nodeSelector:
+        node-role/loadbalancer: ""
+      tolerations:
+        - key: dedicated
+          operator: Equal
+          value: loadbalancer
+  version: 2
+
+deckhouseSpec:
+  enabled: true
+  settings:
+    bundle: Default
+    logLevel: Info
+    releaseChannel: Stable
+    update:
+      mode: Auto
+      windows:
+        - from: "01:00"
+          to: "02:00"
+          days:
+            - Mon
+  version: 1
+
+global:
+  enabled: true
+  settings:
+    modules:
+      https:
+        certManager:
+          clusterIssuerName: selfsigned
+        mode: CertManager
+      placement:
+        customTolerationKeys:
+          - node-role/loadbalancer
+          - dedicated.kubernetes.io
+      publicDomainTemplate: "%s-x2-kong.apim.lmru.tech"
+  version: 2
+
+namespace-configurator:
+  enabled: true
+  settings:
+    configurations:
+      - includeNames:
+          - ^d8-.*
+          - ^kube-.*
+        labels:
+          product-id: P0471
+      - includeNames:
+          - ^devops-core-k8s-blender-exporter$
+        labels:
+          product-id: P0681
+      - labels:
+          extended-monitoring.deckhouse.io/enabled: ""
+        includeNames:
+          - ^infra-lokilogs$
+          - ^kong-*
+  version: 1
+
+okmeter:
+  enabled: true
+  settings:
+    apiKey: 87cfac8a-2a20-4b69-abe5-70c950347c52&u=1dc-62749e24
+  version: 1
+
+user-authn:
+  enabled: true
+  settings:
+    publishAPI:
+      enabled: true
+      https:
+        mode: Global
+  version: 2
+
+user-authz:
+  enabled: true
+  settings:
+    enableMultiTenancy: true
+  version: 1
+
+monitoring-ping:
+  enabled: true
+  settings:
+    externalTargets:
+      - host: 10.203.118.154
+        name: x1-master-0
+      - host: 10.203.118.148
+        name: x1-master-1
+      - host: 10.203.118.149
+        name: x1-master-2
+      - host: 10.203.107.151
+        name: x2-master-0
+      - host: 10.203.107.132
+        name: x2-master-1
+      - host: 10.203.107.137
+        name: x2-master-2
+      - host: 10.203.5.77
+        name: yc-master-0
+      - host: 10.203.21.68
+        name: yc-master-1
+      - host: 10.203.5.82
+        name: yc-master-2
+      - host: 10.203.118.51
+        name: x1-kafka-ha-master-1
+      - host: 10.203.108.196
+        name: x2-kafka-ha-master-2
+      - host: 10.203.240.225
+        name: yc-kafka-ha-master-0
+      - host: api.internal.leroymerlin.ru
+        name: api.internal.leroymerlin.ru
+  version: 1
+
+prometheus:
+  enabled: true
+  settings:
+    externalLabels:
+      k8s_cluster: x2-kong
+      project_name: kong
+      datacenter: x2
+      environment: prod
+      platform: openstack
+    highAvailability: true
+    vpa:
+      longtermMaxMemory: 7Gi
+      maxMemory: 7Gi
+      updateMode: "Off"
+  version: 2
+
+admission-policy-engine:
+  spec:
+    version: 1
+    enabled: true
+  disallowed-tags:
+    enforcementAction: warn # TODO: remove 28.08
+
+cert-manager:
+  enabled: true
+  settings:
+    enableCAInjector: true
+  version: 1
+
+extended-monitoring:
+  enabled: true
+  settings:
+    events:
+      exporterEnabled: true
+      severityLevel: All
+  version: 2
+
+modulesource-flant-team-alfa:
+  registry:
+    ca: ""
+    dockerCfg: eyJhdXRocyI6IHsgImRvY2tlci1yZW1vdGUtZmxhbnQuYXJ0LmxtcnUudGVjaCI6IHt9fX0=
+    repo: docker-remote-flant.art.lmru.tech/team/alfa/d8-modules/monitoring-service-latency
+    scheme: HTTPS
+
+mup-flant-team-alfa:
+  releaseChannel: Stable
+  update:
+    mode: Auto
+
+monitoring-service-latency:
+  enabled: true
+  settings:
+    config:
+      - dsn: postgresql://kong-prod-external:NU6feoNJJzhaH0L6@c-c9q1o7e1a2idub8mgu81.rw.mdb.yandexcloud.net:6432/kong-prod-external?sslmode=disable
+        name: kong-prod-external-postgresql
+        type: postgresql
+      - dsn: postgresql://kong-prod-external:NU6feoNJJzhaH0L6@c-c9q1o7e1a2idub8mgu81.ro.mdb.yandexcloud.net:6432/kong-prod-external?sslmode=disable
+        name: kong-prod-external-postgresql-ro
+        type: postgresql
+      - dsn: postgresql://kong-prod:NoBzvdo3WCVFRRjD@c-c9qe63u038kr1se6kd0o.rw.mdb.yandexcloud.net:6432/kong-prod?sslmode=disable
+        name: kong-prod-postgresql
+        type: postgresql
+      - dsn: postgresql://kong-prod:NoBzvdo3WCVFRRjD@c-c9qe63u038kr1se6kd0o.ro.mdb.yandexcloud.net:6432/kong-prod?sslmode=disable
+        name: kong-prod-postgresql-ro
+        type: postgresql
+      - dsn: redis://:97sVCyQm@TSe@rc1a-nvu4y2sgt26y71dm.mdb.yandexcloud.net:6379
+        name: kong-prod-external-redis
+        type: redis
+      - dsn: redis://:7CyREAiAkPHs2R4@rc1b-7oef9pzwqxj3molg.mdb.yandexcloud.net:6379
+        name: kong-prod-redis
+        type: redis
+      - dsn: redis://:7CyREAiAkPHs2R4@rc1b-6abeakmw1ffox02g.mdb.yandexcloud.net:6379
+        name: kong-prod-2-redis
+        type: redis
+      - dsn: c-c9q1o7e1a2idub8mgu81.rw.mdb.yandexcloud.net:6432
+        name: tcp-kong-prod-external-postgresql
+        type: tcp
+      - dsn: c-c9q1o7e1a2idub8mgu81.ro.mdb.yandexcloud.net:6432
+        name: tcp-kong-prod-external-postgresql-ro
+        type: tcp
+      - dsn: c-c9qe63u038kr1se6kd0o.rw.mdb.yandexcloud.net:6432
+        name: tcp-kong-prod-postgresql
+        type: tcp
+      - dsn: c-c9qe63u038kr1se6kd0o.ro.mdb.yandexcloud.net:6432
+        name: tcp-kong-prod-postgresql-ro
+        type: tcp
+      - dsn: 10.80.120.50:443
+        name: IP-10.80.120.50
+        type: tcp
+      - dsn: 10.80.120.35:443
+        name: IP-10.80.120.35
+        type: tcp
+      - dsn: https://kong-metrics.obs.lmru.tech/prometheus
+        name: observability-prometheus
+        type: http
+      - dsn: http://10.220.8.163:8080/dashboard.html
+        name: HTTP-10.220.8.163
+        type: http
+      - dsn: http://10.220.8.170:8080/dashboard.html
+        name: HTTP-10.220.8.170
+        type: http
+      - dsn: http://10.220.8.183:8080/dashboard.html
+        name: HTTP-10.220.8.183
+        type: http
+      - dsn: http://10.220.8.171:8080/dashboard.html
+        name: HTTP-10.220.8.171
+        type: http
+      - dsn: http://10.80.44.173:8080/dashboard.html
+        name: HTTP-10.80.44.173
+        type: http
+      - dsn: http://10.80.44.162:8080/dashboard.html
+        name: HTTP-10.80.44.162
+        type: http
+      - dsn: http://10.80.44.170:8080/dashboard.html
+        name: HTTP-10.80.44.170
+        type: http
+      - dsn: http://10.80.44.171:8080/dashboard.html
+        name: HTTP-10.80.44.171
+        type: http
+      - dsn: http://10.80.44.183:8080/dashboard.html
+        name: HTTP-10.80.44.183
+        type: http
+      - dsn: http://10.80.44.172:8080/dashboard.html
+        name: HTTP-10.80.44.172
+        type: http
+      - dsn: 10.220.8.163:8080
+        name: IP-10.220.8.163
+        type: tcp
+      - dsn: 10.220.8.170:8080
+        name: IP-10.220.8.170
+        type: tcp
+      - dsn: 10.220.8.183:8080
+        name: IP-10.220.8.183
+        type: tcp
+      - dsn: 10.220.8.171:8080
+        name: IP-10.220.8.171
+        type: tcp
+      - dsn: 10.80.44.173:8080
+        name: IP-10.80.44.173
+        type: tcp
+      - dsn: 10.80.44.162:8080
+        name: IP-10.80.44.162
+        type: tcp
+      - dsn: 10.80.44.170:8080
+        name: IP-10.80.44.170
+        type: tcp
+      - dsn: 10.80.44.171:8080
+        name: IP-10.80.44.171
+        type: tcp
+      - dsn: 10.80.44.183:8080
+        name: IP-10.80.44.183
+        type: tcp
+      - dsn: 10.80.44.172:8080
+        name: IP-10.80.44.172
+        type: tcp
+      - dsn: 10.203.6.101:9200
+        name: opensearch-nlb
+        type: tcp
+      - dsn: broker-1000.pilot-kafka.kafka.apim.lmru.tech:9443
+        name: kafka-pool-broker-1000
+        type: tcp
+      - dsn: broker-1001.pilot-kafka.kafka.apim.lmru.tech:9443
+        name: kafka-pool-broker-1001
+        type: tcp
+      - dsn: broker-1002.pilot-kafka.kafka.apim.lmru.tech:9443
+        name: kafka-pool-broker-1002
+        type: tcp
+      - dsn: broker-2000.pilot-kafka.kafka.apim.lmru.tech:9443
+        name: kafka-pool-broker-2000
+        type: tcp
+      - dsn: broker-2001.pilot-kafka.kafka.apim.lmru.tech:9443
+        name: kafka-pool-broker-2001
+        type: tcp
+      - dsn: broker-2002.pilot-kafka.kafka.apim.lmru.tech:9443
+        name: kafka-pool-broker-2002
+        type: tcp
+    nodeSelector:
+      node.deckhouse.io/group: application-nodes
+  version: 1
+  updatePolicy: flant-team-alfa
+
+cni-flannel:
+  enabled: true
+  settings:
+    podNetworkMode: HostGW
+  version: 1

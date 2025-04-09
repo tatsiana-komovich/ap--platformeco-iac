@@ -1,0 +1,150 @@
+---
+opendistro:
+  curator:
+    enabled: true
+    s3_snapshots:
+      unit_count:
+        all: 60
+        unknown: 7
+    cron:
+      restore: 10 4 * * *
+      snapshot: 30 0 * * *
+    unknown:
+      days_count: 7
+      snapshot: true
+      schedule: 30 0 * * *
+    indices:
+      - kind: prefix
+        value: infra-elklogs
+        system: false
+        days_count: 30
+        snapshot: false
+        schedule: 25 1 * * *
+      - kind: prefix
+        value: d8-ingress
+        system: false
+        days_count: 7
+        snapshot: true
+        snapshot_count_s3: 7
+        schedule: 30 1 * * *
+      - kind: prefix
+        value: .kibana
+        system: true
+        days_count: 30
+        snapshot: true
+        schedule: 40 1 * * *
+      - kind: prefix
+        value: fudzi
+        system: false
+        days_count: 14
+        snapshot: true
+        schedule: 50 1 * * *
+      - kind: prefix
+        value: mf
+        system: false
+        days_count: 3
+        snapshot: true
+        schedule: 05 2 * * *
+      - kind: prefix
+        value: triffle-adtech
+        system: false
+        days_count: 7
+        snapshot: true
+        schedule: 15 2 * * *
+      - kind: prefix
+        value: triffle-api
+        system: false
+        days_count: 7
+        snapshot: true
+        schedule: 25 2 * * *
+        monitoring: false
+      - kind: prefix
+        value: triffle-balisage
+        system: false
+        days_count: 7
+        snapshot: true
+        schedule: 35 2 * * *
+      - kind: prefix
+        value: triffle-ccasphone
+        system: false
+        days_count: 7
+        snapshot: true
+        schedule: 45 2 * * *
+      - kind: prefix
+        value: triffle-emetrics
+        system: false
+        days_count: 7
+        snapshot: true
+        schedule: 55 2 * * *
+      - kind: prefix
+        value: triffle-esl
+        system: false
+        days_count: 7
+        snapshot: true
+        schedule: 05 3 * * *
+      - kind: prefix
+        value: triffle-finops
+        system: false
+        days_count: 7
+        snapshot: true
+        schedule: 15 3 * * *
+      - kind: prefix
+        value: triffle-fudzi
+        system: false
+        days_count: 7
+        snapshot: true
+        schedule: 25 3 * * *
+      - kind: prefix
+        value: triffle-mf
+        system: false
+        days_count: 7
+        snapshot: true
+        schedule: 35 3 * * *
+      - kind: prefix
+        value: triffle-navi
+        system: false
+        days_count: 7
+        snapshot: true
+        schedule: 45 3 * * *
+      - kind: prefix
+        value: triffle-ops
+        system: false
+        days_count: 7
+        snapshot: true
+        schedule: 55 3 * * *
+      - kind: prefix
+        value: triffle-pcp
+        system: false
+        days_count: 7
+        snapshot: true
+        schedule: 05 4 * * *
+      - kind: prefix
+        value: triffle-psu
+        system: false
+        days_count: 7
+        snapshot: true
+        schedule: 15 4 * * *
+      - kind: prefix
+        value: triffle-spd
+        system: false
+        days_count: 7
+        snapshot: true
+        schedule: 25 3 * * *
+      - kind: prefix
+        value: triffle-srch
+        system: false
+        days_count: 7
+        snapshot: true
+        schedule: 35 3 * * *
+      - kind: prefix
+        value: triffle-superapp
+        system: false
+        days_count: 7
+        snapshot: true
+        schedule: 45 3 * * *
+      - kind: prefix
+        value: triffle-p0
+        system: false
+        days_count: 7
+        snapshot: true
+        schedule: 55 3 * * *

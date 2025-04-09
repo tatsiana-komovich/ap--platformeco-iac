@@ -1,0 +1,100 @@
+---
+apiVersion: deckhouse.io/v1
+kind: YandexInstanceClass
+metadata:
+  name: application-nodes
+spec:
+  cores: 16
+  memory: 32768
+  diskSizeGB: 50
+  diskType: network-ssd
+  imageID: fd8emvfmfoaordspe1jr
+  networkType: Standard
+  platformID: standard-v2
+---
+apiVersion: deckhouse.io/v1
+kind: YandexInstanceClass
+metadata:
+  name: application-nodes-a
+spec:
+  additionalSubnets:
+    - e9bnsg93qpea1pjj0f28
+  mainSubnet: e9b6vm2oat4schv8elhf
+  cores: 16
+  memory: 32768
+  diskSizeGB: 50
+  diskType: network-ssd
+  imageID: fd8emvfmfoaordspe1jr
+  networkType: Standard
+  platformID: standard-v2
+---
+apiVersion: deckhouse.io/v1
+kind: YandexInstanceClass
+metadata:
+  name: application-nodes-b
+spec:
+  additionalSubnets:
+    - e2lb866ori4qqopiqfs9
+  mainSubnet: e2l95e44lgvkkqhvg4ce
+  cores: 16
+  memory: 32768
+  diskSizeGB: 50
+  diskType: network-ssd
+  imageID: fd8emvfmfoaordspe1jr
+  networkType: Standard
+  platformID: standard-v2
+---
+apiVersion: deckhouse.io/v1
+kind: YandexInstanceClass
+metadata:
+  name: application-nodes-d
+spec:
+  additionalSubnets:
+    - fl81hf1udhpm65itqciq
+  mainSubnet: fl87llanl43u02kg4uj1
+  cores: 16
+  memory: 32768
+  diskSizeGB: 50
+  diskType: network-ssd
+  imageID: fd8emvfmfoaordspe1jr
+  networkType: Standard
+  platformID: standard-v2
+---
+apiVersion: deckhouse.io/v1
+kind: YandexInstanceClass
+metadata:
+  name: system
+spec:
+  cores: 16
+  memory: 65536
+  diskSizeGB: 50
+  diskType: network-ssd
+  imageID: fd8emvfmfoaordspe1jr
+  networkType: Standard
+  platformID: standard-v2
+---
+apiVersion: deckhouse.io/v1
+kind: YandexInstanceClass
+metadata:
+  name: d8-loki
+spec:
+  cores: 4
+  memory: 8192
+  diskSizeGB: 50
+  diskType: network-ssd
+  imageID: fd8emvfmfoaordspe1jr
+  networkType: Standard
+  platformID: standard-v2
+---
+apiVersion: deckhouse.io/v1
+kind: YandexInstanceClass
+metadata:
+  name: otel-system
+spec:
+  cores: 8
+  diskSizeGB: 50
+  diskType: network-ssd
+  imageID: fd8emvfmfoaordspe1jr
+  memory: 16384
+  networkType: Standard
+  platformID: standard-v2

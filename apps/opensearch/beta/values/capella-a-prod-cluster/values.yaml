@@ -1,0 +1,296 @@
+---
+opendistro:
+  tariff: extra
+
+  alerts:
+    check_record:
+      enabled: true
+    fields_limit:
+      severity_level: 4
+      exclude_indices: []
+    ro_index:
+      enabled: true
+      for: "1m"
+      severity_level: 3
+
+  project: cft
+
+  platform: yandex
+
+  cluster: production
+
+  node_pref: p
+
+  userlist:
+    services: ["admin", "kibana", "read_only_filebeat", "logstash", "filebeat", "apiuser"]
+
+  init:
+    image:
+      repo: "docker-flant.art.lmru.tech/lmru/devops/opensearch--"
+      name: "init-image"
+      tag: "0.0.2"
+
+  opendistro:
+    image:
+      repo: "docker-flant.art.lmru.tech/lmru/devops/opensearch--"
+      name: "opensearch"
+      tag: "2.16.0"
+    # custom - самодельные сертификаты только для старых серверов
+    # cluster - выписываются при помощи k8s
+    certificates: "custom"
+    pv_storageclass: network-ssd-nonreplicated
+    pv_size: 558Gi
+    replicas: "20"
+    limits:
+      memory: 8Gi
+    requests:
+      cpu: "3"
+      memory: 8Gi
+    s3_backup:
+      enabled: true
+      repos:
+        - repository: s3-backup
+          client: default
+          access_key: '<path:services/data/opensearch#cft-capella-a.s3_backup.access_key.prod>'
+          secret_key: '<path:services/data/opensearch#cft-capella-a.s3_backup.secret_key.prod>'
+          scheme: https
+          endpoint: "https://storage.yandexcloud.net"
+          region: ru-central1
+          max_snapshot_bytes_per_sec: "40m" # 40MB/s
+          max_restore_bytes_per_sec: "40m"
+          bucket: flant-cft-capella-a-prod-opendistro
+    keystore:
+      - secretName: opendistro-s3-backup
+        items:
+          - key: s3.access_key
+            path: s3.client.default.access_key
+          - key: s3.secret_key
+            path: s3.client.default.secret_key
+
+    wait_cluster_green: true
+
+  exporter:
+    enabled: true
+    samplelimit: "100000"
+    image:
+      repo: "docker-flant.art.lmru.tech/lmru/devops/opensearch--"
+      name: "os-exporter"
+      tag: "0.0.2"
+
+  snapshot_exporter:
+    enabled: true
+    image:
+      repo: "docker-flant.art.lmru.tech/lmru/devops/opensearch--"
+      name: "os-snapshot-exporter"
+      tag: "0.0.1"
+
+  oneday_exporter:
+    enabled: true
+    image:
+      repo: "docker-flant.art.lmru.tech/lmru/devops/opensearch--"
+      name: "os-oneday-exporter"
+      tag: "0.0.2"
+
+  apiuser:
+    elasticsearch:
+      password: '<path:services/data/opensearch#apiuser.elasticsearch.password.prod>'
+      username: apiuser
+      roles: []
+
+  admin:
+    elasticsearch:
+      password: '<path:services/data/opensearch#cft-capella-a.admin.password.prod>'
+      username: admin
+      roles:
+        - admin
+    madison_key: debe6f1a1f41399ba289d4f67cec44279fb384bc844f4256a0a2cfcb9fef2e1f
+    restore_madison_key: 3e8a1c2071affc8f75e1e3c693d782e89cba29cab51cd627b68dcafd18b634da
+
+  read_only_filebeat:
+    elasticsearch:
+      username: read_only_filebeat
+      password: '<path:services/data/opensearch#cft-capella-a.read_only_filebeat.elasticsearch.password.prod>'
+      roles:
+        - readall
+        - kibanauser
+
+  csi:
+    enabled: true
+    attacher:
+      image:
+        repo: "docker-flant.art.lmru.tech/lmru/devops/opensearch--"
+        name: "csi-attacher"
+        tag: "0.0.1"
+    driver_registrar:
+      image:
+        repo: "docker-flant.art.lmru.tech/lmru/devops/opensearch--"
+        name: "csi-node-driver-registrar"
+        tag: "0.0.1"
+    provisioner:
+      image:
+        repo: "docker-flant.art.lmru.tech/lmru/devops/opensearch--"
+        name: "csi-provisioner"
+        tag: "0.0.1"
+    s3:
+      image:
+        repo: "docker-flant.art.lmru.tech/lmru/devops/opensearch--"
+        name: "csi-s3"
+        tag: "0.0.1"
+
+  recoverer:
+    enabled: true
+    memory: 8Gi
+    image:
+      repo: "docker-flant.art.lmru.tech/lmru/devops/opensearch--"
+      name: "opensearch"
+      tag: "2.16.0"
+    sc_system_name: network-ssd
+
+  vector:
+    enabled: false
+
+
+  filebeat:
+    enabled: true
+    image:
+      repo: "docker-flant.art.lmru.tech/lmru/devops/opensearch--"
+      name: "filebeat"
+      tag: "0.0.2"
+    resources:
+      limits:
+        memory: 1Gi
+      requests:
+        cpu: 30m
+        memory: 256Mi
+
+  logstash:
+    enabled: true
+    image:
+      repo: "docker-flant.art.lmru.tech/lmru/devops/opensearch--"
+      name: "logstash"
+      tag: "0.0.1"
+    external:
+      enabled: false
+    replicas: 4
+    workers: 8
+    queuesize: 1900mb
+    resources:
+      limits:
+        memory: 10Gi
+      requests:
+        cpu: 3
+        memory: 10Gi
+    pv:
+      size: 2Gi
+      storageclass: network-ssd
+    elasticsearch:
+      username: logstash
+      password: '<path:services/data/opensearch#capellaa.logstash.password.stage>'
+      roles:
+        - filebeat
+        - logstash
+    exporter:
+      enabled: true
+      image:
+        repo: "docker-flant.art.lmru.tech/lmru/devops/opensearch--"
+        name: "logstash-exporter"
+        tag: "0.0.1"
+
+  kibana:
+    enabled: true
+    image:
+      repo: "docker-flant.art.lmru.tech/lmru/devops/opensearch--"
+      name: "opensearch-dashboards"
+      tag: "2.16.0"
+    resources:
+      limits:
+        memory: 2Gi
+      requests:
+        cpu: 500m
+        memory: 2Gi
+    maxoldspacesize: 1000
+    host: kibana-capella-a.apps.lmru.tech
+    connecturl: dex-capella-a.apps.lmru.tech
+    auth: '<path:services/data/opensearch#cft-capella-a.kibana.auth.prod>'
+    elasticsearch:
+      username: kibanaserver
+      password: '<path:services/data/opensearch#cft-capella-a.kibana.password.prod>'
+      roles: [""]
+
+  cerebro:
+    enabled: true
+    image:
+      repo: "docker-flant.art.lmru.tech/lmru/devops/opensearch--"
+      name: "cerebro"
+      tag: "0.0.1"
+    host: cerebro-capella-a.apps.lmru.tech
+    secret: '<path:services/data/opensearch#cft-capella-a.cerebro.secret.prod>'
+    auth: '<path:services/data/opensearch#cft-capella-a.cerebro.auth.prod>'
+
+  xtractor:
+    enabled: true
+    image:
+      repo: "docker-flant.art.lmru.tech/lmru/devops/opensearch--"
+      name: "xtractor"
+      tag: "0.2.21"
+    is_s3: true
+    opendistro: opendistro-recoverer
+    host: xtractor-capella-a.apps.lmru.tech
+    kibana: kibana-capella-a.apps.lmru.tech
+
+  xkibana:
+    enabled: false
+
+  nginx:
+    image:
+      repo: "docker-flant.art.lmru.tech/lmru/devops/opensearch--"
+      name: "nginx"
+      tag: "0.0.1"
+
+  shell_operator:
+    image:
+      repo: "docker-flant.art.lmru.tech/lmru/devops/opensearch--"
+      name: "shell-operator"
+      tag: "0.0.1"
+
+  pv_retain_operator:
+    enabled: true
+
+  curator:
+    image:
+      repo: "docker-flant.art.lmru.tech/lmru/devops/opensearch--"
+      name: "os-curator"
+      tag: "0.0.1"
+
+  retention:
+    enabled: true
+
+  dereplicator:
+    enabled: true
+
+  danglingChecker:
+    enabled: true
+    schedule: "0 10 * * *"
+
+  madison:
+    key: 280ea36804f79a6d10943c7af3042a9d7fd63f8dee5f2b94fa9d63b5dcb40bab
+    project: lm-elk
+
+  node_updater:
+    enabled: true
+    image:
+      repo: "docker-flant.art.lmru.tech/lmru/devops/opensearch--"
+      name: "node-updater"
+      tag: "0.0.1"
+
+  sheet_reporter:
+    enabled: true
+    image:
+      repo: "docker-flant.art.lmru.tech/lmru/devops/opensearch--"
+      name: "sheet-reporter"
+      tag: "0.2.0"
+    job:
+      schedule: "40 22 * * *"
+
+billing-resource:
+  resourceName: opendistro

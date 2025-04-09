@@ -1,0 +1,488 @@
+# Внимание! Index pattern трактуется как имя индекса до даты.
+# Например, lmru-p0853-gha != lmru-p0853-gha-prod + lmru-p0853-gha-dev + lmru-p0853-gha-test
+# При обработке lmru-p0853-gha подпадёт под общее правило, т е lmru-p0853-gha = nil
+---
+opendistro:
+  curator:
+    enabled: true
+    s3_snapshots:
+      unit_count:
+        all: 30
+        unknown: 7
+    cron:
+      restore: 10 3 * * *
+      snapshot: 30 0 * * *
+    unknown:
+      days_count: 2
+      snapshot: true
+      schedule: 30 0 * * *
+    indices:
+      - kind: prefix
+        value: filebeat
+        system: false
+        days_count: 2
+        snapshot: false
+        schedule: 50 0 * * *
+      - kind: prefix
+        value: osaas
+        system: false
+        days_count: 14
+        snapshot: true
+        snapshot_count_s3: 7
+        schedule: 55 0 * * *
+      - kind: prefix
+        value: d8
+        system: false
+        days_count: 7
+        snapshot: true
+        snapshot_count_s3: 7
+        schedule: 0 1 * * *
+      - kind: prefix
+        value: .kibana
+        system: true
+        days_count: 30
+        snapshot: true
+        snapshot_count_s3: 7
+        schedule: 5 1 * * *
+      - kind: prefix
+        value: lmru-p0145-claim-debug
+        system: false
+        days_count: 14
+        snapshot: true
+        snapshot_count_s3: 7
+        schedule: 5 1 * * *
+      - kind: prefix
+        value: lmru-p0145-claim-dev
+        system: false
+        monitoring: false
+        days_count: 14
+        snapshot: true
+        snapshot_count_s3: 7
+        schedule: 5 1 * * *
+      - kind: prefix
+        value: lmru-p0145-claim-prod
+        system: false
+        monitoring: false
+        days_count: 14
+        snapshot: true
+        snapshot_count_s3: 7
+        schedule: 5 1 * * *
+      - kind: prefix
+        value: lmru-p0145-dcrm-report-dev
+        system: false
+        days_count: 14
+        snapshot: true
+        snapshot_count_s3: 7
+        schedule: 5 1 * * *
+      - kind: prefix
+        value: lmru-p0145-dcrm-report-prod
+        system: false
+        days_count: 14
+        snapshot: true
+        snapshot_count_s3: 7
+        schedule: 5 1 * * *
+      - kind: prefix
+        value: lmru-p0145-hf-debug
+        system: false
+        days_count: 14
+        snapshot: true
+        snapshot_count_s3: 7
+        schedule: 5 1 * * *
+      - kind: prefix
+        value: lmru-p0145-hf-dev
+        monitoring: false
+        system: false
+        days_count: 14
+        snapshot: true
+        snapshot_count_s3: 7
+        schedule: 5 1 * * *
+      - kind: prefix
+        value: lmru-p0145-hf-test
+        system: false
+        days_count: 14
+        snapshot: true
+        snapshot_count_s3: 7
+        schedule: 5 1 * * *
+      - kind: prefix
+        value: lmru-p0145-usd-production
+        system: false
+        days_count: 14
+        snapshot: true
+        snapshot_count_s3: 7
+        schedule: 5 1 * * *
+      - kind: prefix
+        value: lmru-p0853-gha-dev
+        system: false
+        days_count: 7
+        snapshot: false
+        schedule: 0 10 * * *
+      - kind: prefix
+        value: lmru-p0853-gha-prod
+        system: false
+        days_count: 7
+        snapshot: false
+        schedule: 0 10 * * *
+      - kind: prefix
+        value: lmru-p0853-gha-test
+        system: false
+        days_count: 7
+        snapshot: false
+        schedule: 0 10 * * *
+      - kind: prefix
+        value: lmru-p0864
+        system: false
+        days_count: 7
+        snapshot: false
+        schedule: 0 3 * * *
+### С этим паттерном ещё не было индексов, поэтому он не разделён
+      - kind: prefix
+        value: lmru-p0356-nifi-prod
+        system: false
+        days_count: 14
+        snapshot: true
+        snapshot_count_s3: 7
+        schedule: 5 1 * * *
+      - kind: prefix
+        value: lmru-p0356-nifi-stage
+        system: false
+        days_count: 14
+        snapshot: true
+        snapshot_count_s3: 7
+        schedule: 5 1 * * *
+      - kind: prefix
+        value: lmru-p0891-nifi-prod
+        system: false
+        days_count: 7
+        snapshot: true
+        snapshot_count_s3: 7
+        schedule: 5 1 * * *
+###
+      - kind: prefix
+        value: lmru-p0204-activeroles
+        system: false
+        days_count: 7
+        snapshot: true
+        snapshot_count_s3: 7
+        schedule: 50 2 * * *
+      - kind: prefix
+        value: lmru-p0205-adfs
+        system: false
+        days_count: 7
+        snapshot: true
+        snapshot_count_s3: 7
+        schedule: 30 3 * * *
+      - kind: prefix
+        value: lmru-p0229-exchange
+        system: false
+        days_count: 7
+        snapshot: true
+        snapshot_count_s3: 7
+        schedule: 40 3 * * *
+      - kind: prefix
+        value: lmru-p0222-adds
+        system: false
+        days_count: 7
+        snapshot: true
+        snapshot_count_s3: 7
+        schedule: 50 3 * * *
+      - kind: prefix
+        value: lmru-p0860-qcms-test-stage
+        monitoring: false
+        system: false
+        days_count: 7
+        snapshot: true
+        snapshot_count_s3: 14
+        schedule: 0 4 * * *
+      - kind: prefix
+        value: lmru-p0860-qcms-perf-stage
+        system: false
+        days_count: 7
+        snapshot: true
+        snapshot_count_s3: 14
+        schedule: 20 4 * * *
+      - kind: prefix
+        value: lmru-p0860-qcms-preprod-stage
+        monitoring: false
+        system: false
+        days_count: 7
+        snapshot: true
+        snapshot_count_s3: 14
+        schedule: 30 4 * * *
+      - kind: prefix
+        value: lmru-p0860-qcms-dev-stage
+        monitoring: false
+        system: false
+        days_count: 7
+        snapshot: true
+        snapshot_count_s3: 14
+        schedule: 40 4 * * *
+      - kind: prefix
+        value: lmru-p0076-pnr-prod
+        system: false
+        days_count: 60
+        snapshot: true
+        schedule: 50 4 * * *
+      - kind: prefix
+        value: lmru-p0076-pnr-stage
+        system: false
+        days_count: 7
+        snapshot: true
+        snapshot_count_s3: 14
+        schedule: 50 4 * * *
+      - kind: prefix
+        value: lmru-p0479-del-sell-prod
+        system: false
+        days_count: 7
+        snapshot: true
+        snapshot_count_s3: 14
+        schedule: 0 5 * * *
+      - kind: prefix
+        value: lmru-p0479-del-sell-stage
+        system: false
+        days_count: 7
+        snapshot: true
+        snapshot_count_s3: 14
+        schedule: 0 5 * * *
+      - kind: prefix
+        value: lmru-p0482-del-oper-stage
+        system: false
+        days_count: 7
+        snapshot: true
+        snapshot_count_s3: 14
+        schedule: 0 5 * * *
+      - kind: prefix
+        value: lmru-p0482-del-oper-prod
+        system: false
+        days_count: 7
+        snapshot: true
+        snapshot_count_s3: 14
+        schedule: 0 5 * * *
+      - kind: prefix
+        value: lmru-p0442-repo-prod
+        system: false
+        days_count: 7
+        snapshot: true
+        snapshot_count_s3: 14
+        schedule: 10 5 * * *
+      - kind: prefix
+        value: lmru-p0442-del-repo-prod
+        system: false
+        days_count: 21
+        snapshot: true
+        snapshot_count_s3: 14
+        schedule: 15 5 * * *
+      - kind: prefix
+        value: lmru-p0442-del-repo-stage
+        system: false
+        days_count: 7
+        snapshot: true
+        snapshot_count_s3: 14
+        schedule: 25 5 * * *
+      - kind: prefix
+        value: lmru-p0752-pickup-point-prod
+        system: false
+        days_count: 7
+        snapshot: true
+        snapshot_count_s3: 14
+        schedule: 20 5 * * *
+      - kind: prefix
+        value: lmru-p0752-pickup-point-dev
+        system: false
+        days_count: 7
+        snapshot: true
+        snapshot_count_s3: 14
+        schedule: 25 5 * * *
+      - kind: prefix
+        value: lmru-p0702-alfor
+        days_count: 14
+        snapshot: true
+        snapshot_count_s3: 7
+        schedule: 30 5 * * *
+      - kind: prefix
+        value: lmru-p0188-stock-repository-prod
+        days_count: 14
+        snapshot: true
+        snapshot_count_s3: 30
+        schedule: 25 2 * * *
+      - kind: prefix
+        value: lmru-p0188-cfp-prod
+        days_count: 30
+        snapshot: true
+        snapshot_count_s3: 14
+        schedule: 35 6 * * *
+      - kind: prefix
+        value: lmru-p0188-saa-stock-repository-prod
+        days_count: 30
+        snapshot: true
+        snapshot_count_s3: 14
+        schedule: 35 7 * * *
+      - kind: prefix
+        value: lmru-p0767-almaz-prod
+        days_count: 30
+        snapshot: true
+        snapshot_count_s3: 14
+        schedule: 45 2 * * *
+      - kind: prefix
+        value: lmru-p0955-ip-nc-prod
+        days_count: 30
+        snapshot: true
+        schedule: 5 1 * * *
+      - kind: prefix
+        value: lmru-p0188-stock-repository-stage
+        days_count: 3
+        snapshot: true
+        schedule: 25 1 * * *
+      - kind: prefix
+        value: lmru-p0767-almaz-stage
+        days_count: 3
+        snapshot: true
+        schedule: 45 1 * * *
+      - kind: prefix
+        value: lmru-p0665-carrier-portal-stage
+        days_count: 5
+        snapshot: true
+        schedule: 55 1 * * *
+      - kind: prefix
+        value: lmru-p0665-carrier-portal-prod
+        days_count: 14
+        snapshot: true
+        schedule: 05 2 * * *
+      - kind: prefix
+        value: lmru-p0666-gts-tms-stage
+        days_count: 5
+        snapshot: true
+        schedule: 15 2 * * *
+      - kind: prefix
+        value: lmru-p0666-gts-tms-prod
+        days_count: 14
+        snapshot: true
+        schedule: 20 2 * * *
+      - kind: prefix
+        value: lmru-p1168-locrep-prod
+        days_count: 30
+        snapshot: true
+        snapshot_count_s3: 30
+        schedule: 45 3 * * *
+      - kind: prefix
+        value: lmru-p1168-locrep-stage
+        days_count: 14
+        snapshot: true
+        schedule: 15 3 * * *
+      - kind: prefix
+        value: lmru-p1183-logservices-prod
+        days_count: 30
+        snapshot: true
+        snapshot_count_s3: 30
+        schedule: 45 6 * * *
+      - kind: prefix
+        value: lmru-p1183-logservices-stage
+        days_count: 14
+        snapshot: true
+        schedule: 15 3 * * *
+      - kind: prefix
+        value: lmru-p0627-keycloak-partner-prod-2-prod
+        days_count: 30
+        snapshot: true
+        snapshot_count_s3: 60
+        schedule: 25 3 * * *
+      - kind: prefix
+        value: lmru-p0627-keycloak-employee-prod-prod
+        days_count: 30
+        snapshot: true
+        snapshot_count_s3: 60
+        schedule: 25 3 * * *
+      - kind: prefix
+        value: lmru-p0627-keycloak-customer-prod-prod
+        days_count: 30
+        snapshot: true
+        snapshot_count_s3: 60
+        schedule: 25 3 * * *
+      - kind: prefix
+        value: lmru-p0527-ausweis-prod
+        days_count: 7
+        snapshot: true
+        snapshot_count_s3: 30
+        schedule: 25 3 * * *
+      - kind: prefix
+        value: lmru-p0177-quota-prod
+        monitoring: false
+        days_count: 14
+        snapshot: true
+        snapshot_count_s3: 14
+        schedule: 45 4 * * *
+      - kind: prefix
+        value: lmru-p0177-quota-stage
+        days_count: 3
+        snapshot: true
+        schedule: 45 5 * * *
+      - kind: prefix
+        value: lmru-p0614-logbonus-prod
+        days_count: 14
+        snapshot: true
+        snapshot_count_s3: 14
+        schedule: 45 4 * * *
+      - kind: prefix
+        value: lmru-p0614-logbonus-test
+        days_count: 3
+        snapshot: true
+        schedule: 45 5 * * *
+      - kind: prefix
+        value: lmru-p0179-services-platform-prod
+        days_count: 30
+        snapshot: true
+        schedule: 01 0 * * *
+      - kind: prefix
+        value: lmru-p0567-wecare-dev
+        days_count: 7
+        snapshot: true
+        schedule: 55 5 * * *
+      - kind: prefix
+        value: lmru-p0567-wecare-test
+        days_count: 7
+        snapshot: true
+        schedule: 05 6 * * *
+      - kind: prefix
+        value: lmru-p0767-replenishment-backend-prod
+        days_count: 30
+        snapshot: true
+        schedule: 15 6 * * *
+        monitoring: false
+      - kind: prefix
+        value: lmru-p0767-replenishment-bff
+        days_count: 30
+        snapshot: true
+        schedule: 15 6 * * *
+      - kind: prefix
+        value: lmru-p0767-replenishment-frontend
+        days_count: 30
+        snapshot: true
+        schedule: 20 6 * * *
+      - kind: prefix
+        value: lmru-p0767-replenishment-infra-calc-prod
+        days_count: 30
+        snapshot: true
+        schedule: 25 6 * * *
+      - kind: prefix
+        value: lmru-p0767-replenishment-infra-prod
+        days_count: 30
+        snapshot: true
+        schedule: 30 6 * * *
+      - kind: prefix
+        value: lmru-p0890-baget-ab-platform
+        days_count: 3
+        system: false
+        monitoring: false
+        schedule: 30 * * * *
+        snapshot: true
+        snapshot_count_s3: 7
+      - kind: prefix
+        value: lmru-p0499-cdcalendar-stage
+        days_count: 3
+        snapshot: true
+        schedule: 30 4 * * *
+      - kind: prefix
+        value: lmru-p0499-cdcalendar-prod
+        days_count: 14
+        snapshot_count_s3: 7
+        snapshot: true
+        schedule: 30 3 * * *

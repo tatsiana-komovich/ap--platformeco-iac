@@ -1,0 +1,57 @@
+{{- if hasKey .Values "alerts" }}
+{{- if hasKey .Values.alerts "pods_unavailable" }}
+{{- if .Values.alerts.pods_unavailable.enabled }}
+---
+apiVersion: deckhouse.io/v1
+kind: CustomPrometheusRules
+metadata:
+  labels:
+    component: rules
+    prometheus: main
+  name: many-pods-unavailable
+spec:
+  groups:
+    - name: many-pods-unavailable
+      rules:
+        - alert: TooManyPodsUnavailable
+          annotations:
+            description: |-
+              There are many unavailable pods in the {{`{{ $labels.cluster }}`}} cluster.
+
+              Currently at: {{`{{ $value }}`}}%
+              
+              Threshold at: 5%
+              
+              Get a list of unavailable pods:
+              1. `kubectl get po -A | grep -v 'Runn|Compl'`
+              
+              Check why pods are not available:
+              2. `kubectl describe po`
+            plk_protocol_version: "1"
+            plk_markup_format: markdown
+            summary: |-
+              There are many unavailable pods in the {{`{{ $labels.cluster }}`}} cluster.
+          expr: |-
+            (
+              (
+                sum (kube_deployment_status_replicas_unavailable)
+                +
+                sum (kube_statefulset_status_replicas - kube_statefulset_status_replicas_ready)
+                +
+                sum (kube_daemonset_status_number_unavailable))
+                /
+                (sum (kube_deployment_status_replicas)
+                +
+                sum (kube_statefulset_status_replicas)
+                +
+                sum (kube_daemonset_status_number_available + kube_daemonset_status_number_unavailable)
+              )
+            ) * 100
+            > 5
+          for: 5m
+          labels:
+            severity_level: {{ .Values.alerts.pods_unavailable.severity | default 3 | quote }}
+            tier: cluster
+{{- end }}
+{{- end }}
+{{- end }}

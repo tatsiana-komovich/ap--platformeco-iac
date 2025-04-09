@@ -1,0 +1,66 @@
+{{ $prefix := "flant_backups_restic"}}
+{{ $alertPrefix := "K8sResticBackups"}}
+{{ $description := `Необходимо устранить ошибки и перезапустить restic-exporter  в неймспейсе {{$labels.namespace}} для обновления состояния архива.` }}
+apiVersion: deckhouse.io/v1
+kind: CustomPrometheusRules
+metadata:
+  name: etcd-backup
+spec:
+  groups:
+  - name: backups.restic.rules
+    rules:
+    - alert: flant_backups_resticMalfunctioning
+      labels:
+        severity_level: "4"
+      annotations:
+        description: |-
+          При выполнении проверки целостности архива возникла ошибка.
+          {{ $description }}
+        summary: Архив поврежден
+        plk_markup_format: markdown
+        plk_protocol_version: "1"
+        plk_labels_as_annotations: instance,pod
+      for: 5m
+      expr: |
+        {{ $prefix }}_health{} < 1
+    - alert: {{ $alertPrefix }}NotScheduling
+      labels:
+        severity_level: "4"
+      annotations:
+        description: |-
+          Бекапы давно не выполнялись.
+          {{ $description }}
+          Если в повторной job с бэкапом есть сообщение о локе стороджа, то:
+           - проверить что нет работающих или зависших job с backup в текущий момент, которые
+              блокируют хранилище (зависшие убить, насчет работающих решить по обстоятельствам).
+              Проверить время лока можно командой
+               `kubectl -n {{`{{$labels.namespace}}`}} exec -it restore-restic-<TAB> -- restic --no-lock list locks`
+           - зайти в контейнер и выполнить unlock
+              `kubectl -n {{`{{$labels.namespace}}`}} exec -it restore-restic-<TAB> -- restic unlock`
+        summary: Бекапы не выполнялись больше суток.
+        plk_markup_format: markdown
+        plk_protocol_version: "1"
+        plk_labels_as_annotations: instance,pod
+      for: 5m
+      expr: |
+          {{ $prefix }}_hours_passed_since_last_backup{} > 24
+    - alert: {{ $alertPrefix }}TooManyLocks
+      labels:
+        severity_level: "4"
+      annotations:
+        description: |-
+          Одна или более блокировок длится более 4 часов.
+          {{ $description }}
+           - проверить что нет работающих или зависших job с backup в текущий момент, которые
+              блокируют хранилище (зависшие убить, насчет работающих решить по обстоятельствам).
+              Проверить время лока можно командой
+               `kubectl -n {{`{{$labels.namespace}}`}} exec -it restore-restic-<TAB> -- restic --no-lock list locks`
+           - зайти в контейнер и выполнить unlock
+              `kubectl -n {{`{{$labels.namespace}}`}} exec -it restore-restic-<TAB> -- restic unlock`
+        summary: Одна или более блокировок длится более 4 часов.
+        plk_markup_format: markdown
+        plk_protocol_version: "1"
+        plk_labels_as_annotations: instance,pod
+      for: 4h
+      expr: |
+          {{ $prefix }}_locks_count{} > 0

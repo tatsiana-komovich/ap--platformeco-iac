@@ -1,0 +1,43 @@
+{{- with (index $.Subcharts "tempo-vulture").Values.serviceMonitor }}
+{{- if $.Values.vultureServiceMonitor }}
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: {{ include "tempo-vulture.fullname" (index $.Subcharts "tempo-vulture") }}
+  {{- with .namespace }}
+  namespace: {{ . }}
+  {{- end }}
+  {{- with .annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  labels:
+    {{- include "tempo-vulture.labels" (index $.Subcharts "tempo-vulture") | nindent 4 }}
+    {{- with .labels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+spec:
+  namespaceSelector:
+  {{- if .namespaceSelector }}
+  {{- toYaml .namespaceSelector | nindent 4 }}
+  {{- else }}
+    matchNames:
+    - {{ $.Release.Namespace }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "tempo-vulture.selectorLabels" (index $.Subcharts "tempo-vulture") | nindent 6 }}
+  endpoints:
+    - port: prom-metrics
+      {{- with .interval }}
+      interval: {{ . }}
+      {{- end }}
+      {{- with .scrapeTimeout }}
+      scrapeTimeout: {{ . }}
+      {{- end }}
+      relabelings:
+        {{- with .relabelings }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+{{- end }}
+{{- end }}

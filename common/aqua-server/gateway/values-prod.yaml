@@ -1,0 +1,137 @@
+---
+imageCredentials:
+  create: false
+  name:
+  repositoryUriPrefix: "docker-remote-aquasec.art.lmru.tech"
+  registry: "docker-remote-aquasec.art.lmru.tech"
+  username: ""
+  password: ""
+
+rbac:
+  create: false
+
+clusterRole:
+  roleRef: ""
+
+console:
+  address: aqua-server-console-svc:443
+  publicIP:
+  publicPort:
+
+serviceAccount:
+  annotations: {}
+  create: false
+  name: "aqua-sa"
+
+replicaCount: 2
+# logLevel: debug
+image:
+  repository: gateway
+  tag: "2022.4.759"
+  pullPolicy: Always
+service:
+  type: LoadBalancer
+  labels: {}
+  app: aqua-gateway-gateway
+  annotations:
+    yandex.cpi.flant.com/listener-address-ipv4: 10.203.3.131
+    yandex.cpi.flant.com/listener-subnet-id: e9br176idp39ko3q1p99
+  ports:
+    - name: aqua-gate
+      protocol: TCP
+      port: 3622
+      targetPort: 3622
+      nodePort: 32724
+    - name: aqua-gate-ssl
+      protocol: TCP
+      port: 8443
+      targetPort: 8443
+      nodePort: 31900
+    - name: aqua-health
+      protocol: TCP
+      port: 8082
+      targetPort: 8082
+      nodePort: 32203
+livenessProbe:
+  httpGet:
+    path: /
+    port: 8082
+  initialDelaySeconds: 60
+  periodSeconds: 30
+readinessProbe:
+  tcpSocket:
+    port: 8443
+  initialDelaySeconds: 60
+  periodSeconds: 60
+resources:
+  requests:
+    cpu: 2000m
+    memory: 4Gi
+  limits:
+    cpu: 4000m
+  memory: 6Gi
+nodeSelector: {}
+tolerations: []
+affinity: {}
+podAnnotations: {}
+podLabels: {}
+securityContext:
+  runAsUser: 11431
+  runAsGroup: 11433
+  fsGroup: 11433
+container_securityContext: {}
+
+pdb:
+  minAvailable: "1"
+  apiVersion: policy/v1
+TLS:
+  enabled: false
+extraEnvironmentVars:
+  AQUA_FF_OVERRIDES: '{"SLK-51933":true}'
+extraSecretEnvironmentVars: []
+  # - envName: ENV_NAME
+  #   secretName: name
+  #   secretKey: key
+
+extraVolumeMounts: []
+
+extraVolumes: []
+
+headlessService: false
+
+global:
+  platform: k8s
+
+  db:
+    external:
+      enabled: true
+      name: "aqua-db"
+      host: "p-aquasec-db-01.ru-central1.internal"
+      port: "5435"
+      user: "aqua-db"
+      password: "<path:prod/data/console#db-password>"
+      auditName: "aqua-audit-db"
+      auditHost: "p-aquasec-db-01.ru-central1.internal"
+      auditPort: "5435"
+      auditUser: "aqua-audit-db"
+      auditPassword: "<path:prod/data/console#audit-password>"
+      pubsubName: "aqua-db"
+      pubsubHost: "p-aquasec-db-01.ru-central1.internal"
+      pubsubPort: "5435"
+      pubsubUser: "aqua-db"
+      pubsubPassword: "<path:prod/data/console#db-password>"
+
+    passwordFromSecret:
+      enabled: false
+
+    ssl: true
+    sslmode: disable          # accepts: allow | prefer | require | verify-ca | verify-full (Default: Require)
+    auditssl: true
+    auditsslmode: disable     # accepts: allow | prefer | require | verify-ca | verify-full (Default: Require)
+    pubsubssl: true
+    pubsubsslmode: disable    # accepts: allow | prefer | require | verify-ca | verify-full (Default: Require)
+
+    # To establish mTLS/verify-ca/verify-full with External DB, enable to true and supply dbcerts secret to dcertSecretName
+    externalDbCerts:
+      enable: false
+      certSecretName: ""

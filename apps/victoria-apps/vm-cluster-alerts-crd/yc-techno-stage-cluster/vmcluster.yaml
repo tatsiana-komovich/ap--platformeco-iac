@@ -1,0 +1,148 @@
+---
+apiVersion: operator.victoriametrics.com/v1beta1
+kind: VMCluster
+metadata:
+  name: victoria-alerts-main
+spec:
+  retentionPeriod: "3d"
+  replicationFactor: 2
+  vmstorage:
+    replicaCount: 3
+    logFormat: json
+    logLevel: "INFO"
+    image:
+      repository: docker-remote-docker-io.art.lmru.tech/victoriametrics/vmstorage
+      tag: v1.97.0-cluster
+      pullPolicy: IfNotPresent
+    storageDataPath: "/vm-data"
+    topologySpreadConstraints:
+    - maxSkew: 1
+      topologyKey: "topology.kubernetes.io/zone"
+      whenUnsatisfiable: DoNotSchedule
+    affinity:
+      podAntiAffinity:
+        requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+                - key: "app.kubernetes.io/name"
+                  operator: In
+                  values:
+                    - "vmstorage"
+            topologyKey: "kubernetes.io/hostname"
+    tolerations:
+      - effect: NoExecute
+        key: dedicated
+        value: victoria-alerts
+    nodeSelector:
+      node-role/victoria-alerts: ""
+    podDisruptionBudget:
+      minAvailable: 2
+    storage:
+      volumeClaimTemplate:
+        spec:
+          storageClassName: network-ssd
+          resources:
+            requests:
+              storage: 30Gi
+    resources:
+      limits:
+        memory: 4Gi
+      requests:
+        cpu: 250m
+        memory: 512Mi
+  vmselect:
+    replicaCount: 3
+    serviceSpec:
+      metadata:
+        name: victoria-alerts-cluster-main-access
+        annotations:
+          yandex.cpi.flant.com/listener-subnet-id: e9b62pbnf0oaj4btj7rc
+          yandex.cpi.flant.com/listener-address-ipv4: 10.203.199.3
+      spec:
+        type: LoadBalancer
+    logFormat: json
+    logLevel: "INFO"
+    image:
+      repository: docker-remote-docker-io.art.lmru.tech/victoriametrics/vmselect
+      tag: v1.97.0-cluster
+      pullPolicy: IfNotPresent
+    cacheMountPath: "/select-cache"
+    topologySpreadConstraints:
+      - maxSkew: 1
+        topologyKey: "topology.kubernetes.io/zone"
+        whenUnsatisfiable: DoNotSchedule
+    affinity:
+      podAntiAffinity:
+        requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+                - key: "app.kubernetes.io/name"
+                  operator: In
+                  values:
+                    - "vmselect"
+            topologyKey: "kubernetes.io/hostname"
+    tolerations:
+      - effect: NoExecute
+        key: dedicated
+        value: victoria-alerts
+    nodeSelector:
+      node-role/victoria-alerts: ""
+    podDisruptionBudget:
+      minAvailable: 2
+    storage:
+      volumeClaimTemplate:
+        spec:
+          storageClassName: network-ssd
+          resources:
+            requests:
+              storage: 2Gi
+    resources:
+      limits:
+        memory: "1024Mi"
+      requests:
+        memory: 256Mi
+        cpu: 200m
+  vminsert:
+    replicaCount: 3
+    serviceSpec:
+      metadata:
+        name: victoria-alerts-cluster-main-insert
+        annotations:
+          yandex.cpi.flant.com/listener-subnet-id: e2l6nn0el6dm1e5p73ki
+          yandex.cpi.flant.com/listener-address-ipv4: 10.203.19.200
+      spec:
+        type: LoadBalancer
+    image:
+      repository: docker-remote-docker-io.art.lmru.tech/victoriametrics/vminsert
+      tag: v1.97.0-cluster
+      pullPolicy: IfNotPresent
+    logFormat: json
+    logLevel: "INFO"
+    topologySpreadConstraints:
+    - maxSkew: 1
+      topologyKey: "topology.kubernetes.io/zone"
+      whenUnsatisfiable: DoNotSchedule
+    affinity:
+      podAntiAffinity:
+        requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+                - key: "app.kubernetes.io/name"
+                  operator: In
+                  values:
+                    - "vminsert"
+            topologyKey: "kubernetes.io/hostname"
+    tolerations:
+      - effect: NoExecute
+        key: dedicated
+        value: victoria-alerts
+    nodeSelector:
+      node-role/victoria-alerts: ""
+    podDisruptionBudget:
+      minAvailable: 2
+    resources:
+      limits:
+        memory: "3Gi"
+      requests:
+          memory: "256Mi"
+          cpu: 250m

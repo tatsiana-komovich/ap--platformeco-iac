@@ -1,0 +1,37 @@
+---
+alertmanager:
+  templates:
+    alertmanager.tmpl: |-
+      ''
+
+  config:
+    global:
+      smtp_from: 'alertmanager@leroy-merlin.ru'
+      smtp_smarthost: 'massmail.hq.ru.corp.leroymerlin.com:25'
+      smtp_require_tls: false
+
+    templates:
+      - '/etc/alertmanager/*.tmpl'
+
+    route:
+      group_by: ['alertname', 'job']
+      receiver: 'void'
+      repeat_interval: 4h
+
+  ## Add your Alertmanager configuration below
+
+      routes:
+        - matchers:
+            - alert_channel="edi"
+          receiver: 'rprtn-grafana-oncall-edi'
+        # for compatibility with EDI services that migrated from hassaleh cluster
+        - matchers:
+            - product_id="P0335"
+          receiver: 'rprtn-grafana-oncall-edi'
+
+    receivers:
+      - name: 'void'
+      - name: 'rprtn-grafana-oncall-edi'
+        webhook_configs:
+          - url: 'https://obs-grafana-oncall-yc-techno.apps.lmru.tech/75/integrations/v1/alertmanager/zrYy1AQXTP5if3gdI0mruKYyx/'
+            send_resolved: true

@@ -1,0 +1,18 @@
+apiVersion: operator.victoriametrics.com/v1beta1
+kind: VMRule
+metadata:
+  name: vm-rule-yc-monitoring
+  namespace: devops-core-victoria-alerts
+spec:
+  groups:
+    - name: vmalert
+      rules:
+      - alert: DiskIoQuotaUtilizationPct
+        expr: |
+            disk_io_quota_utilization_percentage{folderName!~"^t-.*"} > 95
+        for: 15m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Disk {{ $labels.disk }} in folder {{ $labels.folderId }} utilizes more than 95% disk IO quota. Current vaule is {{$value}}%"
+          description: dashboard -> https://grafana.lmru.tech/d/ogpFPuyIz/yandex-cloud-compute-disk-dashboard?from=now-5m&to=now&orgId=14&var-folderId={{ $labels.folderId }}

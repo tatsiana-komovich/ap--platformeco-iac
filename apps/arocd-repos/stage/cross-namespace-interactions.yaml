@@ -1,0 +1,12 @@
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: cross-namespace-interaction
+  labels:
+    argocd.argoproj.io/secret-type: repository
+stringData:
+  type: git
+  url: https://github.lmru.tech/adeo/lmru--devops-core--cross-namespace-interactions.git
+  password: '<path:services/data/argocd-secrets#REPO_TOKEN>'
+  username: svc-lmru-devops

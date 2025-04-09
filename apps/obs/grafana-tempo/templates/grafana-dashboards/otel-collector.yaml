@@ -1,0 +1,10 @@
+---
+apiVersion: deckhouse.io/v1alpha1
+kind: GrafanaDashboardDefinition
+metadata:
+  name: collector
+
+spec:
+  folder: OTEL
+  definition: |
+{{ .Files.Get "grafana-dashboards/otel-collector.json" | indent 4 }}

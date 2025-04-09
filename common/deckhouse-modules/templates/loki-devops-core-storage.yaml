@@ -1,0 +1,45 @@
+{{- with (get .Values "prometheus") }}
+---
+apiVersion: deckhouse.io/v1alpha1
+kind: ClusterLogDestination
+metadata:
+  name: loki-devops-core-storage-audit
+spec:
+  type: Loki
+  loki:
+    endpoint: https://loki.devops.lmru.tech
+    auth:
+      password: '<path:services/data/devops-core-loki#basic_auth_string|base64encode>'
+      strategy: Basic
+      user: "loki"
+  buffer:
+    whenFull: DropNewest
+    type: Disk
+    disk:
+      maxSize: 512Mi
+  extraLabels:
+    userAgent: "{{ "{{ userAgent }}" }}"
+    verb: "{{ "{{ verb }}" }}"
+    username: "{{ "{{ user.username }}" }}"
+    {{- toYaml .settings.externalLabels | nindent 4 }}
+---
+apiVersion: deckhouse.io/v1alpha1
+kind: ClusterLogDestination
+metadata:
+  name: loki-devops-core-storage
+spec:
+  type: Loki
+  loki:
+    endpoint: https://loki.devops.lmru.tech
+    auth:
+      password: '<path:services/data/devops-core-loki#basic_auth_string|base64encode>'
+      strategy: Basic
+      user: "loki"
+  buffer:
+    whenFull: DropNewest
+    type: Disk
+    disk:
+      maxSize: 512Mi
+  extraLabels:
+    {{- toYaml .settings.externalLabels | nindent 4 }}
+{{- end }}

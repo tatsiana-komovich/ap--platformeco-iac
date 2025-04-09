@@ -1,0 +1,28 @@
+---
+apiVersion: deckhouse.io/v1alpha1
+kind: NodeGroupConfiguration
+metadata:
+  name: netplan-apply.sh
+spec:
+  weight: 110
+  bundles: ["*"]
+  nodeGroups: ["*"]
+  content: |
+    LOCK_FILE="/tmp/netplan-apply.lock"
+
+    if [ -f "$LOCK_FILE" ]; then
+      echo "$LOCK_FILE lockfile exists. Skip"
+      exit 0
+    fi
+
+    echo "Executing 'netplan apply' command"
+    netplan apply
+
+    if [ $? -eq 0 ]; then
+      echo "Done"
+
+      touch "$LOCK_FILE"
+    else
+      echo "Error during restart"
+      exit 1
+    fi

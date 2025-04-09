@@ -1,0 +1,41 @@
+---
+lokiConfig:
+  size: 100
+  retention: 672
+  storage: "default"
+  memoryRequest: 5Gi
+  nodeSelector:
+    node-role/d8-loki: ""
+  tolerations:
+    - effect: NoExecute
+      key: dedicated
+      operator: Equal
+      value: d8-loki
+  storeSystemLogs: false
+
+loggingConfig:
+  enabled: true
+  custom:
+    byNsName:
+      type: KubernetesPods
+      kubernetesPods:
+        namespaceSelector:
+          matchNames:
+            - ppmru-prod
+            - tender-management-prod
+    byNsLabel:
+      type: KubernetesPods
+      kubernetesPods:
+        namespaceSelector:
+          labelSelector:
+            matchLabels:
+              log-shipping: enabled
+    byPodLabel:
+      type: KubernetesPods
+      kubernetesPods:
+        labelSelector:
+          matchLabels:
+            log-shipping: enabled
+
+eventsExporterPod:
+  enabled: false

@@ -1,0 +1,217 @@
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  name: system-wms
+spec:
+  chaos:
+    mode: Disabled
+  cloudInstances:
+    classReference:
+      kind: OpenStackInstanceClass
+      name: system-wms
+    maxPerZone: 1
+    minPerZone: 1
+    zones:
+      - WMS_PROD_AZ_1
+      - WMS_PROD_AZ_2
+      - WMS_PROD_AZ_3
+  disruptions:
+    approvalMode: Automatic
+  kubelet:
+    containerLogMaxFiles: 4
+    containerLogMaxSize: 50Mi
+    resourceReservation:
+      mode: Auto
+  nodeTemplate:
+    labels:
+      node-role.deckhouse.io/system: ""
+    taints:
+      - effect: NoExecute
+        key: dedicated.deckhouse.io
+        value: system
+  nodeType: CloudEphemeral
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  name: d8-loadbalancer-wms
+spec:
+  chaos:
+    mode: Disabled
+  cloudInstances:
+    classReference:
+      kind: OpenStackInstanceClass
+      name: d8-loadbalancer-wms
+    maxPerZone: 2
+    minPerZone: 1
+    zones:
+      - WMS_PROD_AZ_1
+      - WMS_PROD_AZ_2
+      - WMS_PROD_AZ_3
+  disruptions:
+    approvalMode: Automatic
+  kubelet:
+    containerLogMaxFiles: 4
+    containerLogMaxSize: 50Mi
+    resourceReservation:
+      mode: "Off"
+  nodeTemplate:
+    labels:
+      node-role/d8-loadbalancer: ""
+      node-role/metallb: ""
+    taints:
+      - effect: NoExecute
+        key: dedicated
+        value: d8-loadbalancer
+  nodeType: CloudEphemeral
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  name: loadbalancer-wms
+spec:
+  chaos:
+    mode: Disabled
+  cloudInstances:
+    classReference:
+      kind: OpenStackInstanceClass
+      name: loadbalancer-wms
+    maxPerZone: 2
+    minPerZone: 1
+    zones:
+      - WMS_PROD_AZ_1
+      - WMS_PROD_AZ_2
+      - WMS_PROD_AZ_3
+  disruptions:
+    approvalMode: Automatic
+  kubelet:
+    containerLogMaxFiles: 4
+    containerLogMaxSize: 50Mi
+    resourceReservation:
+      mode: "Off"
+  nodeTemplate:
+    labels:
+      node-role/loadbalancer: ""
+      node-role/metallb: ""
+      threshold.extended-monitoring.deckhouse.io/load-average-per-core-critical: "2"
+      threshold.extended-monitoring.deckhouse.io/load-average-per-core-warning: "1"
+    taints:
+      - effect: NoExecute
+        key: dedicated
+        value: loadbalancer
+  nodeType: CloudEphemeral
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  name: application-nodes-wms
+spec:
+  chaos:
+    mode: Disabled
+  cloudInstances:
+    classReference:
+      kind: OpenStackInstanceClass
+      name: application-nodes-wms
+    maxPerZone: 10
+    minPerZone: 3
+    standby: 1
+    zones:
+      - WMS_PROD_AZ_1
+      - WMS_PROD_AZ_2
+      - WMS_PROD_AZ_3
+  disruptions:
+    approvalMode: Automatic
+  kubelet:
+    containerLogMaxFiles: 4
+    containerLogMaxSize: 50Mi
+    resourceReservation:
+      mode: "Off"
+  nodeTemplate:
+    labels:
+      node-role.k8s.lmru.tech/application: ""
+  nodeType: CloudEphemeral
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  name: opendistro-wms
+spec:
+  nodeType: CloudEphemeral
+  nodeTemplate:
+    labels:
+      node-role/opendistro: ""
+    taints:
+      - effect: NoSchedule
+        key: dedicated
+        value: opendistro
+  cloudInstances:
+    minPerZone: 5
+    maxPerZone: 6
+    zones:
+      - WMS_PROD_AZ_1
+      - WMS_PROD_AZ_2
+      - WMS_PROD_AZ_3
+    classReference:
+      kind: OpenStackInstanceClass
+      name: opensearch-wms
+  disruptions:
+    approvalMode: Automatic
+  chaos:
+    mode: Disabled
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  name: odfe-common-wms
+spec:
+  nodeType: CloudEphemeral
+  nodeTemplate:
+    labels:
+      node-role/opendistro-common: ""
+    taints:
+      - effect: NoSchedule
+        key: dedicated
+        value: opendistro-common
+  cloudInstances:
+    minPerZone: 1
+    maxPerZone: 1
+    zones:
+      - WMS_PROD_AZ_1
+      - WMS_PROD_AZ_2
+      - WMS_PROD_AZ_3
+    classReference:
+      kind: OpenStackInstanceClass
+      name: odfe-common-wms
+  disruptions:
+    approvalMode: Automatic
+  chaos:
+    mode: Disabled
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  name: otel-system
+spec:
+  nodeType: CloudEphemeral
+  nodeTemplate:
+    labels:
+      node-role/otel-system: ""
+    taints:
+      - effect: NoSchedule
+        key: dedicated
+        value: otel-system
+  cloudInstances:
+    minPerZone: 1
+    maxPerZone: 1
+    zones:
+      - WMS_PROD_AZ_1
+      - WMS_PROD_AZ_2
+      - WMS_PROD_AZ_3
+    classReference:
+      kind: OpenStackInstanceClass
+      name: otel-system
+  disruptions:
+    approvalMode: Automatic
+  chaos:
+    mode: Disabled

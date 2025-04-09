@@ -1,0 +1,18 @@
+---
+opentelemetry-collector:
+  agent:
+    enabled: false
+
+  instrumentation:
+    enabled: false
+
+  gateway:
+    name: otel-obs-gateway
+    nodeSelector:
+      node-role.kubernetes.io/otel-system-obs: ""
+
+    tolerations:
+      - key: dedicated
+        value: otel-system-obs
+        operator: Equal
+        effect: NoExecute

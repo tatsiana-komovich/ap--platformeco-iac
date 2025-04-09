@@ -1,0 +1,21 @@
+---
+extended_monitoring_enable_on_all_ns: {}
+
+products:
+  - product-id: P0842
+    namespace_pattern:
+      - ^devops-core-github-actions-runner-controller$
+      - ^devops-core-github-runners-exporter$
+
+  - product-id: P0644
+    namespace_pattern:
+      - ^opssec-.*
+
+  - product-id: P1205
+    namespace_pattern:
+      - ^sandbox-ksc-.*
+
+devops-core-vector:
+  - security.deckhouse.io/pod-policy-action: warn
+    namespace_pattern:
+      - ^devops-core-vector$

@@ -1,0 +1,80 @@
+---
+ingress:
+  host: rabbitmq.golf.kube.project.com
+  class: nginx
+  certificate:
+    letsencrypt: true
+    issuer: letsencrypt
+    custom: ""
+  dex:
+    allowedGroups: []
+  #   - flant
+  #   - one
+  #   - two
+  # whitelist: "0.0.0.0/0"
+
+imagePullSecrets:
+  - name: registrysecret
+
+replicas: 1
+
+affinity:
+  podAntiAffinity: {}
+tolerations: []
+
+config:
+  username: admin
+  commonVhosts:
+    - /
+  adminVhost:
+    - /
+
+  # bindings:
+  #   bind:
+  #     destination: queue-name
+  #     source: exchange-name
+  #   bind1:
+  #     destination: queue-name1
+  #     source: exchange-name1
+  # exchanges:
+  #   - exchange-name
+  #   - exchange-name1
+  # queues:
+  #   - queue-name
+  #   - queue-name1
+
+  high_watermark:
+    absolute: 462MiB
+  # erlang_cookie: cookie
+  # password: password
+  # users: #This section is for flant user, e. g. monitoring user
+  #   user:
+  #     password: password
+  #     tag: tag
+  #   user1:
+  #     password: password
+  #     tag: tag
+  # mqUsers: #This section is for client user
+  #   mqUser:
+  #     tag:
+  #     password: password
+  #   mqUser1:
+  #     tag:
+  #     password: password1
+
+storage:
+  accessModes: ReadWriteOnce
+  class: default
+  size: 2Gi
+
+resources:
+  limits:
+    memory: 256Mi
+  requests:
+    cpu: 10m
+    memory: 256Mi
+
+exporter: false
+
+prometheus:
+  return_per_object_metrics: false

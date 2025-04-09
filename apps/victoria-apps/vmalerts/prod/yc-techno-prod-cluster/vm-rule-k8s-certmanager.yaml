@@ -1,0 +1,29 @@
+---
+apiVersion: operator.victoriametrics.com/v1beta1
+kind: VMRule
+metadata:
+  name: vm-rule-k8s-certmanager
+  namespace: devops-core-victoria-alerts
+spec:
+  groups:
+    - name: kubernetes.certmanager
+      rules:
+        - alert: CertmanagerCertificateExpiredSoon
+          expr: |
+            max by (k8s_cluster, name, exported_namespace) (certmanager_certificate_expiration_timestamp_seconds{job="cert-manager", exported_namespace!~"d8.*"} - time() < 1209600)
+          for: 1h
+          labels:
+            severity: warning
+          annotations:
+            description: The certificate {{$labels.exported_namespace}}/{{$labels.name}} will expire in less than 2 weeks
+            summary: Certificate will expire soon
+        
+        - alert: CertmanagerCertificateExpired
+          expr: |
+            max by (k8s_cluster, name, exported_namespace) (certmanager_certificate_expiration_timestamp_seconds{job="cert-manager", exported_namespace!~"d8.*"} - time() < 0)
+          for: 1h
+          labels:
+            severity: warning
+          annotations:
+            description: Certificate {{$labels.exported_namespace}}/{{$labels.name}} expired
+            summary: Certificate expired

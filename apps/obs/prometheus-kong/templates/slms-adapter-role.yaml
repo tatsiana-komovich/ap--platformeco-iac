@@ -1,0 +1,17 @@
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: slms-slms-adapter-obs-slms-adapter
+  namespace: promaas-prometheus-kong
+  labels:
+    app: obs-slms-adapter
+    chart: obs-slms-adapter
+rules:
+  - apiGroups: ["sloth.slok.dev"]
+    resources: ["*"]
+    verbs: ["*"]
+
+  - apiGroups: ["monitoring.coreos.com"]
+    resources: ["prometheusrules"]
+    verbs: ["create", "list", "get", "update", "watch"]

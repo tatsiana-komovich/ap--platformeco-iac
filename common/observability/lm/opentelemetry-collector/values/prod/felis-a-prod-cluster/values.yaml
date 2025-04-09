@@ -1,0 +1,23 @@
+---
+opentelemetry-collector:
+  tempo:
+    enabled: true
+
+    tempo:
+      storage:
+        trace:
+          backend: s3
+          s3:
+            bucket: '<path:prod/data/tempo-incluster#felis-a-cluster.s3.bucket>'
+            access_key: '<path:prod/data/tempo-incluster#felis-a-cluster.s3.access_key>'
+            secret_key: '<path:prod/data/tempo-incluster#felis-a-cluster.s3.secret_key>'
+
+  gateway:
+    config:
+      exporters:
+        otlp:
+          # URL tempo distributor (Ingress GRPC)
+          endpoint: "tempo-distributor-grpc-traces.obs.lmru.tech:443"
+        otlphttp:
+          # URL tempo distributor (Ingress HTTP)
+          endpoint: "https://tempo-distributor-traces.obs.lmru.tech"

@@ -1,0 +1,1722 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": {
+          "type": "grafana",
+          "uid": "-- Grafana --"
+        },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "target": {
+          "limit": 100,
+          "matchAny": false,
+          "tags": [],
+          "type": "dashboard"
+        },
+        "type": "dashboard"
+      },
+      {
+        "datasource": {
+          "type": "prometheus",
+          "uid": "P0D6E4079E36703EB"
+        },
+        "enable": true,
+        "expr": "kube_deployment_labels{namespace=\"vspsplm-$environment\"} unless (kube_deployment_labels{namespace=\"vspsplm-$environment\"} offset $__interval)",
+        "hide": true,
+        "iconColor": "green",
+        "name": "Releases",
+        "tagKeys": "release",
+        "textFormat": "Version: {{label_app_kubernetes_io_version}}",
+        "titleFormat": "🚀 Released {{label_app_kubernetes_io_name}}"
+      },
+      {
+        "datasource": {
+          "type": "prometheus",
+          "uid": "P0D6E4079E36703EB"
+        },
+        "enable": true,
+        "expr": "group by (container, alertname) (ALERTS{namespace=\"vspsplm-$environment\", container=~\".+\", tier=\"\", alertstate=\"firing\"})",
+        "hide": true,
+        "iconColor": "red",
+        "name": "Alerts",
+        "tagKeys": "alert",
+        "textFormat": "{{container}}",
+        "titleFormat": "🚨 {{alertname}}"
+      }
+    ]
+  },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "id": 60,
+  "iteration": 1691426556220,
+  "links": [],
+  "liveNow": false,
+  "panels": [
+    {
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "id": 15,
+      "title": "Totals",
+      "type": "row"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "P0D6E4079E36703EB"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "noValue": "0",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 0,
+        "y": 1
+      },
+      "id": 17,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "last"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "10.4.5",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P0D6E4079E36703EB"
+          },
+          "editorMode": "code",
+          "exemplar": false,
+          "expr": "count(\r\n  group(\r\n    delta(\r\n      prices_label_manager_labels_total{ namespace = \"vspsplm-${environment}\", store_id =~ \"$store\" }[$__range]\r\n    ) > 0\r\n  ) by (store_id)\r\n)",
+          "instant": true,
+          "range": false,
+          "refId": "A"
+        }
+      ],
+      "title": "Stores - Interacted",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "P0D6E4079E36703EB"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "decimals": 1,
+          "mappings": [],
+          "noValue": "0",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 4,
+        "y": 1
+      },
+      "hideTimeOverride": true,
+      "id": 26,
+      "interval": "$period",
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "sum"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "10.4.5",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P0D6E4079E36703EB"
+          },
+          "editorMode": "code",
+          "exemplar": false,
+          "expr": "sum(\r\n  increase(\r\n    prices_label_manager_sessions_total{ namespace = \"vspsplm-${environment}\", store_id =~ \"$store\", status = \"completed\" }[$period]\r\n  )\r\n)",
+          "instant": false,
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "timeShift": "$period",
+      "title": "Sessions - Completed",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "P0D6E4079E36703EB"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "decimals": 1,
+          "mappings": [],
+          "max": 1,
+          "min": 0,
+          "noValue": "0%",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "red",
+                "value": null
+              },
+              {
+                "color": "#EAB839",
+                "value": 0.2
+              },
+              {
+                "color": "green",
+                "value": 0.5
+              }
+            ]
+          },
+          "unit": "percentunit"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 8,
+        "y": 1
+      },
+      "hideTimeOverride": true,
+      "id": 23,
+      "interval": "$period",
+      "options": {
+        "minVizHeight": 75,
+        "minVizWidth": 75,
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "last"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showThresholdLabels": false,
+        "showThresholdMarkers": true,
+        "sizing": "auto"
+      },
+      "pluginVersion": "10.4.5",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P0D6E4079E36703EB"
+          },
+          "editorMode": "code",
+          "exemplar": false,
+          "expr": "sum(\r\n  increase(\r\n    prices_label_manager_sessions_total{namespace = \"vspsplm-${environment}\", store_id =~ \"$store\", status=\"completed\", delivery=\"on-time\"}[$__range]\r\n  )\r\n) \r\n/\r\nsum(\r\n  increase(\r\n    prices_label_manager_sessions_total{namespace = \"vspsplm-${environment}\", store_id =~ \"$store\", status=\"completed\" }[$__range]\r\n  )\r\n) ",
+          "instant": true,
+          "range": false,
+          "refId": "A"
+        }
+      ],
+      "timeShift": "$period",
+      "title": "% Completed - On-time",
+      "type": "gauge"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "P0D6E4079E36703EB"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "decimals": 1,
+          "mappings": [],
+          "noValue": "0",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 12,
+        "y": 1
+      },
+      "hideTimeOverride": true,
+      "id": 22,
+      "interval": "$period",
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "sum"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "10.4.5",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P0D6E4079E36703EB"
+          },
+          "editorMode": "code",
+          "exemplar": false,
+          "expr": "sum(\r\n  increase(\r\n    prices_label_manager_pages_total{ namespace = \"vspsplm-${environment}\", store_id =~ \"$store\", status=\"printed\" }[$period]\r\n  )\r\n)",
+          "instant": false,
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "timeShift": "$period",
+      "title": "Pages - Printed",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "P0D6E4079E36703EB"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "decimals": 1,
+          "mappings": [],
+          "noValue": "0",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 16,
+        "y": 1
+      },
+      "hideTimeOverride": true,
+      "id": 21,
+      "interval": "$period",
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "sum"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "10.4.5",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P0D6E4079E36703EB"
+          },
+          "editorMode": "code",
+          "exemplar": false,
+          "expr": "sum(\r\n  increase(\r\n    prices_label_manager_labels_total{ namespace = \"vspsplm-${environment}\", store_id =~ \"$store\", status=\"printed\" }[$period]\r\n  )\r\n)",
+          "instant": false,
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "timeShift": "$period",
+      "title": "Labels - Printed",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "P0D6E4079E36703EB"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "decimals": 2,
+          "mappings": [],
+          "max": 1,
+          "min": 0,
+          "noValue": "N/A",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "red",
+                "value": null
+              },
+              {
+                "color": "#EAB839",
+                "value": 0.9
+              },
+              {
+                "color": "green",
+                "value": 0.95
+              }
+            ]
+          },
+          "unit": "percentunit"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 20,
+        "y": 1
+      },
+      "hideTimeOverride": true,
+      "id": 46,
+      "interval": "$period",
+      "options": {
+        "minVizHeight": 75,
+        "minVizWidth": 75,
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "last"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showThresholdLabels": false,
+        "showThresholdMarkers": true,
+        "sizing": "auto"
+      },
+      "pluginVersion": "10.4.5",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P0D6E4079E36703EB"
+          },
+          "editorMode": "code",
+          "exemplar": false,
+          "expr": "sum(\r\n  increase(\r\n    http_server_requests_seconds_count{ namespace = \"vspsplm-${environment}\", outcome=\"SUCCESS\", store_id =~ \"$store\", uri=\"/printing/printTagTask\" }[$__range]\r\n  )\r\n) / sum(\r\n  increase(\r\n    http_server_requests_seconds_count{ namespace = \"vspsplm-${environment}\", uri=\"/printing/printTagTask\" }[$__range]\r\n  )\r\n)",
+          "instant": true,
+          "range": false,
+          "refId": "A"
+        }
+      ],
+      "timeShift": "$period",
+      "title": "% Successful Prints",
+      "type": "gauge"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "P0D6E4079E36703EB"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "decimals": 0,
+          "mappings": [],
+          "noValue": "0",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "#EAB839",
+                "value": 5000
+              },
+              {
+                "color": "red",
+                "value": 15000
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 0,
+        "y": 5
+      },
+      "hideTimeOverride": true,
+      "id": 47,
+      "interval": "$period",
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "last"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "10.4.5",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P0D6E4079E36703EB"
+          },
+          "editorMode": "code",
+          "exemplar": false,
+          "expr": "sum(\r\n  kafka_consumer_fetch_manager_records_lag {\r\n    container=\"plp-generator\",\r\n    namespace=\"vspsplm-${environment}\"\r\n  }\r\n)",
+          "instant": false,
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "timeShift": "$period",
+      "title": "Triggers - Pending",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "P0D6E4079E36703EB"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "decimals": 1,
+          "mappings": [],
+          "noValue": "0",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 4,
+        "y": 5
+      },
+      "hideTimeOverride": true,
+      "id": 24,
+      "interval": "$period",
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "sum"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "10.4.5",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P0D6E4079E36703EB"
+          },
+          "editorMode": "code",
+          "exemplar": false,
+          "expr": "sum(\r\n  increase(\r\n    prices_label_manager_generations_total{ namespace = \"vspsplm-${environment}\", store_id =~ \"$store\", status = \"queued\" }[$period]\r\n  )\r\n)",
+          "instant": false,
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "timeShift": "$period",
+      "title": "Triggers - Received",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "P0D6E4079E36703EB"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "decimals": 1,
+          "mappings": [],
+          "noValue": "0",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 8,
+        "y": 5
+      },
+      "hideTimeOverride": true,
+      "id": 25,
+      "interval": "$period",
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "sum"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "10.4.5",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P0D6E4079E36703EB"
+          },
+          "editorMode": "code",
+          "exemplar": false,
+          "expr": "sum(\r\n  increase(\r\n    prices_label_manager_sessions_total{ namespace = \"vspsplm-${environment}\", store_id =~ \"$store\", status = \"created\" }[$period]\r\n  )\r\n)",
+          "instant": false,
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "timeShift": "$period",
+      "title": "Sessions - Generated",
+      "type": "stat"
+    },
+    {
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 9
+      },
+      "id": 13,
+      "title": "Details",
+      "type": "row"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "P0D6E4079E36703EB"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "axisSoftMin": 0,
+            "barAlignment": 0,
+            "drawStyle": "bars",
+            "fillOpacity": 100,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "normal"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "decimals": 0,
+          "mappings": [],
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 10
+      },
+      "hideTimeOverride": true,
+      "id": 4,
+      "interval": "$period",
+      "options": {
+        "legend": {
+          "calcs": [
+            "sum"
+          ],
+          "displayMode": "table",
+          "placement": "right",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P0D6E4079E36703EB"
+          },
+          "editorMode": "code",
+          "expr": "sum by (template_size) (\r\n    increase(\r\n      prices_label_manager_labels_total{namespace=\"vspsplm-${environment}\", store_id =~ \"$store\", status=\"printed\"}[$period]\r\n    )\r\n)",
+          "hide": false,
+          "legendFormat": "{{template_size}}",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "timeShift": "$period",
+      "title": "Labels Printed [$period]",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "P0D6E4079E36703EB"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "axisSoftMin": 0,
+            "barAlignment": 0,
+            "drawStyle": "bars",
+            "fillOpacity": 100,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "normal"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "decimals": 0,
+          "mappings": [],
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 10
+      },
+      "hideTimeOverride": true,
+      "id": 27,
+      "interval": "$period",
+      "options": {
+        "legend": {
+          "calcs": [
+            "sum"
+          ],
+          "displayMode": "table",
+          "placement": "right",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P0D6E4079E36703EB"
+          },
+          "editorMode": "code",
+          "expr": "sum by (template_size) (\r\n    increase(\r\n      prices_label_manager_pages_total{namespace=\"vspsplm-${environment}\", store_id =~ \"$store\", status=\"printed\"}[$period]\r\n    )\r\n)",
+          "hide": false,
+          "legendFormat": "{{template_size}}",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "timeShift": "$period",
+      "title": "Pages Printed [$period]",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "P0D6E4079E36703EB"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "align": "auto",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "filterable": false,
+            "inspect": false,
+            "minWidth": 50
+          },
+          "decimals": 0,
+          "mappings": [],
+          "noValue": "0",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "#ebeeea",
+                "value": null
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "🏠 Store"
+            },
+            "properties": [
+              {
+                "id": "custom.filterable",
+                "value": true
+              },
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "mode": "basic",
+                  "type": "color-background"
+                }
+              },
+              {
+                "id": "custom.align",
+                "value": "center"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "⌛ Sessions - On-Time %"
+            },
+            "properties": [
+              {
+                "id": "min",
+                "value": 0
+              },
+              {
+                "id": "max",
+                "value": 1
+              },
+              {
+                "id": "unit",
+                "value": "percentunit"
+              },
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "options": {
+                      "NaN": {
+                        "index": 0,
+                        "text": "0%"
+                      }
+                    },
+                    "type": "value"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 11,
+        "w": 24,
+        "x": 0,
+        "y": 18
+      },
+      "hideTimeOverride": true,
+      "id": 44,
+      "interval": "$period",
+      "options": {
+        "cellHeight": "sm",
+        "footer": {
+          "countRows": false,
+          "fields": [
+            "Value #Received (sum)",
+            "Value #Generated (sum)",
+            "Value #Completed (sum)",
+            "Value #Delivery (sum)",
+            "Value #Printed - Labels (sum)",
+            "Value #Printed - Pages (sum)"
+          ],
+          "reducer": [
+            "sum"
+          ],
+          "show": true
+        },
+        "frameIndex": 2,
+        "showHeader": true,
+        "sortBy": []
+      },
+      "pluginVersion": "10.4.5",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P0D6E4079E36703EB"
+          },
+          "editorMode": "code",
+          "exemplar": false,
+          "expr": "sum by (store_id) (\r\n  increase(\r\n    prices_label_manager_generations_total{namespace=\"vspsplm-${environment}\", store_id =~ \"$store\", status=\"queued\"}[$period]\r\n  ) or vector(0)\r\n)",
+          "format": "table",
+          "hide": false,
+          "instant": false,
+          "range": true,
+          "refId": "Received"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P0D6E4079E36703EB"
+          },
+          "editorMode": "code",
+          "exemplar": false,
+          "expr": " sum by (store_id) (\r\n  increase(\r\n    prices_label_manager_sessions_total{namespace=\"vspsplm-${environment}\", store_id =~ \"$store\", status=\"created\"}[$period]\r\n  ) or vector(0)\r\n)",
+          "format": "table",
+          "hide": false,
+          "instant": false,
+          "range": true,
+          "refId": "Generated"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P0D6E4079E36703EB"
+          },
+          "editorMode": "code",
+          "exemplar": false,
+          "expr": "sum by (store_id) (\n  increase(\n    prices_label_manager_sessions_total{namespace=\"vspsplm-${environment}\", store_id =~ \"$store\", status=\"completed\"}[$period]\n  ) or vector(0)\n)",
+          "format": "table",
+          "hide": false,
+          "instant": false,
+          "range": true,
+          "refId": "Completed"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P0D6E4079E36703EB"
+          },
+          "editorMode": "code",
+          "exemplar": false,
+          "expr": "sum by (store_id) (\n  increase(\n    prices_label_manager_sessions_total{namespace=\"vspsplm-${environment}\", store_id =~ \"$store\", status=\"completed\", delivery=\"on-time\"}[$period]\n  ) or vector(0)\n)",
+          "format": "table",
+          "hide": false,
+          "instant": false,
+          "range": true,
+          "refId": "Completed - On-time"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P0D6E4079E36703EB"
+          },
+          "editorMode": "code",
+          "exemplar": false,
+          "expr": " sum by (store_id) (\r\n  increase(\r\n    prices_label_manager_labels_total{namespace=\"vspsplm-${environment}\", store_id =~ \"$store\", status=\"printed\" }[$period]\r\n  ) or vector(0)\r\n)",
+          "format": "table",
+          "hide": false,
+          "instant": false,
+          "range": true,
+          "refId": "Printed - Labels"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P0D6E4079E36703EB"
+          },
+          "editorMode": "code",
+          "exemplar": false,
+          "expr": "sum by (store_id) (\r\n  increase(\r\n    prices_label_manager_pages_total{namespace=\"vspsplm-${environment}\", store_id =~ \"$store\", status=\"printed\"}[$period]\r\n  ) or vector(0)\r\n)",
+          "format": "table",
+          "hide": false,
+          "instant": false,
+          "range": true,
+          "refId": "Printed - Pages"
+        }
+      ],
+      "timeShift": "$period",
+      "title": "Label Management By Store",
+      "transformations": [
+        {
+          "id": "merge",
+          "options": {}
+        },
+        {
+          "id": "convertFieldType",
+          "options": {
+            "conversions": [
+              {
+                "destinationType": "number",
+                "targetField": "store_id"
+              }
+            ],
+            "fields": {}
+          }
+        },
+        {
+          "id": "filterByValue",
+          "options": {
+            "filters": [
+              {
+                "config": {
+                  "id": "greater",
+                  "options": {
+                    "value": 0
+                  }
+                },
+                "fieldName": "Value #Received"
+              },
+              {
+                "config": {
+                  "id": "greater",
+                  "options": {
+                    "value": 0
+                  }
+                },
+                "fieldName": "Value #Generated"
+              },
+              {
+                "config": {
+                  "id": "greater",
+                  "options": {
+                    "value": 0
+                  }
+                },
+                "fieldName": "Value #Completed"
+              },
+              {
+                "config": {
+                  "id": "greater",
+                  "options": {
+                    "value": 0
+                  }
+                },
+                "fieldName": "Value #Printed - Labels"
+              },
+              {
+                "config": {
+                  "id": "greater",
+                  "options": {
+                    "value": 0
+                  }
+                },
+                "fieldName": "Value #Printed - Pages"
+              }
+            ],
+            "match": "any",
+            "type": "include"
+          }
+        },
+        {
+          "id": "groupBy",
+          "options": {
+            "fields": {
+              "Value #Completed": {
+                "aggregations": [
+                  "sum"
+                ],
+                "operation": "aggregate"
+              },
+              "Value #Completed - On-time": {
+                "aggregations": [
+                  "sum"
+                ],
+                "operation": "aggregate"
+              },
+              "Value #Delivery": {
+                "aggregations": [
+                  "max"
+                ],
+                "operation": "aggregate"
+              },
+              "Value #Generated": {
+                "aggregations": [
+                  "sum"
+                ],
+                "operation": "aggregate"
+              },
+              "Value #Printed - Labels": {
+                "aggregations": [
+                  "sum"
+                ],
+                "operation": "aggregate"
+              },
+              "Value #Printed - Pages": {
+                "aggregations": [
+                  "sum"
+                ],
+                "operation": "aggregate"
+              },
+              "Value #Received": {
+                "aggregations": [
+                  "sum"
+                ],
+                "operation": "aggregate"
+              },
+              "store_id": {
+                "aggregations": [],
+                "operation": "groupby"
+              }
+            }
+          }
+        },
+        {
+          "id": "calculateField",
+          "options": {
+            "alias": "Delivery",
+            "binary": {
+              "left": "Value #Completed - On-time (sum)",
+              "operator": "/",
+              "reducer": "sum",
+              "right": "Value #Completed (sum)"
+            },
+            "mode": "binary",
+            "reduce": {
+              "include": [
+                "Value #Completed - On-time (sum)",
+                "Value #Completed (sum)"
+              ],
+              "reducer": "diffperc"
+            }
+          }
+        },
+        {
+          "id": "sortBy",
+          "options": {
+            "fields": {},
+            "sort": [
+              {
+                "field": "store_id"
+              }
+            ]
+          }
+        },
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "Time": true,
+              "Value #Completed - On-time (sum)": true
+            },
+            "indexByName": {
+              "Delivery": 4,
+              "Value #Completed (sum)": 3,
+              "Value #Completed - On-time (sum)": 5,
+              "Value #Generated (sum)": 2,
+              "Value #Printed - Labels (sum)": 6,
+              "Value #Printed - Pages (sum)": 7,
+              "Value #Received (sum)": 1,
+              "store_id": 0
+            },
+            "renameByName": {
+              "Delivery": "⌛ Sessions - On-Time %",
+              "Time": "",
+              "Value #Completed (sum)": "✔️ Sessions - Completed",
+              "Value #Completed - On-time (sum)": "",
+              "Value #Delivery (mean)": "Delivery",
+              "Value #Delivery (sum)": "⛔ Delivery",
+              "Value #Generated (sum)": "➕ Sessions - Generated",
+              "Value #Printed - Labels (sum)": "🏷️ Labels - Printed",
+              "Value #Printed - Pages (sum)": "📄 Pages - Printed",
+              "Value #Received (sum)": "📬 Triggers - Received",
+              "store_id": "🏠 Store"
+            }
+          }
+        }
+      ],
+      "type": "table"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "P0D6E4079E36703EB"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "axisSoftMin": 0,
+            "barAlignment": 0,
+            "drawStyle": "bars",
+            "fillOpacity": 100,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "normal"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 29
+      },
+      "hideTimeOverride": true,
+      "id": 9,
+      "interval": "$period",
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": false
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P0D6E4079E36703EB"
+          },
+          "editorMode": "code",
+          "expr": "sum (\r\n    increase(\r\n      prices_label_manager_generations_total{namespace=\"vspsplm-${environment}\", store_id =~ \"$store\", status=\"queued\"}[$period]\r\n    )\r\n)",
+          "legendFormat": "Generations",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "timeShift": "$period",
+      "title": "Triggers - Received [$period]",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "P0D6E4079E36703EB"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "axisSoftMin": 0,
+            "barAlignment": 0,
+            "drawStyle": "bars",
+            "fillOpacity": 100,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 4,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "normal"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 29
+      },
+      "hideTimeOverride": true,
+      "id": 45,
+      "interval": "$period",
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": false
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P0D6E4079E36703EB"
+          },
+          "editorMode": "code",
+          "expr": "sum (\r\n    increase(\r\n      prices_label_manager_sessions_total{namespace=\"vspsplm-${environment}\", store_id =~ \"$store\", status=\"created\"}[$period]\r\n    )\r\n)",
+          "legendFormat": "Sessions",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "timeShift": "$period",
+      "title": "Sessions - Generated [$period]",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "loki",
+        "uid": "d8-loki"
+      },
+      "gridPos": {
+        "h": 12,
+        "w": 24,
+        "x": 0,
+        "y": 37
+      },
+      "id": 11,
+      "maxDataPoints": 2000,
+      "options": {
+        "dedupStrategy": "exact",
+        "enableLogDetails": true,
+        "prettifyLogMessage": true,
+        "showCommonLabels": false,
+        "showLabels": false,
+        "showTime": true,
+        "sortOrder": "Descending",
+        "wrapLogMessage": false
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "d8-loki"
+          },
+          "expr": "{namespace=\"vspsplm-${environment}\"} | json | level = \"ERROR\" and store =~ \"$store\" | line_format \"| {{.message}}\"",
+          "maxLines": 2000,
+          "queryType": "range",
+          "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "d8-loki"
+          },
+          "expr": "{namespace=\"vspsplm-${environment}\", container=\"plp-mobile-bff\"} |= \"Exception\" | stream = \"stderr\" | line_format \"| {{ __line__ }}\"",
+          "hide": false,
+          "maxLines": 2000,
+          "refId": "B"
+        }
+      ],
+      "title": "Application Errors",
+      "type": "logs"
+    }
+  ],
+  "schemaVersion": 36,
+  "style": "dark",
+  "tags": [],
+  "templating": {
+    "list": [
+      {
+        "current": {
+          "selected": false,
+          "text": "prod",
+          "value": "prod"
+        },
+        "datasource": {
+          "type": "prometheus",
+          "uid": "P0D6E4079E36703EB"
+        },
+        "definition": "query_result(group (prices_label_manager_labels_total) by (namespace))",
+        "hide": 0,
+        "includeAll": false,
+        "label": "Environment",
+        "multi": false,
+        "name": "environment",
+        "options": [],
+        "query": {
+          "query": "query_result(group (prices_label_manager_labels_total) by (namespace))",
+          "refId": "StandardVariableQuery"
+        },
+        "refresh": 1,
+        "regex": "/{namespace=\"vspsplm-(?<value>.*)\"}/",
+        "skipUrlSync": false,
+        "sort": 0,
+        "type": "query"
+      },
+      {
+        "allValue": ".*",
+        "current": {
+          "selected": true,
+          "text": [
+            "All"
+          ],
+          "value": [
+            "$__all"
+          ]
+        },
+        "datasource": {
+          "type": "prometheus",
+          "uid": "P0D6E4079E36703EB"
+        },
+        "definition": "query_result(group(delta(prices_label_manager_labels_total{namespace=\"vspsplm-${environment}\"}[$__range]) > 0) by (store_id))",
+        "hide": 0,
+        "includeAll": true,
+        "label": "Store",
+        "multi": true,
+        "name": "store",
+        "options": [],
+        "query": {
+          "query": "query_result(group(delta(prices_label_manager_labels_total{namespace=\"vspsplm-${environment}\"}[$__range]) > 0) by (store_id))",
+          "refId": "StandardVariableQuery"
+        },
+        "refresh": 2,
+        "regex": "/{store_id=\"(?<value>.*)\"}/",
+        "skipUrlSync": false,
+        "sort": 3,
+        "type": "query"
+      },
+      {
+        "auto": true,
+        "auto_count": 100,
+        "auto_min": "2m",
+        "current": {
+          "selected": false,
+          "text": "auto",
+          "value": "$__auto_interval_period"
+        },
+        "hide": 0,
+        "label": "Period",
+        "name": "period",
+        "options": [
+          {
+            "selected": true,
+            "text": "auto",
+            "value": "$__auto_interval_period"
+          },
+          {
+            "selected": false,
+            "text": "2m",
+            "value": "2m"
+          },
+          {
+            "selected": false,
+            "text": "5m",
+            "value": "5m"
+          },
+          {
+            "selected": false,
+            "text": "10m",
+            "value": "10m"
+          },
+          {
+            "selected": false,
+            "text": "15m",
+            "value": "15m"
+          },
+          {
+            "selected": false,
+            "text": "30m",
+            "value": "30m"
+          },
+          {
+            "selected": false,
+            "text": "1h",
+            "value": "1h"
+          },
+          {
+            "selected": false,
+            "text": "2h",
+            "value": "2h"
+          },
+          {
+            "selected": false,
+            "text": "3h",
+            "value": "3h"
+          },
+          {
+            "selected": false,
+            "text": "6h",
+            "value": "6h"
+          },
+          {
+            "selected": false,
+            "text": "12h",
+            "value": "12h"
+          }
+        ],
+        "query": "2m,5m,10m,15m,30m,1h,2h,3h,6h,12h",
+        "queryValue": "",
+        "refresh": 2,
+        "skipUrlSync": false,
+        "type": "interval"
+      }
+    ]
+  },
+  "time": {
+    "from": "now/d",
+    "to": "now"
+  },
+  "timepicker": {},
+  "timezone": "",
+  "title": "Store Price Label Manager",
+  "uid": "vspsplm",
+  "version": 1,
+  "weekStart": ""
+}

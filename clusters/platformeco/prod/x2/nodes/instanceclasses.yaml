@@ -1,0 +1,54 @@
+---
+apiVersion: deckhouse.io/v1
+kind: OpenStackInstanceClass
+metadata:
+  name: application-nodes
+spec:
+  flavorName: p-c16m32
+  imageName: ubuntu-18-04-cloud-amd64
+  mainNetwork: p-platformeco-ks
+  rootDiskSize: 50
+---
+apiVersion: deckhouse.io/v1
+kind: OpenStackInstanceClass
+metadata:
+  name: cloud-studio-nodes
+spec:
+  flavorName: p-c2m4
+  imageName: ubuntu-20-04-cloud-amd64
+  mainNetwork: p-platformeco-ks
+  rootDiskSize: 50
+---
+apiVersion: deckhouse.io/v1
+kind: OpenStackInstanceClass
+metadata:
+  name: loadbalancer
+spec:
+  flavorName: p-c4m12
+  imageName: ubuntu-22-04-cloud-amd64
+  mainNetwork: BGP-VLAN-3894
+  rootDiskSize: 30
+  additionalNetworks:
+    - p-platformeco-ks
+---
+apiVersion: deckhouse.io/v1
+kind: OpenStackInstanceClass
+metadata:
+  name: d8-loadbalancer
+spec:
+  flavorName: p-c4m12
+  imageName: ubuntu-22-04-cloud-amd64
+  mainNetwork: BGP-VLAN-3894
+  rootDiskSize: 30
+  additionalNetworks:
+    - p-platformeco-ks
+---
+apiVersion: deckhouse.io/v1
+kind: OpenStackInstanceClass
+metadata:
+  name: d8-loki
+spec:
+  flavorName: p-c4m8
+  imageName: ubuntu-22-04-cloud-amd64
+  mainNetwork: p-platformeco-ks
+  rootDiskSize: 50

@@ -1,0 +1,31 @@
+clusterName: "k8s-atlas-a-stage"
+
+aquaSecret:
+  kubeEnforcerToken: enforcer-atlas-a-stage-k8s
+
+extraVolumeMounts:
+  - name: aquasec-audit
+    mountPath: /opt/aquasec/audit
+  - name: aquasec-data
+    mountPath: /data
+
+extraVolumes:
+  - name: aquasec-audit
+    persistentVolumeClaim:
+      claimName: "atlas-a-stage-aqua-audit-pvc"
+  - name: aquasec-data
+    persistentVolumeClaim:
+      claimName: "atlas-a-stage-aqua-data-pvc"
+
+extrapvc:
+  enabled: true
+  namespace: aqua 
+  storageClassName: network-hdd
+  volumeList:
+    atlas-a-stage-aqua-data-pvc:
+      size: 10Gi
+    atlas-a-stage-aqua-audit-pvc:
+      size: 10Gi
+
+enforcer:
+  enforcerToken: enforcer-atlas-a-stage

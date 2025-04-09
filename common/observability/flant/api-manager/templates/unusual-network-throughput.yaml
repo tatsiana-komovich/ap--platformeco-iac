@@ -1,0 +1,40 @@
+{{- if $.Values.enabled }}
+
+{{- $env_list := list }}
+{{- range $k,$v:= $.Values.ng }}
+   {{- if ne $k "_default" }}
+     {{- $env_list = append $env_list $k }}
+   {{- end }}
+{{- end }}
+
+{{- range $env_list }}
+  {{- $environ := . }}
+  {{- $ng := pluck $environ $.Values.ng | first | default $.Values.ng._default }}
+---
+apiVersion: deckhouse.io/v1
+kind: CustomPrometheusRules
+metadata:
+  name: monitoring-unusualnetworkthroughput-{{ $environ }}
+spec:
+  groups:
+  - name: opendistro.unusualnetworkthroughput
+    rules:
+    - alert: UnusualNetworkThroughput-{{ $environ }}
+      annotations:
+        description: |-
+          Слишком высокая утилизация сети на нодах opensearch в кластере {{ $environ }} в течении более 20 минут. Возможны потери логов.
+          Необходимо проверить, не идет ли релоакция шардов, и урезать лимиты при необходимости.
+          Тут можно посмотреть актуальные графики нагрузки сети в кластере https://monitoring.cloud.yandex.ru/folders/b1g8pm29f647s0jts76h/dashboards/fbeal5qr4v8rfrgmnpk3?from=now-1d&to=now&refresh=off
+          Тут можно посмотреть есть ли сейчас дропы спанов ( обратить внимание на ns) https://grafana-main.platformeco.lmru.tech/d/bqJ7Q-v4k/jaeger-collector?orgId=1&var-datasource=Mercury%20VictoriaMetrics&var-ng=sp&from=now-24h&to=now&viewPanel=6
+        plk_markup_format: markdown
+        plk_protocol_version: "1"
+        summary: |-
+          Слишком высокая утилизация сети на нодах opensearch в кластере {{ $environ }}
+          более 20 минут
+      expr: |
+        avg (rate(node_network_receive_bytes_total{node=~"(p-platformeco-logs-a-ks-{{ $ng }}-.*)",device="eth0"}[2m]) + rate(node_network_transmit_bytes_total{node=~"(p-platformeco-logs-a-ks-{{ $ng }}-.*)",device="eth0"}[2m])) > 30000000
+      for: 20m
+      labels:
+        severity_level: "3"
+{{- end }}
+{{- end }}

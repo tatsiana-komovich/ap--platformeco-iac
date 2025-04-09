@@ -1,0 +1,9 @@
+{{- with (get .Values "prometheus-pushgateway") }}
+---
+apiVersion: deckhouse.io/v1alpha1
+kind: ModuleConfig
+metadata:
+  name: prometheus-pushgateway
+spec:
+  {{- toYaml . | nindent 2 }}
+{{- end }}

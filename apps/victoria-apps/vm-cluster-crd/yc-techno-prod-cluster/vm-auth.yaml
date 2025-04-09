@@ -1,0 +1,40 @@
+---
+apiVersion: operator.victoriametrics.com/v1beta1
+kind: VMAuth
+metadata:
+  name: router-main
+spec:
+  podMetadata:
+    labels:
+      component: vmauth
+  userSelector: {}
+  userNamespaceSelector: {}
+  replicaCount: 2
+  resources:
+    requests:
+      cpu: "250m"
+      memory: "350Mi"
+    limits:
+      cpu: "500m"
+      memory: "850Mi"
+  ingress:
+    tlsSecretName: vmauth-tls
+    class_name: nginx
+    host: vm-access.devops.lmru.tech
+  unauthorizedAccessConfig:
+    - src_paths: ["/select/.+", "/metrics"]
+      url_prefix:
+        - "http://vmselect-vm-cluster-main.devops-core-victoriametrics.svc:8481"
+---
+apiVersion: operator.victoriametrics.com/v1beta1
+kind: VMUser
+metadata:
+ name: vmuser-delete-1
+spec:
+ bearerToken: <path:services/data/victoriametrics#vm-user-yc-techno>
+ targetRefs:
+  - crd:
+     kind: VMCluster/vmselect
+     name: vm-cluster-main
+     namespace: devops-core-victoriametrics
+    paths: ["/delete/.+"]

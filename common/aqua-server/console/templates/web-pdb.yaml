@@ -1,0 +1,24 @@
+{{- if gt (.Values.web.replicaCount | default "1" | int) 1 }}
+{{- if .Values.web.pdbApiVersion -}}
+apiVersion: {{ .Values.web.pdbApiVersion }}
+{{- else -}}
+{{- if .Capabilities.APIVersions.Has "policy/v1/PodDisruptionBudget" }}
+apiVersion: policy/v1
+{{- else }}
+apiVersion: policy/v1beta1
+{{- end }}
+{{- end }}
+kind: PodDisruptionBudget
+metadata:
+  name: {{ .Release.Name }}-console-pdb
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: {{ .Release.Name }}-console
+    aqua.component: server
+{{ include "aqua.labels" . | indent 4 }}
+spec:
+  minAvailable: {{ .Values.web.pdb.minAvailable }}
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-console
+{{- end -}}

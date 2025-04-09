@@ -1,0 +1,54 @@
+---
+apiVersion: operator.victoriametrics.com/v1beta1
+kind: VMRule
+metadata:
+  name: vm-rule-k8s-node-group
+  namespace: devops-core-victoria-alerts
+spec:
+  groups:
+    - name: kubernetes.node-group
+      rules:
+        - alert: NodeGroupReplicasUnavailable
+          expr: |
+            max by (k8s_cluster, name) (mcm_machine_deployment_status_unavailable_replicas > 0)
+            * on (k8s_cluster, name) group_left(node_group) machine_deployment_node_group_info
+          for: 30m
+          labels:
+            severity: warning
+          annotations:
+            summary: There are unavailable instances in the {{ $labels.node_group }} node group.
+            description: |
+              The number of unavailable instances is {{ $value }}. See the relevant alerts for more information.
+              Probably, machine-controller-manager is unable to create a machine using the cloud provider module. Possible causes:
+              1. Cloud provider limits on available resources;
+              2. No access to the cloud provider API;
+              3. Cloud provider or instance class misconfiguration;
+              4. Problems with bootstrapping the Machine.
+
+        - alert: NodeGroupAllReplicasUnavailable
+          expr: |
+            max by (k8s_cluster, name) (mcm_machine_deployment_status_unavailable_replicas > 0 and mcm_machine_deployment_status_ready_replicas == 0)
+            * on(k8s_cluster, name) group_left(node_group) machine_deployment_node_group_info
+          for: 30m
+          labels:
+            severity: warning
+          annotations:
+            summary: There are no available instances in the {{ $labels.node_group }} node group.
+            description: |
+              Probably, machine-controller-manager is unable to create a machine using the cloud provider module. Possible causes:
+              1. Cloud provider limits on available resources;
+              2. No access to the cloud provider API;
+              3. Cloud provider or instance class misconfiguration;
+              4. Problems with bootstrapping the Machine.
+
+        - alert: NodeGroupReplicasUnavailable
+          expr: |
+            max by (k8s_cluster, name) (mcm_machine_deployment_status_unavailable_replicas > mcm_machine_deployment_info_spec_rolling_update_max_surge)
+            * on(k8s_cluster, name) group_left(node_group) machine_deployment_node_group_info
+          for: 30m
+          labels:
+            severity: warning
+          annotations:
+            summary: The number of simultaneously unavailable instances in the {{ $labels.node_group }} node group exceeds the allowed value.
+            description: |
+              Possibly, autoscaler has provisioned too many Nodes. Take a look at the state of the Machine in the cluster.

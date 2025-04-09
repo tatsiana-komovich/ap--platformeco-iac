@@ -1,0 +1,44 @@
+---
+lokiConfig:
+  size: 900
+  retention: 24
+  storage: 3par-1-lun80-ec7690fc
+  memoryRequest: 5Gi
+  nodeSelector:
+    node-role/d8-loki: ""
+  tolerations:
+    - effect: NoExecute
+      key: dedicated
+      operator: Equal
+      value: d8-loki
+  storeSystemLogs: false
+
+loggingConfig:
+  enabled: true
+  custom:
+    byNsName:
+      type: KubernetesPods
+      kubernetesPods:
+        namespaceSelector:
+          matchNames:
+            - obs-alertmanager
+            - services-platform-landing
+            - services-platform-monitoring
+            - services-platform-pgadmin-prod
+            - services-platform-prod
+    byNsLabel:
+      type: KubernetesPods
+      kubernetesPods:
+        namespaceSelector:
+          labelSelector:
+            matchLabels:
+              log-shipping: enabled
+    byPodLabel:
+      type: KubernetesPods
+      kubernetesPods:
+        labelSelector:
+          matchLabels:
+            log-shipping: enabled
+
+eventsExporterPod:
+  enabled: false

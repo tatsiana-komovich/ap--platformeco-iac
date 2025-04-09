@@ -1,0 +1,21 @@
+clusterName: "k8s-yc-customer-prod"
+image:
+  tag: "2022.4.721"
+
+aquaSecret:
+  kubeEnforcerToken: enforcer-yc-customer-k8s
+
+enforcer:
+  enforcerToken: enforcer-yc-customer
+  nodeSelector:
+    node-role.k8s.lmru.tech/application: ''
+  tolerations:
+    - key: dedicated
+      operator: Equal
+      effect: "NoExecute"
+      value: commplatform
+  image:
+    tag: "2022.4.721"
+
+microEnforcerImage:
+  tag: "2022.4.721"

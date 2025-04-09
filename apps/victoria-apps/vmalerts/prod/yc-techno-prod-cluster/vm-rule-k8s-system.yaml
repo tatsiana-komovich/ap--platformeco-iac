@@ -1,0 +1,73 @@
+---
+apiVersion: operator.victoriametrics.com/v1beta1
+kind: VMRule
+metadata:
+  name: vm-rule-k8s-system
+  namespace: devops-core-victoria-alerts
+spec:
+  groups:
+    - name: kubernetes.system
+      rules:
+        - alert: KubeETCDServerDown
+          expr: |
+                (sum by (job, pod, k8s_cluster) (up{job="kube-etcd3", k8s_cluster=~".*"} == 1 default 0)) == 0
+          for: 5m
+          labels:
+            severity: critical
+          annotations:
+            summary: "ETCD server in {{ $labels.k8s_cluster }} cluster is down"
+            description: "ETCD server in {{ $labels.k8s_cluster }} cluster is down"
+        
+        - alert: KubeETCDNoLeader
+          expr: max by (k8s_cluster, node) (etcd_server_has_leader{job="kube-etcd3"}) == 0
+          for: 1m
+          labels:
+            severity: warning
+          annotations:
+            description: >
+              Check the status of the etcd Pods: `kubectl -n kube-system get pod -l component=etcd | grep {{ $labels.node }}`.
+            summary: The etcd cluster member running on the {{ $labels.node }} Node has lost the leader.
+        
+        - alert: KubeEtcdHighNumberOfLeaderChanges
+          expr: max by (k8s_cluster, node) (increase(etcd_server_leader_changes_seen_total{job="kube-etcd3"}[10m]) > 3)
+          labels:
+            severity: warning
+          annotations:
+            description: |
+              There were {{ $value }} leader re-elections for the etcd cluster member running on the {{ $labels.node }} Node in the last 10 minutes.
+              Possible causes:
+              1. High latency of the disk where the etcd data is located;
+              2. High CPU usage on the Node;
+              3. Degradation of network connectivity between cluster members in the multi-master mode.
+            summary: The etcd cluster re-elects the leader too often.
+        
+        - alert: KubeEtcdInsufficientMembers
+          expr: count by (k8s_cluster)(up{job="kube-etcd3"} == 0) > (count by (k8s_cluster)(up{job="kube-etcd3"}) / 2 - 1)
+          for: 3m
+          labels:
+            severity: warning
+          annotations:
+            description: >
+              Check the status of the etcd pods: `kubectl -n kube-system get pod -l component=etcd`.
+            summary: There are insufficient members in the etcd cluster; the cluster will fail if one of the remaining members will become unavailable.
+
+        - alert: KubeDNSDown
+          expr: |
+                (sum by (job, pod, k8s_cluster) (up{job="kube-dns", k8s_cluster=~".*"} == 1 default 0)) == 0
+          for: 5m
+          labels:
+            severity: warning
+          annotations:
+            summary: "KubeDNS in {{ $labels.k8s_cluster }} cluster is down"
+            description: "KubeDNS in {{ $labels.k8s_cluster }} cluster is down"
+            
+        - alert: KubernetesCoreDNSHasCriticalErrors
+          expr: sum by (k8s_cluster, pod) (coredns_panics_total{job="kube-dns"}) > 0
+          for: 5m
+          labels:
+            severity: warning
+          annotations:
+            description: |-
+              CoreDNS pod {{$labels.pod}} has at least one critical error.
+              To debug the problem, look into container logs: `kubectl -n kube-system logs {{$labels.pod}}`
+            summary: CoreDNS has critical errors.

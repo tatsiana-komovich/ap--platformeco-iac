@@ -1,0 +1,23 @@
+---
+clusterName: sirius-a-stage
+nsPatterns:
+  - pattern: ^payment-mtools-.*
+    nsTTL: 1
+    protectedNs:
+      - payment-mtools-test
+      - payment-mtools-preprod
+  - pattern: ^payment-pb-dev-.*
+    nsTTL: 1
+  - pattern: ^payment-pdm-dev-.*
+    nsTTL: 1
+  - pattern: ^payment-pof-(bug|feat|pr)-.*
+    nsTTL: 5
+  - pattern: ^payment-wallet-.*
+    nsTTL: 1
+    protectedNs:
+      - payment-wallet-dev
+      - payment-wallet-preprod
+      - payment-wallet-test
+      - payment-wallet-perf
+      - payment-wallet-feature
+      - payment-wallet-autotest

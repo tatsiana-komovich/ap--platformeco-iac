@@ -1,0 +1,51 @@
+---
+apiVersion: deckhouse.io/v1
+kind: YandexInstanceClass
+metadata:
+  name: system
+spec:
+  cores: 8
+  memory: 16384
+  diskSizeGB: 50
+  diskType: network-ssd
+  imageID: fd8gqkbp69nel2ibb5pr
+  networkType: Standard
+  platformID: standard-v2
+---
+apiVersion: deckhouse.io/v1
+kind: YandexInstanceClass
+metadata:
+  name: application-nodes
+spec:
+  cores: 8
+  memory: 16384
+  diskSizeGB: 50
+  diskType: network-ssd
+  imageID: fd8bkgba66kkf9eenpkb
+  networkType: Standard
+---
+apiVersion: deckhouse.io/v1
+kind: YandexInstanceClass
+metadata:
+  name: lb-services
+spec:
+  cores: 4
+  memory: 4096
+  diskSizeGB: 30
+  diskType: network-ssd
+  imageID: fd8bkgba66kkf9eenpkb
+  networkType: Standard
+  additionalSubnets: [e9bfmefqj663nf6teg5r]
+---
+apiVersion: deckhouse.io/v1
+kind: YandexInstanceClass
+metadata:
+  name: d8-loki
+spec:
+  cores: 4
+  diskSizeGB: 50
+  diskType: network-ssd
+  imageID: fd8emvfmfoaordspe1jr
+  memory: 8192
+  networkType: Standard
+  platformID: standard-v2

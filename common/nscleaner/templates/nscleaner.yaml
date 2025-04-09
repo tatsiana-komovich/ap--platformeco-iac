@@ -1,0 +1,16 @@
+---
+apiVersion: leroymerlin.ru/v2
+kind: NamespaceCleaner
+metadata:
+  name: nscleaner
+  namespace: devops-core-nscleaner-oper
+spec:
+  nsPatterns: 
+  {{- range .Values.nsPatterns }}
+  - pattern: {{ .pattern }}
+    nsTTL: {{ .nsTTL }}
+    protectedNs: 
+    {{- range .protectedNs }}
+      - {{ . }}
+    {{- end }}
+  {{- end }}

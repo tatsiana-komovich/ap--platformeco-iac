@@ -1,0 +1,12 @@
+{{- if .Values.createNamespace }}
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: otel-grafana-tempo
+  labels:
+    extended-monitoring.deckhouse.io/enabled: ''
+    prometheus.deckhouse.io/monitor-watcher-enabled: 'true'
+    log-shipping: 'enabled'
+    istio-injection: 'enabled'
+{{- end }}

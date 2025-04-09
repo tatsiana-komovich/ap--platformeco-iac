@@ -1,0 +1,28 @@
+---
+crossplane:
+  replicas: 1
+
+  image:
+    repository: docker-remote-docker-io.art.lmru.tech/crossplane/crossplane
+    tag: "release-1.18"
+
+  rbacManager:
+    deploy: true
+    skipAggregatedClusterRoles: false
+    replicas: 1
+
+  resourcesCrossplane:
+    limits:
+      cpu: 500m
+      memory: 1024Mi
+    requests:
+      cpu: 100m
+      memory: 128Mi
+
+  resourcesRBACManager:
+    limits:
+      cpu: 100m
+      memory: 512Mi
+    requests:
+      cpu: 100m
+      memory: 128Mi

@@ -1,0 +1,179 @@
+---
+opendistro:
+  curator:
+    enabled: true
+    s3_snapshots:
+      unit_count:
+        all: 90
+        unknown: 7
+    cron:
+      restore: 10 3 * * *
+      snapshot: 30 0 * * *
+    unknown:
+      days_count: 7
+      snapshot: true
+      schedule: 30 0 * * *
+    indices:
+      - kind: prefix
+        value: filebeat
+        system: false
+        days_count: 14
+        snapshot: true
+        schedule: 50 0 * * *
+      - kind: prefix
+        value: infra
+        system: false
+        days_count: 30
+        snapshot: false
+        schedule: 55 0 * * *
+      - kind: prefix
+        value: .opendistro_security
+        system: true
+        days_count: 30
+        snapshot: true
+        schedule: 0 1 * * *
+      - kind: prefix
+        value: .kibana
+        system: true
+        days_count: 30
+        snapshot: true
+        schedule: 5 1 * * *
+      - kind: prefix
+        value: d8
+        system: false
+        days_count: 7
+        snapshot: true
+        snapshot_count_s3: 7
+        schedule: 10 1 * * *
+      - kind: prefix
+        value: cp
+        system: false
+        days_count: 14
+        snapshot: true
+        schedule: 15 1 * * *
+      - kind: prefix
+        value: cp-aggregator
+        system: false
+        days_count: 14
+        snapshot: true
+        schedule: 25 1 * * *
+      - kind: prefix
+        value: cp-b2b
+        system: false
+        days_count: 14
+        snapshot: true
+        schedule: 35 1 * * *
+      - kind: prefix
+        value: cp-b2b-clients-repository
+        system: false
+        days_count: 14
+        snapshot: true
+        schedule: 45 1 * * *
+      - kind: prefix
+        value: cp-b2b-exchange-communication-history
+        system: false
+        days_count: 14
+        snapshot: true
+        schedule: 55 1 * * *
+      - kind: prefix
+        value: cp-b2b-exchange-exchange-connector
+        system: false
+        days_count: 14
+        snapshot: true
+        schedule: 05 2 * * *
+      - kind: prefix
+        value: cp-basic
+        system: false
+        days_count: 14
+        snapshot: true
+        schedule: 15 2 * * *
+      - kind: prefix
+        value: cp-bathroom
+        system: false
+        days_count: 14
+        snapshot: true
+        schedule: 25 2 * * *
+      - kind: prefix
+        value: cp-constructions
+        system: false
+        days_count: 14
+        snapshot: true
+        schedule: 35 2 * * *
+      - kind: prefix
+        value: cp-constructions-reference
+        system: false
+        days_count: 14
+        snapshot: true
+        schedule: 45 2 * * *
+      - kind: prefix
+        value: cp-equeue-queue-manager
+        system: false
+        days_count: 14
+        snapshot: true
+        schedule: 55 2 * * *
+      - kind: prefix
+        value: cp-games
+        system: false
+        days_count: 14
+        snapshot: true
+        schedule: 05 3 * * *
+      - kind: prefix
+        value: cp-kitchen
+        system: false
+        days_count: 14
+        snapshot: true
+        schedule: 15 3 * * *
+      - kind: prefix
+        value: cp-leads
+        system: false
+        days_count: 14
+        snapshot: true
+        schedule: 15 3 * * *
+      - kind: prefix
+        value: cp-presale-crawler
+        system: false
+        days_count: 14
+        snapshot: true
+        schedule: 25 3 * * *
+      - kind: prefix
+        value: cp-project-library
+        system: false
+        days_count: 14
+        snapshot: true
+        schedule: 35 3 * * *
+      - kind: prefix
+        value: cp-project-manager
+        system: false
+        days_count: 14
+        snapshot: true
+        schedule: 45 3 * * *
+      - kind: prefix
+        value: cp-quotation-ceramic
+        system: false
+        days_count: 14
+        snapshot: true
+        schedule: 55 3 * * *
+      - kind: prefix
+        value: cp-quotation-offer
+        system: false
+        days_count: 14
+        snapshot: true
+        schedule: 05 4 * * *
+      - kind: prefix
+        value: cp-reference-repository
+        system: false
+        days_count: 14
+        snapshot: true
+        schedule: 15 4 * * *
+      - kind: prefix
+        value: cp-storage
+        system: false
+        days_count: 14
+        snapshot: true
+        schedule: 25 4 * * *
+      - kind: prefix
+        value: cp-user-tasks
+        system: false
+        days_count: 14
+        snapshot: true
+        schedule: 35 4 * * *

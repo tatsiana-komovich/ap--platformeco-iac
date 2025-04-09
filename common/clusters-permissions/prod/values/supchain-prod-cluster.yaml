@@ -1,0 +1,650 @@
+---
+cluster_authorization:
+  defaults:
+    default_sa_permissions: &default
+      accessLevel: User
+      limitNamespaces:
+        - default
+      allowScale: true
+      allowAccessToSystemNamespaces: true
+      portForwarding: true
+  crowd:
+    groups:
+      jenkins-deploy:
+        <<: *default
+        accessLevel: SuperAdmin
+        limitNamespaces:
+          - .*
+        allowAccessToSystemNamespaces: true
+        allowScale: false
+        portForwarding: false
+        kind: ServiceAccount
+        namespace: d8-service-accounts
+      crowd-bpms-ved-admin:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - .*
+      crowd-bpms-ved-ro:
+        <<: *default
+        accessLevel: User
+        limitNamespaces:
+          - .*
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+      crowd-bpms-ved-rw:
+        <<: *default
+        accessLevel: Editor
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - .*
+      crowd-sa-bpms-ved:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - .*
+      crowd-les-ro:
+        <<: *default
+        accessLevel: User
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - les-.*
+      crowd-les-admin:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - les-.*
+      crowd-les-rw:
+        <<: *default
+        accessLevel: Editor
+        limitNamespaces:
+          - les-.*
+      crowd-sa-les:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - les-.*
+      crowd-lynx-ro:
+        <<: *default
+        accessLevel: User
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - lynx-.*
+      crowd-lynx-admin:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - lynx-.*
+      crowd-lynx-rw:
+        <<: *default
+        accessLevel: Editor
+        limitNamespaces:
+          - lynx-.*
+      crowd-sa-lynx:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - lynx-.*
+      crowd-lmdb-ro:
+        <<: *default
+        accessLevel: User
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - lmdb-.*
+      crowd-lmdb-admin:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - lmdb-.*
+      crowd-lmdb-rw:
+        <<: *default
+        accessLevel: Editor
+        limitNamespaces:
+          - lmdb-.*
+      crowd-sa-lmdb:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - lmdb-.*
+      crowd-ppm-ro:
+        <<: *default
+        accessLevel: User
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - ppm-.*
+      crowd-ppm-admin:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - ppm-.*
+      crowd-ppm-rw:
+        <<: *default
+        accessLevel: Editor
+        limitNamespaces:
+          - ppm-.*
+      crowd-sa-ppm:
+        <<: *default
+        accessLevel: Admin
+        allowAccessToSystemNamespaces: true
+        limitNamespaces:
+          - ppm-.*
+      crowd-quota-ro:
+        <<: *default
+        accessLevel: User
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - quota-.*
+      crowd-quota-admin:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - quota-.*
+      crowd-quota-rw:
+        <<: *default
+        accessLevel: Editor
+        limitNamespaces:
+          - quota-.*
+      crowd-sa-quota:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - quota-.*
+      crowd-ots-ro:
+        <<: *default
+        accessLevel: User
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - ots-.*
+      crowd-ots-admin:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - ots-.*
+      crowd-ots-rw:
+        <<: *default
+        accessLevel: Editor
+        limitNamespaces:
+          - ots-.*
+      crowd-sa-ots:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - ots-.*
+      # wms-reception
+      crowd-sa-wms-reception:
+        <<: *default
+        accessLevel: Admin
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - wms-inbound-.*
+          - wms-reception-.*
+      crowd-wms-reception-ro:
+        <<: *default
+        accessLevel: User
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - wms-inbound-.*
+          - wms-reception-.*
+      crowd-wms-reception-admin:
+        <<: *default
+        accessLevel: Admin
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - wms-inbound-.*
+          - wms-reception-.*
+      crowd-wms-reception-rw:
+        <<: *default
+        accessLevel: Editor
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - wms-inbound-.*
+          - wms-reception-.*
+      crowd-middleware-rw:
+        <<: *default
+        accessLevel: Editor
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - wms-.*
+          - lmdb-.*
+      crowd-wms-ro:
+        <<: *default
+        accessLevel: User
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - wms-.*
+      crowd-wms-admin:
+        <<: *default
+        accessLevel: Admin
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - wms-.*
+      crowd-wms-rw:
+        <<: *default
+        accessLevel: Editor
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - wms-.*
+      crowd-sa-wms:
+        <<: *default
+        accessLevel: Admin
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - wms-.*
+      crowd-suppliers-stocks-ro:
+        <<: *default
+        accessLevel: User
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - suppliers-stocks-.*
+      crowd-suppliers-stocks-admin:
+        <<: *default
+        accessLevel: Admin
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - suppliers-stocks-.*
+      crowd-suppliers-stocks-rw:
+        <<: *default
+        accessLevel: Editor
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - suppliers-stocks-.*
+      crowd-sa-suppliers-stocks:
+        <<: *default
+        accessLevel: Admin
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - suppliers-stocks-.*
+      crowd-supplier-calendar-ro:
+        <<: *default
+        accessLevel: User
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - supplier-calendar.*
+      crowd-supplier-calendar-admin:
+        <<: *default
+        accessLevel: Admin
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - supplier-calendar.*
+      crowd-supplier-calendar-rw:
+        <<: *default
+        accessLevel: Editor
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - supplier-calendar.*
+      crowd-sa-supplier-calendar:
+        <<: *default
+        accessLevel: Admin
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - supplier-calendar.*
+      crowd-sa-cfo:
+        <<: *default
+        accessLevel: Admin
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - cfo.*
+          - cfo-.*
+      crowd-cfo-rw:
+        <<: *default
+        accessLevel: Editor
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - cfo.*
+          - cfo-.*
+      crowd-cfo-ro:
+        <<: *default
+        accessLevel: User
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - cfo.*
+          - cfo-.*
+      crowd-cfo-admin:
+        <<: *default
+        accessLevel: Admin
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - cfo.*
+          - cfo-.*
+      crowd-sa-carrier-appointment:
+        <<: *default
+        accessLevel: Admin
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - carrier-appointment.*
+          - ca-.*
+      crowd-carrier-appointment-rw:
+        <<: *default
+        accessLevel: Editor
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - carrier-appointment.*
+          - ca-.*
+      crowd-carrier-appointment-ro:
+        <<: *default
+        accessLevel: User
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - carrier-appointment.*
+          - ca-.*
+      crowd-carrier-appointment-admin:
+        <<: *default
+        accessLevel: Admin
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - carrier-appointment.*
+          - ca-.*
+      crowd-flant-bravo-rw:
+        <<: *default
+        accessLevel: SuperAdmin
+        limitNamespaces:
+          - .*
+        allowScale: true
+        allowAccessToSystemNamespaces: true
+        portForwarding: true
+      crowd-obs-ro:
+        <<: *default
+        accessLevel: User
+        limitNamespaces:
+          - .*
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+      crowd-egaisles:
+        <<: *default
+        accessLevel: Editor
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - egaisles.*
+      crowd-sa-egaisles:
+        <<: *default
+        accessLevel: Admin
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - egaisles.*
+      crowd-egaisles-rw:
+        <<: *default
+        accessLevel: Editor
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - egaisles.*
+      crowd-egaisles-ro:
+        <<: *default
+        accessLevel: User
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - egaisles.*
+      crowd-egaisles-admin:
+        <<: *default
+        accessLevel: Admin
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - egaisles.*
+      crowd-updrepo-admin:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - updrepo-.*
+      crowd-updrepo-ro:
+        <<: *default
+        accessLevel: User
+        limitNamespaces:
+          - updrepo-.*
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+      crowd-updrepo-rw:
+        <<: *default
+        accessLevel: Editor
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - updrepo-.*
+      crowd-sa-updrepo:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - updrepo-.*
+      crowd-mp-mrs-admin:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - mp-mrs-.*
+      crowd-mp-mrs-ro:
+        <<: *default
+        accessLevel: User
+        limitNamespaces:
+          - mp-mrs-.*
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+      crowd-mp-mrs-rw:
+        <<: *default
+        accessLevel: Editor
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - mp-mrs-.*
+      crowd-sa-mp-mrs:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - mp-mrs-.*
+      crowd-sa-carrier-portal:
+        <<: *default
+        accessLevel: Admin
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - carrier-portal
+          - carrier-portal-.*
+      crowd-carrier-portal-rw:
+        <<: *default
+        accessLevel: Editor
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - carrier-portal
+          - carrier-portal-.*
+      crowd-carrier-portal-ro:
+        <<: *default
+        accessLevel: User
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - carrier-portal
+          - carrier-portal-.*
+      crowd-carrier-portal-admin:
+        <<: *default
+        accessLevel: Admin
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - carrier-portal
+          - carrier-portal-.*
+      crowd-sa-gts:
+        <<: *default
+        accessLevel: Admin
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - gts.*
+      crowd-gts-rw:
+        <<: *default
+        accessLevel: Editor
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - gts.*
+      crowd-gts-ro:
+        <<: *default
+        accessLevel: User
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - gts.*
+      crowd-gts-admin:
+        <<: *default
+        accessLevel: Admin
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - gts.*
+      # GTS TMS namespace
+      crowd-sa-gts-tms:
+        <<: *default
+        accessLevel: Admin
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - gts-tms.*
+      crowd-gts-tms-rw:
+        <<: *default
+        accessLevel: Editor
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - gts-tms.*
+      crowd-gts-tms-ro:
+        <<: *default
+        accessLevel: User
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - gts-tms.*
+      crowd-gts-tms-admin:
+        <<: *default
+        accessLevel: Admin
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - gts-tms.*
+      #tms
+      crowd-sa-tms:
+        <<: *default
+        accessLevel: Admin
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - tms
+          - tms-.*
+      crowd-tms-rw:
+        <<: *default
+        accessLevel: Editor
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - tms
+          - tms-.*
+      crowd-tms-ro:
+        <<: *default
+        accessLevel: User
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - tms
+          - tms-.*
+      crowd-tms-admin:
+        <<: *default
+        accessLevel: Admin
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - tms
+          - tms-.*
+      #ash
+      crowd-sa-ash:
+        <<: *default
+        accessLevel: Admin
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - ash-.*
+          - ash
+      crowd-ash-rw:
+        <<: *default
+        accessLevel: Editor
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - ash-.*
+          - ash
+      crowd-ash-ro:
+        <<: *default
+        accessLevel: User
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - ash-.*
+          - ash
+      crowd-ash-admin:
+        <<: *default
+        accessLevel: Admin
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - ash-.*
+          - ash
+      # gold
+      crowd-sa-gold:
+        <<: *default
+        accessLevel: Admin
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - gold-.*
+          - gold
+      crowd-gold-rw:
+        <<: *default
+        accessLevel: Editor
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - gold-.*
+          - gold
+      crowd-gold-ro:
+        <<: *default
+        accessLevel: User
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - gold-.*
+          - gold
+      crowd-gold-admin:
+        <<: *default
+        accessLevel: Admin
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - gold-.*
+          - gold
+      # replenishment
+      crowd-sa-replenishment:
+        <<: *default
+        accessLevel: Admin
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - replenishment-.*
+          - replenishment
+      crowd-replenishment-rw:
+        <<: *default
+        accessLevel: Editor
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - replenishment-.*
+          - replenishment
+      crowd-replenishment-ro:
+        <<: *default
+        accessLevel: User
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - replenishment-.*
+          - replenishment
+      crowd-replenishment-admin:
+        <<: *default
+        accessLevel: Admin
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - replenishment-.*
+          - replenishment
+      # svetofor2
+      crowd-svetofor2-ro:
+        <<: *default
+        accessLevel: User
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - svetofor2-.*
+      crowd-svetofor2-admin:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - svetofor2-.*
+      crowd-svetofor2-rw:
+        <<: *default
+        accessLevel: Editor
+        limitNamespaces:
+          - svetofor2-.*
+      crowd-sa-svetofor2:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - svetofor2-.*
+
+DexProvider:
+  clientID: supchain-prod
+  clientSecret: crowd_app_k8s-supchain-prod

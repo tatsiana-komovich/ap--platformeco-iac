@@ -1,0 +1,41 @@
+---
+opendistro:
+  security:
+    multitenancy: false
+    tenants:
+      - name: flant
+        indices: ["filebeat-*", "flant-*", "infra-*", "v3-d8-*"]
+        roles:
+          - name: flant_rw
+            type: rw
+            groups: ["crowd-flant-golf-admin", "crowd-flant-rnd-admin"]
+          - name: flant_ro
+            type: ro
+            groups: ["crowd-devops-core-rw"]
+      - name: obs
+        indices: ["v3-keycloak-*", "v3-obs-*", "v3-strimzi-kafka-*"]
+        roles:
+          - name: obs_rw
+            type: rw
+            groups: ["crowd-obs-admin", "crowd-obs-rw", "crowd-lm-sre-admin"]
+          - name: obs_ro
+            type: ro
+            groups: ["crowd-lm-sre-ro", "crowd-obs-ro"]
+      - name: itam
+        indices: ["v3-keycloak-*", "v3-ausweis-*"]
+        roles:
+          - name: itam_rw
+            type: rw
+            groups: ["crowd-keycloak-admin", "crowd-keycloak-rw", "crowd-ausweis-admin", "crowd-ausweis-rw"]
+          - name: itam_ro
+            type: ro
+            groups: ["crowd-keycloak-ro", "crowd-ausweis-ro"]
+      - name: l2supptools
+        indices: ["v3-l2supptools-*"]
+        roles:
+          - name: l2supptools_rw
+            type: rw
+            groups: ["crowd-l2supptools-admin", "crowd-l2supptools-rw"]
+          - name: l2supptools_ro
+            type: ro
+            groups: ["crowd-l2supptools-ro"]

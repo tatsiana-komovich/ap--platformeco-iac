@@ -1,0 +1,200 @@
+---
+IngressNginxController:
+  nginx-a:
+    apiVersion: deckhouse.io/v1
+    name: nginx-a
+    acceptRequestsFrom: {}
+    spec:
+      chaosMonkey: false
+      disableHTTP2: false
+      hsts: false
+      ingressClass: nginx
+      inlet: LoadBalancer
+      maxReplicas: 1
+      minReplicas: 1
+      enableIstioSidecar: true
+      validationEnabled: true
+      waitLoadBalancerOnTerminating: 60
+    loadBalancer:
+      annotations:
+        yandex.cloud/load-balancer-type: Internal
+        yandex.cpi.flant.com/listener-subnet-id: e9bqojjsaam1vh433507
+        yandex.cpi.flant.com/target-group-network-id: enpofm2o1fd0e01e2rfb
+      realIPHeader: X-Forwarded-For
+      behindL7Proxy: true
+
+  nginx-b:
+    apiVersion: deckhouse.io/v1
+    name: nginx-b
+    acceptRequestsFrom: {}
+    spec:
+      chaosMonkey: false
+      disableHTTP2: false
+      hsts: false
+      ingressClass: nginx
+      inlet: LoadBalancer
+      maxReplicas: 1
+      minReplicas: 1
+      enableIstioSidecar: true
+      validationEnabled: true
+      waitLoadBalancerOnTerminating: 60
+    loadBalancer:
+      annotations:
+        yandex.cloud/load-balancer-type: Internal
+        yandex.cpi.flant.com/listener-subnet-id: e2l04gbf7tp6ljlnihq1
+        yandex.cpi.flant.com/target-group-network-id: enpofm2o1fd0e01e2rfb
+      realIPHeader: X-Forwarded-For
+      behindL7Proxy: true
+
+
+  sentry-a:
+    apiVersion: deckhouse.io/v1
+    name: sentry-a
+    acceptRequestsFrom: {}
+    spec:
+      chaosMonkey: false
+      disableHTTP2: false
+      hsts: false
+      ingressClass: sentry
+      inlet: LoadBalancer
+      maxReplicas: 1
+      minReplicas: 1
+      enableIstioSidecar: true
+      validationEnabled: true
+      waitLoadBalancerOnTerminating: 60
+    loadBalancer:
+      annotations:
+        yandex.cloud/load-balancer-type: Internal
+        yandex.cpi.flant.com/listener-subnet-id: e9bqojjsaam1vh433507
+        yandex.cpi.flant.com/target-group-network-id: enpofm2o1fd0e01e2rfb
+      realIPHeader: X-Forwarded-For
+      behindL7Proxy: true
+    nodeSelector:
+      node-role/frontend-sentry: ""
+    tolerations:
+      - effect: NoExecute
+        key: dedicated
+        operator: Equal
+        value: frontend-sentry
+
+  sentry-b:
+    apiVersion: deckhouse.io/v1
+    name: sentry-b
+    acceptRequestsFrom: {}
+    spec:
+      chaosMonkey: false
+      disableHTTP2: false
+      hsts: false
+      ingressClass: sentry
+      inlet: LoadBalancer
+      maxReplicas: 1
+      minReplicas: 1
+      enableIstioSidecar: true
+      validationEnabled: true
+      waitLoadBalancerOnTerminating: 60
+    loadBalancer:
+      annotations:
+        yandex.cloud/load-balancer-type: Internal
+        yandex.cpi.flant.com/listener-subnet-id: e2l04gbf7tp6ljlnihq1
+        yandex.cpi.flant.com/target-group-network-id: enpofm2o1fd0e01e2rfb
+      realIPHeader: X-Forwarded-For
+      behindL7Proxy: true
+    nodeSelector:
+      node-role/frontend-sentry: ""
+    tolerations:
+      - effect: NoExecute
+        key: dedicated
+        operator: Equal
+        value: frontend-sentry
+
+
+  relay-a:
+    apiVersion: deckhouse.io/v1
+    name: relay-a
+    acceptRequestsFrom: {}
+    spec:
+      chaosMonkey: false
+      disableHTTP2: false
+      hsts: false
+      ingressClass: relay
+      inlet: LoadBalancer
+      maxReplicas: 1
+      minReplicas: 1
+      enableIstioSidecar: true
+      validationEnabled: true
+      waitLoadBalancerOnTerminating: 60
+    loadBalancer:
+      annotations:
+        yandex.cloud/load-balancer-type: Internal
+        yandex.cpi.flant.com/listener-subnet-id: e9bqojjsaam1vh433507
+        yandex.cpi.flant.com/target-group-network-id: enpofm2o1fd0e01e2rfb
+      realIPHeader: X-Forwarded-For
+      behindL7Proxy: true
+    nodeSelector:
+      node-role/frontend-relay: ""
+    tolerations:
+      - effect: NoExecute
+        key: dedicated
+        operator: Equal
+        value: frontend-relay
+
+  relay-b:
+    apiVersion: deckhouse.io/v1
+    name: relay-b
+    acceptRequestsFrom: {}
+    spec:
+      chaosMonkey: false
+      disableHTTP2: false
+      hsts: false
+      ingressClass: relay
+      inlet: LoadBalancer
+      maxReplicas: 1
+      minReplicas: 1
+      enableIstioSidecar: true
+      validationEnabled: true
+      waitLoadBalancerOnTerminating: 60
+    loadBalancer:
+      annotations:
+        yandex.cloud/load-balancer-type: Internal
+        yandex.cpi.flant.com/listener-subnet-id: e2l04gbf7tp6ljlnihq1
+        yandex.cpi.flant.com/target-group-network-id: enpofm2o1fd0e01e2rfb
+      realIPHeader: X-Forwarded-For
+      behindL7Proxy: true
+    nodeSelector:
+      node-role/frontend-relay: ""
+    tolerations:
+      - effect: NoExecute
+        key: dedicated
+        operator: Equal
+        value: frontend-relay
+
+
+  d8-main-b:
+    apiVersion: deckhouse.io/v1
+    name: d8-main-b
+    acceptRequestsFrom: {}
+    spec:
+      chaosMonkey: false
+      disableHTTP2: false
+      enableIstioSidecar: true
+      hsts: false
+      ingressClass: nginx-d8s
+      inlet: LoadBalancer
+      maxReplicas: 1
+      minReplicas: 1
+      underscoresInHeaders: false
+      validationEnabled: true
+    loadBalancer:
+      annotations:
+        yandex.cloud/load-balancer-type: Internal
+        yandex.cpi.flant.com/listener-subnet-id: e2l04gbf7tp6ljlnihq1
+        yandex.cpi.flant.com/target-group-network-id: enpofm2o1fd0e01e2rfb
+      behindL7Proxy: true
+      realIPHeader: X-Forwarded-For
+    nodeSelector:
+      node-role/d8-frontend: ""
+    tolerations:
+      - effect: NoExecute
+        key: dedicated
+        operator: Equal
+        value: d8-frontend

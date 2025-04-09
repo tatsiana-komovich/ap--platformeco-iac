@@ -1,0 +1,37 @@
+apiVersion: operator.victoriametrics.com/v1beta1
+kind: VMAgent
+metadata:
+  name: vm-agent
+spec:
+  replicaCount: 1
+  logFormat: json
+  logLevel: "INFO"
+  remoteWrite:
+  -  url: https://vminsert-vm-cluster-main-yc-techno-stage.apps.lmru.tech/insert/0/prometheus/api/v1/write
+    # https://docs.victoriametrics.com/operator/api/#streamaggrconfig
+     streamAggrConfig:
+       rules:
+         - match: '{__name__=~"capacity_planning:.*"}'
+           interval: 1h
+           outputs: [avg]
+         - match: '{__name__=~"kube_node_status.*"}'
+           interval: 1h
+           by: [k8s_cluster]
+           outputs: [avg]
+       dropInput: true
+  image:
+    repository: docker-remote-docker-io.art.lmru.tech/victoriametrics/vmagent
+    tag: v1.103.0
+    pullPolicy: IfNotPresent
+  resources:
+    limits:
+      memory: "1024Mi"
+    requests:
+      memory: 256Mi
+      cpu: 200m
+  inlineRelabelConfig:
+      # from nodegroup_* remove 'namespace', 'pod', 'prometheus' 'service' labels
+      # kube_node_status_* remove 'prometheus' label
+    - action: labeldrop
+      if: '{__name__=~"kube_node_status_.*"}'
+      regex: "(namespace|pod|prometheus|service)"

@@ -1,0 +1,5835 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": "-- Grafana --",
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "target": {
+          "limit": 100,
+          "matchAny": false,
+          "tags": [],
+          "type": "dashboard"
+        },
+        "type": "dashboard"
+      }
+    ]
+  },
+  "description": "Dashboard for spring boot 2 services. Displays standard spring metrics along with important data from kubernetes.",
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "gnetId": 6756,
+  "graphTooltip": 0,
+  "id": 72,
+  "iteration": 1648113312913,
+  "links": [],
+  "liveNow": false,
+  "panels": [
+    {
+      "collapsed": false,
+      "datasource": null,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "id": 18,
+      "panels": [],
+      "title": "HTTP I/O",
+      "type": "row"
+    },
+    {
+      "aliasColors": {
+        "total (press shift + left click to hide)": "rgba(200, 242, 194, 0.72)"
+      },
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": "main",
+      "fieldConfig": {
+        "defaults": {
+          "links": []
+        },
+        "overrides": []
+      },
+      "fill": 1,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 7,
+        "w": 24,
+        "x": 0,
+        "y": 1
+      },
+      "hiddenSeries": false,
+      "id": 4,
+      "legend": {
+        "alignAsTable": true,
+        "avg": true,
+        "current": false,
+        "hideEmpty": false,
+        "hideZero": true,
+        "max": true,
+        "min": true,
+        "rightSide": true,
+        "show": true,
+        "total": false,
+        "values": true
+      },
+      "lines": true,
+      "linewidth": 1,
+      "links": [],
+      "nullPointMode": "null",
+      "options": {
+        "alertThreshold": true
+      },
+      "percentage": false,
+      "pluginVersion": "8.2.6",
+      "pointradius": 5,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [
+        {
+          "alias": "total (press shift + left click to hide)",
+          "dashes": true,
+          "linewidth": 0
+        }
+      ],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "expr": "sum by (method, uri) (increase(http_server_requests_seconds_count{pod=~\"$pod\", namespace=\"$namespace\", service=\"$service\", uri!~\"$excluded_urls\"}[1m]))",
+          "legendFormat": "{{ method }} {{ uri }}",
+          "refId": "A"
+        },
+        {
+          "expr": "sum by (service) (increase(http_server_requests_seconds_count{pod=~\"$pod\", namespace=\"$namespace\", service=\"$service\", uri!~\"$excluded_urls\"}[1m]))",
+          "hide": false,
+          "intervalFactor": 1,
+          "legendFormat": "total (press shift + left click to hide)",
+          "refId": "B"
+        }
+      ],
+      "thresholds": [],
+      "timeFrom": null,
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "Request Count [1m]",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "decimals": null,
+          "format": "none",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        },
+        {
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    },
+    {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": "main",
+      "fieldConfig": {
+        "defaults": {
+          "links": []
+        },
+        "overrides": []
+      },
+      "fill": 1,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 7,
+        "w": 24,
+        "x": 0,
+        "y": 8
+      },
+      "hiddenSeries": false,
+      "id": 2,
+      "legend": {
+        "alignAsTable": true,
+        "avg": true,
+        "current": false,
+        "hideEmpty": true,
+        "max": true,
+        "min": true,
+        "rightSide": true,
+        "show": true,
+        "total": false,
+        "values": true
+      },
+      "lines": true,
+      "linewidth": 1,
+      "links": [],
+      "nullPointMode": "null",
+      "options": {
+        "alertThreshold": true
+      },
+      "percentage": false,
+      "pluginVersion": "8.2.6",
+      "pointradius": 5,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "expr": "sum by (method, uri) (irate(http_server_requests_seconds_sum{pod=~\"$pod\", namespace=\"$namespace\", service=\"$service\", exception=\"None\", uri!~\"$excluded_urls\"}[1m])) / sum by (method, uri) (irate(http_server_requests_seconds_count{pod=~\"$pod\", namespace=\"$namespace\", service=\"$service\", exception=\"None\", uri!~\"$excluded_urls\"}[1m]))",
+          "format": "time_series",
+          "intervalFactor": 1,
+          "legendFormat": "{{method}} {{uri}}",
+          "refId": "A"
+        }
+      ],
+      "thresholds": [],
+      "timeFrom": null,
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "Response Time [1m]",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "format": "s",
+          "label": "",
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        },
+        {
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    },
+    {
+      "aliasColors": {
+        "200": "semi-dark-green",
+        "500": "semi-dark-red",
+        "2xx": "semi-dark-green",
+        "4xx": "semi-dark-orange",
+        "5xx": "semi-dark-red",
+        "CLIENT_ERROR": "semi-dark-yellow",
+        "SERVER_ERROR": "semi-dark-red",
+        "SUCCESS": "semi-dark-green"
+      },
+      "bars": true,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": null,
+      "decimals": null,
+      "description": "Actually, query works with 'outcome' attribute: [SUCCESS, CLIENT_ERROR, SERVER_ERROR]",
+      "fieldConfig": {
+        "defaults": {
+          "links": []
+        },
+        "overrides": []
+      },
+      "fill": 1,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 15
+      },
+      "hiddenSeries": false,
+      "id": 113,
+      "legend": {
+        "alignAsTable": true,
+        "avg": true,
+        "current": false,
+        "hideEmpty": false,
+        "hideZero": false,
+        "max": true,
+        "min": false,
+        "rightSide": true,
+        "show": true,
+        "total": false,
+        "values": true
+      },
+      "lines": false,
+      "linewidth": 1,
+      "nullPointMode": "connected",
+      "options": {
+        "alertThreshold": true
+      },
+      "percentage": false,
+      "pluginVersion": "8.2.6",
+      "pointradius": 2,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": true,
+      "steppedLine": false,
+      "targets": [
+        {
+          "aggregation": "Last",
+          "decimals": 2,
+          "displayAliasType": "Warning / Critical",
+          "displayType": "Regular",
+          "displayValueWithAlias": "Never",
+          "expr": "sum(increase(http_server_requests_seconds_count{namespace=\"$namespace\", service=\"$service\", pod=~\"$pod\", uri!~\"$excluded_urls\", outcome=\"SUCCESS\"}[5m])) / scalar(sum(increase(http_server_requests_seconds_count{namespace=\"$namespace\", service=\"$service\", pod=~\"$pod\", uri!~\"$excluded_urls\"}[5m])) by (service))",
+          "format": "time_series",
+          "instant": false,
+          "legendFormat": "2xx",
+          "refId": "C",
+          "units": "none",
+          "valueHandler": "Number Threshold"
+        },
+        {
+          "aggregation": "Last",
+          "decimals": 2,
+          "displayAliasType": "Warning / Critical",
+          "displayType": "Regular",
+          "displayValueWithAlias": "Never",
+          "expr": "sum(increase(http_server_requests_seconds_count{namespace=\"$namespace\", service=\"$service\", pod=~\"$pod\", uri!~\"$excluded_urls\", outcome=\"CLIENT_ERROR\"}[5m])) / scalar(sum(increase(http_server_requests_seconds_count{namespace=\"$namespace\", service=\"$service\", pod=~\"$pod\", uri!~\"$excluded_urls\"}[5m])) by (service))",
+          "format": "time_series",
+          "instant": false,
+          "legendFormat": "4xx",
+          "refId": "A",
+          "units": "none",
+          "valueHandler": "Number Threshold"
+        },
+        {
+          "aggregation": "Last",
+          "decimals": 2,
+          "displayAliasType": "Warning / Critical",
+          "displayType": "Regular",
+          "displayValueWithAlias": "Never",
+          "expr": "sum(increase(http_server_requests_seconds_count{namespace=\"$namespace\", service=\"$service\", pod=~\"$pod\", uri!~\"$excluded_urls\", outcome=\"SERVER_ERROR\"}[5m])) / scalar(sum(increase(http_server_requests_seconds_count{namespace=\"$namespace\", service=\"$service\", pod=~\"$pod\", uri!~\"$excluded_urls\"}[5m])) by (service))",
+          "format": "time_series",
+          "instant": false,
+          "legendFormat": "5xx",
+          "refId": "B",
+          "units": "none",
+          "valueHandler": "Number Threshold"
+        }
+      ],
+      "thresholds": [],
+      "timeFrom": null,
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "Response Status Groups 2xx / 4xx / 5xx [5m]",
+      "tooltip": {
+        "shared": true,
+        "sort": 2,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "decimals": 1,
+          "format": "percentunit",
+          "label": "",
+          "logBase": 1,
+          "max": "1",
+          "min": null,
+          "show": true
+        },
+        {
+          "decimals": null,
+          "format": "percent",
+          "label": "",
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": false
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    },
+    {
+      "aliasColors": {
+        "200": "semi-dark-green",
+        "500": "semi-dark-red"
+      },
+      "bars": true,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": null,
+      "fieldConfig": {
+        "defaults": {
+          "links": []
+        },
+        "overrides": []
+      },
+      "fill": 1,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 15
+      },
+      "hiddenSeries": false,
+      "id": 106,
+      "legend": {
+        "alignAsTable": true,
+        "avg": true,
+        "current": false,
+        "hideEmpty": true,
+        "hideZero": true,
+        "max": true,
+        "min": false,
+        "rightSide": true,
+        "show": true,
+        "total": false,
+        "values": true
+      },
+      "lines": false,
+      "linewidth": 1,
+      "nullPointMode": "connected",
+      "options": {
+        "alertThreshold": true
+      },
+      "percentage": false,
+      "pluginVersion": "8.2.6",
+      "pointradius": 2,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": true,
+      "steppedLine": false,
+      "targets": [
+        {
+          "aggregation": "Last",
+          "decimals": 2,
+          "displayAliasType": "Warning / Critical",
+          "displayType": "Regular",
+          "displayValueWithAlias": "Never",
+          "expr": "sum(increase(http_server_requests_seconds_count{namespace=\"$namespace\", service=\"$service\", pod=~\"$pod\", uri!~\"$excluded_urls\"}[5m])) by (status) / scalar(sum(increase(http_server_requests_seconds_count{namespace=\"$namespace\", service=\"$service\", pod=~\"$pod\", uri!~\"$excluded_urls\"}[5m])) by (service))",
+          "format": "time_series",
+          "instant": false,
+          "legendFormat": "{{ status }}",
+          "refId": "C",
+          "units": "none",
+          "valueHandler": "Number Threshold"
+        }
+      ],
+      "thresholds": [],
+      "timeFrom": null,
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "Response Statuses [5m]",
+      "tooltip": {
+        "shared": true,
+        "sort": 2,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "decimals": 1,
+          "format": "percentunit",
+          "label": "",
+          "logBase": 1,
+          "max": "1",
+          "min": null,
+          "show": true
+        },
+        {
+          "decimals": null,
+          "format": "percent",
+          "label": "",
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": false
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    },
+    {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": null,
+      "fieldConfig": {
+        "defaults": {
+          "links": []
+        },
+        "overrides": []
+      },
+      "fill": 1,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 7,
+        "w": 12,
+        "x": 0,
+        "y": 23
+      },
+      "hiddenSeries": false,
+      "id": 102,
+      "legend": {
+        "avg": false,
+        "current": false,
+        "hideEmpty": true,
+        "hideZero": true,
+        "max": false,
+        "min": false,
+        "show": true,
+        "total": false,
+        "values": false
+      },
+      "lines": true,
+      "linewidth": 1,
+      "nullPointMode": "null",
+      "options": {
+        "alertThreshold": true
+      },
+      "percentage": false,
+      "pluginVersion": "8.2.6",
+      "pointradius": 2,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "expr": "sum by (method, uri, status) (increase(http_server_requests_seconds_count{namespace=\"$namespace\", service=\"$service\", pod=~\"$pod\", outcome=\"CLIENT_ERROR\", uri!~\"$excluded_urls\"}[5m]))",
+          "legendFormat": "{{ method }} {{ uri }} [{{ status }}]",
+          "refId": "C"
+        }
+      ],
+      "thresholds": [],
+      "timeFrom": null,
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "Response Status 4xx by (method, path, status) [5m]",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        },
+        {
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    },
+    {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": null,
+      "fieldConfig": {
+        "defaults": {
+          "links": []
+        },
+        "overrides": []
+      },
+      "fill": 1,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 7,
+        "w": 12,
+        "x": 12,
+        "y": 23
+      },
+      "hiddenSeries": false,
+      "id": 103,
+      "legend": {
+        "avg": false,
+        "current": false,
+        "max": false,
+        "min": false,
+        "show": true,
+        "total": false,
+        "values": false
+      },
+      "lines": true,
+      "linewidth": 1,
+      "nullPointMode": "null",
+      "options": {
+        "alertThreshold": true
+      },
+      "percentage": false,
+      "pluginVersion": "8.2.6",
+      "pointradius": 2,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "expr": "sum by (method, uri, status) (increase(http_server_requests_seconds_count{namespace=\"$namespace\", service=\"$service\", pod=~\"$pod\", outcome=\"SERVER_ERROR\", uri!~\"$excluded_urls\"}[5m]))",
+          "legendFormat": "{{ method }} {{ uri }} [{{ status }}]",
+          "refId": "C"
+        }
+      ],
+      "thresholds": [],
+      "timeFrom": null,
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "Response Status 5xx by (method, path, status) [5m]",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        },
+        {
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    },
+    {
+      "aliasColors": {
+        "200": "semi-dark-green",
+        "500": "semi-dark-red"
+      },
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": null,
+      "fieldConfig": {
+        "defaults": {
+          "links": []
+        },
+        "overrides": []
+      },
+      "fill": 1,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 8,
+        "w": 14,
+        "x": 0,
+        "y": 30
+      },
+      "hiddenSeries": false,
+      "id": 197,
+      "legend": {
+        "alignAsTable": true,
+        "avg": true,
+        "current": false,
+        "hideEmpty": false,
+        "hideZero": true,
+        "max": true,
+        "min": false,
+        "rightSide": true,
+        "show": true,
+        "total": false,
+        "values": true
+      },
+      "lines": true,
+      "linewidth": 1,
+      "nullPointMode": "null as zero",
+      "options": {
+        "alertThreshold": true
+      },
+      "percentage": false,
+      "pluginVersion": "8.2.6",
+      "pointradius": 2,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "aggregation": "Last",
+          "decimals": 2,
+          "displayAliasType": "Warning / Critical",
+          "displayType": "Regular",
+          "displayValueWithAlias": "Never",
+          "expr": "sum(increase(http_server_requests_seconds_count{namespace=\"$namespace\", service=\"$service\", uri!~\"$excluded_urls\", outcome!=\"SUCCESS\"}[5m])) by (method, uri) / (sum(increase(http_server_requests_seconds_count{namespace=\"$namespace\", service=\"$service\", uri!~\"$excluded_urls\"}[5m])) by (method, uri) > 0)",
+          "format": "time_series",
+          "instant": false,
+          "legendFormat": "{{ method }} {{ uri }}",
+          "refId": "C",
+          "units": "none",
+          "valueHandler": "Number Threshold"
+        }
+      ],
+      "thresholds": [],
+      "timeFrom": null,
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "Response Status Error % by (method, path) [5m]",
+      "tooltip": {
+        "shared": true,
+        "sort": 2,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "decimals": 1,
+          "format": "percentunit",
+          "label": "",
+          "logBase": 1,
+          "max": "1",
+          "min": null,
+          "show": true
+        },
+        {
+          "decimals": null,
+          "format": "percent",
+          "label": "",
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": false
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    },
+    {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": null,
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "links": []
+        },
+        "overrides": []
+      },
+      "fill": 1,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 8,
+        "w": 10,
+        "x": 14,
+        "y": 30
+      },
+      "hiddenSeries": false,
+      "id": 146,
+      "interval": "",
+      "legend": {
+        "avg": false,
+        "current": false,
+        "hideEmpty": true,
+        "hideZero": true,
+        "max": false,
+        "min": false,
+        "show": true,
+        "total": false,
+        "values": false
+      },
+      "lines": true,
+      "linewidth": 1,
+      "nullPointMode": "null",
+      "options": {
+        "alertThreshold": true
+      },
+      "percentage": false,
+      "pluginVersion": "8.2.6",
+      "pointradius": 2,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "expr": "sum(increase(http_server_requests_seconds_count{namespace=\"$namespace\", service=\"$service\", pod=~\"$pod\", uri!~\"$excluded_urls\", exception!=\"None\"}[5m])) by (exception)",
+          "legendFormat": "{{ exception }}",
+          "refId": "A"
+        }
+      ],
+      "thresholds": [],
+      "timeFrom": null,
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "Exceptions [5m]",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        },
+        {
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    },
+    {
+      "aliasColors": {},
+      "breakPoint": "50%",
+      "cacheTimeout": null,
+      "combine": {
+        "label": "Others",
+        "threshold": 0
+      },
+      "datasource": null,
+      "decimals": null,
+      "description": "",
+      "fontSize": "80%",
+      "format": "short",
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 38
+      },
+      "id": 289,
+      "interval": null,
+      "legend": {
+        "percentage": true,
+        "percentageDecimals": 1,
+        "show": true,
+        "sideWidth": null,
+        "values": true
+      },
+      "legendType": "Right side",
+      "links": [],
+      "maxDataPoints": 1,
+      "nullPointMode": "connected",
+      "pieType": "donut",
+      "strokeWidth": "",
+      "targets": [
+        {
+          "expr": "sort_desc(sum(increase(http_server_requests_seconds_count{namespace=\"$namespace\", service=\"$service\", pod=~\"$pod\", uri!~\"$excluded_urls\"}[$__range]) > 0) by (method, uri))",
+          "instant": true,
+          "legendFormat": "{{ method }} {{ uri }}",
+          "refId": "A"
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Request Count [selected range]",
+      "type": "grafana-piechart-panel",
+      "valueName": "current"
+    },
+    {
+      "cacheTimeout": null,
+      "datasource": null,
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "decimals": 0,
+          "mappings": [
+            {
+              "options": {
+                "match": "null",
+                "result": {
+                  "text": "N/A"
+                }
+              },
+              "type": "special"
+            }
+          ],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "none"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 4,
+        "x": 12,
+        "y": 38
+      },
+      "id": 291,
+      "interval": null,
+      "links": [],
+      "maxDataPoints": 100,
+      "options": {
+        "colorMode": "none",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "/^total$/",
+          "values": false
+        },
+        "text": {},
+        "textMode": "auto"
+      },
+      "pluginVersion": "8.2.6",
+      "targets": [
+        {
+          "expr": "sum(increase(http_server_requests_seconds_count{namespace=\"$namespace\", service=\"$service\", pod=~\"$pod\", uri!~\"$excluded_urls\"}[$__range]) > 0)",
+          "instant": true,
+          "legendFormat": "total",
+          "refId": "A"
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Total Requests [selected range]",
+      "type": "stat"
+    },
+    {
+      "aliasColors": {},
+      "breakPoint": "50%",
+      "cacheTimeout": null,
+      "combine": {
+        "label": "Others",
+        "threshold": 0
+      },
+      "datasource": null,
+      "decimals": null,
+      "description": "",
+      "fontSize": "80%",
+      "format": "short",
+      "gridPos": {
+        "h": 8,
+        "w": 8,
+        "x": 16,
+        "y": 38
+      },
+      "id": 290,
+      "interval": null,
+      "legend": {
+        "percentage": true,
+        "percentageDecimals": 1,
+        "show": true,
+        "values": true
+      },
+      "legendType": "Right side",
+      "links": [],
+      "maxDataPoints": 1,
+      "nullPointMode": "connected",
+      "pieType": "donut",
+      "strokeWidth": "",
+      "targets": [
+        {
+          "expr": "sort_desc(sum(increase(http_server_requests_seconds_count{namespace=\"$namespace\", service=\"$service\", pod=~\"$pod\", uri!~\"$excluded_urls\"}[$__range]) > 0) by (status))",
+          "instant": true,
+          "legendFormat": "{{ status }}",
+          "refId": "A"
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Response Statuses [selected range]",
+      "type": "grafana-piechart-panel",
+      "valueName": "current"
+    },
+    {
+      "aliasColors": {},
+      "breakPoint": "50%",
+      "cacheTimeout": null,
+      "combine": {
+        "label": "Others",
+        "threshold": 0
+      },
+      "datasource": null,
+      "decimals": null,
+      "description": "",
+      "fontSize": "80%",
+      "format": "short",
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 46
+      },
+      "id": 298,
+      "interval": null,
+      "legend": {
+        "percentage": true,
+        "percentageDecimals": 1,
+        "show": true,
+        "sideWidth": null,
+        "values": true
+      },
+      "legendType": "Right side",
+      "links": [],
+      "maxDataPoints": 1,
+      "nullPointMode": "connected",
+      "pieType": "donut",
+      "strokeWidth": "",
+      "targets": [
+        {
+          "expr": "sort_desc(sum(increase(http_server_requests_seconds_count{namespace=\"$namespace\", service=\"$service\", pod=~\"$pod\", uri!~\"$excluded_urls\", exception!=\"None\"}[$__range]) > 0) by (method, uri))",
+          "instant": true,
+          "legendFormat": "{{ method }} {{ uri }}",
+          "refId": "A"
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Exceptions by endpoint [selected range]",
+      "type": "grafana-piechart-panel",
+      "valueName": "current"
+    },
+    {
+      "cacheTimeout": null,
+      "datasource": null,
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "decimals": 0,
+          "mappings": [
+            {
+              "options": {
+                "match": "null",
+                "result": {
+                  "text": "N/A"
+                }
+              },
+              "type": "special"
+            }
+          ],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "none"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 4,
+        "x": 12,
+        "y": 46
+      },
+      "id": 288,
+      "interval": null,
+      "links": [],
+      "maxDataPoints": 100,
+      "options": {
+        "colorMode": "none",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "/^total$/",
+          "values": false
+        },
+        "text": {},
+        "textMode": "auto"
+      },
+      "pluginVersion": "8.2.6",
+      "targets": [
+        {
+          "expr": "sum(increase(http_server_requests_seconds_count{namespace=\"$namespace\", service=\"$service\", pod=~\"$pod\", uri!~\"$excluded_urls\", exception!=\"None\"}[$__range]) > 0)",
+          "instant": true,
+          "legendFormat": "total",
+          "refId": "A"
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Total Exceptions [selected range]",
+      "type": "stat"
+    },
+    {
+      "aliasColors": {},
+      "breakPoint": "50%",
+      "cacheTimeout": null,
+      "combine": {
+        "label": "Others",
+        "threshold": 0
+      },
+      "datasource": null,
+      "decimals": null,
+      "description": "",
+      "fontSize": "80%",
+      "format": "short",
+      "gridPos": {
+        "h": 8,
+        "w": 8,
+        "x": 16,
+        "y": 46
+      },
+      "id": 287,
+      "interval": null,
+      "legend": {
+        "percentage": true,
+        "percentageDecimals": 1,
+        "show": true,
+        "values": true
+      },
+      "legendType": "Right side",
+      "links": [],
+      "maxDataPoints": 1,
+      "nullPointMode": "connected",
+      "pieType": "donut",
+      "strokeWidth": "",
+      "targets": [
+        {
+          "expr": "sort_desc(sum(increase(http_server_requests_seconds_count{namespace=\"$namespace\", service=\"$service\", pod=~\"$pod\", uri!~\"$excluded_urls\", exception!=\"None\"}[$__range]) > 0) by (exception))",
+          "instant": true,
+          "legendFormat": "{{ exception }}",
+          "refId": "A"
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Exception Types [selected range]",
+      "type": "grafana-piechart-panel",
+      "valueName": "current"
+    },
+    {
+      "collapsed": false,
+      "datasource": null,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 54
+      },
+      "id": 8,
+      "panels": [],
+      "title": "Logs",
+      "type": "row"
+    },
+    {
+      "aliasColors": {
+        "DEBUG": "light-purple",
+        "TRACE": "light-blue"
+      },
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": "main",
+      "fieldConfig": {
+        "defaults": {
+          "links": []
+        },
+        "overrides": []
+      },
+      "fill": 1,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 7,
+        "w": 12,
+        "x": 0,
+        "y": 55
+      },
+      "hiddenSeries": false,
+      "id": 6,
+      "legend": {
+        "alignAsTable": false,
+        "avg": false,
+        "current": false,
+        "hideZero": false,
+        "max": false,
+        "min": false,
+        "rightSide": false,
+        "show": true,
+        "total": false,
+        "values": false
+      },
+      "lines": true,
+      "linewidth": 1,
+      "links": [],
+      "nullPointMode": "null",
+      "percentage": false,
+      "pluginVersion": "8.2.6",
+      "pointradius": 5,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "alias": "",
+          "expr": "sum by (service) (increase(logback_events_total{namespace=\"$namespace\", service=\"$service\", level=\"info\"}[5m]))",
+          "format": "time_series",
+          "intervalFactor": 1,
+          "legendFormat": "INFO",
+          "rawSql": "SELECT\n  $__time(time_column),\n  value1\nFROM\n  metric_table\nWHERE\n  $__timeFilter(time_column)\n",
+          "refId": "A"
+        },
+        {
+          "alias": "",
+          "expr": "sum by (service) (increase(logback_events_total{namespace=\"$namespace\", service=\"$service\", level=\"debug\"}[5m]))",
+          "format": "time_series",
+          "intervalFactor": 1,
+          "legendFormat": "DEBUG",
+          "rawSql": "SELECT\n  $__time(time_column),\n  value1\nFROM\n  metric_table\nWHERE\n  $__timeFilter(time_column)\n",
+          "refId": "B"
+        },
+        {
+          "alias": "",
+          "expr": "sum by (service) (increase(logback_events_total{namespace=\"$namespace\", service=\"$service\", level=\"trace\"}[5m]))",
+          "format": "time_series",
+          "intervalFactor": 1,
+          "legendFormat": "TRACE",
+          "rawSql": "SELECT\n  $__time(time_column),\n  value1\nFROM\n  metric_table\nWHERE\n  $__timeFilter(time_column)\n",
+          "refId": "C"
+        }
+      ],
+      "thresholds": [],
+      "timeFrom": null,
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "TRACE, DEBUG, INFO [5m]",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "format": "none",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        },
+        {
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    },
+    {
+      "aliasColors": {
+        "ERROR": "red",
+        "WARN": "orange"
+      },
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": "main",
+      "fieldConfig": {
+        "defaults": {
+          "links": []
+        },
+        "overrides": []
+      },
+      "fill": 1,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 7,
+        "w": 12,
+        "x": 12,
+        "y": 55
+      },
+      "hiddenSeries": false,
+      "id": 10,
+      "legend": {
+        "alignAsTable": false,
+        "avg": false,
+        "current": false,
+        "hideEmpty": false,
+        "hideZero": false,
+        "max": false,
+        "min": false,
+        "rightSide": false,
+        "show": true,
+        "total": false,
+        "values": false
+      },
+      "lines": true,
+      "linewidth": 1,
+      "links": [],
+      "nullPointMode": "null",
+      "percentage": false,
+      "pluginVersion": "8.2.6",
+      "pointradius": 5,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "alias": "",
+          "expr": "sum by (service) (increase(logback_events_total{namespace=\"$namespace\", service=\"$service\", level=\"warn\"}[5m]))",
+          "format": "time_series",
+          "intervalFactor": 1,
+          "legendFormat": "WARN",
+          "rawSql": "SELECT\n  $__time(time_column),\n  value1\nFROM\n  metric_table\nWHERE\n  $__timeFilter(time_column)\n",
+          "refId": "A"
+        },
+        {
+          "alias": "",
+          "expr": "sum by (service) (increase(logback_events_total{namespace=\"$namespace\", service=\"$service\", level=\"error\"}[5m]))",
+          "format": "time_series",
+          "intervalFactor": 1,
+          "legendFormat": "ERROR",
+          "rawSql": "SELECT\n  $__time(time_column),\n  value1\nFROM\n  metric_table\nWHERE\n  $__timeFilter(time_column)\n",
+          "refId": "B"
+        }
+      ],
+      "thresholds": [],
+      "timeFrom": null,
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "WARN, ERROR [5m]",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "format": "none",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        },
+        {
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": false
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    },
+    {
+      "aliasColors": {
+        "ERROR": "red",
+        "WARN": "orange"
+      },
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": "main",
+      "fieldConfig": {
+        "defaults": {
+          "links": []
+        },
+        "overrides": []
+      },
+      "fill": 1,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 7,
+        "w": 12,
+        "x": 0,
+        "y": 62
+      },
+      "hiddenSeries": false,
+      "id": 104,
+      "legend": {
+        "alignAsTable": true,
+        "avg": true,
+        "current": false,
+        "hideEmpty": true,
+        "hideZero": true,
+        "max": true,
+        "min": false,
+        "show": true,
+        "total": false,
+        "values": true
+      },
+      "lines": true,
+      "linewidth": 1,
+      "links": [],
+      "nullPointMode": "null",
+      "percentage": false,
+      "pluginVersion": "8.2.6",
+      "pointradius": 5,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "alias": "",
+          "expr": "sum by (pod) (increase(logback_events_total{namespace=\"$namespace\", service=\"$service\", level=\"warn\"}[5m]))",
+          "format": "time_series",
+          "intervalFactor": 1,
+          "legendFormat": "{{ pod }}",
+          "rawSql": "SELECT\n  $__time(time_column),\n  value1\nFROM\n  metric_table\nWHERE\n  $__timeFilter(time_column)\n",
+          "refId": "A"
+        }
+      ],
+      "thresholds": [],
+      "timeFrom": null,
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "WARN by pod [5m]",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "format": "none",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        },
+        {
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": false
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    },
+    {
+      "aliasColors": {
+        "ERROR": "red",
+        "WARN": "orange"
+      },
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": "main",
+      "fieldConfig": {
+        "defaults": {
+          "links": []
+        },
+        "overrides": []
+      },
+      "fill": 1,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 7,
+        "w": 12,
+        "x": 12,
+        "y": 62
+      },
+      "hiddenSeries": false,
+      "id": 105,
+      "legend": {
+        "alignAsTable": true,
+        "avg": true,
+        "current": false,
+        "hideEmpty": true,
+        "hideZero": true,
+        "max": true,
+        "min": false,
+        "show": true,
+        "total": false,
+        "values": true
+      },
+      "lines": true,
+      "linewidth": 1,
+      "links": [],
+      "nullPointMode": "null",
+      "percentage": false,
+      "pluginVersion": "8.2.6",
+      "pointradius": 5,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "alias": "",
+          "expr": "sum by (pod) (increase(logback_events_total{namespace=\"$namespace\", service=\"$service\", level=\"error\"}[5m]))",
+          "format": "time_series",
+          "intervalFactor": 1,
+          "legendFormat": "{{ pod }}",
+          "rawSql": "SELECT\n  $__time(time_column),\n  value1\nFROM\n  metric_table\nWHERE\n  $__timeFilter(time_column)\n",
+          "refId": "B"
+        }
+      ],
+      "thresholds": [],
+      "timeFrom": null,
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "ERROR by pod [5m]",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "format": "none",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        },
+        {
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    },
+    {
+      "collapsed": false,
+      "datasource": null,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 69
+      },
+      "id": 161,
+      "panels": [],
+      "title": "Spring Cloud Stream (RabbitMQ)",
+      "type": "row"
+    },
+    {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": "main",
+      "fieldConfig": {
+        "defaults": {
+          "links": []
+        },
+        "overrides": []
+      },
+      "fill": 1,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 6,
+        "w": 24,
+        "x": 0,
+        "y": 70
+      },
+      "hiddenSeries": false,
+      "id": 225,
+      "legend": {
+        "alignAsTable": true,
+        "avg": true,
+        "current": false,
+        "hideEmpty": true,
+        "hideZero": true,
+        "max": true,
+        "min": false,
+        "rightSide": true,
+        "show": true,
+        "total": false,
+        "values": true
+      },
+      "lines": true,
+      "linewidth": 1,
+      "nullPointMode": "null",
+      "percentage": false,
+      "pluginVersion": "8.2.6",
+      "pointradius": 2,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "expr": "sum by (name) (increase(spring_integration_send_seconds_count{namespace=\"$namespace\", service=\"$service\", pod=~\"$pod\", name!=\"unknown\"}[1m]))",
+          "legendFormat": "{{ name }}",
+          "refId": "A"
+        }
+      ],
+      "thresholds": [],
+      "timeFrom": null,
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "Message Rate [1m]",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        },
+        {
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    },
+    {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": "main",
+      "fieldConfig": {
+        "defaults": {
+          "links": []
+        },
+        "overrides": []
+      },
+      "fill": 1,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 6,
+        "w": 14,
+        "x": 0,
+        "y": 76
+      },
+      "hiddenSeries": false,
+      "id": 170,
+      "legend": {
+        "avg": false,
+        "current": false,
+        "hideEmpty": true,
+        "hideZero": true,
+        "max": false,
+        "min": false,
+        "show": true,
+        "total": false,
+        "values": false
+      },
+      "lines": true,
+      "linewidth": 1,
+      "nullPointMode": "null",
+      "percentage": false,
+      "pluginVersion": "8.2.6",
+      "pointradius": 2,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "expr": "sum by (name) (irate(spring_integration_send_seconds_sum{namespace=\"$namespace\", service=\"$service\", pod=~\"$pod\", name!=\"unknown\", result=\"success\"}[1m])) /  sum by (name) (irate(spring_integration_send_seconds_count{namespace=\"$namespace\", service=\"$service\", pod=~\"$pod\", name!=\"unknown\", result=\"success\"}[1m]))",
+          "legendFormat": "{{ name }}",
+          "refId": "A"
+        }
+      ],
+      "thresholds": [],
+      "timeFrom": null,
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "Timings [1m]",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "format": "s",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        },
+        {
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    },
+    {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": null,
+      "fieldConfig": {
+        "defaults": {
+          "links": []
+        },
+        "overrides": []
+      },
+      "fill": 1,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 6,
+        "w": 10,
+        "x": 14,
+        "y": 76
+      },
+      "hiddenSeries": false,
+      "id": 173,
+      "legend": {
+        "avg": false,
+        "current": false,
+        "hideEmpty": true,
+        "hideZero": true,
+        "max": false,
+        "min": false,
+        "show": true,
+        "total": false,
+        "values": false
+      },
+      "lines": true,
+      "linewidth": 1,
+      "nullPointMode": "null",
+      "percentage": false,
+      "pluginVersion": "8.2.6",
+      "pointradius": 2,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "expr": "sum by (name) (increase(spring_integration_send_seconds_count{namespace=\"$namespace\", service=\"$service\", pod=~\"$pod\", name!=\"unknown\", result!=\"success\"}[5m]))",
+          "legendFormat": "{{ name }}",
+          "refId": "A"
+        }
+      ],
+      "thresholds": [],
+      "timeFrom": null,
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "Errors [5m]",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        },
+        {
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    },
+    {
+      "collapsed": true,
+      "datasource": null,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 82
+      },
+      "id": 244,
+      "panels": [
+        {
+          "aliasColors": {},
+          "bars": false,
+          "dashLength": 10,
+          "dashes": false,
+          "datasource": null,
+          "fieldConfig": {
+            "defaults": {
+              "custom": {}
+            },
+            "overrides": []
+          },
+          "fill": 1,
+          "fillGradient": 0,
+          "gridPos": {
+            "h": 5,
+            "w": 12,
+            "x": 0,
+            "y": 83
+          },
+          "hiddenSeries": false,
+          "id": 246,
+          "legend": {
+            "avg": false,
+            "current": false,
+            "max": false,
+            "min": false,
+            "show": true,
+            "total": false,
+            "values": false
+          },
+          "lines": true,
+          "linewidth": 1,
+          "nullPointMode": "null",
+          "options": {
+            "dataLinks": []
+          },
+          "percentage": false,
+          "pointradius": 2,
+          "points": false,
+          "renderer": "flot",
+          "seriesOverrides": [],
+          "spaceLength": 10,
+          "stack": false,
+          "steppedLine": false,
+          "targets": [
+            {
+              "expr": "avg by (cache) (cache_size{namespace=\"$namespace\", service=\"$service\", pod=~\"$pod\"})",
+              "legendFormat": "{{ cache }}",
+              "refId": "A"
+            }
+          ],
+          "thresholds": [],
+          "timeFrom": null,
+          "timeRegions": [],
+          "timeShift": null,
+          "title": "Average Cache Size",
+          "tooltip": {
+            "shared": true,
+            "sort": 0,
+            "value_type": "individual"
+          },
+          "type": "graph",
+          "xaxis": {
+            "buckets": null,
+            "mode": "time",
+            "name": null,
+            "show": true,
+            "values": []
+          },
+          "yaxes": [
+            {
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
+            },
+            {
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": false
+            }
+          ],
+          "yaxis": {
+            "align": false,
+            "alignLevel": null
+          }
+        },
+        {
+          "aliasColors": {},
+          "bars": false,
+          "dashLength": 10,
+          "dashes": false,
+          "datasource": null,
+          "description": "",
+          "fieldConfig": {
+            "defaults": {
+              "custom": {}
+            },
+            "overrides": []
+          },
+          "fill": 1,
+          "fillGradient": 0,
+          "gridPos": {
+            "h": 5,
+            "w": 12,
+            "x": 12,
+            "y": 83
+          },
+          "hiddenSeries": false,
+          "id": 247,
+          "legend": {
+            "avg": false,
+            "current": false,
+            "max": false,
+            "min": false,
+            "show": true,
+            "total": false,
+            "values": false
+          },
+          "lines": true,
+          "linewidth": 1,
+          "maxPerRow": 3,
+          "nullPointMode": "null",
+          "options": {
+            "dataLinks": []
+          },
+          "percentage": false,
+          "pointradius": 2,
+          "points": false,
+          "renderer": "flot",
+          "repeat": null,
+          "repeatDirection": "h",
+          "seriesOverrides": [],
+          "spaceLength": 10,
+          "stack": false,
+          "steppedLine": false,
+          "targets": [
+            {
+              "expr": "sum(increase(cache_gets_total{namespace=\"$namespace\", service=\"$service\", pod=~\"$pod\", result=\"hit\"}[5m])) by (cache) / sum(increase(cache_gets_total{namespace=\"$namespace\", service=\"$service\", pod=~\"$pod\"}[5m])) by (cache)",
+              "legendFormat": "{{ cache }}",
+              "refId": "A"
+            }
+          ],
+          "thresholds": [],
+          "timeFrom": null,
+          "timeRegions": [],
+          "timeShift": null,
+          "title": "Cache Hit Ratio [5m]",
+          "tooltip": {
+            "shared": true,
+            "sort": 0,
+            "value_type": "individual"
+          },
+          "type": "graph",
+          "xaxis": {
+            "buckets": null,
+            "mode": "time",
+            "name": null,
+            "show": true,
+            "values": []
+          },
+          "yaxes": [
+            {
+              "decimals": null,
+              "format": "percentunit",
+              "label": null,
+              "logBase": 1,
+              "max": "1",
+              "min": null,
+              "show": true
+            },
+            {
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": false
+            }
+          ],
+          "yaxis": {
+            "align": false,
+            "alignLevel": null
+          }
+        },
+        {
+          "aliasColors": {},
+          "bars": false,
+          "dashLength": 10,
+          "dashes": false,
+          "datasource": null,
+          "fieldConfig": {
+            "defaults": {
+              "custom": {}
+            },
+            "overrides": []
+          },
+          "fill": 1,
+          "fillGradient": 0,
+          "gridPos": {
+            "h": 5,
+            "w": 12,
+            "x": 0,
+            "y": 88
+          },
+          "hiddenSeries": false,
+          "id": 248,
+          "legend": {
+            "avg": false,
+            "current": false,
+            "max": false,
+            "min": false,
+            "show": true,
+            "total": false,
+            "values": false
+          },
+          "lines": true,
+          "linewidth": 1,
+          "nullPointMode": "null",
+          "options": {
+            "dataLinks": []
+          },
+          "percentage": false,
+          "pointradius": 2,
+          "points": false,
+          "renderer": "flot",
+          "seriesOverrides": [],
+          "spaceLength": 10,
+          "stack": false,
+          "steppedLine": false,
+          "targets": [
+            {
+              "expr": "avg by (cache) ( \n  increase(cache_puts_total{namespace=\"$namespace\", service=\"$service\", pod=~\"$pod\", cache=~\"$cache_name\"}[5m])\n)",
+              "legendFormat": "{{ cache }}",
+              "refId": "A"
+            }
+          ],
+          "thresholds": [],
+          "timeFrom": null,
+          "timeRegions": [],
+          "timeShift": null,
+          "title": "Average Cache Puts [5m]",
+          "tooltip": {
+            "shared": true,
+            "sort": 0,
+            "value_type": "individual"
+          },
+          "type": "graph",
+          "xaxis": {
+            "buckets": null,
+            "mode": "time",
+            "name": null,
+            "show": true,
+            "values": []
+          },
+          "yaxes": [
+            {
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
+            },
+            {
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": false
+            }
+          ],
+          "yaxis": {
+            "align": false,
+            "alignLevel": null
+          }
+        },
+        {
+          "aliasColors": {},
+          "bars": false,
+          "dashLength": 10,
+          "dashes": false,
+          "datasource": null,
+          "fieldConfig": {
+            "defaults": {
+              "custom": {}
+            },
+            "overrides": []
+          },
+          "fill": 1,
+          "fillGradient": 0,
+          "gridPos": {
+            "h": 5,
+            "w": 12,
+            "x": 12,
+            "y": 88
+          },
+          "hiddenSeries": false,
+          "id": 249,
+          "legend": {
+            "avg": false,
+            "current": false,
+            "max": false,
+            "min": false,
+            "show": true,
+            "total": false,
+            "values": false
+          },
+          "lines": true,
+          "linewidth": 1,
+          "nullPointMode": "null",
+          "options": {
+            "dataLinks": []
+          },
+          "percentage": false,
+          "pointradius": 2,
+          "points": false,
+          "renderer": "flot",
+          "seriesOverrides": [],
+          "spaceLength": 10,
+          "stack": false,
+          "steppedLine": false,
+          "targets": [
+            {
+              "expr": "avg by (cache) ( \n  increase(cache_evictions_total{namespace=\"$namespace\", service=\"$service\", pod=~\"$pod\", cache=~\"$cache_name\"}[5m])\n)",
+              "legendFormat": "{{ cache }}",
+              "refId": "A"
+            }
+          ],
+          "thresholds": [],
+          "timeFrom": null,
+          "timeRegions": [],
+          "timeShift": null,
+          "title": "Average Cache Evictions [5m]",
+          "tooltip": {
+            "shared": true,
+            "sort": 0,
+            "value_type": "individual"
+          },
+          "type": "graph",
+          "xaxis": {
+            "buckets": null,
+            "mode": "time",
+            "name": null,
+            "show": true,
+            "values": []
+          },
+          "yaxes": [
+            {
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
+            },
+            {
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": false
+            }
+          ],
+          "yaxis": {
+            "align": false,
+            "alignLevel": null
+          }
+        }
+      ],
+      "title": "Cache",
+      "type": "row"
+    },
+    {
+      "collapsed": false,
+      "datasource": null,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 83
+      },
+      "id": 132,
+      "panels": [],
+      "title": "Kubernetes Pods Status",
+      "type": "row"
+    },
+    {
+      "cards": {
+        "cardHSpacing": 2,
+        "cardMinWidth": 5,
+        "cardRound": null,
+        "cardVSpacing": 2
+      },
+      "color": {
+        "cardColor": "#b4ff00",
+        "colorScale": "sqrt",
+        "colorScheme": "interpolateYlOrRd",
+        "defaultColor": "#757575",
+        "exponent": 0.5,
+        "max": 10,
+        "min": 1,
+        "mode": "spectrum",
+        "thresholds": [
+          {
+            "$$hashKey": "object:565",
+            "color": "#96D98D",
+            "tooltip": "1",
+            "value": "1"
+          },
+          {
+            "$$hashKey": "object:569",
+            "color": "#73BF69",
+            "value": "2"
+          }
+        ]
+      },
+      "datasource": null,
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 84
+      },
+      "highlightCards": true,
+      "id": 306,
+      "legend": {
+        "show": true
+      },
+      "nullPointMode": "as empty",
+      "pageSize": 15,
+      "pluginVersion": "7.0.6",
+      "seriesFilterIndex": -1,
+      "statusmap": {
+        "ConfigVersion": "v1"
+      },
+      "targets": [
+        {
+          "expr": "sum(label_replace(min_over_time(kube_pod_status_phase{namespace=\"$namespace\", pod=~\"$pod\", phase=\"Running\"}[$__rate_interval]),\"pod_bunch\", \"$1\", \"pod\", \"([a-z-]+)-.*\")) by (pod_bunch)",
+          "interval": "",
+          "legendFormat": "{{pod_bunch}}",
+          "refId": "A"
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Pods quantity",
+      "tooltip": {
+        "freezeOnClick": true,
+        "items": [],
+        "show": true,
+        "showItems": false
+      },
+      "type": "state-timeline",
+      "useMax": true,
+      "usingPagination": false,
+      "xAxis": {
+        "show": true
+      },
+      "yAxis": {
+        "maxWidth": -1,
+        "minWidth": -1,
+        "show": true
+      },
+      "yAxisSort": "metrics"
+    },
+    {
+      "aliasColors": {},
+      "bars": true,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": "main",
+      "decimals": 0,
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "links": []
+        },
+        "overrides": []
+      },
+      "fill": 1,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 84
+      },
+      "hiddenSeries": false,
+      "id": 138,
+      "legend": {
+        "alignAsTable": false,
+        "avg": false,
+        "current": false,
+        "hideEmpty": true,
+        "hideZero": true,
+        "max": false,
+        "min": false,
+        "rightSide": false,
+        "show": false,
+        "sort": "avg",
+        "sortDesc": true,
+        "total": false,
+        "values": false
+      },
+      "lines": false,
+      "linewidth": 1,
+      "links": [],
+      "nullPointMode": "null as zero",
+      "percentage": false,
+      "pluginVersion": "8.2.6",
+      "pointradius": 5,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [
+        {
+          "alias": "Total",
+          "bars": false,
+          "stack": false
+        }
+      ],
+      "spaceLength": 10,
+      "stack": true,
+      "steppedLine": false,
+      "targets": [
+        {
+          "expr": "(\n  sum by (pod) (avg_over_time(kube_controller_pod{namespace=\"$namespace\", controller=~\"$controller\", pod=~\"$pod\"}[$__rate_interval])) \n  * on (pod)\n  sum by (pod) (increase(kube_pod_container_status_restarts_total{namespace=\"$namespace\", pod=~\"$pod\"}[$__rate_interval]))\n) > 0",
+          "format": "time_series",
+          "intervalFactor": 1,
+          "legendFormat": "{{ pod }}",
+          "refId": "A"
+        },
+        {
+          "expr": "sum (\n  sum by (pod) (avg_over_time(kube_controller_pod{namespace=\"$namespace\", controller=~\"$controller\", pod=~\"$pod\"}[$__rate_interval])) \n  * on (pod)\n  sum by (pod) (increase(kube_pod_container_status_restarts_total{namespace=\"$namespace\", pod=~\"$pod\"}[$__rate_interval]))\n)",
+          "format": "time_series",
+          "intervalFactor": 1,
+          "legendFormat": "Total",
+          "refId": "B"
+        }
+      ],
+      "thresholds": [],
+      "timeFrom": null,
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "Pods Restarts",
+      "tooltip": {
+        "shared": true,
+        "sort": 2,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "decimals": 0,
+          "format": "short",
+          "label": "",
+          "logBase": 1,
+          "max": null,
+          "min": "0",
+          "show": true
+        },
+        {
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": false
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    },
+    {
+      "cards": {
+        "cardHSpacing": 2,
+        "cardMinWidth": 5,
+        "cardRound": null,
+        "cardVSpacing": 2
+      },
+      "color": {
+        "cardColor": "#b4ff00",
+        "colorScale": "sqrt",
+        "colorScheme": "interpolateGnYlRd",
+        "defaultColor": "#757575",
+        "exponent": 0.5,
+        "mode": "discrete",
+        "thresholds": [
+          {
+            "$$hashKey": "object:60",
+            "color": "#99440a",
+            "tooltip": "Some container restart",
+            "value": "5"
+          },
+          {
+            "$$hashKey": "object:61",
+            "color": "#e5ac0e",
+            "tooltip": "Pending",
+            "value": "1"
+          },
+          {
+            "$$hashKey": "object:62",
+            "color": "rgb(215, 215, 215)",
+            "tooltip": "Unknown",
+            "value": "2"
+          },
+          {
+            "$$hashKey": "object:63",
+            "color": "#bf1b00",
+            "tooltip": "Failed",
+            "value": "3"
+          },
+          {
+            "$$hashKey": "object:64",
+            "color": "#e0f9d7",
+            "tooltip": "Succeeded",
+            "value": "4"
+          },
+          {
+            "$$hashKey": "object:65",
+            "color": "#508642",
+            "tooltip": "Running",
+            "value": "0"
+          }
+        ]
+      },
+      "datasource": "main",
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 92
+      },
+      "highlightCards": true,
+      "id": 135,
+      "legend": {
+        "show": true
+      },
+      "links": [],
+      "nullPointMode": "as empty",
+      "pageSize": 15,
+      "seriesFilterIndex": -1,
+      "statusmap": {
+        "ConfigVersion": "v1"
+      },
+      "targets": [
+        {
+          "expr": "(\n  min by (pod) (\n    kube_controller_pod{namespace=\"$namespace\", controller=~\"$controller\"}\n    * on (pod) group_right()\n    min_over_time(kube_pod_status_phase{namespace=\"$namespace\", pod=~\"$pod\", phase=\"Running\"}[$__rate_interval])\n  ) == 1\n) * 0",
+          "format": "time_series",
+          "hide": false,
+          "interval": "",
+          "intervalFactor": 1,
+          "legendFormat": "{{ pod }}",
+          "refId": "A"
+        },
+        {
+          "expr": "(\n  min by (pod, phase) (\n    kube_controller_pod{namespace=\"$namespace\", controller=~\"$controller\"}\n    * on (pod) group_right()\n    min_over_time(kube_pod_status_phase{namespace=\"$namespace\", pod=~\"$pod\", phase=\"Pending\"}[$__rate_interval])\n  ) == 1\n) * 1",
+          "format": "time_series",
+          "hide": false,
+          "intervalFactor": 1,
+          "legendFormat": "{{ pod }}",
+          "refId": "B"
+        },
+        {
+          "expr": "(\n  min by (pod, phase) (\n    kube_controller_pod{namespace=\"$namespace\", controller=~\"$controller\"}\n    * on (pod) group_right()\n    min_over_time(kube_pod_status_phase{namespace=\"$namespace\", pod=~\"$pod\", phase=\"Unknown\"}[$__rate_interval])\n  ) == 1\n) * 2",
+          "format": "time_series",
+          "hide": false,
+          "intervalFactor": 1,
+          "legendFormat": "{{ pod }}",
+          "refId": "C"
+        },
+        {
+          "expr": "(\n  min by (pod, phase) (\n    kube_controller_pod{namespace=\"$namespace\", controller=~\"$controller\"}\n    * on (pod) group_right()\n    min_over_time(kube_pod_status_phase{namespace=\"$namespace\", pod=~\"$pod\", phase=\"Failed\"}[$__rate_interval])\n  ) == 1\n) * 3",
+          "format": "time_series",
+          "hide": false,
+          "intervalFactor": 1,
+          "legendFormat": "{{ pod }}",
+          "refId": "D"
+        },
+        {
+          "expr": "(\n  min by (pod, phase) (\n    kube_controller_pod{namespace=\"$namespace\", controller=~\"$controller\"}\n    * on (pod) group_right()\n    min_over_time(kube_pod_status_phase{namespace=\"$namespace\", pod=~\"$pod\", phase=\"Succeeded\"}[$__rate_interval])\n  ) == 1\n) * 4",
+          "format": "time_series",
+          "hide": false,
+          "intervalFactor": 1,
+          "legendFormat": "{{ pod }}",
+          "refId": "E"
+        },
+        {
+          "expr": "(\n  min by (pod) (\n    kube_controller_pod{node=~\"$node\", namespace=\"$namespace\", controller=~\"$controller\"}\n    * on (pod) group_right()\n    min by (pod) (min_over_time(kube_pod_container_status_ready{namespace=\"$namespace\", pod=~\"$pod\"}[$__rate_interval]))\n  ) == 0\n) + 5",
+          "format": "time_series",
+          "hide": false,
+          "intervalFactor": 1,
+          "legendFormat": "{{ pod }}",
+          "refId": "F"
+        }
+      ],
+      "title": "Pods Status",
+      "tooltip": {
+        "freezeOnClick": true,
+        "items": [],
+        "show": true,
+        "showItems": false
+      },
+      "type": "state-timeline",
+      "useMax": true,
+      "usingPagination": false,
+      "xAxis": {
+        "show": true
+      },
+      "yAxis": {
+        "maxWidth": -1,
+        "minWidth": -1,
+        "show": true
+      },
+      "yAxisSort": "metrics"
+    },
+    {
+      "cacheTimeout": null,
+      "datasource": "main",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "decimals": 1,
+          "mappings": [
+            {
+              "options": {
+                "match": "null",
+                "result": {
+                  "text": "N/A"
+                }
+              },
+              "type": "special"
+            }
+          ],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "dthms"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 3,
+        "w": 12,
+        "x": 0,
+        "y": 100
+      },
+      "id": 52,
+      "interval": null,
+      "links": [],
+      "maxDataPoints": 100,
+      "options": {
+        "colorMode": "none",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "/^process_uptime_seconds{instance=\"10.244.28.74:10000\", job=\"custom-atol\", namespace=\"payment-payment-brick-preprod\", pod=\"atol-746bcfd6c6-566hd\", service=\"atol\"}$/",
+          "values": false
+        },
+        "text": {},
+        "textMode": "auto"
+      },
+      "pluginVersion": "8.2.6",
+      "repeat": "pod",
+      "repeatDirection": "h",
+      "targets": [
+        {
+          "expr": "process_uptime_seconds{pod=\"$pod\", namespace=\"$namespace\", service=\"$service\"}",
+          "format": "time_series",
+          "intervalFactor": 1,
+          "legendFormat": "",
+          "metric": "",
+          "refId": "A",
+          "step": 14400
+        }
+      ],
+      "title": "Uptime - $pod",
+      "type": "stat"
+    },
+    {
+      "collapsed": false,
+      "datasource": null,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 103
+      },
+      "id": 140,
+      "panels": [],
+      "title": "Kubernetes Resource Usage",
+      "type": "row"
+    },
+    {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": "main",
+      "fieldConfig": {
+        "defaults": {
+          "links": []
+        },
+        "overrides": []
+      },
+      "fill": 0,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 7,
+        "w": 12,
+        "x": 0,
+        "y": 104
+      },
+      "hiddenSeries": false,
+      "id": 143,
+      "legend": {
+        "alignAsTable": false,
+        "avg": false,
+        "current": false,
+        "hideEmpty": true,
+        "hideZero": true,
+        "max": false,
+        "min": false,
+        "rightSide": false,
+        "show": true,
+        "sort": "avg",
+        "sortDesc": true,
+        "total": false,
+        "values": false
+      },
+      "lines": true,
+      "linewidth": 1,
+      "links": [],
+      "nullPointMode": "null as zero",
+      "percentage": false,
+      "pluginVersion": "8.2.6",
+      "pointradius": 5,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [
+        {
+          "alias": "Limit",
+          "dashes": true,
+          "linewidth": 3
+        }
+      ],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "expr": "sum by(pod) (\n  kube_controller_pod{namespace=\"$namespace\", controller=~\"$controller\", pod=~\"$pod\"}\n  * on (pod)\n  sum by (pod) (avg_over_time(container_memory_working_set_bytes{container!=\"POD\", pod=~\"$pod\", namespace=\"$namespace\"}[$__rate_interval]))\n)",
+          "format": "time_series",
+          "intervalFactor": 1,
+          "legendFormat": "{{ pod }}",
+          "refId": "A"
+        },
+        {
+          "expr": "avg(kube_pod_container_resource_limits_memory_bytes{namespace=\"$namespace\", pod=~\"$pod\", container!=\"POD\"})",
+          "legendFormat": "Limit",
+          "refId": "B"
+        }
+      ],
+      "thresholds": [],
+      "timeFrom": null,
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "Memory Usage",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "format": "bytes",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": "0",
+          "show": true
+        },
+        {
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": false
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    },
+    {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": "main",
+      "fieldConfig": {
+        "defaults": {
+          "links": []
+        },
+        "overrides": []
+      },
+      "fill": 1,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 7,
+        "w": 12,
+        "x": 12,
+        "y": 104
+      },
+      "hiddenSeries": false,
+      "id": 152,
+      "legend": {
+        "alignAsTable": false,
+        "avg": false,
+        "current": false,
+        "hideEmpty": true,
+        "hideZero": true,
+        "max": false,
+        "min": false,
+        "rightSide": false,
+        "show": true,
+        "sort": "avg",
+        "sortDesc": true,
+        "total": false,
+        "values": false
+      },
+      "lines": true,
+      "linewidth": 1,
+      "links": [],
+      "nullPointMode": "null as zero",
+      "percentage": false,
+      "pluginVersion": "8.2.6",
+      "pointradius": 5,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [
+        {
+          "alias": "Total",
+          "bars": false,
+          "stack": false
+        }
+      ],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "expr": "sum by(pod) (\n  kube_controller_pod{namespace=\"$namespace\", controller=~\"$controller\", pod=~\"$pod\"}\n  * on (pod)\n  sum by (pod) (rate(container_cpu_usage_seconds_total{container!=\"POD\", pod=~\"$pod\", namespace=\"$namespace\"}[$__rate_interval]))\n)",
+          "format": "time_series",
+          "instant": false,
+          "intervalFactor": 1,
+          "legendFormat": "{{ pod }}",
+          "refId": "A"
+        }
+      ],
+      "thresholds": [],
+      "timeFrom": null,
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "CPU Usage",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "format": "short",
+          "label": "cores",
+          "logBase": 1,
+          "max": null,
+          "min": "0",
+          "show": true
+        },
+        {
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    },
+    {
+      "collapsed": false,
+      "datasource": null,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 111
+      },
+      "id": 108,
+      "panels": [],
+      "title": "Kubernetes Ingress Important Statuses",
+      "type": "row"
+    },
+    {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": null,
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "links": []
+        },
+        "overrides": []
+      },
+      "fill": 1,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 6,
+        "w": 8,
+        "x": 0,
+        "y": 112
+      },
+      "hiddenSeries": false,
+      "id": 110,
+      "legend": {
+        "avg": false,
+        "current": false,
+        "hideEmpty": false,
+        "hideZero": false,
+        "max": false,
+        "min": false,
+        "show": true,
+        "total": false,
+        "values": false
+      },
+      "lines": true,
+      "linewidth": 1,
+      "nullPointMode": "null",
+      "percentage": false,
+      "pluginVersion": "8.2.6",
+      "pointradius": 2,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "expr": "sum(increase(ingress_nginx_detail_responses_total{job=\"nginx-ingress-controller\", namespace=\"$namespace\", status=\"404\"}[5m])) by (service)",
+          "legendFormat": "{{ service }}",
+          "refId": "A"
+        },
+        {
+          "expr": "sum(increase(ingress_nginx_detail_responses_total{job=\"nginx-ingress-controller\", namespace=\"$namespace\", status=\"404\"}[5m]))",
+          "instant": false,
+          "legendFormat": "total",
+          "refId": "B"
+        }
+      ],
+      "thresholds": [],
+      "timeFrom": null,
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "404 (maybe backend not found) [5m]",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        },
+        {
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": false
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    },
+    {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": null,
+      "fieldConfig": {
+        "defaults": {
+          "links": []
+        },
+        "overrides": []
+      },
+      "fill": 1,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 6,
+        "w": 8,
+        "x": 8,
+        "y": 112
+      },
+      "hiddenSeries": false,
+      "id": 111,
+      "legend": {
+        "avg": false,
+        "current": false,
+        "max": false,
+        "min": false,
+        "show": true,
+        "total": false,
+        "values": false
+      },
+      "lines": true,
+      "linewidth": 1,
+      "nullPointMode": "null",
+      "percentage": false,
+      "pluginVersion": "8.2.6",
+      "pointradius": 2,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "expr": "sum(increase(ingress_nginx_detail_responses_total{job=\"nginx-ingress-controller\", namespace=\"$namespace\", status=\"499\"}[5m])) by (service)",
+          "legendFormat": "{{ service }}",
+          "refId": "A"
+        },
+        {
+          "expr": "sum(increase(ingress_nginx_detail_responses_total{job=\"nginx-ingress-controller\", namespace=\"$namespace\", status=\"499\"}[5m]))",
+          "legendFormat": "total",
+          "refId": "B"
+        }
+      ],
+      "thresholds": [],
+      "timeFrom": null,
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "499 (client disconnected due to its timeout) [5m]",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        },
+        {
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    },
+    {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": null,
+      "fieldConfig": {
+        "defaults": {
+          "links": []
+        },
+        "overrides": []
+      },
+      "fill": 1,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 6,
+        "w": 8,
+        "x": 16,
+        "y": 112
+      },
+      "hiddenSeries": false,
+      "id": 112,
+      "legend": {
+        "avg": false,
+        "current": false,
+        "hideEmpty": false,
+        "hideZero": false,
+        "max": false,
+        "min": false,
+        "show": true,
+        "total": false,
+        "values": false
+      },
+      "lines": true,
+      "linewidth": 1,
+      "nullPointMode": "null",
+      "percentage": false,
+      "pluginVersion": "8.2.6",
+      "pointradius": 2,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "expr": "sum(increase(ingress_nginx_detail_responses_total{job=\"nginx-ingress-controller\", namespace=\"$namespace\", status=\"503\"}[5m])) by (service)",
+          "legendFormat": "{{ service }}",
+          "refId": "A"
+        },
+        {
+          "expr": "sum(increase(ingress_nginx_detail_responses_total{job=\"nginx-ingress-controller\", namespace=\"$namespace\", status=\"503\"}[5m]))",
+          "legendFormat": "total",
+          "refId": "B"
+        }
+      ],
+      "thresholds": [],
+      "timeFrom": null,
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "503 (probably all backends not available) [5m]",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "decimals": null,
+          "format": "short",
+          "label": "",
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        },
+        {
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    },
+    {
+      "collapsed": false,
+      "datasource": null,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 118
+      },
+      "id": 205,
+      "panels": [],
+      "title": "HTTP Actuator - health / info",
+      "type": "row"
+    },
+    {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": "main",
+      "fieldConfig": {
+        "defaults": {
+          "links": []
+        },
+        "overrides": []
+      },
+      "fill": 1,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 6,
+        "w": 12,
+        "x": 0,
+        "y": 119
+      },
+      "hiddenSeries": false,
+      "id": 206,
+      "legend": {
+        "alignAsTable": false,
+        "avg": false,
+        "current": false,
+        "hideEmpty": true,
+        "max": false,
+        "min": false,
+        "rightSide": false,
+        "show": true,
+        "total": false,
+        "values": false
+      },
+      "lines": true,
+      "linewidth": 1,
+      "links": [],
+      "maxPerRow": 3,
+      "nullPointMode": "null",
+      "percentage": false,
+      "pluginVersion": "8.2.6",
+      "pointradius": 5,
+      "points": false,
+      "renderer": "flot",
+      "repeat": "pod",
+      "repeatDirection": "h",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "expr": "sum by (method, uri) (irate(http_server_requests_seconds_sum{pod=~\"$pod\", namespace=\"$namespace\", service=\"$service\", outcome=\"SUCCESS\", uri=~\"/actuator/(info|health)\"}[5m]) / irate(http_server_requests_seconds_count{pod=~\"$pod\", namespace=\"$namespace\", service=\"$service\", outcome=\"SUCCESS\", uri=~\"/actuator/(info|health)\"}[5m]))",
+          "format": "time_series",
+          "intervalFactor": 1,
+          "legendFormat": "{{method}} {{uri}}",
+          "refId": "A"
+        }
+      ],
+      "thresholds": [],
+      "timeFrom": null,
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "Actuator Response Time [5m] - $pod",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "format": "s",
+          "label": "",
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        },
+        {
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    },
+    {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": null,
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "links": []
+        },
+        "overrides": []
+      },
+      "fill": 1,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 6,
+        "w": 24,
+        "x": 0,
+        "y": 125
+      },
+      "hiddenSeries": false,
+      "id": 214,
+      "legend": {
+        "alignAsTable": true,
+        "avg": false,
+        "current": false,
+        "max": false,
+        "min": false,
+        "rightSide": true,
+        "show": true,
+        "total": false,
+        "values": false
+      },
+      "lines": true,
+      "linewidth": 1,
+      "nullPointMode": "null",
+      "percentage": false,
+      "pluginVersion": "8.2.6",
+      "pointradius": 2,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "expr": "sum by (method, uri, status, pod) (increase(http_server_requests_seconds_count{namespace=\"$namespace\", service=\"$service\", pod=~\"$pod\", outcome!=\"SUCCESS\", uri=~\"/actuator/(info|health)\"}[5m]))",
+          "legendFormat": "{{ method }} {{ uri }} [{{ status }}] - {{ pod }}",
+          "refId": "C"
+        }
+      ],
+      "thresholds": [],
+      "timeFrom": null,
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "Actuator Response Statuses 4xx/5xx by (method, path, status, pod) [5m]",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        },
+        {
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    },
+    {
+      "collapsed": false,
+      "datasource": null,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 131
+      },
+      "id": 54,
+      "panels": [],
+      "title": "JVM - CPU / Load",
+      "type": "row"
+    },
+    {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": "main",
+      "fieldConfig": {
+        "defaults": {
+          "links": []
+        },
+        "overrides": []
+      },
+      "fill": 1,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 7,
+        "w": 12,
+        "x": 0,
+        "y": 132
+      },
+      "hiddenSeries": false,
+      "id": 95,
+      "legend": {
+        "alignAsTable": true,
+        "avg": true,
+        "current": false,
+        "max": false,
+        "min": true,
+        "show": true,
+        "total": false,
+        "values": true
+      },
+      "lines": true,
+      "linewidth": 1,
+      "links": [],
+      "maxPerRow": 3,
+      "nullPointMode": "null",
+      "percentage": false,
+      "pluginVersion": "8.2.6",
+      "pointradius": 5,
+      "points": false,
+      "renderer": "flot",
+      "repeat": "pod",
+      "repeatDirection": "h",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "expr": "system_cpu_usage{pod=\"$pod\", namespace=\"$namespace\", service=\"$service\"}",
+          "format": "time_series",
+          "intervalFactor": 1,
+          "legendFormat": "System CPU Usage",
+          "refId": "A"
+        },
+        {
+          "expr": "process_cpu_usage{pod=\"$pod\", namespace=\"$namespace\", service=\"$service\"}",
+          "format": "time_series",
+          "intervalFactor": 1,
+          "legendFormat": "Process CPU Usage",
+          "refId": "B"
+        }
+      ],
+      "thresholds": [],
+      "timeFrom": null,
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "CPU Usage - $pod",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        },
+        {
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    },
+    {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": "main",
+      "fieldConfig": {
+        "defaults": {
+          "links": []
+        },
+        "overrides": []
+      },
+      "fill": 1,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 7,
+        "w": 12,
+        "x": 0,
+        "y": 139
+      },
+      "hiddenSeries": false,
+      "id": 96,
+      "legend": {
+        "alignAsTable": true,
+        "avg": true,
+        "current": false,
+        "max": true,
+        "min": false,
+        "show": true,
+        "total": false,
+        "values": true
+      },
+      "lines": true,
+      "linewidth": 1,
+      "links": [],
+      "maxPerRow": 3,
+      "nullPointMode": "null",
+      "percentage": false,
+      "pluginVersion": "8.2.6",
+      "pointradius": 5,
+      "points": false,
+      "renderer": "flot",
+      "repeat": "pod",
+      "repeatDirection": "h",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "expr": "system_load_average_1m{pod=\"$pod\", namespace=\"$namespace\", service=\"$service\"}",
+          "format": "time_series",
+          "intervalFactor": 1,
+          "legendFormat": "Load Average [1m]",
+          "refId": "A"
+        },
+        {
+          "expr": "system_cpu_count{pod=\"$pod\", namespace=\"$namespace\", service=\"$service\"}",
+          "format": "time_series",
+          "intervalFactor": 1,
+          "legendFormat": "CPU Core Size",
+          "refId": "B"
+        }
+      ],
+      "thresholds": [],
+      "timeFrom": null,
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "Load Average - $pod",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        },
+        {
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    },
+    {
+      "collapsed": false,
+      "datasource": null,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 146
+      },
+      "id": 48,
+      "panels": [],
+      "title": "JVM - Memory",
+      "type": "row"
+    },
+    {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": "main",
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "links": []
+        },
+        "overrides": []
+      },
+      "fill": 1,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 6,
+        "w": 12,
+        "x": 0,
+        "y": 147
+      },
+      "hiddenSeries": false,
+      "id": 85,
+      "legend": {
+        "alignAsTable": false,
+        "avg": false,
+        "current": false,
+        "max": false,
+        "min": false,
+        "rightSide": false,
+        "show": true,
+        "total": false,
+        "values": false
+      },
+      "lines": true,
+      "linewidth": 1,
+      "links": [],
+      "maxPerRow": 4,
+      "nullPointMode": "null",
+      "percentage": false,
+      "pluginVersion": "8.2.6",
+      "pointradius": 5,
+      "points": false,
+      "renderer": "flot",
+      "repeat": "pod",
+      "repeatDirection": "h",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "expr": "sum by (area) (jvm_memory_used_bytes{area=\"heap\", namespace=\"$namespace\", service=\"$service\", pod=\"$pod\"})",
+          "format": "time_series",
+          "intervalFactor": 1,
+          "legendFormat": "Used",
+          "refId": "C"
+        },
+        {
+          "expr": "sum by (area) (jvm_memory_committed_bytes{area=\"heap\", namespace=\"$namespace\", service=\"$service\", pod=\"$pod\"})",
+          "format": "time_series",
+          "intervalFactor": 1,
+          "legendFormat": "Commited",
+          "refId": "A"
+        },
+        {
+          "expr": "sum by (area) (jvm_memory_max_bytes{area=\"heap\", namespace=\"$namespace\", service=\"$service\", pod=\"$pod\"})",
+          "format": "time_series",
+          "intervalFactor": 1,
+          "legendFormat": "Max",
+          "refId": "B"
+        }
+      ],
+      "thresholds": [],
+      "timeFrom": null,
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "JVM Heap - $pod",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "format": "bytes",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        },
+        {
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    },
+    {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": "main",
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "links": []
+        },
+        "overrides": []
+      },
+      "fill": 1,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 6,
+        "w": 12,
+        "x": 0,
+        "y": 153
+      },
+      "hiddenSeries": false,
+      "id": 116,
+      "legend": {
+        "alignAsTable": false,
+        "avg": false,
+        "current": false,
+        "max": false,
+        "min": false,
+        "rightSide": false,
+        "show": true,
+        "total": false,
+        "values": false
+      },
+      "lines": true,
+      "linewidth": 1,
+      "links": [],
+      "maxPerRow": 4,
+      "nullPointMode": "null",
+      "percentage": false,
+      "pluginVersion": "8.2.6",
+      "pointradius": 5,
+      "points": false,
+      "renderer": "flot",
+      "repeat": "pod",
+      "repeatDirection": "h",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "expr": "sum by (area) (jvm_memory_used_bytes{area=\"nonheap\", namespace=\"$namespace\", service=\"$service\", pod=\"$pod\"})",
+          "format": "time_series",
+          "intervalFactor": 1,
+          "legendFormat": "Used",
+          "refId": "C"
+        },
+        {
+          "expr": "sum by (area) (jvm_memory_committed_bytes{area=\"nonheap\", namespace=\"$namespace\", service=\"$service\", pod=\"$pod\"})",
+          "format": "time_series",
+          "intervalFactor": 1,
+          "legendFormat": "Commited",
+          "refId": "A"
+        }
+      ],
+      "thresholds": [],
+      "timeFrom": null,
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "JVM Non-heap - $pod",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "format": "bytes",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        },
+        {
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    },
+    {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": "main",
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "links": []
+        },
+        "overrides": []
+      },
+      "fill": 1,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 6,
+        "w": 8,
+        "x": 16,
+        "y": 153
+      },
+      "hiddenSeries": false,
+      "id": 260,
+      "legend": {
+        "alignAsTable": false,
+        "avg": false,
+        "current": false,
+        "max": false,
+        "min": false,
+        "rightSide": false,
+        "show": true,
+        "total": false,
+        "values": false
+      },
+      "lines": true,
+      "linewidth": 1,
+      "links": [],
+      "maxPerRow": 3,
+      "nullPointMode": "null",
+      "percentage": false,
+      "pluginVersion": "8.2.6",
+      "pointradius": 5,
+      "points": false,
+      "renderer": "flot",
+      "repeatDirection": "h",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "expr": "jvm_memory_used_bytes{area=\"heap\", id=\"Survivor Space\", namespace=\"$namespace\", service=\"$service\", pod=\"$pod\"}",
+          "format": "time_series",
+          "intervalFactor": 1,
+          "legendFormat": "Used",
+          "refId": "C"
+        },
+        {
+          "expr": "jvm_memory_committed_bytes{area=\"heap\", id=\"Survivor Space\", namespace=\"$namespace\", service=\"$service\", pod=\"$pod\"}",
+          "format": "time_series",
+          "intervalFactor": 1,
+          "legendFormat": "Committed",
+          "refId": "A"
+        },
+        {
+          "expr": "jvm_memory_max_bytes{area=\"heap\", id=\"Survivor Space\", namespace=\"$namespace\", service=\"$service\", pod=\"$pod\"}",
+          "format": "time_series",
+          "intervalFactor": 1,
+          "legendFormat": "Max",
+          "refId": "B"
+        }
+      ],
+      "thresholds": [],
+      "timeFrom": null,
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "JVM Heap - Survivor Space - $pod",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "format": "bytes",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        },
+        {
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    },
+    {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": "main",
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "links": []
+        },
+        "overrides": []
+      },
+      "fill": 1,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 6,
+        "w": 8,
+        "x": 0,
+        "y": 159
+      },
+      "hiddenSeries": false,
+      "id": 259,
+      "legend": {
+        "alignAsTable": false,
+        "avg": false,
+        "current": false,
+        "max": false,
+        "min": false,
+        "rightSide": false,
+        "show": true,
+        "total": false,
+        "values": false
+      },
+      "lines": true,
+      "linewidth": 1,
+      "links": [],
+      "maxPerRow": 3,
+      "nullPointMode": "null",
+      "percentage": false,
+      "pluginVersion": "8.2.6",
+      "pointradius": 5,
+      "points": false,
+      "renderer": "flot",
+      "repeat": null,
+      "repeatDirection": "h",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "expr": "jvm_memory_used_bytes{area=\"heap\", id=\"Eden Space\", namespace=\"$namespace\", service=\"$service\", pod=\"$pod\"}",
+          "format": "time_series",
+          "intervalFactor": 1,
+          "legendFormat": "Used",
+          "refId": "C"
+        },
+        {
+          "expr": "jvm_memory_committed_bytes{area=\"heap\", id=\"Eden Space\", namespace=\"$namespace\", service=\"$service\", pod=\"$pod\"}",
+          "format": "time_series",
+          "intervalFactor": 1,
+          "legendFormat": "Committed",
+          "refId": "A"
+        },
+        {
+          "expr": "jvm_memory_max_bytes{area=\"heap\", id=\"Eden Space\", namespace=\"$namespace\", service=\"$service\", pod=\"$pod\"}",
+          "format": "time_series",
+          "intervalFactor": 1,
+          "legendFormat": "Max",
+          "refId": "B"
+        }
+      ],
+      "thresholds": [],
+      "timeFrom": null,
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "JVM Heap - Eden Space - $pod",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "format": "bytes",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        },
+        {
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    },
+    {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": "main",
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "links": []
+        },
+        "overrides": []
+      },
+      "fill": 1,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 6,
+        "w": 8,
+        "x": 0,
+        "y": 165
+      },
+      "hiddenSeries": false,
+      "id": 262,
+      "legend": {
+        "alignAsTable": false,
+        "avg": false,
+        "current": false,
+        "max": false,
+        "min": false,
+        "rightSide": false,
+        "show": true,
+        "total": false,
+        "values": false
+      },
+      "lines": true,
+      "linewidth": 1,
+      "links": [],
+      "maxPerRow": 3,
+      "nullPointMode": "null",
+      "percentage": false,
+      "pluginVersion": "8.2.6",
+      "pointradius": 5,
+      "points": false,
+      "renderer": "flot",
+      "repeatDirection": "h",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "expr": "jvm_memory_used_bytes{area=\"nonheap\", id=\"Metaspace\", namespace=\"$namespace\", service=\"$service\", pod=\"$pod\"}",
+          "format": "time_series",
+          "intervalFactor": 1,
+          "legendFormat": "Used",
+          "refId": "C"
+        },
+        {
+          "expr": "jvm_memory_committed_bytes{area=\"nonheap\", id=\"Metaspace\", namespace=\"$namespace\", service=\"$service\", pod=\"$pod\"}",
+          "format": "time_series",
+          "intervalFactor": 1,
+          "legendFormat": "Committed",
+          "refId": "A"
+        },
+        {
+          "expr": "jvm_memory_max_bytes{area=\"nonheap\", id=\"Metaspace\", namespace=\"$namespace\", service=\"$service\", pod=\"$pod\"}",
+          "format": "time_series",
+          "intervalFactor": 1,
+          "legendFormat": "Max",
+          "refId": "B"
+        }
+      ],
+      "thresholds": [],
+      "timeFrom": null,
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "JVM Non-heap - Metaspace - $pod",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "format": "bytes",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        },
+        {
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    },
+    {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": "main",
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "links": []
+        },
+        "overrides": []
+      },
+      "fill": 1,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 6,
+        "w": 8,
+        "x": 8,
+        "y": 165
+      },
+      "hiddenSeries": false,
+      "id": 261,
+      "legend": {
+        "alignAsTable": false,
+        "avg": false,
+        "current": false,
+        "max": false,
+        "min": false,
+        "rightSide": false,
+        "show": true,
+        "total": false,
+        "values": false
+      },
+      "lines": true,
+      "linewidth": 1,
+      "links": [],
+      "maxPerRow": 3,
+      "nullPointMode": "null",
+      "percentage": false,
+      "pluginVersion": "8.2.6",
+      "pointradius": 5,
+      "points": false,
+      "renderer": "flot",
+      "repeatDirection": "h",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "expr": "jvm_memory_used_bytes{area=\"heap\", id=\"Tenured Gen\", namespace=\"$namespace\", service=\"$service\", pod=\"$pod\"}",
+          "format": "time_series",
+          "intervalFactor": 1,
+          "legendFormat": "Used",
+          "refId": "C"
+        },
+        {
+          "expr": "jvm_memory_committed_bytes{area=\"heap\", id=\"Tenured Gen\", namespace=\"$namespace\", service=\"$service\", pod=\"$pod\"}",
+          "format": "time_series",
+          "intervalFactor": 1,
+          "legendFormat": "Committed",
+          "refId": "A"
+        },
+        {
+          "expr": "jvm_memory_max_bytes{area=\"heap\", id=\"Tenured Gen\", namespace=\"$namespace\", service=\"$service\", pod=\"$pod\"}",
+          "format": "time_series",
+          "intervalFactor": 1,
+          "legendFormat": "Max",
+          "refId": "B"
+        }
+      ],
+      "thresholds": [],
+      "timeFrom": null,
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "JVM Heap - Tenured Gen - $pod",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "format": "bytes",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        },
+        {
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    },
+    {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": "main",
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "links": []
+        },
+        "overrides": []
+      },
+      "fill": 1,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 6,
+        "w": 8,
+        "x": 16,
+        "y": 165
+      },
+      "hiddenSeries": false,
+      "id": 264,
+      "legend": {
+        "alignAsTable": false,
+        "avg": false,
+        "current": false,
+        "max": false,
+        "min": false,
+        "rightSide": false,
+        "show": true,
+        "total": false,
+        "values": false
+      },
+      "lines": true,
+      "linewidth": 1,
+      "links": [],
+      "maxPerRow": 3,
+      "nullPointMode": "null",
+      "percentage": false,
+      "pluginVersion": "8.2.6",
+      "pointradius": 5,
+      "points": false,
+      "renderer": "flot",
+      "repeatDirection": "h",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "expr": "jvm_memory_used_bytes{area=\"nonheap\", id=\"Compressed Class Space\", namespace=\"$namespace\", service=\"$service\", pod=\"$pod\"}",
+          "format": "time_series",
+          "intervalFactor": 1,
+          "legendFormat": "Used",
+          "refId": "C"
+        },
+        {
+          "expr": "jvm_memory_committed_bytes{area=\"nonheap\", id=\"Compressed Class Space\", namespace=\"$namespace\", service=\"$service\", pod=\"$pod\"}",
+          "format": "time_series",
+          "intervalFactor": 1,
+          "legendFormat": "Committed",
+          "refId": "A"
+        },
+        {
+          "expr": "jvm_memory_max_bytes{area=\"nonheap\", id=\"Compressed Class Space\", namespace=\"$namespace\", service=\"$service\", pod=\"$pod\"}",
+          "format": "time_series",
+          "intervalFactor": 1,
+          "legendFormat": "Max",
+          "refId": "B"
+        }
+      ],
+      "thresholds": [],
+      "timeFrom": null,
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "JVM Non-heap - Compressed Class Space - $pod",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "format": "bytes",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        },
+        {
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    },
+    {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": "main",
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "links": []
+        },
+        "overrides": []
+      },
+      "fill": 1,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 6,
+        "w": 8,
+        "x": 8,
+        "y": 171
+      },
+      "hiddenSeries": false,
+      "id": 263,
+      "legend": {
+        "alignAsTable": false,
+        "avg": false,
+        "current": false,
+        "max": false,
+        "min": false,
+        "rightSide": false,
+        "show": true,
+        "total": false,
+        "values": false
+      },
+      "lines": true,
+      "linewidth": 1,
+      "links": [],
+      "maxPerRow": 3,
+      "nullPointMode": "null",
+      "percentage": false,
+      "pluginVersion": "8.2.6",
+      "pointradius": 5,
+      "points": false,
+      "renderer": "flot",
+      "repeatDirection": "h",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "expr": "jvm_memory_used_bytes{area=\"nonheap\", id=\"Code Cache\", namespace=\"$namespace\", service=\"$service\", pod=\"$pod\"}",
+          "format": "time_series",
+          "intervalFactor": 1,
+          "legendFormat": "Used",
+          "refId": "C"
+        },
+        {
+          "expr": "jvm_memory_committed_bytes{area=\"nonheap\", id=\"Code Cache\", namespace=\"$namespace\", service=\"$service\", pod=\"$pod\"}",
+          "format": "time_series",
+          "intervalFactor": 1,
+          "legendFormat": "Committed",
+          "refId": "A"
+        },
+        {
+          "expr": "jvm_memory_max_bytes{area=\"nonheap\", id=\"Code Cache\", namespace=\"$namespace\", service=\"$service\", pod=\"$pod\"}",
+          "format": "time_series",
+          "intervalFactor": 1,
+          "legendFormat": "Max",
+          "refId": "B"
+        }
+      ],
+      "thresholds": [],
+      "timeFrom": null,
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "JVM Non-heap - Code Cache - $pod",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "format": "bytes",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        },
+        {
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    },
+    {
+      "collapsed": true,
+      "datasource": null,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 177
+      },
+      "id": 122,
+      "panels": [
+        {
+          "aliasColors": {},
+          "bars": false,
+          "dashLength": 10,
+          "dashes": false,
+          "datasource": "main",
+          "fill": 1,
+          "fillGradient": 0,
+          "gridPos": {
+            "h": 6,
+            "w": 12,
+            "x": 0,
+            "y": 157
+          },
+          "hiddenSeries": false,
+          "id": 68,
+          "legend": {
+            "alignAsTable": false,
+            "avg": false,
+            "current": false,
+            "max": false,
+            "min": false,
+            "rightSide": false,
+            "show": true,
+            "total": false,
+            "values": false
+          },
+          "lines": true,
+          "linewidth": 1,
+          "links": [],
+          "maxPerRow": 4,
+          "nullPointMode": "null",
+          "options": {
+            "dataLinks": []
+          },
+          "percentage": false,
+          "pointradius": 5,
+          "points": false,
+          "renderer": "flot",
+          "repeat": "pod",
+          "repeatDirection": "h",
+          "seriesOverrides": [],
+          "spaceLength": 10,
+          "stack": false,
+          "steppedLine": false,
+          "targets": [
+            {
+              "expr": "jvm_threads_daemon_threads{pod=\"$pod\", namespace=\"$namespace\", service=\"$service\"}",
+              "format": "time_series",
+              "intervalFactor": 1,
+              "legendFormat": "Daemon",
+              "refId": "A"
+            },
+            {
+              "expr": "jvm_threads_live_threads{pod=\"$pod\", namespace=\"$namespace\", service=\"$service\"}",
+              "format": "time_series",
+              "intervalFactor": 1,
+              "legendFormat": "Live",
+              "refId": "B"
+            },
+            {
+              "expr": "jvm_threads_peak_threads{pod=\"$pod\", namespace=\"$namespace\", service=\"$service\"}",
+              "format": "time_series",
+              "intervalFactor": 1,
+              "legendFormat": "Peak",
+              "refId": "C"
+            }
+          ],
+          "thresholds": [],
+          "timeFrom": null,
+          "timeRegions": [],
+          "timeShift": null,
+          "title": "Threads - $pod",
+          "tooltip": {
+            "shared": true,
+            "sort": 0,
+            "value_type": "individual"
+          },
+          "type": "graph",
+          "xaxis": {
+            "buckets": null,
+            "mode": "time",
+            "name": null,
+            "show": true,
+            "values": []
+          },
+          "yaxes": [
+            {
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
+            },
+            {
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
+            }
+          ],
+          "yaxis": {
+            "align": false,
+            "alignLevel": null
+          }
+        },
+        {
+          "aliasColors": {},
+          "bars": false,
+          "dashLength": 10,
+          "dashes": false,
+          "datasource": "main",
+          "decimals": 0,
+          "fill": 1,
+          "fillGradient": 0,
+          "gridPos": {
+            "h": 6,
+            "w": 24,
+            "x": 0,
+            "y": 163
+          },
+          "hiddenSeries": false,
+          "id": 50,
+          "legend": {
+            "alignAsTable": false,
+            "avg": false,
+            "current": false,
+            "max": false,
+            "min": false,
+            "show": true,
+            "total": false,
+            "values": false
+          },
+          "lines": true,
+          "linewidth": 1,
+          "links": [],
+          "nullPointMode": "null",
+          "options": {
+            "dataLinks": []
+          },
+          "percentage": false,
+          "pointradius": 5,
+          "points": false,
+          "renderer": "flot",
+          "seriesOverrides": [],
+          "spaceLength": 10,
+          "stack": false,
+          "steppedLine": false,
+          "targets": [
+            {
+              "expr": "jvm_classes_loaded_classes{namespace=\"$namespace\", service=\"$service\", pod=~\"$pod\"}",
+              "format": "time_series",
+              "intervalFactor": 1,
+              "legendFormat": "{{ pod }}",
+              "refId": "A"
+            }
+          ],
+          "thresholds": [],
+          "timeFrom": null,
+          "timeRegions": [],
+          "timeShift": null,
+          "title": "Classes Loaded",
+          "tooltip": {
+            "shared": true,
+            "sort": 0,
+            "value_type": "individual"
+          },
+          "type": "graph",
+          "xaxis": {
+            "buckets": null,
+            "mode": "time",
+            "name": null,
+            "show": true,
+            "values": []
+          },
+          "yaxes": [
+            {
+              "decimals": 0,
+              "format": "locale",
+              "label": "",
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
+            },
+            {
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
+            }
+          ],
+          "yaxis": {
+            "align": false,
+            "alignLevel": null
+          }
+        }
+      ],
+      "title": "JVM - Misc",
+      "type": "row"
+    },
+    {
+      "collapsed": true,
+      "datasource": null,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 178
+      },
+      "id": 34,
+      "panels": [
+        {
+          "aliasColors": {},
+          "bars": false,
+          "dashLength": 10,
+          "dashes": false,
+          "datasource": "main",
+          "fill": 1,
+          "fillGradient": 0,
+          "gridPos": {
+            "h": 6,
+            "w": 12,
+            "x": 0,
+            "y": 158
+          },
+          "hiddenSeries": false,
+          "id": 36,
+          "legend": {
+            "alignAsTable": true,
+            "avg": true,
+            "current": false,
+            "hideEmpty": true,
+            "hideZero": false,
+            "max": false,
+            "min": false,
+            "rightSide": true,
+            "show": true,
+            "total": false,
+            "values": true
+          },
+          "lines": true,
+          "linewidth": 1,
+          "links": [],
+          "maxPerRow": 3,
+          "nullPointMode": "null",
+          "options": {
+            "dataLinks": []
+          },
+          "percentage": false,
+          "pointradius": 5,
+          "points": false,
+          "renderer": "flot",
+          "repeat": "pod",
+          "repeatDirection": "h",
+          "seriesOverrides": [],
+          "spaceLength": 10,
+          "stack": false,
+          "steppedLine": false,
+          "targets": [
+            {
+              "expr": "hikaricp_connections_idle{namespace=\"$namespace\", service=\"$service\", pod=\"$pod\", pool=~\"$hikaricp\"}",
+              "format": "time_series",
+              "intervalFactor": 1,
+              "legendFormat": "Idle",
+              "refId": "A"
+            },
+            {
+              "expr": "hikaricp_connections_active{namespace=\"$namespace\", service=\"$service\", pod=\"$pod\", pool=~\"$hikaricp\"}",
+              "format": "time_series",
+              "instant": false,
+              "intervalFactor": 1,
+              "legendFormat": "Active",
+              "refId": "B"
+            },
+            {
+              "expr": "hikaricp_connections_pending{namespace=\"$namespace\", service=\"$service\", pod=\"$pod\", pool=~\"$hikaricp\"}",
+              "format": "time_series",
+              "intervalFactor": 1,
+              "legendFormat": "Pending",
+              "refId": "C"
+            }
+          ],
+          "thresholds": [],
+          "timeFrom": null,
+          "timeRegions": [],
+          "timeShift": null,
+          "title": "Connections - $pod",
+          "tooltip": {
+            "shared": true,
+            "sort": 0,
+            "value_type": "individual"
+          },
+          "type": "graph",
+          "xaxis": {
+            "buckets": null,
+            "mode": "time",
+            "name": null,
+            "show": true,
+            "values": []
+          },
+          "yaxes": [
+            {
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
+            },
+            {
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
+            }
+          ],
+          "yaxis": {
+            "align": false,
+            "alignLevel": null
+          }
+        },
+        {
+          "aliasColors": {},
+          "bars": false,
+          "dashLength": 10,
+          "dashes": false,
+          "datasource": "main",
+          "fill": 1,
+          "fillGradient": 0,
+          "gridPos": {
+            "h": 6,
+            "w": 8,
+            "x": 0,
+            "y": 164
+          },
+          "hiddenSeries": false,
+          "id": 38,
+          "legend": {
+            "avg": false,
+            "current": false,
+            "max": false,
+            "min": false,
+            "show": true,
+            "total": false,
+            "values": false
+          },
+          "lines": true,
+          "linewidth": 1,
+          "links": [],
+          "nullPointMode": "null",
+          "options": {
+            "dataLinks": []
+          },
+          "percentage": false,
+          "pointradius": 5,
+          "points": false,
+          "renderer": "flot",
+          "seriesOverrides": [],
+          "spaceLength": 10,
+          "stack": false,
+          "steppedLine": false,
+          "targets": [
+            {
+              "expr": "hikaricp_connections_creation_seconds_sum{namespace=\"$namespace\", service=\"$service\", pool=~\"$hikaricp\"} / hikaricp_connections_creation_seconds_count{namespace=\"$namespace\", service=\"$service\", pool=~\"$hikaricp\"}",
+              "format": "time_series",
+              "intervalFactor": 1,
+              "legendFormat": "{{ pod }}",
+              "refId": "A"
+            }
+          ],
+          "thresholds": [],
+          "timeFrom": null,
+          "timeRegions": [],
+          "timeShift": null,
+          "title": "Connection Creation Time",
+          "tooltip": {
+            "shared": true,
+            "sort": 0,
+            "value_type": "individual"
+          },
+          "type": "graph",
+          "xaxis": {
+            "buckets": null,
+            "mode": "time",
+            "name": null,
+            "show": true,
+            "values": []
+          },
+          "yaxes": [
+            {
+              "format": "s",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
+            },
+            {
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
+            }
+          ],
+          "yaxis": {
+            "align": false,
+            "alignLevel": null
+          }
+        },
+        {
+          "aliasColors": {},
+          "bars": false,
+          "dashLength": 10,
+          "dashes": false,
+          "datasource": "main",
+          "fill": 1,
+          "fillGradient": 0,
+          "gridPos": {
+            "h": 6,
+            "w": 8,
+            "x": 8,
+            "y": 164
+          },
+          "hiddenSeries": false,
+          "id": 40,
+          "legend": {
+            "avg": false,
+            "current": false,
+            "max": false,
+            "min": false,
+            "show": true,
+            "total": false,
+            "values": false
+          },
+          "lines": true,
+          "linewidth": 1,
+          "links": [],
+          "nullPointMode": "null",
+          "options": {
+            "dataLinks": []
+          },
+          "percentage": false,
+          "pointradius": 5,
+          "points": false,
+          "renderer": "flot",
+          "seriesOverrides": [],
+          "spaceLength": 10,
+          "stack": false,
+          "steppedLine": false,
+          "targets": [
+            {
+              "expr": "hikaricp_connections_acquire_seconds_sum{namespace=\"$namespace\", service=\"$service\", pool=~\"$hikaricp\"} / hikaricp_connections_acquire_seconds_count{namespace=\"$namespace\", service=\"$service\", pool=~\"$hikaricp\"}",
+              "format": "time_series",
+              "intervalFactor": 1,
+              "legendFormat": "{{ pod }}",
+              "refId": "A"
+            }
+          ],
+          "thresholds": [],
+          "timeFrom": null,
+          "timeRegions": [],
+          "timeShift": null,
+          "title": "Connection Acquire Time",
+          "tooltip": {
+            "shared": true,
+            "sort": 0,
+            "value_type": "individual"
+          },
+          "type": "graph",
+          "xaxis": {
+            "buckets": null,
+            "mode": "time",
+            "name": null,
+            "show": true,
+            "values": []
+          },
+          "yaxes": [
+            {
+              "format": "s",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
+            },
+            {
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
+            }
+          ],
+          "yaxis": {
+            "align": false,
+            "alignLevel": null
+          }
+        },
+        {
+          "aliasColors": {},
+          "bars": false,
+          "dashLength": 10,
+          "dashes": false,
+          "datasource": "main",
+          "fill": 1,
+          "fillGradient": 0,
+          "gridPos": {
+            "h": 6,
+            "w": 8,
+            "x": 16,
+            "y": 164
+          },
+          "hiddenSeries": false,
+          "id": 42,
+          "legend": {
+            "avg": false,
+            "current": false,
+            "max": false,
+            "min": false,
+            "show": true,
+            "total": false,
+            "values": false
+          },
+          "lines": true,
+          "linewidth": 1,
+          "links": [],
+          "nullPointMode": "null",
+          "options": {
+            "dataLinks": []
+          },
+          "percentage": false,
+          "pointradius": 5,
+          "points": false,
+          "renderer": "flot",
+          "seriesOverrides": [],
+          "spaceLength": 10,
+          "stack": false,
+          "steppedLine": false,
+          "targets": [
+            {
+              "expr": "hikaricp_connections_usage_seconds_sum{namespace=\"$namespace\", service=\"$service\", pool=~\"$hikaricp\"} / hikaricp_connections_usage_seconds_count{namespace=\"$namespace\", service=\"$service\", pool=~\"$hikaricp\"}",
+              "format": "time_series",
+              "intervalFactor": 1,
+              "legendFormat": "{{ pod }}",
+              "refId": "A"
+            }
+          ],
+          "thresholds": [],
+          "timeFrom": null,
+          "timeRegions": [],
+          "timeShift": null,
+          "title": "Connection Usage Time",
+          "tooltip": {
+            "shared": true,
+            "sort": 0,
+            "value_type": "individual"
+          },
+          "type": "graph",
+          "xaxis": {
+            "buckets": null,
+            "mode": "time",
+            "name": null,
+            "show": true,
+            "values": []
+          },
+          "yaxes": [
+            {
+              "format": "s",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
+            },
+            {
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
+            }
+          ],
+          "yaxis": {
+            "align": false,
+            "alignLevel": null
+          }
+        },
+        {
+          "cacheTimeout": null,
+          "datasource": "main",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "mappings": [
+                {
+                  "options": {
+                    "match": "null",
+                    "result": {
+                      "text": "N/A"
+                    }
+                  },
+                  "type": "special"
+                }
+              ],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  },
+                  {
+                    "color": "red",
+                    "value": 80
+                  }
+                ]
+              },
+              "unit": "none"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 3,
+            "w": 4,
+            "x": 8,
+            "y": 170
+          },
+          "id": 46,
+          "interval": null,
+          "links": [],
+          "maxDataPoints": 100,
+          "options": {
+            "colorMode": "none",
+            "graphMode": "none",
+            "justifyMode": "auto",
+            "orientation": "horizontal",
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "text": {},
+            "textMode": "auto"
+          },
+          "pluginVersion": "8.2.6",
+          "targets": [
+            {
+              "expr": "avg by (service) (hikaricp_connections_timeout_total{namespace=\"$namespace\", service=\"$service\", pool=~\"$hikaricp\"})",
+              "format": "time_series",
+              "intervalFactor": 1,
+              "legendFormat": "",
+              "refId": "A"
+            }
+          ],
+          "timeFrom": null,
+          "timeShift": null,
+          "title": "Connection Timeout Count (Average)",
+          "type": "stat"
+        },
+        {
+          "cacheTimeout": null,
+          "datasource": "main",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "mappings": [
+                {
+                  "options": {
+                    "match": "null",
+                    "result": {
+                      "text": "N/A"
+                    }
+                  },
+                  "type": "special"
+                }
+              ],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  },
+                  {
+                    "color": "red",
+                    "value": 80
+                  }
+                ]
+              },
+              "unit": "none"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 3,
+            "w": 4,
+            "x": 12,
+            "y": 170
+          },
+          "id": 44,
+          "interval": null,
+          "links": [],
+          "maxDataPoints": 100,
+          "options": {
+            "colorMode": "none",
+            "graphMode": "none",
+            "justifyMode": "auto",
+            "orientation": "horizontal",
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "text": {},
+            "textMode": "auto"
+          },
+          "pluginVersion": "8.2.6",
+          "targets": [
+            {
+              "expr": "avg by (service) (hikaricp_connections{namespace=\"$namespace\", service=\"$service\", pool=~\"$hikaricp\"})",
+              "format": "time_series",
+              "intervalFactor": 1,
+              "legendFormat": "",
+              "refId": "A"
+            }
+          ],
+          "title": "Connections Size",
+          "type": "stat"
+        }
+      ],
+      "title": "HikariCP",
+      "type": "row"
+    },
+    {
+      "collapsed": true,
+      "datasource": null,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 179
+      },
+      "id": 22,
+      "panels": [
+        {
+          "aliasColors": {},
+          "bars": false,
+          "dashLength": 10,
+          "dashes": false,
+          "datasource": "main",
+          "decimals": 0,
+          "fill": 1,
+          "fillGradient": 0,
+          "gridPos": {
+            "h": 7,
+            "w": 24,
+            "x": 0,
+            "y": 157
+          },
+          "hiddenSeries": false,
+          "id": 24,
+          "legend": {
+            "alignAsTable": false,
+            "avg": false,
+            "current": false,
+            "max": false,
+            "min": false,
+            "show": true,
+            "total": false,
+            "values": false
+          },
+          "lines": true,
+          "linewidth": 1,
+          "links": [],
+          "nullPointMode": "null",
+          "options": {
+            "dataLinks": []
+          },
+          "percentage": false,
+          "pointradius": 5,
+          "points": false,
+          "renderer": "flot",
+          "seriesOverrides": [],
+          "spaceLength": 10,
+          "stack": false,
+          "steppedLine": false,
+          "targets": [
+            {
+              "expr": "tomcat_sessions_active_current_sessions{namespace=\"$namespace\", service=\"$service\", pod=~\"$pod\"}",
+              "format": "time_series",
+              "intervalFactor": 1,
+              "legendFormat": "{{ pod }}",
+              "refId": "A"
+            }
+          ],
+          "thresholds": [],
+          "timeFrom": null,
+          "timeRegions": [],
+          "timeShift": null,
+          "title": "Active Sessions",
+          "tooltip": {
+            "shared": true,
+            "sort": 0,
+            "value_type": "individual"
+          },
+          "type": "graph",
+          "xaxis": {
+            "buckets": null,
+            "mode": "time",
+            "name": null,
+            "show": true,
+            "values": []
+          },
+          "yaxes": [
+            {
+              "decimals": null,
+              "format": "none",
+              "label": "",
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
+            },
+            {
+              "decimals": null,
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
+            }
+          ],
+          "yaxis": {
+            "align": false,
+            "alignLevel": null
+          }
+        }
+      ],
+      "title": "Tomcat",
+      "type": "row"
+    }
+  ],
+  "refresh": "10s",
+  "schemaVersion": 32,
+  "style": "dark",
+  "tags": [
+    "java",
+    "kubernetes",
+    "spring boot"
+  ],
+  "templating": {
+    "list": [
+      {
+        "allValue": null,
+        "current": {
+          "selected": true,
+          "text": "payment-pdm-test",
+          "value": "payment-pdm-test"
+        },
+        "datasource": "main",
+        "definition": "label_values(jvm_classes_loaded_classes, namespace)",
+        "description": null,
+        "error": null,
+        "hide": 0,
+        "includeAll": false,
+        "label": "namespace",
+        "multi": false,
+        "name": "namespace",
+        "options": [],
+        "query": {
+          "query": "label_values(jvm_classes_loaded_classes, namespace)",
+          "refId": "main-namespace-Variable-Query"
+        },
+        "refresh": 1,
+        "regex": "payment-pdm-.*",
+        "skipUrlSync": false,
+        "sort": 1,
+        "tagValuesQuery": "",
+        "tagsQuery": "",
+        "type": "query",
+        "useTags": false
+      },
+      {
+        "allValue": null,
+        "current": {
+          "selected": true,
+          "text": "migration",
+          "value": "migration"
+        },
+        "datasource": "main",
+        "definition": "label_values(jvm_classes_loaded_classes{namespace=\"$namespace\"}, service)",
+        "description": null,
+        "error": null,
+        "hide": 0,
+        "includeAll": false,
+        "label": "Service",
+        "multi": false,
+        "name": "service",
+        "options": [],
+        "query": {
+          "query": "label_values(jvm_classes_loaded_classes{namespace=\"$namespace\"}, service)",
+          "refId": "main-service-Variable-Query"
+        },
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 1,
+        "tagValuesQuery": "",
+        "tagsQuery": "",
+        "type": "query",
+        "useTags": false
+      },
+      {
+        "allValue": ".*",
+        "current": {
+          "selected": false,
+          "text": "All",
+          "value": "$__all"
+        },
+        "datasource": "main",
+        "definition": "label_values(kube_controller_pod{namespace=~\"$namespace\"}, controller)",
+        "description": null,
+        "error": null,
+        "hide": 0,
+        "includeAll": true,
+        "label": "Controller",
+        "multi": false,
+        "name": "controller",
+        "options": [],
+        "query": {
+          "query": "label_values(kube_controller_pod{namespace=~\"$namespace\"}, controller)",
+          "refId": "main-controller-Variable-Query"
+        },
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 5,
+        "tagValuesQuery": "",
+        "tagsQuery": "",
+        "type": "query",
+        "useTags": false
+      },
+      {
+        "allValue": ".*",
+        "current": {
+          "selected": true,
+          "text": [
+            "All"
+          ],
+          "value": [
+            "$__all"
+          ]
+        },
+        "datasource": "main",
+        "definition": "label_values(jvm_classes_loaded_classes{namespace=\"$namespace\", service=\"$service\"}, pod)",
+        "description": null,
+        "error": null,
+        "hide": 0,
+        "includeAll": true,
+        "label": "Pod",
+        "multi": true,
+        "name": "pod",
+        "options": [],
+        "query": {
+          "query": "label_values(jvm_classes_loaded_classes{namespace=\"$namespace\", service=\"$service\"}, pod)",
+          "refId": "main-pod-Variable-Query"
+        },
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 1,
+        "tagValuesQuery": "",
+        "tagsQuery": "",
+        "type": "query",
+        "useTags": false
+      },
+      {
+        "allValue": ".*",
+        "current": {
+          "selected": false,
+          "text": "All",
+          "value": "$__all"
+        },
+        "datasource": "main",
+        "definition": "label_values(hikaricp_connections{pod=~\"$pod\"}, pool)",
+        "description": null,
+        "error": null,
+        "hide": 0,
+        "includeAll": true,
+        "label": "HikariCP-Pool",
+        "multi": false,
+        "name": "hikaricp",
+        "options": [],
+        "query": {
+          "query": "label_values(hikaricp_connections{pod=~\"$pod\"}, pool)",
+          "refId": "main-hikaricp-Variable-Query"
+        },
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 1,
+        "tagValuesQuery": "",
+        "tagsQuery": "",
+        "type": "query",
+        "useTags": false
+      },
+      {
+        "description": null,
+        "error": null,
+        "hide": 2,
+        "label": "Excluded URLs",
+        "name": "excluded_urls",
+        "query": "/actuator.*|.*api-docs.*|.*swagger.*|/metrics|UNKNOWN|/camunda/.*|ROOT|REDIRECTION|root|NOT_FOUND|/webjars/.*",
+        "skipUrlSync": false,
+        "type": "constant"
+      },
+      {
+        "allValue": ".*",
+        "current": {
+          "selected": true,
+          "text": [
+            "All"
+          ],
+          "value": [
+            "$__all"
+          ]
+        },
+        "datasource": "main",
+        "definition": "label_values(cache_size{namespace=\"$namespace\", service=\"$service\"}, cache)",
+        "description": null,
+        "error": null,
+        "hide": 0,
+        "includeAll": true,
+        "label": "Cache Name",
+        "multi": true,
+        "name": "cache_name",
+        "options": [],
+        "query": {
+          "query": "label_values(cache_size{namespace=\"$namespace\", service=\"$service\"}, cache)",
+          "refId": "main-cache_name-Variable-Query"
+        },
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
+        "tagValuesQuery": "",
+        "tagsQuery": "",
+        "type": "query",
+        "useTags": false
+      }
+    ]
+  },
+  "time": {
+    "from": "now-3h",
+    "to": "now"
+  },
+  "timepicker": {
+    "refresh_intervals": [
+      "10s",
+      "30s",
+      "1m",
+      "5m",
+      "15m",
+      "30m",
+      "1h",
+      "2h",
+      "1d"
+    ],
+    "time_options": [
+      "5m",
+      "15m",
+      "1h",
+      "6h",
+      "12h",
+      "24h",
+      "2d",
+      "7d",
+      "30d"
+    ]
+  },
+  "timezone": "",
+  "title": "Spring Boot + K8S Info (latest)",
+  "uid": "pdm-spring-boot-and-k8s-info",
+  "version": 1
+}

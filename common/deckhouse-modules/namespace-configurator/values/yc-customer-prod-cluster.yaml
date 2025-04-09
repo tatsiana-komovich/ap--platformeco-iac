@@ -1,0 +1,37 @@
+---
+extended_monitoring_enable_on_all_ns: {}
+
+products:
+  - product-id: P0471
+    namespace_pattern:
+      - ^devops-core-vector$
+
+  - product-id: P0542
+    namespace_pattern:
+      - ^cr-loyalty-.*
+      - ^cr-loyalty-lys-.*
+  - product-id: P0993
+    namespace_pattern:
+      - ^cr-cusac-.*
+  - product-id: P0311
+    namespace_pattern:
+      - ^cr-complat-rubbles-.*
+  - product-id: P0005
+    namespace_pattern:
+      - ^cr-customerknowledge-.*
+  - product-id: P0359
+    namespace_pattern:
+      - ^cr-customer-mdm-.*
+istio:
+  - istio-injection: enabled
+    namespace_pattern:
+      - ^cr-cusac-test$
+      - ^cr-cusac-master$
+  - istio.deckhouse.io/auto-upgrade: "true"
+    namespace_pattern:
+      - ^cr-cusac-master$
+
+devops-core-vector:
+  - security.deckhouse.io/pod-policy-action: warn
+    namespace_pattern:
+      - ^devops-core-vector$

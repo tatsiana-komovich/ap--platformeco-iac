@@ -1,0 +1,159 @@
+# the role can view all but the secrets and dexprovider resources in the cluster
+---
+kind: ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: cluster-admin-ro
+rules:
+  - apiGroups:
+      - acme.cert-manager.io
+      - admissionregistration.k8s.io
+      - apiextensions.k8s.io
+      - apiregistration.k8s.io
+      - apps
+      - apps.kruise.io
+      - authentication.k8s.io
+      - authorization.k8s.io
+      - autoscaling
+      - autoscaling.k8s.io
+      - bashible.deckhouse.io
+      - batch
+      - certificates.k8s.io
+      - cert-manager.io
+      - cluster.x-k8s.io
+      - config.gatekeeper.sh
+      - constraints.gatekeeper.sh
+      - coordinatio n.k8s.io
+      - custom.metrics.k8s.io
+      - dex.coreos.com
+      - discovery.k8s.io
+      - events.k8s.io
+      - expansion.gatekeeper.sh
+      - extensions.istio.io
+      - externaldata.gatekeeper.sh
+      - external.metrics.k8s.io
+      - flowcontrol.apiserver.k8s.io
+      - infrastructure.cluster.x-k8s.io
+      - install.istio.io
+      - leroymerlin.ru
+      - machine.sapcloud.io
+      - metallb.io
+      - metrics.k8s.io
+      - monitoring.coreos.com
+      - mutations.gatekeeper.sh
+      - networking.istio.io
+      - networking.k8s.io
+      - node.k8s.io
+      - policy
+      - rbac.authorization.k8s.io
+      - runtime.cluster.x-k8s.io
+      - scheduling.k8s.io
+      - security.istio.io
+      - snapshot.storage.k8s.io
+      - status.gatekeeper.sh
+      - storage.k8s.io
+      - telemetry.istio.io
+      - templates.gatekeeper.sh
+    resources:
+      - "*"
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - ""
+    resources:
+      - bindings
+      - componentstatuses
+      - configmaps
+      - endpoints
+      - events
+      - limitranges
+      - namespaces
+      - nodes
+      - persistentvolumeclaims
+      - persistentvolumes
+      - pods
+      - podtemplates
+      - replicationcontrollers
+      - resourcequotas
+      - serviceaccounts
+      - services
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - "deckhouse.io"
+    resources:
+      - authorizationrules
+      - clusteralerts
+      - clusterauthorizationrules
+      - clusterdaemonsetmetrics
+      - clusterdeploymentmetrics
+      - clusteringressmetrics
+      - clusterlogdestinations
+      - clusterloggingconfigs
+      - clusterpodmetrics
+      - clusterservicemetrics
+      - clusterstatefulsetmetrics
+      - customalertmanagers
+      - customprometheusrules
+      - daemonsetmetrics
+      - deckhousereleases
+      - deploymentmetrics
+      - deschedulers
+      - dexauthenticators
+      - dexclients
+      - downtimes
+      - externalmodulereleases
+      - externalmodulesources
+      - grafanaadditionaldatasources
+      - grafanaalertschannels
+      - grafanadashboarddefinitions
+      - groups
+      - ingressistiocontrollers
+      - ingressmetrics
+      - ingressnginxcontrollers
+      - instances
+      - instancetypescatalogs
+      - istiofederations
+      - istiomulticlusters
+      - localpathprovisioners
+      - moduleconfigs
+      - moduledocumentations
+      - modulepulloverrides
+      - modulereleases
+      - modules
+      - modulesources
+      - moduleupdatepolicies
+      - namespacemetrics
+      - nodegroupconfigurations
+      - nodegroups
+      - nodeusers
+      - operationpolicies
+      - podloggingconfigs
+      - podmetrics
+      - prometheusremotewrites
+      - securitypolicies
+      - servicemetrics
+      - sshcredentials
+      - statefulsetmetrics
+      - staticinstances
+      - upmeterhookprobes
+      - upmeterremotewrites
+      - users
+      - yandexinstanceclasses
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - ""
+      - deckhouse.io
+    resources:
+      - secrets
+      - dexproviders
+    verbs:
+      - list
+      - watch

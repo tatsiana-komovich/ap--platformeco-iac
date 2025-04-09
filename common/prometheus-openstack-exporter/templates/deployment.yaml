@@ -1,0 +1,43 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.app.name }}
+  namespace: {{ .Values.app.namespace }}
+spec:
+  selector:
+    matchLabels:
+      app: {{ .Values.app.name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.app.name }}
+    spec:
+      serviceAccountName: {{ .Values.app.name }}
+      containers:
+        - image: {{ .Values.app.image }}
+          name: {{ .Values.app.name }}
+          imagePullPolicy: Always
+          resources:
+            requests:
+              cpu: {{ .Values.app.resources.requests.cpu }}
+              memory: {{ .Values.app.resources.requests.memory }}
+            limits:
+              memory: {{ .Values.app.resources.limits.memory }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.app.name }}
+  labels:
+    prometheus.deckhouse.io/custom-target: {{ .Values.app.name }}
+  annotations:
+    prometheus.deckhouse.io/sample-limit: "5000"
+  namespace: {{ .Values.app.namespace }}
+spec:
+  clusterIP: None
+  selector:
+    app: {{ .Values.app.name }}
+  ports:
+  - name: http-metrics
+    port: 9300

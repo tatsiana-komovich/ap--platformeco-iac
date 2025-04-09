@@ -1,0 +1,62 @@
+apiVersion: operator.victoriametrics.com/v1beta1
+kind: VMAgent
+metadata:
+  name: victoria-alerts-vmagent
+spec:
+  containers:
+  - name: config-reloader
+    image: docker-remote-quay-io.art.lmru.tech/prometheus-operator/prometheus-config-reloader:v0.68.0
+  initContainers:
+  - name: config-init
+    image: docker-remote-quay-io.art.lmru.tech/prometheus-operator/prometheus-config-reloader:v0.68.0
+  image:
+    repository: docker-remote-docker-io.art.lmru.tech/victoriametrics/vmagent
+    tag: v1.93.11
+    pullPolicy: IfNotPresent
+  affinity:
+    podAntiAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        - labelSelector:
+            matchExpressions:
+              - key: "app.kubernetes.io/name"
+                operator: In
+                values:
+                  - "alertmananger"
+          topologyKey: "kubernetes.io/hostname"
+  tolerations:
+    - effect: NoExecute
+      key: dedicated
+      value: victoria-alerts
+  nodeSelector:
+    node-role/victoria-alerts: ""
+  inlineScrapeConfig: |
+    {{- toYaml .Values.vmagent.scrapeConfigs | nindent 4 }} 
+    {{ if .Values.vmagent.ycmonitoringexportcompute }}
+    {{- range $folderName, $folderId := .Values.vmagent.ycfolderIds }}
+    - job_name: 'yc-monitoring-export-compute-{{ $folderId }}'
+      metrics_path: '/monitoring/v2/prometheusMetrics'
+      scheme: 'https'
+      params:
+        folderId:
+        - '{{ $folderId }}'
+        service:
+        - 'compute'
+      bearer_token: '<path:services/data/victoria-alerts#yc-monitoring-bearer_token>'
+      static_configs:
+      - targets: ['monitoring.api.cloud.yandex.net']
+        labels:
+          folderId: '{{ $folderId }}'
+          folderName: '{{ $folderName }}'
+          service: 'compute'
+    {{- end }}
+    {{- end }}
+  remoteWrite:
+    - url: "http://vminsert-victoria-alerts-main.devops-core-victoria-alerts.svc:8480/insert/0/prometheus"
+  resources:
+    requests:
+      memory: "64Mi"
+      cpu: "250m"
+    limits:
+      memory: "512Mi"
+      cpu: "500m"
+  scrapeInterval: 30s

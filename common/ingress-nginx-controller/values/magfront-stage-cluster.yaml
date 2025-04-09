@@ -1,0 +1,76 @@
+---
+# Default values for IngressNginxController.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+IngressNginxController:
+  main-b-backup:
+    apiVersion: deckhouse.io/v1
+    name: main-b-backup
+    spec:
+      chaosMonkey: false
+      disableHTTP2: false
+      hsts: false
+      maxReplicas: 1
+      minReplicas: 1
+      underscoresInHeaders: false
+      validationEnabled: true
+      ingressClass: nginx
+      inlet: LoadBalancer
+      enableIstioSidecar: true
+    nodeSelector:
+      node-role/frontend-backup: ""
+    tolerations:
+      - effect: NoExecute
+        key: dedicated
+        value: frontend-backup
+    loadBalancer:
+      annotations:
+        yandex.cloud/load-balancer-type: Internal
+        yandex.cpi.flant.com/listener-subnet-id: e2lo8kbj6b19vea5fers
+        yandex.cpi.flant.com/target-group-network-id: enpofm2o1fd0e01e2rfb
+      behindL7Proxy: true
+      realIPHeader: X-Forwarded-For
+
+  main-b:
+    apiVersion: deckhouse.io/v1
+    name: main-b
+    spec:
+      chaosMonkey: false
+      disableHTTP2: false
+      hsts: false
+      maxReplicas: 1
+      minReplicas: 1
+      underscoresInHeaders: false
+      waitLoadBalancerOnTerminating: 60
+      ingressClass: nginx
+      inlet: LoadBalancer
+      enableIstioSidecar: true
+    loadBalancer:
+      annotations:
+        yandex.cloud/load-balancer-type: Internal
+        yandex.cpi.flant.com/listener-subnet-id: e2lo8kbj6b19vea5fers
+        yandex.cpi.flant.com/target-group-network-id: enpofm2o1fd0e01e2rfb
+      behindL7Proxy: true
+      realIPHeader: X-Forwarded-For
+
+  d8-main-b:
+    apiVersion: deckhouse.io/v1
+    name: d8-main-b
+    spec:
+      chaosMonkey: false
+      disableHTTP2: false
+      hsts: false
+      maxReplicas: 1
+      minReplicas: 1
+      underscoresInHeaders: false
+      waitLoadBalancerOnTerminating: 60
+      ingressClass: nginx-d8s
+      inlet: LoadBalancer
+      enableIstioSidecar: true
+    loadBalancer:
+      annotations:
+        yandex.cloud/load-balancer-type: Internal
+        yandex.cpi.flant.com/listener-subnet-id: e2lo8kbj6b19vea5fers
+        yandex.cpi.flant.com/target-group-network-id: enpofm2o1fd0e01e2rfb
+      behindL7Proxy: true
+      realIPHeader: X-Forwarded-For

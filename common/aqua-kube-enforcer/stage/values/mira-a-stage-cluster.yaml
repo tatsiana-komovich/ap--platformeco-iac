@@ -1,0 +1,22 @@
+clusterName: "k8s-mira-a-stage"
+
+aquaSecret:
+  kubeEnforcerToken: enforcer-mira-a-stage-k8s
+
+enforcer:
+  enforcerToken: enforcer-mira-a-stage
+  nodeSelector:
+    node-role.k8s.lmru.tech/application: ''
+  tolerations:
+    - key: node-role/jenkins-slave
+      operator: Equal
+      effect: "NoExecute"
+      value: ""
+    - key: dedicated
+      operator: Equal
+      effect: "NoSchedule"
+      value: node-ml
+    - key: dedicated
+      operator: Equal
+      effect: "NoExecute"
+      value: custom-sorts

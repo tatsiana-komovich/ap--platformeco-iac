@@ -1,0 +1,27 @@
+---
+admission-policy-engine:
+  spec:
+    version: 1
+    enabled: true
+{{- if eq .Datacenter "yc" }}
+  internal-lb-policy: true
+{{- end }}
+
+prometheus:
+  enabled: true
+  settings:
+    externalLabels:
+    {{- if eq .Environment "stage" }}
+      k8s_cluster: {{ .Cluster }}-{{ .Environment }}
+    {{- else }}
+      k8s_cluster: {{ .Cluster }}
+    {{- end }}
+      project_name: {{ .Domain }}
+      environment: {{ .Environment }}
+      datacenter: {{ .Datacenter }}
+    {{- if eq .Datacenter "yc" }}
+      platform: {{ .Datacenter }}
+    {{- else }}
+      platform: TBD
+    {{- end }}
+  version: 2

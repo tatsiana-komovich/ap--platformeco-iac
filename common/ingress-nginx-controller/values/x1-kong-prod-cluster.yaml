@@ -1,0 +1,100 @@
+---
+# Default values for IngressNginxController.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+IngressNginxController:
+  main:
+    name: main
+    spec:
+      chaosMonkey: false
+      disableHTTP2: false
+      hsts: false
+      ingressClass: nginx
+      inlet: LoadBalancer
+      maxReplicas: 1
+      minReplicas: 1
+      underscoresInHeaders: false
+      validationEnabled: true
+    loadBalancer:
+      behindL7Proxy: true
+      realIPHeader: X-Forwarded-For
+    sourceRanges:
+      - 127.0.0.1/32
+      - 10.203.5.0/24
+      - 10.203.8.0/24
+      - 10.203.21.0/24
+      - 10.203.107.0/24
+      - 10.203.206.0/24
+      - 10.203.118.0/24
+      - 10.220.211.0/24
+      - 10.80.120.50/32
+    nodeSelector:
+      node-role/loadbalancer: ""
+    tolerations:
+      - effect: NoExecute
+        key: dedicated
+        operator: Equal
+        value: loadbalancer
+  external:
+    name: external
+    spec:
+      chaosMonkey: false
+      disableHTTP2: false
+      hsts: false
+      ingressClass: external
+      inlet: LoadBalancer
+      maxReplicas: 1
+      minReplicas: 1
+      underscoresInHeaders: false
+      validationEnabled: true
+    loadBalancer:
+      behindL7Proxy: true
+      realIPHeader: X-Forwarded-For
+    sourceRanges:
+      - 127.0.0.1/32
+      - 10.203.5.0/24
+      - 10.203.8.0/24
+      - 10.203.21.0/24
+      - 10.203.107.0/24
+      - 10.203.206.0/24
+      - 10.203.118.0/24
+      - 10.220.211.0/24
+      - 10.203.115.160/27
+    nodeSelector:
+      node-role/loadbalancer: ""
+    tolerations:
+      - effect: NoExecute
+        key: dedicated
+        operator: Equal
+        value: loadbalancer
+  d8-main:
+    name: d8-main
+    spec:
+      chaosMonkey: false
+      disableHTTP2: false
+      hsts: false
+      ingressClass: nginx
+      inlet: LoadBalancer
+      maxReplicas: 1
+      minReplicas: 1
+      underscoresInHeaders: false
+      validationEnabled: true
+    loadBalancer:
+      behindL7Proxy: true
+      realIPHeader: X-Forwarded-For
+    sourceRanges:
+      - 10.203.5.0/24
+      - 10.203.8.0/24
+      - 10.203.21.0/24
+      - 10.203.107.0/24
+      - 10.203.206.0/24
+      - 10.203.118.0/24
+      - 10.220.211.0/24
+      - 10.80.120.50/32
+    nodeSelector:
+      node-role/loadbalancer: ""
+    tolerations:
+      - effect: NoExecute
+        key: dedicated
+        operator: Equal
+        value: loadbalancer

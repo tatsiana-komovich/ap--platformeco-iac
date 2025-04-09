@@ -1,0 +1,24 @@
+{{- if not .Values.certsSecret.autoGenerate }}
+{{- if not .Values.certsSecret.name}}
+{{ template "certsSecret_name" . }}
+{{- end }}
+{{- if .Values.certsSecret.create }}
+apiVersion: v1
+kind: Secret
+metadata:
+  name: {{ .Values.certsSecret.name }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    role: {{ .Release.Name }}
+    app: {{ include "kube-enforcer.fullname" . }}
+    aqua.component: kubeenforcer
+    {{ include "aqua.labels" . | nindent 4 }}
+  {{- if .Values.certsSecret.annotations }}
+  annotations:
+    {{ toYaml .Values.certsSecret.annotations | nindent 4 }}
+  {{- end }}
+data:
+  server.crt: {{ template "serverCertificate" . }}  # place server cert
+  server.key: {{ template "serverKey" . }}  # place server key
+{{- end }}
+{{- end }}

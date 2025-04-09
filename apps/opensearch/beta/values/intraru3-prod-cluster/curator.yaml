@@ -1,0 +1,104 @@
+---
+opendistro:
+  curator:
+    enabled: true
+    s3_snapshots:
+      unit_count:
+        all: 60
+        unknown: 7
+    cron:
+      restore: 10 3 * * *
+      snapshot: 30 0 * * *
+    unknown:
+      days_count: 7
+      snapshot: true
+      schedule: 30 0 * * *
+    indices:
+      - kind: prefix
+        value: filebeat
+        system: false
+        days_count: 10
+        snapshot: true
+        restore_max_wait: 7200
+        schedule: 50 0 * * *
+      - kind: prefix
+        value: infra
+        system: false
+        days_count: 30
+        snapshot: false
+        schedule: 55 0 * * *
+      - kind: prefix
+        value: d8
+        system: false
+        days_count: 7
+        snapshot: true
+        snapshot_count_s3: 7
+        schedule: 0 1 * * *
+      - kind: prefix
+        value: eventrouter
+        system: false
+        days_count: 7
+        snapshot: false
+        schedule: 5 1 * * *
+      - kind: prefix
+        value: cafe
+        system: false
+        days_count: 30
+        snapshot: true
+        snapshot_count_s3: 365
+        schedule: 10 1 * * *
+      - kind: prefix
+        value: dam
+        system: false
+        days_count: 10
+        snapshot: true
+        schedule: 15 1 * * *
+      - kind: prefix
+        value: dampro
+        system: false
+        monitoring: false
+        days_count: 10
+        snapshot: true
+        schedule: 20 1 * * *
+      - kind: prefix
+        value: intraru
+        system: false
+        days_count: 10
+        snapshot: true
+        schedule: 25 1 * * *
+      - kind: prefix
+        value: trips
+        system: false
+        days_count: 10
+        snapshot: true
+        schedule: 30 1 * * *
+      - kind: prefix
+        value: lm-te-dam-prod
+        system: false
+        days_count: 10
+        snapshot: true
+        schedule: 35 1 * * *
+      - kind: prefix
+        value: lm-te-dampro
+        system: false
+        days_count: 10
+        snapshot: true
+        schedule: 40 1 * * *
+      - kind: prefix
+        value: lm-te-prod
+        system: false
+        days_count: 10
+        snapshot: true
+        schedule: 45 1 * * *
+      - kind: prefix
+        value: lm-te-trips-prod
+        system: false
+        days_count: 10
+        snapshot: true
+        schedule: 50 1 * * *
+      - kind: prefix
+        value: .kibana
+        system: true
+        days_count: 30
+        snapshot: true
+        schedule: 55 1 * * *

@@ -1,0 +1,111 @@
+---
+opendistro:
+  tariff: basic
+
+  project: sculptor-a
+
+  node_pref: p
+
+  cluster: production
+  cluster_env: prod
+
+  userlist:
+    services: []
+
+  common:
+    nodegroup: opendistro-common
+
+  opendistro:
+    enabled: false
+    certificates: "custom"
+
+  exporter:
+    enabled: false
+
+  snapshot_exporter:
+    enabled: false
+
+  oneday_exporter:
+    enabled: false
+
+  csi:
+    enabled: false
+
+  vector:
+    enabled: false
+
+  recoverer:
+    enabled: false
+
+  filebeat:
+    enabled: true
+    resources:
+      limits:
+        memory: 1Gi
+      requests:
+        cpu: 30m
+        memory: 64Mi
+    image:
+      repo: "docker-flant.art.lmru.tech/lmru/devops/opensearch--"
+      name: "filebeat"
+      tag: "0.0.2"
+
+  logstash:
+    enabled: true
+    image:
+      repo: "docker-flant.art.lmru.tech/lmru/devops/opensearch--"
+      name: "logstash"
+      tag: "0.0.1"
+    loadbalancer: {}
+    remote_os:
+      enabled: true
+      host: "10.203.2.238:9200"
+      index_name:
+        - "services-platform"
+      user: logstash
+      password: '<path:services/data/opensearch#remote_os.password>'
+    external:
+      enabled: false
+    replicas: 2
+    workers: 4
+    queuesize: 1900mb
+    tcpPort: 9045
+    resources:
+      limits:
+        memory: 4Gi
+      requests:
+        cpu: 1
+        memory: 4Gi
+    pv:
+      size: 2Gi
+      storageclass: network-ssd
+
+  kibana:
+    enabled: false
+
+  pv_retain_operator:
+    enabled: false
+
+  cerebro:
+    enabled: false
+
+  xtractor:
+    enabled: false
+
+  xkibana:
+    enabled: false
+
+  retention:
+    enabled: false
+
+  dereplicator:
+    enabled: false
+
+  node_updater:
+    enabled: false
+    image:
+      repo: "docker-flant.art.lmru.tech/lmru/devops/opensearch--"
+      name: "node-updater"
+      tag: "0.0.1"
+billing-resource:
+  resourceName: opendistro

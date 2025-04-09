@@ -1,0 +1,86 @@
+vmagent:
+  scrapeConfigs:
+    - job_name: 'vmalerts-prod'
+      static_configs:
+        - targets: ['vmalertsselect.devops.lmru.tech:8481', 'vmalertsinsert.devops.lmru.tech:8480']
+          labels:
+            k8s_cluster: yc-techno
+            project_name: techno
+            datacenter: yc
+            environment: prod
+            platform: yandex
+      metrics_path: "/health"
+    - job_name: 'vmalerts-stage'
+      static_configs:
+        - targets: ['vmalertsselect-stage.devops.lmru.tech:8481', 'vmalertsinsert-stage.devops.lmru.tech:8480']
+          labels:
+            k8s_cluster: yc-techno-stage
+            project_name: techno
+            datacenter: yc
+            environment: stage
+            platform: yandex
+      metrics_path: "/health"
+    - job_name: 'loki-yc-devops-lmru-tech-frontend'
+      scheme: https
+      static_configs:
+        - targets: ['loki-yc.devops.lmru.tech:443']
+          labels:
+            k8s_cluster: yc-techno
+            project_name: techno
+            datacenter: yc
+            environment: prod
+            platform: yandex
+      metrics_path: "/frontend/ready"
+    - job_name: 'loki-yc-devops-lmru-tech-querier'
+      scheme: https
+      static_configs:
+        - targets: ['loki-yc.devops.lmru.tech:443']
+          labels:
+            k8s_cluster: yc-techno
+            project_name: techno
+            datacenter: yc
+            environment: prod
+            platform: yandex
+      metrics_path: "/querier/ready"
+    - job_name: 'loki-yc-devops-lmru-tech-distributor'
+      scheme: https
+      static_configs:
+        - targets: ['loki-yc.devops.lmru.tech:443']
+          labels:
+            k8s_cluster: yc-techno
+            project_name: techno
+            datacenter: yc
+            environment: prod
+            platform: yandex
+      metrics_path: "/distributor/ready"
+    - job_name: 'awx'
+      scheme: https
+      static_configs:
+        - targets: ['awx-dors-a.apps.lmru.tech:443']
+          labels:
+            k8s_cluster: dors-a
+            project_name: techno
+            datacenter: yc
+            environment: prod
+            platform: yandex
+      metrics_path: "/api/v2/ping"
+    - job_name: 'awx-posgresql-db'
+      static_configs:
+        - targets: ['p-pg-k8s-rundeck-db-01.ru-central1.internal:9216']
+          labels:
+            project_name: techno
+            datacenter: yc
+            environment: prod
+            platform: yandex
+      metrics_path: "/metrics"
+    - job_name: 'n8n'
+      scheme: https
+      static_configs:
+        - targets: ['n8n-dors-a.apps.lmru.tech:443']
+          labels:
+            k8s_cluster: dors-a
+            project_name: techno
+            datacenter: yc
+            environment: prod
+            platform: yandex
+      metrics_path: "/metrics"

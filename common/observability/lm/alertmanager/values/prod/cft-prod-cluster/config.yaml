@@ -1,0 +1,87 @@
+---
+alertmanager:
+  templates:
+    alertmanager.tmpl: |-
+      '{{ define "generator.url" }} {{ (index .Alerts 0).GeneratorURL | reReplaceAll "&g0.tab=1$" "&g0.tab=0" }} {{ end }}'
+
+  config:
+    global:
+      smtp_from: 'alertmanager@leroy-merlin.ru'
+      smtp_smarthost: 'massmail.hq.ru.corp.leroymerlin.com:25'
+      smtp_require_tls: false
+
+    templates:
+      - '/etc/alertmanager/*.tmpl'
+
+    route:
+      group_by: ['alertname', 'job']
+      receiver: 'void'
+      repeat_interval: 4h
+
+  ## Add your Alertmanager configuration below
+
+      routes:
+        - matchers:
+            - product_id="P0619"
+          receiver: 'ctcr-grafana-oncall'
+          group_by: ['alertname', 'service']
+        - matchers:
+            - product_id="P0567"
+          receiver: 'wecare'
+        - matchers:
+            - product_id="P0145"
+          receiver: 'dcrm'
+        - matchers:
+            - product_id="P0476"
+          receiver: 'nvg-grafana-oncall'
+        - matchers:
+            - product_id="P0532"
+          receiver: 'cft'
+        - matchers:
+            - namespace="mf"
+            - service="checkout"
+            - ingress="checkout"
+          receiver: 'pao-grafana-oncall-checkout'
+        - matchers:
+            - team_id="Prepare-Customer-Project-Team"
+            - tier="frontend"
+          receiver: 'pcprj-grafana-oncall-triffle-frontend'
+        # - matchers:
+        #     - cool_label="cool_value"
+        #   receiver: 'my-grafana-oncall-webhook'
+
+    receivers:
+      - name: 'void'
+
+      - name: 'ctcr-grafana-oncall'
+        webhook_configs:
+          - url: 'https://obs-grafana-oncall-yc-techno.apps.lmru.tech/65/integrations/v1/alertmanager/hNT3cHrCIKXhGwovlRMTNogj9/'
+            send_resolved: true
+      - name: 'wecare'
+        webhook_configs:
+          - url: 'https://obs-grafana-oncall-yc-techno.apps.lmru.tech/63/integrations/v1/alertmanager/sifOQbJeNIx7telB4MlSoe3TN/'
+            send_resolved: true
+      - name: 'dcrm'
+        webhook_configs:
+          - url: 'https://obs-grafana-oncall-yc-techno.apps.lmru.tech/63/integrations/v1/alertmanager/M0xIA8kMWw21D5ba7aYz8YDlP/'
+            send_resolved: true
+      - name: 'nvg-grafana-oncall'
+        webhook_configs:
+          - url: 'https://obs-grafana-oncall-yc-techno.apps.lmru.tech/66/integrations/v1/alertmanager/tOFRxb5p7nCs3g8n2U9w50XOs/'
+            send_resolved: true
+      - name: 'cft'
+        webhook_configs:
+          - url: 'https://obs-grafana-oncall-yc-techno.apps.lmru.tech/20/integrations/v1/alertmanager/fxBo58JonaQBMUvmniEXDruci/'
+            send_resolved: true
+      - name: 'pao-grafana-oncall-checkout'
+        webhook_configs:
+          - url: 'https://obs-grafana-oncall-yc-techno.apps.lmru.tech/77/integrations/v1/alertmanager/C57M4iPKsuKazB4JbirYNhFxL/'
+            send_resolved: true
+      - name: 'pcprj-grafana-oncall-triffle-frontend'
+        webhook_configs:
+          - url: 'https://obs-grafana-oncall-yc-techno.apps.lmru.tech/28/integrations/v1/alertmanager/4stQVaGix1P0C1uGhC2mAj4NL/'
+            send_resolved: true
+      # - name: 'my-grafana-oncall-webhook'
+      #   webhook_configs:
+      #     - url: 'https://obs-grafana-oncall-yc-techno.apps.lmru.tech/00/integrations/v1/alertmanager/AABBCCC112233/'
+      #       send_resolved: true

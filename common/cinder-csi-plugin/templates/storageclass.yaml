@@ -1,0 +1,114 @@
+{{- if .Values.storageClass.enabled }}
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: csi-cinder-sc-delete-x1
+  {{- if .Values.storageClass.delete.isDefault }}
+  annotations:
+    storageclass.kubernetes.io/is-default-class: "true"
+  {{- end }}
+provisioner: cinder.csi.openstack.org
+reclaimPolicy: Delete
+allowVolumeExpansion: {{ .Values.storageClass.delete.allowVolumeExpansion }}
+allowedTopologies:
+- matchLabelExpressions:
+  - key: topology.kubernetes.io/region
+    values:
+    - x1
+parameters:
+  csi.storage.k8s.io/controller-publish-secret-name: openstack-config-x1
+  csi.storage.k8s.io/controller-publish-secret-namespace: {{ .Release.Namespace }}
+  csi.storage.k8s.io/node-publish-secret-name: openstack-config-x1
+  csi.storage.k8s.io/node-publish-secret-namespace: {{ .Release.Namespace }}
+  csi.storage.k8s.io/node-stage-secret-name: openstack-config-x1
+  csi.storage.k8s.io/node-stage-secret-namespace: {{ .Release.Namespace }}
+  csi.storage.k8s.io/provisioner-secret-name: openstack-config-x1
+  csi.storage.k8s.io/provisioner-secret-namespace: {{ .Release.Namespace }}
+  csi.storage.k8s.io/controller-expand-secret-name: openstack-config-x1
+  csi.storage.k8s.io/controller-expand-secret-namespace: {{ .Release.Namespace }}
+---
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: csi-cinder-sc-retain-x1
+  {{- if .Values.storageClass.retain.isDefault }}
+  annotations:
+    storageclass.kubernetes.io/is-default-class: "true"
+  {{- end }}
+provisioner: cinder.csi.openstack.org
+reclaimPolicy: Retain
+allowVolumeExpansion: {{ .Values.storageClass.retain.allowVolumeExpansion }}
+allowedTopologies:
+- matchLabelExpressions:
+  - key: topology.kubernetes.io/region
+    values:
+    - x1
+parameters:
+  csi.storage.k8s.io/controller-publish-secret-name: openstack-config-x1
+  csi.storage.k8s.io/controller-publish-secret-namespace: {{ .Release.Namespace }}
+  csi.storage.k8s.io/node-publish-secret-name: openstack-config-x1
+  csi.storage.k8s.io/node-publish-secret-namespace: {{ .Release.Namespace }}
+  csi.storage.k8s.io/node-stage-secret-name: openstack-config-x1
+  csi.storage.k8s.io/node-stage-secret-namespace: {{ .Release.Namespace }}
+  csi.storage.k8s.io/provisioner-secret-name: openstack-config-x1
+  csi.storage.k8s.io/provisioner-secret-namespace: {{ .Release.Namespace }}
+  csi.storage.k8s.io/controller-expand-secret-name: openstack-config-x1
+  csi.storage.k8s.io/controller-expand-secret-namespace: {{ .Release.Namespace }}
+---
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: csi-cinder-sc-delete-x2
+  {{- if .Values.storageClass.delete.isDefault }}
+  annotations:
+    storageclass.kubernetes.io/is-default-class: "true"
+  {{- end }}
+provisioner: cinder.csi.openstack.org
+reclaimPolicy: Delete
+allowVolumeExpansion: {{ .Values.storageClass.delete.allowVolumeExpansion }}
+allowedTopologies:
+- matchLabelExpressions:
+  - key: topology.kubernetes.io/region
+    values:
+    - x2
+parameters:
+  csi.storage.k8s.io/controller-publish-secret-name: openstack-config-x2
+  csi.storage.k8s.io/controller-publish-secret-namespace: {{ .Release.Namespace }}
+  csi.storage.k8s.io/node-publish-secret-name: openstack-config-x2
+  csi.storage.k8s.io/node-publish-secret-namespace: {{ .Release.Namespace }}
+  csi.storage.k8s.io/node-stage-secret-name: openstack-config-x2
+  csi.storage.k8s.io/node-stage-secret-namespace: {{ .Release.Namespace }}
+  csi.storage.k8s.io/provisioner-secret-name: openstack-config-x2
+  csi.storage.k8s.io/provisioner-secret-namespace: {{ .Release.Namespace }}
+  csi.storage.k8s.io/controller-expand-secret-name: openstack-config-x2
+  csi.storage.k8s.io/controller-expand-secret-namespace: {{ .Release.Namespace }}
+---
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: csi-cinder-sc-retain-x2
+  {{- if .Values.storageClass.retain.isDefault }}
+  annotations:
+    storageclass.kubernetes.io/is-default-class: "true"
+  {{- end }}
+
+provisioner: cinder.csi.openstack.org
+reclaimPolicy: Retain
+allowVolumeExpansion: {{ .Values.storageClass.retain.allowVolumeExpansion }}
+allowedTopologies:
+- matchLabelExpressions:
+  - key: topology.kubernetes.io/region
+    values:
+    - x2
+parameters:
+  csi.storage.k8s.io/controller-publish-secret-name: openstack-config-x2
+  csi.storage.k8s.io/controller-publish-secret-namespace: {{ .Release.Namespace }}
+  csi.storage.k8s.io/node-publish-secret-name: openstack-config-x2
+  csi.storage.k8s.io/node-publish-secret-namespace: {{ .Release.Namespace }}
+  csi.storage.k8s.io/node-stage-secret-name: openstack-config-x2
+  csi.storage.k8s.io/node-stage-secret-namespace: {{ .Release.Namespace }}
+  csi.storage.k8s.io/provisioner-secret-name: openstack-config-x2
+  csi.storage.k8s.io/provisioner-secret-namespace: {{ .Release.Namespace }}
+  csi.storage.k8s.io/controller-expand-secret-name: openstack-config-x2
+  csi.storage.k8s.io/controller-expand-secret-namespace: {{ .Release.Namespace }}
+{{- end }}

@@ -1,0 +1,135 @@
+---
+prometheus:
+  alertmanager:
+    enabled: true
+
+    serviceAccount:
+      create: false
+      name: "promaas-itopsp"
+
+    podDisruptionBudget:
+      enabled: true
+      minAvailable: 1
+
+    config:
+      global:
+        resolve_timeout: 5m
+      inhibit_rules:
+        - source_matchers:
+            - 'severity = critical'
+          target_matchers:
+            - 'severity =~ warning|info'
+          equal:
+            - 'namespace'
+            - 'alertname'
+        - source_matchers:
+            - 'severity = warning'
+          target_matchers:
+            - 'severity = info'
+          equal:
+            - 'namespace'
+            - 'alertname'
+        - source_matchers:
+            - 'alertname = InfoInhibitor'
+          target_matchers:
+            - 'severity = info'
+          equal:
+            - 'namespace'
+        - target_matchers:
+            - 'alertname = InfoInhibitor'
+      route:
+        group_by: ['namespace']
+        group_wait: 30s
+        group_interval: 5m
+        repeat_interval: 12h
+        receiver: 'null'
+        routes:
+          - receiver: 'null'
+            matchers:
+              - alertname = "Watchdog"
+      receivers:
+        - name: 'null'
+      templates:
+        - '/etc/alertmanager/config/*.tmpl'
+
+    ingress:
+      enabled: true
+      annotations:
+        nginx.ingress.kubernetes.io/use-regex: 'true'
+        nginx.ingress.kubernetes.io/affinity: 'cookie'
+        nginx.ingress.kubernetes.io/affinity-mode: 'persistent'
+        nginx.ingress.kubernetes.io/session-cookie-name: 'ALERTMANAGERAFFINITY'
+        nginx.ingress.kubernetes.io/session-cookie-path: '/alertmanager'
+        nginx.ingress.kubernetes.io/session-cookie-expires: '10800'
+        nginx.ingress.kubernetes.io/session-cookie-max-age: '10800'
+        nginx.ingress.kubernetes.io/rewrite-target: /$2
+      hosts:
+        - itopsp-metrics.obs.lmru.tech
+      paths:
+        - /alertmanager(/|$)(.*)
+      pathType: ImplementationSpecific
+      tls:
+        - hosts:
+            - 'itopsp-metrics.obs.lmru.tech'
+
+    service:
+      sessionAffinity: ClientIP
+      sessionAffinityConfig:
+        clientIP:
+          timeoutSeconds: 10800
+
+    serviceMonitor:
+      selfMonitor: false
+      additionalLabels:
+        prometheus: main
+
+    alertmanagerSpec:
+
+      image:
+        registry: docker.art.lmru.tech
+        repository: prometheus/alertmanager
+        tag: v0.26.0
+        sha: ""
+
+      configSecret: alertmanager-promaas-itopsp
+
+      logFormat: json
+      logLevel: debug
+
+      replicas: 2
+
+      retention: 120h
+
+      storage:
+        volumeClaimTemplate:
+          spec:
+            storageClassName: network-ssd
+            accessModes: ["ReadWriteOnce"]
+            resources:
+              requests:
+                storage: 30Gi
+
+      externalUrl: 'https://itopsp-metrics.obs.lmru.tech/alertmanager/'
+
+      ## scheme: HTTP scheme to use. Can be used with `tlsConfig` for example if using istio mTLS.
+      scheme: ""
+
+      nodeSelector:
+        node-role/prometheus-common: ''
+
+      resources:
+        requests:
+          cpu: 500m
+          memory: 512Mi
+
+      tolerations:
+        - effect: NoSchedule
+          key: dedicated
+          operator: Equal
+          value: prometheus
+
+      priorityClassName: 'production-high'
+
+      podAntiAffinity: 'hard'
+      # podAntiAffinityTopologyKey: kubernetes.io/hostname
+      podAntiAffinityTopologyKey: kubernetes.io/zone

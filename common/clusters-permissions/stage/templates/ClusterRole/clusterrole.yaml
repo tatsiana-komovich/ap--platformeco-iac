@@ -1,0 +1,30 @@
+{{- if .Values.ClusterRole }}
+{{- range $key, $value := .Values.ClusterRole }}
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+    {{- toYaml $value.metadata | nindent 2 }}
+rules:
+{{- range $key, $vol := $value.rules }}
+- apiGroups:
+{{- range $k, $v := $vol.apiGroups }}
+    - "{{ $v }}"
+{{- end }}
+  resources:
+{{- range $k, $v := $vol.resources }}
+    - "{{ $v }}"
+{{- end }}
+{{- if $vol.resourceNames }}
+  resourceNames:
+{{- range $k, $v := $vol.resourceNames }}
+    - "{{ $v }}"
+{{- end }}
+{{- end }}
+  verbs:
+{{- range $k, $v := $vol.verbs }}
+    - "{{ $v }}"
+{{- end }}
+{{- end }}
+{{- end }}
+{{- end }}

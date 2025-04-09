@@ -1,0 +1,113 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cloud-controller-manager-devops-core
+  namespace: d8-cloud-provider-yandex
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cloud-controller-manager-devops-core
+  strategy:
+    rollingUpdate:
+      maxSurge: 0
+      maxUnavailable: 1
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: cloud-controller-manager-devops-core
+    spec:
+      containers:
+        - args:
+            - --leader-elect=true
+            - --leader-elect-resource-name=cloud-controller-manager-devops-core
+            - --cluster-cidr=10.111.0.0/16
+            - --allocate-node-cidrs=true
+            - --configure-cloud-routes=true
+            - --cloud-provider=yandex
+            - --cluster-name=10d638bc719e02569c96ade0
+            - --bind-address=127.0.0.1
+            - --secure-port=10472
+            - --v=2
+            - --controllers=route
+          env:
+            - name: HOST_IP
+              valueFrom:
+                fieldRef:
+                  apiVersion: v1
+                  fieldPath: status.hostIP
+            - name: YANDEX_CLUSTER_NAME
+              value: a10d638bc719e02569c96ade0
+            - name: YANDEX_CLOUD_SERVICE_ACCOUNT_JSON
+              valueFrom:
+                secretKeyRef:
+                  key: service-acount-json
+                  name: cloud-controller-manager
+            - name: YANDEX_CLOUD_FOLDER_ID
+              value: b1g6crjmq0kuhhbps6ji
+            - name: YANDEX_CLOUD_DEFAULT_LB_LISTENER_SUBNET_ID
+            - name: YANDEX_CLOUD_DEFAULT_LB_TARGET_GROUP_NETWORK_ID
+              value: enpk182kn9ugki09q568
+            - name: YANDEX_CLOUD_INTERNAL_NETWORK_IDS
+              value: enpk182kn9ugki09q568
+            - name: YANDEX_CLOUD_EXTERNAL_NETWORK_IDS
+              value: enpofm2o1fd0e01e2rfb
+            - name: YANDEX_CLOUD_ROUTE_TABLE_ID
+              value: enp2fnl6p8hcc21a6bh1
+          image: docker-remote-deckhouse-io.art.lmru.tech/deckhouse/fe@sha256:74a4dffef2a43547da7347ea412ee159623dca2eec50dafe1d7333aa304eb024
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              host: 127.0.0.1
+              path: /healthz
+              port: 10472
+              scheme: HTTPS
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 1
+          name: yandex-cloud-controller-manager
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              host: 127.0.0.1
+              path: /healthz
+              port: 10472
+              scheme: HTTPS
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 1
+          resources:
+            requests:
+              ephemeral-storage: 60Mi
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          volumeMounts:
+            - mountPath: /tmp
+              name: tmp
+      dnsPolicy: Default
+      hostNetwork: true
+      imagePullSecrets:
+        - name: deckhouse-registry
+      nodeSelector:
+        node-role.kubernetes.io/control-plane: ""
+      priorityClassName: system-cluster-critical
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext:
+        runAsGroup: 64535
+        runAsNonRoot: true
+        runAsUser: 64535
+      serviceAccount: cloud-controller-manager
+      serviceAccountName: cloud-controller-manager
+      terminationGracePeriodSeconds: 30
+      tolerations:
+        - operator: Exists
+      volumes:
+        - emptyDir: {}
+          name: tmp

@@ -1,0 +1,60 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: aqua-csp-kube-enforcer
+  namespace: {{ .Release.Namespace }}
+  labels:
+    role: {{ .Release.Name }}
+    app: {{ include "kube-enforcer.fullname" . }}
+    aqua.component: kubeenforcer
+{{ include "aqua.labels" . | indent 4 }}
+data:
+  SCALOCK_LOG_LEVEL: {{ .Values.logLevel | default "INFO" | quote }}
+  AQUA_ENABLE_CACHE: {{ .Values.aqua_enable_cache | quote }}
+  AQUA_CACHE_EXPIRATION_PERIOD: {{ .Values.aqua_cache_expiration_period | default "60" | quote }}
+  AQUA_LOGICAL_NAME: {{ .Values.logicalName | quote }}
+  CLUSTER_NAME: {{ .Values.clusterName | quote }}
+  AQUA_NODE_LABELS_TO_SKIP_KB: {{ .Values.skipNodes | quote }}
+  {{- if .Values.me_ke_custom_registry.enable }}
+  AQUA_KB_IMAGE_NAME: "{{ .Values.me_ke_custom_registry.registry }}/{{ .Values.kubebenchImage.repository }}:{{ .Values.kubebenchImage.tag }}"
+  AQUA_ME_IMAGE_NAME: "{{ .Values.me_ke_custom_registry.registry }}/{{ .Values.microEnforcerImage.repository }}:{{ .Values.microEnforcerImage.tag }}"
+  AQUA_KB_ME_REGISTRY_NAME: "{{ .Values.me_ke_custom_registry.imagePullSecretName  }}"
+  {{- else }}
+  AQUA_KB_IMAGE_NAME: "{{ .Values.kubebenchImage.repositoryUriPrefix }}/{{ .Values.kubebenchImage.repository }}:{{ .Values.kubebenchImage.tag }}"
+  AQUA_ME_IMAGE_NAME: "{{ .Values.global.imageCredentials.repositoryUriPrefix }}/{{ .Values.microEnforcerImage.repository }}:{{ .Values.microEnforcerImage.tag }}"
+  AQUA_KB_ME_REGISTRY_NAME: "{{ template "registrySecret" .  }}"
+  {{- end }}
+  {{- if .Values.global.enforcer.enabled }}
+  AQUA_ENFORCER_DS_NAME: {{ .Release.Name }}-ds
+  {{ else if ne .Values.enforcer_ds_name "" }}
+  AQUA_ENFORCER_DS_NAME: {{ .Values.enforcer_ds_name }}
+  {{- end }}
+  {{- if .Values.certsSecret.create }}
+  TLS_SERVER_CERT_FILEPATH: "/certs/server.crt"
+  TLS_SERVER_KEY_FILEPATH: "/certs/server.key"
+  {{- else }}
+  TLS_SERVER_CERT_FILEPATH: "/certs/{{ .Values.certsSecret.serverCertificate }}"
+  TLS_SERVER_KEY_FILEPATH: "/certs/{{ .Values.certsSecret.serverKey }}"
+  {{- end }}
+# mTLS env config
+{{- if .Values.TLS.enabled }}
+  AQUA_PRIVATE_KEY: "/opt/aquasec/ssl/key.pem"
+  AQUA_PUBLIC_KEY: "/opt/aquasec/ssl/cert.pem"
+  AQUA_TLS_VERIFY: {{ .Values.TLS.tls_verify | quote }}
+{{- if .Values.TLS.rootCA_fileName }}
+  AQUA_ROOT_CA: "/opt/aquasec/ssl/ca.pem"
+{{- end }}
+{{- end }}
+  AQUA_GATEWAY_SECURE_ADDRESS: {{ .Values.global.gateway.address | default "aqua-gateway-svc" }}:{{ .Values.global.gateway.port | default "8443" }}
+  AQUA_KAP_ADD_ALL_CONTROL: "true"
+  AQUA_WATCH_CONFIG_AUDIT_REPORT: "true"
+{{- if .Values.kubeEnforcerAdvance.enable }}
+  AQUA_TLS_PORT: "8449"
+  AQUA_KE_SERVER_PORT: "8442"
+  AQUA_ENVOY_MODE: "true"
+{{- else }}
+  AQUA_TLS_PORT: "8443"
+{{- end }}
+  AQUA_KB_SCAN_TAINTED_NODES: "{{ .Values.kubeBench.scanTainted }}"
+

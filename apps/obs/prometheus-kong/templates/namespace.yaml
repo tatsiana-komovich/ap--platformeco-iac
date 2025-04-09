@@ -1,0 +1,11 @@
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: {{ printf "%s-%s" .Chart.Name (index .Values.prometheus.commonLabels "promaas-customer-name") }}
+  labels:
+    promaas-customer-name: {{ index .Values.prometheus.commonLabels "promaas-customer-name" }}
+    promaas-customer-id: {{ index .Values.prometheus.commonLabels "promaas-customer-id" }}
+    extended-monitoring.deckhouse.io/enabled: ''
+    log-shipping: 'enabled'
+    prometheus.deckhouse.io/monitor-watcher-enabled: 'true'

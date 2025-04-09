@@ -1,0 +1,68 @@
+{{- range $index, $service := .Values.IngressNginxController}}
+{{- $files := $.Files.Get "files/range.yaml" }}
+---
+apiVersion: {{ $service.apiVersion | default "deckhouse.io/v1" }}
+kind: IngressNginxController
+metadata:
+  name: {{ $service.name }}
+  {{- with $service.labels}}
+  labels:
+  {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+{{- range $key, $value := $service.spec }}
+  {{ $key }}: {{ $value }}
+{{- end }}
+{{-  if hasKey $service "controllerVersion" }}
+  controllerVersion: {{ $service.controllerVersion | quote }}
+{{- end }}
+{{- if and ($service.hostPort) (ne $service.blacklist false) }}
+  acceptRequestsFrom:
+{{- if $files }}
+{{ $files | indent 4 }}
+{{- end }}
+{{- with $service.acceptRequestsFrom }}
+{{ . | toYaml | indent 6 }}
+{{- end }}
+{{- end }}
+{{- with  $service.loadBalancer }}
+  loadBalancer:
+    sourceRanges:
+{{- if $files }}
+{{ $files | indent 4 }}
+{{- end }}
+{{- with $service.sourceRanges}}
+{{ . | toYaml | indent 6 }}
+{{- end }}
+{{ . | toYaml | indent 4 }}
+{{- end }}
+{{- with $service.hostPort}}
+  hostPort:
+{{ . | toYaml | indent 4 }}
+{{- end }}
+{{- with $service.hostPortWithSSLPassthrough}}
+  hostPortWithSSLPassthrough:
+{{ . | toYaml | indent 4 }}
+{{- end }}
+{{- with $service.config}}
+  config:
+{{ . | toYaml | indent 4 }}
+{{- end }}
+{{- with $service.additionalLogFields}}
+  additionalLogFields:
+{{ . | toYaml | indent 4 }}
+{{- end }}
+{{- with $service.nodeSelector }}
+  nodeSelector:
+    {{- toYaml . | nindent 4 }}
+{{- end }}
+{{- with $service.tolerations }}
+  tolerations:
+  {{- toYaml . | nindent 4 }}
+{{- end }}
+{{- with $service.resourcesRequests }}
+  resourcesRequests:
+  {{- toYaml . | nindent 4 }}
+{{- end }}
+
+{{- end }}

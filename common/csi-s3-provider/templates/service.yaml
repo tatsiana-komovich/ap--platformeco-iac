@@ -1,0 +1,29 @@
+---
+# needed for StatefulSet
+kind: Service
+apiVersion: v1
+metadata:
+  name: csi-attacher-s3
+  namespace: {{ $.Values.argocd.app.namespace }}
+  labels:
+    app: csi-attacher-s3
+spec:
+  selector:
+    app: csi-attacher-s3
+  ports:
+    - name: csi-s3-dummy
+      port: 65535
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: csi-provisioner-s3
+  namespace: {{ $.Values.argocd.app.namespace }}
+  labels:
+    app: csi-provisioner-s3
+spec:
+  selector:
+    app: csi-provisioner-s3
+  ports:
+    - name: csi-s3-dummy
+      port: 65535

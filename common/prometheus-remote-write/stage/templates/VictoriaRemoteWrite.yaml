@@ -1,0 +1,48 @@
+{{- range $name, $spec := .Values.k8s_prometheus_remote_write }}
+{{- $customMetrics := "" }}
+{{- $defaultMetrics := (list
+ "elasticsearch_snapshot_stats_size_in_bytes_total"
+ "elasticsearch_indices_store_size_bytes_primary"
+ "elasticsearch_cluster_health_number_of_nodes"
+ "oneday_elasticsearch_indices_.*"
+ "k8s_monitoring_app_.*"
+ "resource_versions_compatibility"
+ "prometheus_target_scrapes_exceeded_sample_limit_total"
+ "deckhouse_build_info"
+ "apiserver_requested_deprecated_apis"
+ "cluster_running_pods"
+ "billing:.*"
+ "d8_telemetry_update_window"
+ "d8_telemetry_update_window_approval_mode"
+ "d8_release_blocked"
+ "node_dmi_info"
+ "flagger_.*") | join "|"
+}}
+{{- if $spec.writeRelabelConfigs.CustomMetrics }}
+    {{- $customMetrics = ($spec.writeRelabelConfigs.CustomMetrics | join "|") }}
+    {{- $defaultMetrics = printf "%s|%s" $defaultMetrics $customMetrics }}
+{{- end }}
+---
+apiVersion: deckhouse.io/v1
+kind: PrometheusRemoteWrite
+metadata:
+  name: {{ $name | default "vminsert-devops-lmru-tech-custom-remote-write-custom-remote-write" }}
+spec:
+  url: {{ $spec.url._default }}
+  {{- if $spec.basicAuth }}
+  {{- with $spec.basicAuth._default }}
+  basicAuth: {{ toYaml . | nindent 4 }}{{ end }}{{ end }}
+  {{- if $spec.writeRelabelConfigs._default }}
+  {{- with $spec.writeRelabelConfigs._default }}
+  writeRelabelConfigs: {{tpl (toYaml . ) $ | nindent 4 }}{{ end }}
+  {{- else }}
+  writeRelabelConfigs:
+    - sourceLabels: [__name__]
+      action: keep
+      regex: {{ $defaultMetrics }}
+    - action: labeldrop
+      regex: "instance|scrape_endpoint|tier|bios_.*|board_.*|product_family|product_name|product_version|system_vendor"
+  {{- with $spec.writeRelabelConfigs.additional_metrics }}
+  {{- tpl (toYaml . ) $ | nindent 4 }}{{ end }}
+  {{- end }}
+{{- end }}

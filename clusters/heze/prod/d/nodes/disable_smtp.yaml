@@ -1,0 +1,16 @@
+---
+apiVersion: deckhouse.io/v1alpha1
+kind: NodeGroupConfiguration
+metadata:
+  name: disable-smtp-on-node.sh
+spec:
+  weight: 110
+  bundles: ["*"]
+  nodeGroups: ["*"]
+  content: |
+    for service in postfix.service; do
+      if systemctl --no-legend --plain --no-pager | awk '{print $1}' | grep -q "^${service}$"; then
+        systemctl stop $service
+        systemctl disable $service
+      fi
+    done

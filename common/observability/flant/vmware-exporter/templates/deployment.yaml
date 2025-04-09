@@ -1,0 +1,61 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vmware-exporter
+spec:
+  selector:
+    matchLabels:
+      app: vmware-exporter
+  template:
+    metadata:
+      labels:
+        app: vmware-exporter
+        release: vmware-exporter
+    spec:
+      containers:
+      - name: vmware-exporter
+        image: {{ .Values.exporter.image }}
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 9272
+          name: http-metrics
+        env:
+          - name: VSPHERE_HOST
+            value: {{ .Values.exporter.host }}
+          - name: VSPHERE_USER
+            value: {{ .Values.exporter.user }}
+          - name: VSPHERE_PASSWORD
+            value: {{ .Values.exporter.password }}
+          - name: VSPHERE_IGNORE_SSL
+            value: "True"
+          - name: VSPHERE_COLLECT_HOSTS
+            value: "True"
+          - name: VSPHERE_COLLECT_DATASTORES
+            value: "True"
+          - name: VSPHERE_COLLECT_VMS
+            value: "False"
+          - name: VSPHERE_FETCH_ALARMS
+            value: "False"
+          - name: VSPHERE_COLLECT_VMGUESTS
+            value: "False"
+          - name: VSPHERE_COLLECT_SNAPSHOTS
+            value: "False"
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: vmware-exporter
+  labels:
+    prometheus.deckhouse.io/custom-target: vmware-exporter
+  annotations:
+    prometheus.deckhouse.io/sample-limit: {{ .Values.exporter.limits | quote }}
+spec:
+  clusterIP: None
+  selector:
+    app: vmware-exporter
+  ports:
+  - name: http-metrics
+    port: 9272
+    protocol: TCP

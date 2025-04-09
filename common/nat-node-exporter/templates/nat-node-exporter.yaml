@@ -1,0 +1,63 @@
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: lmru-devops-k8s-nat-node-exporter
+  labels:
+    prometheus.deckhouse.io/monitor-watcher-enabled: "true"
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: nat-node-exporter
+  namespace: lmru-devops-k8s-nat-node-exporter
+  labels:
+    prometheus: main
+spec:
+  jobLabel: app
+  namespaceSelector:
+    matchNames:
+    - lmru-devops-k8s-nat-node-exporter
+  endpoints:
+  - relabelings:
+    - action: labeldrop
+      regex: endpoint|namespace|service
+    - action: replace
+      sourceLabels:
+      - __meta_kubernetes_service_name
+      targetLabel: node
+    - action: replace
+      replacement: outside-cluster
+      targetLabel: tier
+    scheme: http
+    scrapeTimeout: 20s
+  selector:
+    matchLabels:
+      app: node-exporter
+{{- $instances := .Values.default }}
+{{- range $instances }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .clusterName }}
+  namespace: lmru-devops-k8s-nat-node-exporter
+  labels:
+    app: node-exporter
+spec:
+  ports:
+  - name: http-metrics
+    port: 9100
+---
+apiVersion: v1
+kind: Endpoints
+metadata:
+  name: {{ .clusterName }}
+  namespace: lmru-devops-k8s-nat-node-exporter
+subsets:
+  - addresses:
+    - ip: {{ .ip }}
+    ports:
+    - name: http-metrics
+      port: 9100
+{{- end }}

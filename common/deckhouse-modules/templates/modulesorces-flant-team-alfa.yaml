@@ -1,0 +1,12 @@
+{{- with (get .Values "modulesource-flant-team-alfa") }}
+---
+apiVersion: deckhouse.io/v1alpha1
+kind: ModuleSource
+metadata:
+  finalizers:
+  - modules.deckhouse.io/release-exists
+  - modules.deckhouse.io/module-exists
+  name: flant-team-alfa
+spec:
+  {{- toYaml . | nindent 2 }}
+{{- end }}

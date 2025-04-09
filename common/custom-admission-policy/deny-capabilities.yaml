@@ -1,0 +1,135 @@
+---
+apiVersion: templates.gatekeeper.sh/v1
+kind: ConstraintTemplate
+metadata:
+  name: denycapabilities
+  annotations:
+    description: >
+      Restricts the usage of Linux capabilities.
+      If a container specifies capabilities.add, then only capabilities from the allowed list are permitted.
+    metadata.gatekeeper.sh/title: Deny Capabilities Security Policy Constraint
+    metadata.gatekeeper.sh/version: 1.0.0
+    argocd.argoproj.io/hook: PreSync
+spec:
+  crd:
+    spec:
+      names:
+        kind: DenyCapabilities
+      validation:
+        openAPIV3Schema:
+          type: object
+          properties:
+            excludedContainers:
+              description: List of container names to be excluded from the check.
+              type: array
+              items:
+                type: string
+  targets:
+    - target: admission.k8s.gatekeeper.sh
+      rego: |
+        package d8.deny_capabilities
+
+        # Define the set of allowed capabilities (in lowercase)
+        allowed_capabilities := {
+          "audit_write", "chown", "dac_override", "fowner", "fsetid",
+          "kill", "mknod", "net_bind_service", "setfcap", "setgid",
+          "setpcap", "setuid", "sys_chroot", "net_raw"
+        }
+
+        # Convert the set to a list using list comprehension
+        allowed_list := [cap | allowed_capabilities[cap]]
+
+        # Skip check for containers listed in parameters.excludedContainers.
+        skip_container(container) {
+          input.parameters.excludedContainers[_] == container.name
+        }
+
+        # Violation: if container specifies capabilities.add and at least one added capability is not allowed.
+        violation[{"msg": msg}] {
+          container := input_containers[c]
+          not skip_container(container)
+          not compliant_container(container)
+          msg := sprintf("Container %v must only add capabilities from the allowed list: %v", [container.name, allowed_list])
+        }
+
+        # A container is compliant if:
+        # 1. It does not specify the capabilities.add field at all.
+        compliant_container(container) {
+          not container.securityContext.capabilities.add
+        }
+
+        # 2. If it specifies capabilities.add, then all added capabilities must be in the allowed list.
+        compliant_container(container) {
+          container.securityContext.capabilities.add
+          not disallowed_capability(container)
+        }
+
+        # Returns true if any added capability is not in the allowed list.
+        disallowed_capability(container) {
+          container.securityContext.capabilities.add[_] = cap
+          not allowed_capabilities[lower(cap)]
+        }
+
+        # Retrieve all containers (regular, init, and ephemeral)
+        input_containers[c] {
+          c := input.review.object.spec.containers[_]
+        }
+        input_containers[c] {
+          c := input.review.object.spec.initContainers[_]
+        }
+        input_containers[c] {
+          c := input.review.object.spec.ephemeralContainers[_]
+        }
+---
+apiVersion: constraints.gatekeeper.sh/v1beta1
+kind: DenyCapabilities
+metadata:
+  name: deny-capabilities
+  annotations:
+    argocd.argoproj.io/sync-options: "SkipDryRunOnMissingResource=true, Replace=true"
+spec:
+  enforcementAction: deny
+  parameters:
+    excludedContainers: ["istio-init"]
+  match:
+    kinds:
+      - apiGroups: [""]
+        kinds: ["Pod"]
+      - apiGroups: ["apps"]
+        kinds: ["Deployment", "ReplicaSet", "StatefulSet", "DaemonSet"]
+    excludedNamespaces:
+      - kube-*
+      - d8-*
+      - aqua*
+      - lmru-*
+      - devops-core-*
+      - syn-github-actions-runner-controller #gha runners for synoptic p0602
+      - vspspr-*
+      - clickhouse-*
+      - coroot
+      - alfor-*
+      - asm-dev
+      - billing-preprod
+      - intraru-prod
+      - wecare-prod
+      - wecare-test
+      - fudzi
+      - carrier-portal-*
+      - pickup-point-*
+      - del-sell-*
+      - gts-tms-*
+      - pnr--alfa
+      - del-repo-*
+      - infra-elklogs*
+      - osaas-opensearch*
+      - osaas-logs-b-obs*
+      - jaeger*
+      - gitlab-runner*
+      - pim-*
+      - search-*
+      - mf
+      - chaos-mesh
+      - intraru-stage
+      - intraru-preprod
+      - elma-*
+      - trivy-operator

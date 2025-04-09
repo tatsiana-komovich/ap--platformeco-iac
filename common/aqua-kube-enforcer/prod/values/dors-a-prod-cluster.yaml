@@ -1,0 +1,21 @@
+clusterName: "k8s-dors-a-prod"
+image:
+  tag: "2022.4.721"
+
+aquaSecret:
+  kubeEnforcerToken: enforcer-dors-a-k8s
+
+enforcer:
+  enforcerToken: enforcer-dors-a
+  nodeSelector:
+    node-role.k8s.lmru.tech/application: ''
+  tolerations:
+    - key: dedicated
+      operator: Equal
+      effect: "NoSchedule"
+      value: rundeck
+  image:
+    tag: "2022.4.721"
+
+microEnforcerImage:
+  tag: "2022.4.721"

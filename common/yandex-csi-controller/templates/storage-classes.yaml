@@ -1,0 +1,134 @@
+---
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: yc-network-hdd
+{{- if  eq "yc-network-hdd" .Values.defaultStorageclass }}
+  annotations:
+    storageclass.kubernetes.io/is-default-class: "true"
+{{- end }}
+provisioner: yandex.csi.flant.com
+parameters:
+  typeID: network-hdd
+allowVolumeExpansion: true
+volumeBindingMode: Immediate
+reclaimPolicy: Delete
+allowedTopologies:
+- matchLabelExpressions:
+  - key: topology.kubernetes.io/region
+    values:
+    - yc
+---
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: yc-network-ssd
+{{- if  eq "yc-network-ssd" .Values.defaultStorageclass }}
+  annotations:
+    storageclass.kubernetes.io/is-default-class: "true"
+{{- end }}
+
+provisioner: yandex.csi.flant.com
+parameters:
+  typeID: network-ssd-a
+allowVolumeExpansion: true
+volumeBindingMode: Immediate
+reclaimPolicy: Delete
+allowedTopologies:
+- matchLabelExpressions:
+  - key: topology.kubernetes.io/region
+    values:
+    - yc
+  - key: topology.kubernetes.io/zone
+    values:
+    - yc-a
+---
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: yc-network-ssd-nonreplicated
+{{- if  eq "yc-network-ssd-nonreplicated" .Values.defaultStorageclass }}
+  annotations:
+    storageclass.kubernetes.io/is-default-class: "true"
+{{- end }}
+provisioner: yandex.csi.flant.com
+parameters:
+  typeID: network-ssd-nonreplicated
+allowVolumeExpansion: true
+volumeBindingMode: Immediate
+reclaimPolicy: Delete
+allowedTopologies:
+- matchLabelExpressions:
+  - key: topology.kubernetes.io/region
+    values:
+    - yc
+---
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: network-ssd-yca
+provisioner: yandex.csi.flant.com
+parameters:
+  typeID: network-ssd
+allowVolumeExpansion: true
+volumeBindingMode: Immediate
+reclaimPolicy: Delete
+allowedTopologies:
+- matchLabelExpressions:
+  - key: topology.kubernetes.io/region
+    values:
+    - yc
+---
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: network-ssd-ycd
+provisioner: yandex.csi.flant.com
+parameters:
+  typeID: network-ssd
+allowVolumeExpansion: true
+volumeBindingMode: Immediate
+reclaimPolicy: Delete
+allowedTopologies:
+- matchLabelExpressions:
+  - key: topology.kubernetes.io/region
+    values:
+    - yc
+  - key: topology.kubernetes.io/zone
+    values:
+    - yc-d
+---
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: network-ssd-io-m3-yca
+provisioner: yandex.csi.flant.com
+parameters:
+  typeID: network-ssd-io-m3
+allowVolumeExpansion: true
+volumeBindingMode: Immediate
+reclaimPolicy: Delete
+allowedTopologies:
+- matchLabelExpressions:
+  - key: topology.kubernetes.io/region
+    values:
+    - yc
+---
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: network-ssd-io-m3-ycd
+provisioner: yandex.csi.flant.com
+parameters:
+  typeID: network-ssd-io-m3
+allowVolumeExpansion: true
+volumeBindingMode: Immediate
+reclaimPolicy: Delete
+allowedTopologies:
+- matchLabelExpressions:
+  - key: topology.kubernetes.io/region
+    values:
+    - yc
+  - key: topology.kubernetes.io/zone
+    values:
+    - yc-d

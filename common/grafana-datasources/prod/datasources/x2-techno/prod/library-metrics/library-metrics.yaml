@@ -1,0 +1,17 @@
+spec:
+  access: Proxy
+  type: postgres
+  url: '<path:library-metrics/data/prod#host>:<path:library-metrics/data/prod#port>'
+  user: '<path:library-metrics/data/prod#username>'
+  database: '<path:library-metrics/data/prod#database>'
+  secureJsonData:
+    password: '<path:library-metrics/data/prod#password>'
+  jsonData:
+    database: '<path:library-metrics/data/prod#database>'
+    sslmode: 'disable'
+    maxOpenConns: 100 # Grafana v5.4+
+    maxIdleConns: 2 # Grafana v5.4+
+    maxIdleConnsAuto: true # Grafana v9.5.1+
+    connMaxLifetime: 14400 # Grafana v5.4+
+    postgresVersion: 1000 # 903=9.3, 904=9.4, 905=9.5, 906=9.6, 1000=10
+    timescaledb: false

@@ -1,0 +1,37 @@
+---
+apiVersion: operator.victoriametrics.com/v1beta1
+kind: VMRule
+metadata:
+  name: vm-rule-k8s-prometheus
+  namespace: devops-core-victoria-alerts
+spec:
+  groups:
+    - name: kubernetes.gogomonia
+      rules:
+        - alert: KubeApiIsDown
+          expr: |
+                avg by (cluster, environment, job) (gogomonia_test{site=~"api-.*", environment="prod"}) < 0.5
+          for: 5m
+          labels:
+            severity: critical
+          annotations:
+            summary: "K8S API is down"
+            description: "K8S API is down"
+        - alert: KubeApiIsDown
+          expr: |
+                avg by (cluster, environment, job) (gogomonia_test{site=~"api-.*", environment="stage"}) < 0.5
+          for: 5m
+          labels:
+            severity: warning
+          annotations:
+            summary: "K8S API is down"
+            description: "K8S API is down"
+        - alert: ServiceIsDown
+          expr: |
+                up{job=~"awx|vmalerts-prod|awx-posgresql-db|loki.*"} < 1
+          for: 5m
+          labels:
+            severity: warning
+          annotations:
+            summary: "{{ $labels.instance }} is down"
+            description: "{{ $labels.instance }} is down"

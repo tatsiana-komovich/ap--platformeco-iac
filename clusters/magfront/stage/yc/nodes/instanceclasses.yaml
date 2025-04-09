@@ -1,0 +1,50 @@
+---
+apiVersion: deckhouse.io/v1
+kind: YandexInstanceClass
+metadata:
+  name: worker
+spec:
+  cores: 8
+  diskSizeGB: 45
+  diskType: network-hdd
+  imageID: fd8bkgba66kkf9eenpkb
+  memory: 16384
+  networkType: Standard
+---
+apiVersion: deckhouse.io/v1
+kind: YandexInstanceClass
+metadata:
+  name: system
+spec:
+  cores: 4
+  diskSizeGB: 50
+  diskType: network-hdd
+  imageID: fd8bkgba66kkf9eenpkb
+  memory: 12288
+  networkType: Standard
+---
+apiVersion: deckhouse.io/v1
+kind: YandexInstanceClass
+metadata:
+  name: otel-system
+spec:
+  cores: 8
+  diskSizeGB: 50
+  diskType: network-ssd
+  imageID: fd8emvfmfoaordspe1jr
+  memory: 16384
+  networkType: Standard
+  platformID: standard-v2
+---
+apiVersion: deckhouse.io/v1
+kind: YandexInstanceClass
+metadata:
+  name: d8-loki
+spec:
+  cores: 4
+  diskSizeGB: 50
+  diskType: network-ssd
+  imageID: fd8emvfmfoaordspe1jr
+  memory: 8192
+  networkType: Standard
+  platformID: standard-v2

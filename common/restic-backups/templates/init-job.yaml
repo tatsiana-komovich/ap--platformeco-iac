@@ -1,0 +1,38 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ .Values.Chart_Name }}-init-job
+  annotations:
+    avp.kubernetes.io/path: "{{ .Values.avp_path }}"
+    "helm.sh/hook": post-install
+spec:
+  template:
+    spec:
+      imagePullSecrets:
+      - name: regsecret
+      containers:
+      - name: init
+        command: ["/restic_init.sh"]
+        image: {{ .Values.restic_image }}
+        imagePullPolicy: IfNotPresent
+        volumeMounts:
+        - name: backup-script
+          subPath: restic_init.sh
+          mountPath: /restic_init.sh
+        env:
+        {{ include "envs" $ | nindent 14 }}
+        resources:
+          requests:
+            cpu: 100m
+      volumes:
+      - name: k8s-dir
+        hostPath:
+          path: /etc/kubernetes
+          type: Directory
+      - name: backup-script
+        configMap:
+          name: etcd-backup-script
+          defaultMode: 0755
+      restartPolicy: Never
+      activeDeadlineSeconds: 100
+  backoffLimit: 1

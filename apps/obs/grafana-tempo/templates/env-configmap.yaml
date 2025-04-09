@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: otel-tempo-env
+  labels:
+    app: {{ .Chart.Name}}-distributor
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}"
+    release: "{{ .Release.Name }}"
+    heritage: "{{ .Release.Service }}"
+data:
+  JAEGER_SAMPLER_TYPE: const
+  JAEGER_SAMPLER_PARAM: '0.1'
+  JAEGER_AGENT_HOST: otel-tempo-self-monitoring
+  JAEGER_AGENT_PORT: '6831'

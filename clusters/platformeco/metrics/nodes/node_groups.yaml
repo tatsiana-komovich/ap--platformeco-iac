@@ -1,0 +1,347 @@
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  name: app-nodes
+spec:
+  cloudInstances:
+    classReference:
+      kind: YandexInstanceClass
+      name: application-nodes
+    maxPerZone: 8
+    minPerZone: 4
+    zones:
+      - ru-central1-d
+  disruptions:
+    approvalMode: Manual
+  kubelet:
+    containerLogMaxFiles: 4
+    containerLogMaxSize: 50Mi
+    maxPods: 130
+    resourceReservation:
+      mode: "Auto"
+  nodeTemplate:
+    labels:
+      environment: prod
+      threshold.extended-monitoring.deckhouse.io/load-average-per-core-critical: "100"
+      threshold.extended-monitoring.deckhouse.io/load-average-per-core-warning: "100"
+  nodeType: CloudEphemeral
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  name: insert-nodes-d
+spec:
+  cloudInstances:
+    classReference:
+      kind: YandexInstanceClass
+      name: vminsert-nodes
+    maxPerZone: 20
+    minPerZone: 7
+    standby: 1
+    standbyHolder:
+      notHeldResources:
+        cpu: 200m
+        memory: 2Gi
+    zones:
+      - ru-central1-d
+  disruptions:
+    approvalMode: Automatic
+  kubelet:
+    containerLogMaxFiles: 4
+    containerLogMaxSize: 50Mi
+    maxPods: 130
+    resourceReservation:
+      mode: "Auto"
+  nodeTemplate:
+    labels:
+      node-role.flant.com/vm-insert-d: ""
+    taints:
+      - effect: NoSchedule
+        key: dedicated.flant.com
+        value: vm-insert-d
+  nodeType: CloudEphemeral
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  name: insert-nodes-a
+spec:
+  cloudInstances:
+    classReference:
+      kind: YandexInstanceClass
+      name: vminsert-nodes
+    maxPerZone: 20
+    minPerZone: 5
+    standby: 1
+    standbyHolder:
+      notHeldResources:
+        cpu: 200m
+        memory: 2Gi
+    zones:
+      - ru-central1-a
+  disruptions:
+    approvalMode: Automatic
+  kubelet:
+    containerLogMaxFiles: 4
+    containerLogMaxSize: 50Mi
+    maxPods: 130
+    resourceReservation:
+      mode: "Auto"
+  nodeTemplate:
+    labels:
+      node-role.flant.com/vm-insert-a: ""
+    taints:
+      - effect: NoSchedule
+        key: dedicated.flant.com
+        value: vm-insert-a
+  nodeType: CloudEphemeral
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  name: insert-nodes-b
+spec:
+  cloudInstances:
+    classReference:
+      kind: YandexInstanceClass
+      name: vminsert-nodes
+    maxPerZone: 20
+    minPerZone: 5
+    standby: 1
+    standbyHolder:
+      notHeldResources:
+        cpu: 200m
+        memory: 2Gi
+    zones:
+      - ru-central1-b
+  disruptions:
+    approvalMode: Automatic
+  kubelet:
+    containerLogMaxFiles: 4
+    containerLogMaxSize: 50Mi
+    maxPods: 130
+    resourceReservation:
+      mode: "Auto"
+  nodeTemplate:
+    labels:
+      node-role.flant.com/vm-insert-b: ""
+    taints:
+      - effect: NoSchedule
+        key: dedicated.flant.com
+        value: vm-insert-b
+  nodeType: CloudEphemeral
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  name: select-nodes-d
+spec:
+  cloudInstances:
+    classReference:
+      kind: YandexInstanceClass
+      name: vmselect-nodes
+    maxPerZone: 20
+    minPerZone: 5
+    standby: 1
+    standbyHolder:
+      notHeldResources:
+        cpu: 200m
+        memory: 2Gi
+    zones:
+      - ru-central1-d
+  disruptions:
+    approvalMode: Automatic
+  kubelet:
+    containerLogMaxFiles: 4
+    containerLogMaxSize: 50Mi
+    maxPods: 130
+    resourceReservation:
+      mode: "Auto"
+  nodeTemplate:
+    labels:
+      node-role.flant.com/vm-select-d: ""
+    taints:
+      - effect: NoSchedule
+        key: dedicated.flant.com
+        value: vm-select-d
+  nodeType: CloudEphemeral
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  name: select-nodes-a
+spec:
+  cloudInstances:
+    classReference:
+      kind: YandexInstanceClass
+      name: vmselect-nodes
+    maxPerZone: 20
+    minPerZone: 5
+    standby: 1
+    standbyHolder:
+      notHeldResources:
+        cpu: 200m
+        memory: 2Gi
+    zones:
+      - ru-central1-a
+  disruptions:
+    approvalMode: Automatic
+  kubelet:
+    containerLogMaxFiles: 4
+    containerLogMaxSize: 50Mi
+    maxPods: 130
+    resourceReservation:
+      mode: "Auto"
+  nodeTemplate:
+    labels:
+      node-role.flant.com/vm-select-a: ""
+    taints:
+      - effect: NoSchedule
+        key: dedicated.flant.com
+        value: vm-select-a
+  nodeType: CloudEphemeral
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  name: select-nodes-b
+spec:
+  cloudInstances:
+    classReference:
+      kind: YandexInstanceClass
+      name: vmselect-nodes
+    maxPerZone: 20
+    minPerZone: 5
+    standby: 1
+    standbyHolder:
+      notHeldResources:
+        cpu: 200m
+        memory: 2Gi
+    zones:
+      - ru-central1-b
+  disruptions:
+    approvalMode: Automatic
+  kubelet:
+    containerLogMaxFiles: 4
+    containerLogMaxSize: 50Mi
+    maxPods: 130
+    resourceReservation:
+      mode: "Auto"
+  nodeTemplate:
+    labels:
+      node-role.flant.com/vm-select-b: ""
+    taints:
+      - effect: NoSchedule
+        key: dedicated.flant.com
+        value: vm-select-b
+  nodeType: CloudEphemeral
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  name: storage-node-d
+spec:
+  cloudInstances:
+    classReference:
+      kind: YandexInstanceClass
+      name: vmstorage-nodes
+    maxPerZone: 36
+    minPerZone: 18
+    standby: 3
+    standbyHolder:
+      notHeldResources:
+        cpu: 200m
+        memory: 2Gi
+    zones:
+      - ru-central1-d
+  disruptions:
+    approvalMode: Automatic
+  kubelet:
+    containerLogMaxFiles: 4
+    containerLogMaxSize: 50Mi
+    maxPods: 130
+    resourceReservation:
+      mode: "Auto"
+  nodeTemplate:
+    labels:
+      node-role.flant.com/vm-storage-d: ""
+      node-role.kubernetes.io/vm-storage-d: ""
+    taints:
+      - effect: NoSchedule
+        key: dedicated.flant.com
+        value: vm-storage-d
+  nodeType: CloudEphemeral
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  name: d8-loki
+spec:
+  chaos:
+    mode: Disabled
+  cloudInstances:
+    classReference:
+      kind: YandexInstanceClass
+      name: d8-loki
+    maxPerZone: 1
+    minPerZone: 1
+    zones:
+      - ru-central1-a
+  disruptions:
+    approvalMode: Automatic
+  nodeTemplate:
+    labels:
+      node-role/d8-loki: ""
+    taints:
+      - effect: NoExecute
+        key: dedicated
+        value: d8-loki
+  nodeType: CloudEphemeral
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  name: master
+spec:
+  disruptions:
+    approvalMode: Manual
+  nodeTemplate:
+    labels:
+      node-role.kubernetes.io/control-plane: ""
+      node-role.kubernetes.io/master: ""
+      okmeter.io/enabled: ""
+    taints:
+      - effect: NoSchedule
+        key: node-role.kubernetes.io/control-plane
+      - effect: NoSchedule
+        key: node-role.kubernetes.io/master
+  nodeType: CloudPermanent
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  name: system
+spec:
+  chaos:
+    mode: Disabled
+  cloudInstances:
+    classReference:
+      kind: YandexInstanceClass
+      name: system
+    maxPerZone: 2
+    minPerZone: 1
+    zones:
+      - ru-central1-a
+      - ru-central1-b
+  disruptions:
+    approvalMode: Automatic
+  nodeTemplate:
+    labels:
+      node-role.deckhouse.io/system: ""
+      okmeter.io/enabled: ""
+    taints:
+      - effect: NoExecute
+        key: dedicated.deckhouse.io
+        value: system
+  nodeType: CloudEphemeral

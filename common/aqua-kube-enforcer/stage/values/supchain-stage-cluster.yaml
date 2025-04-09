@@ -1,0 +1,22 @@
+clusterName: "k8s-supchain-stage"
+
+aquaSecret:
+  kubeEnforcerToken: enforcer-supchain-stage-k8s
+
+nodeSelector:
+  node-role.k8s.lmru.tech/application: ''
+tolerations:
+  - key: dedicated
+    operator: Equal
+    effect: "NoExecute"
+    value: ist-perf-test-app
+
+enforcer:
+  enforcerToken: enforcer-supchain-stage
+  nodeSelector:
+    node-role.k8s.lmru.tech/application: ''
+  tolerations:
+    - key: dedicated
+      operator: Equal
+      effect: "NoExecute"
+      value: ist-perf-test-app

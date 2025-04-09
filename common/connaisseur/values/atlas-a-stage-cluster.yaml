@@ -1,0 +1,29 @@
+---
+connaisseur:
+  application:
+    validators:
+      - name: allow
+        type: static
+        approve: true
+      - name: deny
+        type: static
+        approve: false
+
+      - name: cosign
+        type: cosign
+        trustRoots:
+          - name: agryaznov
+            key: |
+              <path:services/data/connaisseur#AGRYAZNOV_PUBLIC_KEY | indent 6>
+    policy:
+      - pattern: "docker-devops-examples.art.lmru.tech/*:*"
+        validator: cosign
+        with:
+          trustRoot: agryaznov
+      - pattern: "docker.art.lmru.tech/*:*"
+        validator: cosign
+        with:
+          trustRoot: "*"
+
+  alerting:
+    clusterIdentifier: atlas-a-stage

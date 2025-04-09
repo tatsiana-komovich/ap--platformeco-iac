@@ -1,0 +1,41 @@
+---
+alertmanager:
+  templates:
+    alertmanager.tmpl: |-
+      ''
+
+  config:
+    global:
+      smtp_from: 'alertmanager@leroy-merlin.ru'
+      smtp_smarthost: 'massmail.hq.ru.corp.leroymerlin.com:25'
+      smtp_require_tls: false
+
+    templates:
+      - '/etc/alertmanager/*.tmpl'
+
+    route:
+      group_by: ['alertname', 'job']
+      receiver: 'void'
+      repeat_interval: 4h
+
+  ## Add your Alertmanager configuration below
+
+      routes:
+        - matchers:
+            - product_id="P0116"
+          receiver: 'pocmn-grafana-oncall-lopus'
+        # - matchers:
+        #     - cool_label="cool_value"
+        #   receiver: 'my-grafana-oncall-webhook'
+
+    receivers:
+      - name: 'void'
+      - name: 'pocmn-grafana-oncall-lopus'
+        webhook_configs:
+          - url: 'https://obs-grafana-oncall-yc-techno.apps.lmru.tech/79/integrations/v1/alertmanager/jhdpQKWueSU6H0OEX7psYl091/'
+            send_resolved: true
+
+    #   - name: 'my-grafana-oncall-webhook'
+    #     webhook_configs:
+    #       - url: 'https://obs-grafana-oncall-yc-techno.apps.lmru.tech/00/integrations/v1/alertmanager/AABBCCC112233/'
+    #         send_resolved: true

@@ -1,0 +1,14 @@
+clusterName: "k8s-heze-a-stage"
+
+aquaSecret:
+  kubeEnforcerToken: enforcer-heze-a-stage-k8s
+
+enforcer:
+  enforcerToken: enforcer-heze-a-stage
+  nodeSelector:
+    node-role.k8s.lmru.tech/application: ''
+  tolerations:
+    - key: dedicated
+      operator: Equal
+      effect: "NoSchedule"
+      value: ghe-runners

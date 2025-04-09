@@ -1,0 +1,119 @@
+---
+admission-policy-engine:
+  spec:
+    version: 1
+    enabled: true
+  internal-lb-policy: true
+
+user-authn:
+  enabled: true
+  settings:
+    publishAPI:
+      enabled: true
+      https:
+        global:
+          kubeconfigGeneratorMasterCA: ""
+        mode: Global
+  version: 2
+
+prometheus:
+  enabled: true
+  settings:
+    externalLabels:
+      k8s_cluster: antlia-d-stage
+      project_name: kong
+      environment: stage
+      datacenter: yc
+      platform: yandex
+  version: 2
+
+cert-manager:
+  enabled: true
+  settings:
+    enableCAInjector: true
+  version: 1
+
+logShipper:
+  enabled: false
+  version: 1
+
+extended-monitoring:
+  enabled: true
+  settings:
+    events:
+      exporterEnabled: true
+      severityLevel: All
+  version: 2
+
+monitoring-service-latency:
+  enabled: true
+  updatePolicy: flant-team-alfa
+  settings:
+    config:
+      - dsn: preprod-kafka-preprod-kafka-0.preprod-kafka-kafka-brokers.preprod-kafka.svc.cluster.local.:9090
+        name: internal-tcp-antlia-a-preprod-kafka-0-9090
+        type: tcp
+      - dsn: preprod-kafka-preprod-kafka-1.preprod-kafka-kafka-brokers.preprod-kafka.svc.cluster.local.:9090
+        name: internal-tcp-antlia-a-preprod-kafka-1-9090
+        type: tcp
+      - dsn: preprod-kafka-preprod-kafka-2.preprod-kafka-kafka-brokers.preprod-kafka.svc.cluster.local.:9090
+        name: internal-tcp-antlia-a-preprod-kafka-2-9090
+        type: tcp
+      - dsn: preprod-kafka-preprod-kafka-0.preprod-kafka-kafka-brokers.preprod-kafka.svc.cluster.local.:9091
+        name: internal-tcp-antlia-a-preprod-kafka-0-9091
+        type: tcp
+      - dsn: preprod-kafka-preprod-kafka-1.preprod-kafka-kafka-brokers.preprod-kafka.svc.cluster.local.:9091
+        name: internal-tcp-antlia-a-preprod-kafka-1-9091
+        type: tcp
+      - dsn: preprod-kafka-preprod-kafka-2.preprod-kafka-kafka-brokers.preprod-kafka.svc.cluster.local.:9091
+        name: internal-tcp-antlia-a-preprod-kafka-2-9091
+        type: tcp
+      - dsn: preprod-kafka-preprod-kafka-0.preprod-kafka-kafka-brokers.preprod-kafka.svc.cluster.local.:9092
+        name: internal-tcp-antlia-a-preprod-kafka-0-9092
+        type: tcp
+      - dsn: preprod-kafka-preprod-kafka-1.preprod-kafka-kafka-brokers.preprod-kafka.svc.cluster.local.:9092
+        name: internal-tcp-antlia-a-preprod-kafka-1-9092
+        type: tcp
+      - dsn: preprod-kafka-preprod-kafka-2.preprod-kafka-kafka-brokers.preprod-kafka.svc.cluster.local.:9092
+        name: internal-tcp-antlia-a-preprod-kafka-2-9092
+        type: tcp
+      - dsn: preprod-kafka-preprod-kafka-0.preprod-kafka-kafka-brokers.preprod-kafka.svc.cluster.local.:9094
+        name: internal-tcp-antlia-b-preprod-kafka-0-9094
+        type: tcp
+      - dsn: preprod-kafka-preprod-kafka-1.preprod-kafka-kafka-brokers.preprod-kafka.svc.cluster.local.:9094
+        name: internal-tcp-antlia-a-preprod-kafka-1-9094
+        type: tcp
+      - dsn: preprod-kafka-preprod-kafka-2.preprod-kafka-kafka-brokers.preprod-kafka.svc.cluster.local.:9094
+        name: internal-tcp-antlia-a-preprod-kafka-2-9094
+        type: tcp
+      - dsn: tls-0.preprod-kafka-a-stage.kafka.apim.lmru.tech:9094
+        name: external-tcp-antlia-a-preprod-kafka-0-9094
+        type: tcp
+      - dsn: tls-1.preprod-kafka-a-stage.kafka.apim.lmru.tech:9094
+        name: external-tcp-antlia-a-preprod-kafka-1-9094
+        type: tcp
+      - dsn: tls-2.preprod-kafka-a-stage.kafka.apim.lmru.tech:9094
+        name: external-tcp-antlia-a-preprod-kafka-2-9094
+        type: tcp
+      - dsn: tls-0.preprod-kafka-b-stage.kafka.apim.lmru.tech:9094
+        name: external-tcp-antlia-b-preprod-kafka-0-9094
+        type: tcp
+      - dsn: tls-1.preprod-kafka-b-stage.kafka.apim.lmru.tech:9094
+        name: external-tcp-antlia-b-preprod-kafka-1-9094
+        type: tcp
+      - dsn: tls-2.preprod-kafka-b-stage.kafka.apim.lmru.tech:9094
+        name: external-tcp-antlia-b-preprod-kafka-2-9094
+        type: tcp
+  version: 1
+
+mup-flant-team-alfa:
+  releaseChannel: EarlyAccess
+  update:
+    mode: Auto
+
+modulesource-flant-team-alfa:
+  registry:
+    ca: ""
+    dockerCfg: eyJhdXRocyI6IHsgImRvY2tlci1yZW1vdGUtZmxhbnQuYXJ0LmxtcnUudGVjaCI6IHt9fX0=
+    repo: docker-remote-flant.art.lmru.tech/team/alfa/d8-modules/monitoring-service-latency
+    scheme: HTTPS

@@ -1,0 +1,177 @@
+---
+opendistro:
+  logstash:
+    enabled: true
+    filter: |-
+      filter {
+        grok {
+          id => "grok_multi"
+          match => {
+            "message" => [
+              "(((?<brick>[a-zA-Z\-0-9]+)_(?<application>[a-zA-Z\-0-9]+)\s)|((?<application>[a-zA-Z\-0-9]+)\s)|(.{0}))(?<timestamp>%{YEAR}-%{MONTHNUM}-%{MONTHDAY} %{TIME}) \[(?<transaction>[A-Za-z0-9\-_\.]*),{0,1}(?<traceId>[A-Za-z0-9\-_\.]*),(?<spanId>[A-Za-z0-9\-_\.]*)\]\[%{GREEDYDATA:thread}\] %{LOGLEVEL:level}[ ]+%{NOTSPACE:class} - %{GREEDYDATA:text}",
+              "(((?<brick>[a-zA-Z\-0-9]+)_(?<application>[a-zA-Z\-0-9]+)\s)|((?<application>[a-zA-Z\-0-9]+)\s)|(.{0}))(?<timestamp>%{YEAR}-%{MONTHNUM}-%{MONTHDAY} %{TIME}) %{LOGLEVEL:level} \[(?<transaction>[A-Za-z0-9\-_\.]*),{0,1}(?<traceId>[A-Za-z0-9\-_\.]*),(?<spanId>[A-Za-z0-9\-_\.]*),([A-Za-z0-9\-_\.]*)\] ([0-9]*) --- \[%{GREEDYDATA:thread}\] %{NOTSPACE:class}[ ]+: %{GREEDYDATA:text}",
+              "(((?<brick>[a-zA-Z\-0-9]+)_(?<application>[a-zA-Z\-0-9]+)\s)|((?<application>[a-zA-Z\-0-9]+)\s)|(.{0}))(?<timestamp>%{YEAR}-%{MONTHNUM}-%{MONTHDAY} %{TIME}) \[(?<processId>[A-Za-z\-0-9]*),(?<solutionId>[A-Za-z0-9\-_\.]*),{0,1}(?<traceId>[A-Za-z0-9\-_\.]*),(?<spanId>[A-Za-z0-9\-_\.]*)\]\[%{GREEDYDATA:thread}\] %{LOGLEVEL:level}[ ]+%{NOTSPACE:class} - %{GREEDYDATA:text}",
+              "(?<event>([A-Z][0-9]{0,4})) %{TIME:time}%{SPACE}%{NUMBER:n} (?<appsrc>%{WORD}\.%{WORD}:\d{1,})\] %{GREEDYDATA:msg}"
+            ]
+          }
+        }
+
+        mutate {
+          id => "mutate_log"
+          rename => { "log" => "original_log" }
+          rename => { "text" => "log" }
+          remove_field => ["time"]
+        }
+        if [kubernetes][namespace] !~ /^cp-.*/ {
+          json {
+            id => "json_log"
+            source => "log"
+            skip_on_invalid_json => true
+            target => "jsonLog"
+          }
+        }
+
+        if [message] =~ "\tat" {
+          grok {
+            id => "grok_tat"
+            match => ["message", "^(\tat)"]
+            add_tag => ["stacktrace"]
+          }
+        }
+
+        if [log] {
+          mutate {
+            id => "log_remove_field2"
+            remove_field => [ "message" ]
+          }
+        }
+
+        if [jsonLog][body][id] {
+          mutate {
+            id => "log_remove_body_id"
+            remove_field => [ "[jsonLog][body][id]" ]
+          }
+        }
+        mutate {
+          id => "log_remove_prevValue"
+          remove_field => [ "[jsonLog][body][changeSets][diffs][modifiedFields][prevValue]" ]
+        }
+        mutate {
+          id => "log_remove_products"
+          remove_field => [ "[jsonLog][body][products]" ]
+        }
+        if [jsonLog][body][0][id] {
+          mutate {
+            id => "log_remove_body_id_in_array0"
+            remove_field => [ "[jsonLog][body][0][id]" ]
+          }
+        }
+        if [jsonLog][body][1][id] {
+          mutate {
+            id => "log_remove_body_id_in_array1"
+            remove_field => [ "[jsonLog][body][1][id]" ]
+          }
+        }
+        if [jsonLog][body][2][id] {
+          mutate {
+            id => "log_remove_body_id_in_array2"
+            remove_field => [ "[jsonLog][body][2][id]" ]
+          }
+        }
+        if [jsonLog][body][3][id] {
+          mutate {
+            id => "log_remove_body_id_in_array3"
+            remove_field => [ "[jsonLog][body][3][id]" ]
+          }
+        }
+        if [jsonLog][body][4][id] {
+          mutate {
+            id => "log_remove_body_id_in_array4"
+            remove_field => [ "[jsonLog][body][4][id]" ]
+          }
+        }
+        if [jsonLog][body][5][id] {
+          mutate {
+            id => "log_remove_body_id_in_array5"
+            remove_field => [ "[jsonLog][body][5][id]" ]
+          }
+        }
+        if [jsonLog][body][6][id] {
+          mutate {
+            id => "log_remove_body_id_in_array6"
+            remove_field => [ "[jsonLog][body][6][id]" ]
+          }
+        }
+        if [jsonLog][body][7][id] {
+          mutate {
+            id => "log_remove_body_id_in_array7"
+            remove_field => [ "[jsonLog][body][7][id]" ]
+          }
+        }
+        if [jsonLog][body][8][id] {
+          mutate {
+            id => "log_remove_body_id_in_array8"
+            remove_field => [ "[jsonLog][body][8][id]" ]
+          }
+        }
+        if [jsonLog][body][9][id] {
+          mutate {
+            id => "log_remove_body_id_in_array9"
+            remove_field => [ "[jsonLog][body][9][id]" ]
+          }
+        }
+        if [jsonLog][body][comments] {
+          mutate {
+            id => "log_remove_body_comments"
+            remove_field => [ "[jsonLog][body][comments]" ]
+          }
+        }
+        if [jsonLog][body][status] {
+          mutate {
+            id => "log_remove_body_status"
+            remove_field => [ "[jsonLog][body][status]" ]
+          }
+        }
+
+        date {
+          id => "date"
+          match => ["timestamp", "yyyy-MM-dd HH:mm:ss.SSS", "ISO8601"]
+        }
+
+        if ![kubernetes][namespace] {
+          mutate {
+            id => "filebeat_index"
+            add_field => { "[@metadata][target_index]" => "filebeat" }
+          }
+        } else if [kubernetes][labels][opensearch_index] {
+          mutate {
+            id => "mutate_opensearch_idx"
+            add_field => { "[@metadata][target_index]" => "%{[kubernetes][labels][opensearch_index]}" }
+          }
+        } else {
+          grok {
+            id => "grok"
+            match => { "[kubernetes][namespace]" => "(?<[@metadata][target_index]>^[^-]+)" }
+          }
+          #hot fix
+          if [kubernetes][namespace] =~ /^cp.*/ {
+            mutate {
+              replace => { "[@metadata][target_index]" => "cp-fix" }
+            }
+            mutate {
+              id => "log_remove_body_status_2"
+              remove_field => [ "[jsonLog][body][status]" ]
+            }
+            mutate {
+              id => "log_remove_body_comments_2"
+              remove_field => [ "[jsonLog][body][comments]", "[jsonLog][body][changeSets][diffs][modifiedFields][newValue]" ]
+            }
+          }
+        }
+        if [ingress][upstream_response_time] {
+          mutate {
+            id => "ingress_nginx_float"
+            convert => { "[ingress][upstream_response_time]" => "float" }
+          }
+        }
+      }

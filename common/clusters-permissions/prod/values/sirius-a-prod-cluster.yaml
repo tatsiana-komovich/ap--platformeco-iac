@@ -1,0 +1,470 @@
+---
+cluster_authorization:
+  defaults:
+    default_sa_permissions: &default
+      accessLevel: User
+      limitNamespaces:
+        - default
+      allowScale: true
+      allowAccessToSystemNamespaces: true
+      portForwarding: true
+  crowd:
+    groups:
+      crowd-flant-bravo-admin:
+        <<: *default
+      crowd-payment-devops:
+        <<: *default
+        accessLevel: SuperAdmin
+        limitNamespaces:
+          - .*
+      #payment-common
+      crowd-payment-admin:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - payment-.*
+          - payment
+      crowd-payment-ro:
+        <<: *default
+        accessLevel: User
+        limitNamespaces:
+          - payment-.*
+          - payment
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+      crowd-payment-rw:
+        <<: *default
+        accessLevel: Editor
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - payment-.*
+          - payment
+      crowd-sa-payment:
+        <<: *default
+        accessLevel: Admin
+        allowAccessToSystemNamespaces: true
+        limitNamespaces:
+          - payment-.*
+          - payment
+          - d8-monitoring
+      #ptm
+      crowd-ptm-ro:
+        <<: *default
+        accessLevel: User
+        limitNamespaces:
+          - ptm-.*
+          - ptm
+          - payment-ptm-.*
+          - payment-sre-tools
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+      crowd-ptm-rw:
+        <<: *default
+        accessLevel: Editor
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - ptm-.*
+          - ptm
+          - payment-ptm-.*
+          - payment-sre-tools
+      crowd-ptm-admin:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - ptm-.*
+          - ptm
+          - payment-ptm-.*
+          - payment-sre-tools
+      crowd-sa-ptm:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - ptm-.*
+          - ptm
+          - payment-ptm-.*
+          - payment-sre-tools
+      #pdm
+      crowd-pdm-admin:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - payment-pdm-.*
+          - payment-monitoring
+          - payment-sre-tools
+      crowd-pdm-ro:
+        <<: *default
+        accessLevel: User
+        limitNamespaces:
+          - payment-pdm-.*
+          - payment-monitoring
+          - payment-sre-tools
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+      crowd-pdm-rw:
+        <<: *default
+        accessLevel: Editor
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - payment-pdm-.*
+          - payment-monitoring
+          - payment-sre-tools
+      crowd-sa-pdm:
+        <<: *default
+        accessLevel: Admin
+        allowAccessToSystemNamespaces: true
+        limitNamespaces:
+          - payment-pdm-.*
+          - payment-monitoring
+          - payment-sre-tools
+      #wallet
+      crowd-wallet-admin:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - payment-wallet-.*
+          - payment-monitoring
+          - payment-sre-tools
+      crowd-wallet-ro:
+        <<: *default
+        accessLevel: User
+        limitNamespaces:
+          - payment-wallet-.*
+          - payment-monitoring
+          - payment-sre-tools
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+      crowd-wallet-rw:
+        <<: *default
+        accessLevel: Editor
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - payment-wallet-.*
+          - payment-monitoring
+          - payment-sre-tools
+      crowd-sa-wallet:
+        <<: *default
+        accessLevel: Admin
+        allowAccessToSystemNamespaces: true
+        limitNamespaces:
+          - payment-wallet-.*
+          - payment-monitoring
+          - payment-sre-tools
+      #payment-sre
+      crowd-payment-sre-admin:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - payment-sre-.*
+          - payment-sre
+      crowd-payment-sre-ro:
+        <<: *default
+        accessLevel: User
+        limitNamespaces:
+          - payment-sre-.*
+          - payment-sre
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+      crowd-payment-sre-rw:
+        <<: *default
+        accessLevel: Editor
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - payment-sre-.*
+          - payment-sre
+      crowd-sa-payment-sre:
+        <<: *default
+        accessLevel: Admin
+        allowAccessToSystemNamespaces: true
+        limitNamespaces:
+          - payment-sre-.*
+          - payment-sre
+      #pon
+      crowd-pon-ro:
+        <<: *default
+        accessLevel: User
+        limitNamespaces:
+          - pon-.*
+          - pon
+          - payment-pon-.*
+          - payment-sre-tools
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+      crowd-pon-rw:
+        <<: *default
+        accessLevel: Editor
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - pon-.*
+          - pon
+          - payment-pon-.*
+          - payment-sre-tools
+      crowd-pon-admin:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - pon-.*
+          - pon
+          - payment-pon-.*
+          - payment-sre-tools
+      crowd-sa-pon:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - pon-.*
+          - pon
+          - payment-pon-.*
+          - payment-sre-tools
+      #receipts-payment
+      crowd-receipts-payment-admin:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - receipts-.*
+          - receipts
+          - payment-monitoring
+      crowd-receipts-payment-ro:
+        <<: *default
+        accessLevel: User
+        limitNamespaces:
+          - receipts-.*
+          - receipts
+          - payment-monitoring
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+      crowd-receipts-payment-rw:
+        <<: *default
+        accessLevel: Editor
+        allowAccessToSystemNamespaces: false
+        portForwarding: true
+        limitNamespaces:
+          - receipts-.*
+          - receipts
+          - redis-operator
+          - payment-monitoring
+      crowd-sa-receipts-payment:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - receipts-.*
+          - receipts
+          - payment-monitoring
+      crowd-obs-ro:
+        <<: *default
+        accessLevel: User
+        limitNamespaces:
+          - .*
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+      crowd-middleware-rw:
+        <<: *default
+        accessLevel: Editor
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - payment-pof-.*
+          - payment-pof
+      #wfm
+      crowd-wfm-admin:
+        <<: *default
+        accessLevel: User
+        limitNamespaces:
+          - default
+      crowd-wfm-ro:
+        <<: *default
+        accessLevel: User
+        limitNamespaces:
+          - default
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+      crowd-wfm-rw:
+        <<: *default
+        accessLevel: User
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - default
+      crowd-sa-wfm:
+        <<: *default
+        accessLevel: User
+        allowAccessToSystemNamespaces: true
+        limitNamespaces:
+          - default
+      #billing
+      crowd-billing-admin:
+        <<: *default
+        accessLevel: User
+        limitNamespaces:
+          - default
+      crowd-billing-ro:
+        <<: *default
+        accessLevel: User
+        limitNamespaces:
+          - default
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+      crowd-billing-rw:
+        <<: *default
+        accessLevel: User
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - default
+      crowd-sa-billing:
+        <<: *default
+        accessLevel: User
+        allowAccessToSystemNamespaces: true
+        limitNamespaces:
+          - default
+      # otel for tracing
+      crowd-otel-ro:
+        <<: *default
+        accessLevel: User
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+      crowd-otel-rw:
+        <<: *default
+        accessLevel: Editor
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - otel-.*
+      crowd-otel-admin:
+        <<: *default
+        accessLevel: Admin
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - otel-.*
+      crowd-sa-otel:
+        <<: *default
+        accessLevel: SuperAdmin
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - otel-.*
+      #pbb
+      crowd-pbb-ro:
+        <<: *default
+        accessLevel: User
+        limitNamespaces:
+          - pbb-.*
+          - pbb
+          - payment-sre-tools
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+      crowd-pbb-rw:
+        <<: *default
+        accessLevel: Editor
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - pbb-.*
+          - pbb
+          - payment-sre-tools
+      crowd-pbb-admin:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - pbb-.*
+          - pbb
+          - payment-sre-tools
+      crowd-sa-pbb:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - pbb-.*
+          - pbb
+          - payment-sre-tools
+      #cashoffice
+      crowd-cashoffice-ro:
+        <<: *default
+        accessLevel: User
+        limitNamespaces:
+          - cashoffice-.*
+          - cashoffice
+          - payment-sre-tools
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+      crowd-cashoffice-rw:
+        <<: *default
+        accessLevel: Editor
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - cashoffice-.*
+          - cashoffice
+          - payment-sre-tools
+      crowd-cashoffice-admin:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - cashoffice-.*
+          - cashoffice
+          - payment-sre-tools
+      crowd-sa-cashoffice:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - cashoffice-.*
+          - cashoffice
+          - payment-sre-tools
+
+DexProvider:
+  clientID: k8s-argocd
+  clientSecret: crowd_app_k8s-argocd
+
+ClusterRole:
+  prometheus-service-levels-user:
+    metadata:
+      annotations:
+        user-authz.deckhouse.io/access-level: User
+      name: prometheus-service-levels:user
+    rules:
+      - apiGroups:
+          - "sloth.slok.dev"
+        resources:
+          - prometheusservicelevels
+        verbs:
+          - get
+          - list
+          - watch
+  prometheus-service-levels-editor:
+    metadata:
+      annotations:
+        user-authz.deckhouse.io/access-level: Editor
+      name: prometheus-service-levels:editor
+    rules:
+      - apiGroups:
+          - "sloth.slok.dev"
+        resources:
+          - prometheusservicelevels
+        verbs:
+          - get
+          - list
+          - watch
+          - update
+          - patch
+          - create
+  prometheus-service-levels-admin:
+    metadata:
+      annotations:
+        user-authz.deckhouse.io/access-level: Admin
+      name: prometheus-service-levels:admin
+    rules:
+      - apiGroups:
+          - "sloth.slok.dev"
+        resources:
+          - prometheusservicelevels
+        verbs:
+          - get
+          - list
+          - watch
+          - update
+          - patch
+          - create
+          - delete

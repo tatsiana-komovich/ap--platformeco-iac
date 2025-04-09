@@ -1,0 +1,115 @@
+---
+cluster_authorization:
+  defaults:
+    default_sa_permissions: &default
+      accessLevel: User
+      limitNamespaces:
+        - default
+      allowScale: true
+      allowAccessToSystemNamespaces: false
+      portForwarding: true
+  crowd:
+    groups:
+      crowd-obs-ro:
+        <<: *default
+        accessLevel: User
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+        limitNamespaces:
+          - .*
+      crowd-obs-rw:
+        <<: *default
+        accessLevel: Editor
+        allowScale: true
+        allowAccessToSystemNamespaces: false
+        portForwarding: true
+        limitNamespaces:
+          - .*
+      crowd-obs-admin:
+        <<: *default
+        accessLevel: Admin
+        allowScale: true
+        allowAccessToSystemNamespaces: false
+        portForwarding: true
+        limitNamespaces:
+          - .*
+      crowd-sa-obs:
+        <<: *default
+        accessLevel: SuperAdmin
+        allowAccessToSystemNamespaces: true
+        limitNamespaces:
+          - .*
+      crowd-otel-ro:
+        <<: *default
+        accessLevel: User
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+        limitNamespaces:
+          - .*
+      crowd-otel-rw:
+        <<: *default
+        accessLevel: Editor
+        allowScale: true
+        allowAccessToSystemNamespaces: false
+        portForwarding: true
+        limitNamespaces:
+          - .*
+      crowd-otel-admin:
+        <<: *default
+        accessLevel: Admin
+        allowScale: true
+        allowAccessToSystemNamespaces: false
+        portForwarding: true
+        limitNamespaces:
+          - .*
+      crowd-sa-otel:
+        <<: *default
+        accessLevel: SuperAdmin
+        allowAccessToSystemNamespaces: true
+        limitNamespaces:
+          - .*
+      # The payment team helps with the deployment of the tracing service.
+      crowd-payment-sre-rw:
+        <<: *default
+        accessLevel: Editor
+        allowScale: true
+        allowAccessToSystemNamespaces: false
+        portForwarding: true
+        limitNamespaces:
+          - otel-.*
+      # opentelemetry
+      crowd-lm-sre-admin:
+        <<: *default
+        accessLevel: SuperAdmin
+        limitNamespaces:
+          - obs-.*
+        allowScale: true
+        allowAccessToSystemNamespaces: true
+        portForwarding: true
+
+ClusterRole:
+  prometheus-http-editor:
+    metadata:
+      annotations:
+        user-authz.deckhouse.io/access-level: Editor
+      name: prometheus-http:editor
+    rules:
+      - apiGroups:
+          - "monitoring.coreos.com"
+        resources:
+          - prometheuses/http
+        resourceNames:
+          - main
+        verbs:
+          - get
+          - list
+          - watch
+          - update
+          - patch
+          - create
+
+DexProvider:
+  clientID: k8s-argocd
+  clientSecret: crowd_app_k8s-argocd

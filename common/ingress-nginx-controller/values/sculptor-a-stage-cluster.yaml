@@ -1,0 +1,52 @@
+---
+IngressNginxController:
+  main-b:
+    apiVersion: deckhouse.io/v1
+    name: main-b
+    acceptRequestsFrom: {}
+    spec:
+      chaosMonkey: false
+      disableHTTP2: false
+      hsts: false
+      maxReplicas: 1
+      minReplicas: 1
+      underscoresInHeaders: false
+      validationEnabled: true
+      ingressClass: nginx
+      inlet: LoadBalancer
+      enableIstioSidecar: true
+      waitLoadBalancerOnTerminating: 60
+    additionalLogFields:
+      remote_port: "$remote_port"
+      connection_from_port: "$realip_remote_port"
+    loadBalancer:
+      annotations:
+        yandex.cloud/load-balancer-type: Internal
+        yandex.cpi.flant.com/listener-subnet-id: e2lcn36s0e34njb7er5k
+        yandex.cpi.flant.com/target-group-network-id: enpofm2o1fd0e01e2rfb
+      behindL7Proxy: true
+      realIPHeader: X-Forwarded-For
+
+  d8-main-b:
+    apiVersion: deckhouse.io/v1
+    name: d8-main-b
+    acceptRequestsFrom: {}
+    spec:
+      chaosMonkey: false
+      disableHTTP2: false
+      enableIstioSidecar: true
+      hsts: false
+      ingressClass: nginx-d8s
+      inlet: LoadBalancer
+      maxReplicas: 1
+      minReplicas: 1
+      underscoresInHeaders: false
+      validationEnabled: true
+      waitLoadBalancerOnTerminating: 60
+    loadBalancer:
+      annotations:
+        yandex.cloud/load-balancer-type: Internal
+        yandex.cpi.flant.com/listener-subnet-id: e2lcn36s0e34njb7er5k
+        yandex.cpi.flant.com/target-group-network-id: enpofm2o1fd0e01e2rfb
+      behindL7Proxy: true
+      realIPHeader: X-Forwarded-For

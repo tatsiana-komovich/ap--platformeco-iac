@@ -1,0 +1,25 @@
+---
+apiVersion: deckhouse.io/v1alpha1
+kind: NodeGroupConfiguration
+metadata:
+  name: sysctl-tune.sh
+spec:
+  weight: 50
+  bundles:
+    - "*"
+  nodeGroups:
+    - "opensearch-hf"
+    - "opensearch-pdp"
+    - "opensearch-mobileapp"
+    - "opensearch-trace-a"
+    - "opensearch-hybrid"
+    - "opensearch-trace-s"
+    - "opensearch-crsel"
+    - "opensearch-infra"
+    - "opensearch-trace-b"
+  content: |
+    mmc=`sysctl -n vm.max_map_count`
+    if [ $mmc -ne 262144 ]; then
+      sysctl -w vm.max_map_count=262144
+      echo "vm.max_map_count = 262144" | tee /etc/sysctl.d/20-maxmapcount.conf
+    fi

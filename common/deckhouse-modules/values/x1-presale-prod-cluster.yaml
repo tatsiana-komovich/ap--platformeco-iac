@@ -1,0 +1,133 @@
+---
+admission-policy-engine:
+  spec:
+    version: 1
+    enabled: true
+  artifactory-repos:
+    enforcementAction: deny
+
+global:
+  settings:
+    modules:
+      ingressClass: nginx-d8s
+
+prometheus:
+  enabled: true
+  settings:
+    vpa:
+      updateMode: Initial
+      longtermMaxCPU: 1000m
+      longtermMaxMemory: 10Gi
+      maxCPU: 2000m
+      maxMemory: 13Gi
+    externalLabels:
+      k8s_cluster: x1-presale
+      project_name: presale
+      datacenter: x1
+      environment: prod
+      platform: openstack
+  version: 2
+
+user-authn:
+  enabled: true
+  settings:
+    publishAPI:
+      enabled: true
+      https:
+        global:
+          kubeconfigGeneratorMasterCA: ""
+        mode: Global
+  version: 2
+
+okmeter:
+  enabled: true
+  settings:
+    apiKey: 1c591f65-6b61-4c66-beea-baa50527e152
+    nodeSelector:
+      node-role.kubernetes.io/control-plane: ""
+    tolerations:
+      - key: node-role.kubernetes.io/control-plane
+        operator: Exists
+      - key: node-role.kubernetes.io/master
+        operator: Exists
+      - key: dedicated
+        operator: Equal
+        value: router
+  version: 1
+
+istio:
+  enabled: true
+  settings:
+    dataPlane:
+      trafficRedirectionSetupMode: CNIPlugin
+    globalVersion: "1.19"
+    sidecar:
+      resourcesManagement:
+        mode: Static
+        static:
+          limits:
+            cpu: "10"
+            memory: 10Gi
+          requests:
+            cpu: 100m
+            memory: 128Mi
+    alliance:
+      ingressGateway:
+        inlet: LoadBalancer
+        nodeSelector:
+          node-role/loadbalancer: ""
+        tolerations:
+          - operator: Exists
+    federation:
+      enabled: true
+    multicluster:
+      enabled: true
+  version: 2
+
+logShipper:
+  enabled: false
+  version: 1
+
+cert-manager:
+  enabled: true
+  settings:
+    enableCAInjector: true
+  version: 1
+
+extended-monitoring:
+  enabled: true
+  settings:
+    events:
+      exporterEnabled: true
+      severityLevel: All
+  version: 2
+
+metallb:
+  enabled: true
+  settings:
+    addressPools:
+      - addresses:
+          - 10.80.214.120/29
+        name: mypool
+        protocol: bgp
+    bgpPeers:
+      - hold-time: 3s
+        my-asn: 64994
+        peer-address: 10.80.212.252
+        peer-asn: 65501
+      - hold-time: 3s
+        my-asn: 64994
+        peer-address: 10.80.212.253
+        peer-asn: 65501
+    speaker:
+      nodeSelector:
+        node-role/metallb-speaker: ""
+      tolerations:
+        - operator: Exists
+  version: 2
+
+cni-flannel:
+  enabled: true
+  settings:
+    podNetworkMode: HostGW
+  version: 1

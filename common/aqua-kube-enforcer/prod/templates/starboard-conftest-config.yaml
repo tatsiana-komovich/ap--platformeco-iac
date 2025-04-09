@@ -1,0 +1,32 @@
+---
+{{- if and (ge (atoi (.Capabilities.KubeVersion.Minor | replace "+" "")) 19 ) .Values.starboard.enabled }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: starboard
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: {{ .Release.Name }}
+    aqua.component: starboard-operator
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}"
+    release: "{{ .Release.Name }}"
+    heritage: "{{ .Release.Service }}"
+data:
+  configAuditReports.scanner: Conftest
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: starboard-policies-config
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: {{ .Release.Name }}
+    aqua.component: starboard-operator
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}"
+    release: "{{ .Release.Name }}"
+    heritage: "{{ .Release.Service }}"
+    app.kubernetes.io/name: {{ .Values.starboard.appName }}
+    app.kubernetes.io/instance: {{ .Values.starboard.appName }}
+    app.kubernetes.io/version: {{ .Values.starboard.image.tag | quote }}
+{{- end }}

@@ -1,0 +1,38 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: app-of-appset
+  namespace: devops-core-argocd
+  annotations:
+    argocd.argoproj.io/manifest-generate-paths: /argocd-crd
+spec:
+  destination:
+    namespace: devops-core-argocd
+    server: https://kubernetes.default.svc
+  project: argocd-infra
+  source:
+    path: argocd-crd
+    plugin:
+      env:
+        - name: VAULT_NAMESPACE
+          value: it-devops
+        - name: RELEASE_NAME
+          value: app-of-appset
+        - name: AVP_SECRET
+          value: devops-core-argocd:argocd-vault-plugin-credentials
+        - name: VALUES_FILE
+          value: "values/stage/clusters.yaml"
+      name: vault-plugin-helm-values-cmp
+    repoURL: https://github.lmru.tech/adeo/lmru--devops--argocd.git
+    targetRevision: master
+  syncPolicy:
+    automated:
+      selfHeal: true
+      prune: true
+    retry:
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m0s
+      limit: 2

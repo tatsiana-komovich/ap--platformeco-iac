@@ -1,0 +1,141 @@
+---
+clusterName: felis-b
+clusterDomain: felis-b.p.mesh
+
+admission-policy-engine:
+  spec:
+    version: 1
+    enabled: true
+  artifactory-repos:
+    enforcementAction: deny
+
+global:
+  settings:
+    modules:
+      ingressClass: nginx-d8s
+
+user-authn:
+  enabled: true
+  settings:
+    idTokenTTL: "9h"
+    publishAPI:
+      enable: true
+      https:
+        global:
+          kubeconfigGeneratorMasterCA: ""
+        mode: Global
+  version: 1
+
+prometheus:
+  enabled: true
+  settings:
+    externalLabels:
+      k8s_cluster: felis-b
+      project_name: order-flow
+      environment: prod
+      datacenter: x2
+      platform: vsphere
+  version: 2
+
+okmeter:
+  enabled: true
+  settings:
+    apiKey: 7555d43e-3fb3-4847-b3a4-2edfdbfa2de2
+    nodeSelector:
+      node-role.kubernetes.io/control-plane: ""
+    tolerations:
+      - key: node-role.kubernetes.io/control-plane
+        operator: Exists
+      - key: node-role.kubernetes.io/master
+        operator: Exists
+      - key: dedicated
+        operator: Equal
+        value: router
+  version: 1
+
+control-plane-manager:
+  enabled: true
+  settings:
+    apiserver:
+      auditPolicyEnabled: true
+      certSANs:
+        - kubernetes.default.svc.cluster.local
+        - kubernetes.default.svc.felis-b.p.mesh
+        - kubernetes.default.svc.felis-a.p.mesh
+      serviceAccount:
+        additionalAPIAudiences:
+          - https://kubernetes.default.svc.felis-a.p.mesh
+          - https://kubernetes.default.svc.felis-b.p.mesh
+        additionalAPIIssuers:
+          - https://kubernetes.default.svc.felis-a.p.mes
+          - https://kubernetes.default.svc.felis-b.p.mesh
+  version: 1
+
+istio:
+  enabled: true
+  settings:
+    sidecar:
+      resourcesManagement:
+        mode: Static
+        static:
+          limits:
+            cpu: "10"
+            memory: 10Gi
+          requests:
+            cpu: 100m
+            memory: 128Mi
+    globalVersion: "1.19"
+    alliance:
+      ingressGateway:
+        inlet: LoadBalancer
+        nodeSelector:
+          node-role/loadbalancer: ""
+        tolerations:
+          - operator: Exists
+    federation:
+      enabled: true
+    dataPlane:
+      trafficRedirectionSetupMode: CNIPlugin
+    multicluster:
+      enabled: true
+  version: 2
+
+monitoring-ping:
+  enabled: true
+  settings:
+    externalTargets:
+      - host: p-pg-camunda-db-01.p-ordertracking.x1-a.cloud.lmru.tech
+        name: p-pg-camunda-db-01
+      - host: p-pg-camunda-db-02.p-ordertracking-x2.x2.cloud.lmru.tech
+        name: p-pg-camunda-db-02
+      - host: p-pg-camunda-db-03.ru-central1.internal
+        name: p-pg-camunda-db-03
+      - host: download.geofabrik.de
+        name: osm-geofabrik
+  version: 1
+
+cert-manager:
+  enabled: true
+  settings:
+    enableCAInjector: true
+  version: 1
+
+logShipper:
+  enabled: false
+  version: 1
+
+extended-monitoring:
+  enabled: true
+  settings:
+    events:
+      exporterEnabled: true
+      severityLevel: All
+  version: 1
+
+deckhouse:
+  updateMode: Manual
+  windows:
+    - from: "00:00"
+      to: "01:00"
+      days:
+        - Tue

@@ -1,0 +1,79 @@
+---
+cluster_authorization:
+  defaults:
+    default_sa_permissions: &default
+      accessLevel: User
+      limitNamespaces:
+        - default
+      allowScale: true
+      allowAccessToSystemNamespaces: true
+      portForwarding: true
+  crowd:
+    groups:
+      crowd-dbaas-admin:
+        <<: *default
+        accessLevel: Admin
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - dbaas-.*
+      # cm
+      crowd-contract-management-admin:
+        <<: *default
+        accessLevel: Admin
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - ^cm-onlyoffice-test$
+      crowd-contract-management-rw:
+        <<: *default
+        accessLevel: Editor
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - ^cm-onlyoffice-test$
+      crowd-contract-management-ro:
+        <<: *default
+        accessLevel: User
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - ^cm-onlyoffice-test$
+      crowd-sa-contract-management:
+        <<: *default
+        accessLevel: Admin
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - ^cm-onlyoffice-test$
+      #payment-common
+      crowd-payment-admin:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - payment-.*
+          - payment
+      crowd-payment-sre-admin:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - payment-.*
+          - payment
+      crowd-sa-payment:
+        <<: *default
+        accessLevel: Admin
+        allowAccessToSystemNamespaces: true
+        limitNamespaces:
+          - payment-.*
+          - payment
+
+ClusterRoleBinding:
+  crowd-dbaas-admin:custom-cluster-role:crossplane:
+    metadata:
+      name: crowd-dbaas-admin:custom-cluster-role:crossplane
+    roleRef:
+      kind: ClusterRole
+      name: crossplane
+    subjects:
+      - kind: Group
+        apiGroup: rbac.authorization.k8s.io
+        name: crowd-dbaas-admin
+
+DexProvider:
+  clientID: k8s-argocd
+  clientSecret: crowd_app_k8s-argocd

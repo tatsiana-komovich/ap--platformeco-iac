@@ -1,0 +1,124 @@
+---
+apiVersion: templates.gatekeeper.sh/v1
+kind: ConstraintTemplate
+metadata:
+  name: allowedvolumetypes
+  annotations:
+    description: Enforces security policy to restrict containers to specific volume types.
+    metadata.gatekeeper.sh/title: Allowed Volume Types Security Policy Constraint
+    metadata.gatekeeper.sh/version: 1.0.0
+    argocd.argoproj.io/hook: PreSync
+spec:
+  crd:
+    spec:
+      names:
+        kind: AllowedVolumeTypes
+      validation:
+        openAPIV3Schema:
+          type: object
+          properties:
+            allowedVolumes:
+              description: A list of volume types that are allowed to be used in a container.
+              type: array
+              items:
+                type: string
+  targets:
+    - target: admission.k8s.gatekeeper.sh
+      rego: |
+        package d8.allowed_volume_types
+
+        # Проверка на использование запрещенного типа volume
+        violation[{"msg": msg}] {
+          volume := input.review.object.spec.volumes[_]
+          volume_type := volume_source_type(volume)
+          not volume_is_allowed(volume_type)
+          msg := sprintf("Volume type %v is not allowed. Allowed volume types are %v.", [volume_type, input.parameters.allowedVolumes])
+        }
+
+        # Функция для определения типа volume
+        volume_source_type(volume) = type {
+          volume.emptyDir
+          type := "emptyDir"
+        }
+        volume_source_type(volume) = type {
+          volume.secret
+          type := "secret"
+        }
+        volume_source_type(volume) = type {
+          volume.configMap
+          type := "configMap"
+        }
+        volume_source_type(volume) = type {
+          volume.persistentVolumeClaim
+          type := "persistentVolumeClaim"
+        }
+        volume_source_type(volume) = type {
+          volume.hostPath
+          type := "hostPath"
+        }
+
+        # Проверка, является ли тип volume разрешенным
+        volume_is_allowed(volume_type) {
+          allowed := {v | v := input.parameters.allowedVolumes[_]}
+          allowed[volume_type]
+        }
+---
+apiVersion: constraints.gatekeeper.sh/v1beta1
+kind: AllowedVolumeTypes
+metadata:
+  name: allowed-volume-types
+  annotations:
+    argocd.argoproj.io/sync-options: "SkipDryRunOnMissingResource=true, Replace=true"
+spec:
+  enforcementAction: deny
+  parameters:
+    allowedVolumes:
+      - emptyDir
+      - secret
+      - configMap
+      - persistentVolumeClaim
+  match:
+    kinds:
+      - apiGroups: [""]
+        kinds: ["Pod"]
+      - apiGroups: ["apps"]
+        kinds: ["Deployment", "ReplicaSet", "StatefulSet", "DaemonSet"]
+    excludedNamespaces:
+      - kube-*
+      - d8-*
+      - aqua*
+      - lmru-*
+      - devops-core-*
+      - syn-github-actions-runner-controller #gha runners for synoptic p0602
+      - vspspr-*
+      - clickhouse-*
+      - coroot
+      - alfor-*
+      - asm-dev
+      - billing-preprod
+      - intraru-prod
+      - wecare-prod
+      - wecare-test
+      - fudzi
+      - carrier-portal-*
+      - pickup-point-*
+      - del-sell-*
+      - gts-tms-*
+      - pnr--alfa
+      - del-repo-*
+      - infra-elklogs*
+      - osaas-opensearch*
+      - osaas-logs-b-obs*
+      - jaeger*
+      - gitlab-runner*
+      - pim-*
+      - search-*
+      - mf
+      - chaos-mesh
+      - intraru-stage
+      - intraru-preprod
+      - obs-alloy
+      - default # services-prod, hassaleh-a-prod, marketplace, shared, yc-techno
+      - sentry* #marketplace
+      - lens-metrics #x1-presale
+      - trivy-operator

@@ -1,0 +1,65 @@
+---
+opendistro:
+  security:
+    multitenancy: true
+    tenants:
+      - name: flant
+        indices: ["filebeat-*", "infra-*", "d8-*"]
+        roles:
+          - name: flant_rw
+            type: rw
+            groups: ["crowd-flant-golf-admin", "crowd-flant-rnd", "crowd-flant-bravo", "ALL-LMRU-Svc"]
+      - name: itop-nginx
+        indices:
+          - "lmru-p0376-nginx-common-access-*"
+          - "lmru-p0376-nginx-common-error-*"
+          - "lmru-p0376-nginx-platformeco-access-*"
+          - "lmru-p0376-nginx-platformeco-error-*"
+          - "lmru-p0376-nginx-microfront-access-*"
+          - "lmru-p0376-nginx-microfront-error-*"
+          - "lmru-p0376-nginx-apigee-access-*"
+          - "lmru-p0376-nginx-apigee-error-*"
+          - "lmru-p0376-nginx-devops-access-*"
+          - "lmru-p0376-nginx-devops-error-*"
+          - "lmru-p0376-nginx-obs-access-*"
+          - "lmru-p0376-nginx-obs-error-*"
+          - "lmru-p0376-nginx-kz-access-*"
+          - "lmru-p0376-nginx-kz-error-*"
+          - "lmru-p0376-nginx-kz-ext-access-*"
+          - "lmru-p0376-nginx-kz-ext-error-*"
+          - "lmru-p0376-nginx-oldssl-access-*"
+          - "lmru-p0376-nginx-oldssl-error-*"
+          - "lmru-p0376-nginx-test-access-*"
+          - "lmru-p0376-nginx-test-error-*"
+          - "lmru-p0376-nginx-preprod-access-*"
+          - "lmru-p0376-nginx-preprod-error-*"
+          - "lmru-p0376-nginx-ext-access-*"
+          - "lmru-p0376-nginx-ext-error-*"
+          - "lmru-p0376-nginx-daoffice-access-*"
+          - "lmru-p0376-nginx-daoffice-error-*"
+          - "lmru-p0376-nginx-nobgp-access-*"
+          - "lmru-p0376-nginx-nobgp-error-*"
+          - "lmru-p0376-nginx-clientproject-access-*"
+          - "lmru-p0376-nginx-clientproject-error-*"
+          - "lmru-p0376-nginx-magportal-access-*"
+          - "lmru-p0376-nginx-magportal-error-*"
+          - "lmru-p0376-nginx-ad-access-*"
+          - "lmru-p0376-nginx-ad-error-*"
+          - "lmru-p0376-nginx-payment-access-*"
+          - "lmru-p0376-nginx-payment-error-*"
+          - "lmru-p0376-nginx-keycloak-access-*"
+          - "lmru-p0376-nginx-keycloak-error-*"
+          - "lmru-p0376-nginx-scdp-access-*"
+          - "lmru-p0376-nginx-scdp-error-*"
+          - "lmru-p0376-nginx-itsec-access-*"
+          - "lmru-p0376-nginx-itsec-error-*"
+        roles:
+          - name: itop-nginx_rw
+            type: rw
+            groups: ["itop-l2", "it-platform_app", "itopsw"]
+          - name: itop-nginx_ro
+            type: ro
+            groups: ["all-lmru", "tech-community-users", "itop-l1", "crowd-flant-ro"]
+          - name: itam-nginx_rw
+            type: rw
+            groups: ["crowd-keycloak-admin"]

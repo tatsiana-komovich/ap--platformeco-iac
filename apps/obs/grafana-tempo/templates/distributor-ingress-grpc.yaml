@@ -1,0 +1,34 @@
+{{- if .Values.distributorGRPCIngress.enabled -}}
+apiVersion: {{ include "tempo.ingress.apiVersion" . }}
+kind: Ingress
+metadata:
+  name: {{ .Chart.Name}}-distributor-grpc
+  labels:
+    app: {{ .Chart.Name}}-distributor-grpc
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}"
+    release: "{{ .Release.Name }}"
+    heritage: "{{ .Release.Service }}"
+  annotations:
+    {{- range $key, $value := .Values.distributorGRPCIngress.annotations }}
+      {{ $key }}: {{ $value | quote }}
+    {{- end }}
+spec:
+  ingressClassName: {{ .Values.distributorGRPCIngress.ingressClassName }}
+  rules:
+    {{- with .Values.distributorGRPCIngress.host }}
+    - host: {{ .name }}
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ .service.name }}
+                port:
+                  number: {{ .service.port }}
+    {{- end }}
+  {{- if .Values.distributorGRPCIngress.tls }}
+  tls:
+{{ toYaml .Values.distributorGRPCIngress.tls | indent 4 }}
+  {{- end -}}
+{{- end -}}

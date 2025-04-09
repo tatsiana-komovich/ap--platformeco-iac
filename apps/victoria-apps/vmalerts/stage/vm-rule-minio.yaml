@@ -1,0 +1,25 @@
+---
+apiVersion: operator.victoriametrics.com/v1beta1
+kind: VMRule
+metadata:
+  name: vm-rule-devops-core-minio
+  namespace: devops-core-victoria-alerts
+spec:
+  groups:
+    - name: minio.devops
+      concurrency: 1
+      rules:
+        - alert: MinioHealthDown
+          expr: minio_cluster_health_status{namespace="devops-core-minio-operator"} != 1
+          for: 5m
+          labels:
+            severity: warning
+          annotations:
+            summary: "Minio pod {{ $labels.pod }} in {{ $labels.k8s_cluster }} cluster is down"
+        - alert: MinioCapacityLow
+          expr: minio_cluster_capacity_raw_free_bytes{namespace="devops-core-minio-operator"} / 1024 / 1024 / 1024 < 50
+          for: 5m
+          labels:
+            severity: warning
+          annotations:
+            summary: "Devops minio in {{ $labels.k8s_cluster }} cluster has < 50 Gi storage space"

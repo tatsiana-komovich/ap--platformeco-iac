@@ -1,0 +1,183 @@
+---
+opendistro:
+  security:
+    multitenancy: false
+    tenants:
+      - name: tpmn-payment-devops
+        indices:
+          - "*"
+        roles:
+          - name: tpmn-payment-devops_rw
+            type: rw
+            groups: ["crowd-payment-devops"]
+      - name: tpmn-mtools
+        indices: ["lmru-p0551-mtools-prod-*", "lmru-p0551-mtools-test-*"]
+        roles:
+          - name: tpmn_mtools_rw
+            type: rw
+            groups: ["crowd-mtools-admin"]
+          - name: tpmn_mtools_ro
+            type: ro
+            groups: ["crowd-mtools-ro"]
+      - name: blg-billing
+        indices: ["lmru-p0164-billing-prod-*"]
+        roles:
+          - name: blg-billing_rw
+            type: rw
+            groups: ["crowd-billing-admin", "crowd-billing-rw"]
+          - name: blg-billing_ro
+            type: ro
+            groups: ["crowd-billing-ro"]
+      - name: blg-b2bm
+        indices: ["lmru-p1169-b2bm-prod-*"]
+        roles:
+          - name: blg-b2bm_rw
+            type: rw
+            groups: ["crowd-b2bm-admin", "crowd-b2bm-rw"]
+          - name: blg-b2bm_ro
+            type: ro
+            groups: ["crowd-b2bm-ro"]
+      - name: blg-src
+        indices: ["lmru-p0950-src-prod-*"]
+        roles:
+          - name: blg-src_rw
+            type: rw
+            groups: ["crowd-src-admin", "crowd-src-rw"]
+          - name: blg-src_ro
+            type: ro
+            groups: ["crowd-src-ro"]
+      - name: blg-psp
+        indices: ["lmru-p0948-psp-prod-*"]
+        roles:
+          - name: blg-psp_rw
+            type: rw
+            groups: ["crowd-psp-admin", "crowd-psp-rw"]
+          - name: blg-psp_ro
+            type: ro
+            groups: ["crowd-psp-ro"]
+      - name: blg-rap
+        indices: ["lmru-p0949-rap-prod-*"]
+        roles:
+          - name: blg-rap_rw
+            type: rw
+            groups: ["crowd-rap-admin", "crowd-rap-rw"]
+          - name: blg-rap_ro
+            type: ro
+            groups: ["crowd-rap-ro"]
+      - name: ops-amc
+        indices: ["lmru-p0444-payment-amc-*"]
+        roles:
+          - name: ops-amc_rw
+            type: rw
+            groups: ["crowd-amc-admin", "crowd-amc-rw"]
+          - name: ops-amc_ro
+            type: ro
+            groups: ["crowd-amc-ro"]
+      - name: ops-payment-brick
+        indices: ["lmru-p0165-payment-pb-prod-*"]
+        roles:
+          - name: ops-payment-brick_rw
+            type: rw
+            groups: ["crowd-payment-admin", "crowd-payment-rw"]
+          - name: ops-payment-brick_ro
+            type: ro
+            groups: ["crowd-payment-ro"]
+      - name: ops-pbb
+        indices: ["lmru-p0084-pbb-prod-*"]
+        roles:
+          - name: ops-pbb_rw
+            type: rw
+            groups: ["crowd-pbb-admin", "crowd-pbb-rw"]
+          - name: ops-pbb_ro
+            type: ro
+            groups: ["crowd-pbb-ro"]
+      - name: lnpdt-payment
+        indices: ["lmru-p0636-payment-credit-prod-*"]
+        roles:
+          - name: lnpdt-payment_rw
+            type: rw
+            groups: ["crowd-payment-admin", "crowd-payment-rw"]
+          - name: lnpdt-payment_ro
+            type: ro
+            groups: ["crowd-payment-ro"]
+      - name: pdm
+        indices: ["lmru-p0510-payment-pdm-prod-*"]
+        roles:
+          - name: pdm_rw
+            type: rw
+            groups: ["crowd-pdm-admin", "crowd-pdm-rw"]
+          - name: pdm_ro
+            type: ro
+            groups: ["crowd-pdm-ro"]
+      - name: ps-pof
+        indices: ["lmru-p0709-payment-pof-prod-*"]
+        roles:
+          - name: ps-pof_rw
+            type: rw
+            groups: ["crowd-payment-admin", "crowd-payment-rw"]
+          - name: ps-pof_ro
+            type: ro
+            groups: ["crowd-payment-ro"]
+      - name: tpmn-sre
+        indices: ["lmru-p0339-payment-sre-*"]
+        roles:
+          - name: tpmn-sre_rw
+            type: rw
+            groups: ["crowd-payment-sre-admin", "crowd-payment-sre-rw"]
+          - name: tpmn-sre_ro
+            type: ro
+            groups: ["crowd-payment-sre-ro"]
+      - name: ops-pon
+        indices: ["lmru-p0717-payment-pon-prod-*"]
+        roles:
+          - name: ops-pon_rw
+            type: rw
+            groups: ["crowd-pon-admin", "crowd-pon-rw"]
+          - name: ops-pon_ro
+            type: ro
+            groups: ["crowd-pon-ro"]
+      - name: ops-ptm
+        indices: ["lmru-p0445-payment-ptm-prod-*"]
+        roles:
+          - name: ops-ptm_rw
+            type: rw
+            groups: ["crowd-ptm-admin", "crowd-ptm-rw"]
+          - name: ops-ptm_ro
+            type: ro
+            groups: ["crowd-ptm-ro"]
+      - name: ps-rf
+        indices: ["lmru-p0406-payment-rf-prod-*"]
+        roles:
+          - name: ps-rf_rw
+            type: rw
+            groups: ["crowd-payment-admin", "crowd-payment-rw"]
+          - name: ps-rf_ro
+            type: ro
+            groups: ["crowd-payment-ro"]
+      - name: wteff-staff-calc
+        indices: ["lmru-p0461-payment-staff-prod-*"]
+        roles:
+          - name: wteff-staff-calc_rw
+            type: rw
+            groups: ["crowd-payment-admin", "crowd-payment-rw"]
+          - name: wteff-staff-calc_ro
+            type: ro
+            groups: ["crowd-payment-ro"]
+      - name: wteff-wfm
+        indices: ["lmru-p0171-wfm-prod-*"]
+        roles:
+          - name: wteff-wfm_rw
+            type: rw
+            groups: ["crowd-wfm-admin", "crowd-wfm-rw"]
+          - name: wteff-wfm_ro
+            type: ro
+            groups: ["crowd-wfm-ro"]
+      - name: ops-wallet
+        indices: ["lmru-p0405-payment-wallet-prod-*"]
+        roles:
+          - name: ops-wallet_rw
+            type: rw
+            groups: ["crowd-wallet-admin", "crowd-wallet-rw"]
+          - name: ops-wallet_ro
+            type: ro
+            groups: ["crowd-wallet-ro"]

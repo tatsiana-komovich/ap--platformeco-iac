@@ -1,0 +1,18 @@
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: collectd-ingress
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: collectd-x2-techno.apps.lmru.tech
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: collectd-metrics
+                port:
+                  number: 9103

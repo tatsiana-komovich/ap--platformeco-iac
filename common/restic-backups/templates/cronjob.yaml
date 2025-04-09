@@ -1,0 +1,57 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: etcd-backup
+  annotations:
+    avp.kubernetes.io/path: "{{ .Values.avp_path }}"
+spec:
+  schedule: "1 1 * * *"
+  startingDeadlineSeconds: 14400
+  concurrencyPolicy: Forbid
+  jobTemplate:
+    spec:
+      backoffLimit: 3
+      activeDeadlineSeconds: 7200
+      # 3 days
+      ttlSecondsAfterFinished: 259200
+      template:
+        metadata:
+          name: etcd-backup
+        spec:
+          imagePullSecrets:
+          - name: regsecret
+          nodeSelector:
+            node-role.kubernetes.io/control-plane: ""
+          tolerations:
+          - effect: NoSchedule
+            operator: Exists
+          hostNetwork: true
+          containers:
+          - name: backup
+            command: ["/restic_backup.sh"]
+            image: {{ .Values.restic_image }}
+            imagePullPolicy: IfNotPresent
+            volumeMounts:
+            - mountPath: "/etc/kubernetes"
+              name: k8s-dir
+              readOnly: true
+            - name: backup-script
+              subPath: restic_backup.sh
+              mountPath: /restic_backup.sh
+            securityContext:
+              privileged: true
+            env:
+            {{ include "envs" $ | nindent 14 }}
+            resources:
+              requests:
+                ephemeral-storage: 3G
+          volumes:
+          - name: k8s-dir
+            hostPath:
+              path: /etc/kubernetes
+              type: Directory
+          - name: backup-script
+            configMap:
+              name: etcd-backup-script
+              defaultMode: 0755
+          restartPolicy: OnFailure

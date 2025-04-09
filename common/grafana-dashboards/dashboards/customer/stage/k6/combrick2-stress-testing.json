@@ -1,0 +1,3685 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": {
+          "type": "grafana",
+          "uid": "-- Grafana --"
+        },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "target": {
+          "limit": 100,
+          "matchAny": false,
+          "tags": [],
+          "type": "dashboard"
+        },
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "id": 79,
+  "links": [],
+  "liveNow": false,
+  "panels": [
+    {
+      "datasource": "combrick2-stress-testing",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisGridShow": true,
+            "axisLabel": "",
+            "axisPlacement": "left",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 14,
+            "gradientMode": "opacity",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "stepBefore",
+            "lineStyle": {
+              "fill": "solid"
+            },
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "spanNulls": true,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "short"
+        }
+      },
+      "gridPos": {
+        "h": 12,
+        "w": 12,
+        "x": 0,
+        "y": 0
+      },
+      "id": 29,
+      "links": [],
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "table",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "8.2.6",
+      "targets": [
+        {
+          "alias": "All RPS",
+          "datasource": "combrick2-stress-testing",
+          "groupBy": [
+            {
+              "params": ["1s"],
+              "type": "time"
+            },
+            {
+              "params": ["null"],
+              "type": "fill"
+            }
+          ],
+          "hide": false,
+          "measurement": "http_reqs",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "refId": "A",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": ["value"],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "count"
+              }
+            ]
+          ],
+          "tags": []
+        },
+        {
+          "alias": "Search By 100 Emails",
+          "datasource": "combrick2-stress-testing",
+          "groupBy": [
+            {
+              "params": ["1s"],
+              "type": "time"
+            },
+            {
+              "params": ["null"],
+              "type": "fill"
+            }
+          ],
+          "hide": false,
+          "measurement": "successSearchBy100Emails",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "refId": "B",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": ["value"],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "count"
+              }
+            ]
+          ],
+          "tags": []
+        },
+        {
+          "alias": "Search By 100 Emails And 100 Phones",
+          "datasource": "combrick2-stress-testing",
+          "groupBy": [
+            {
+              "params": ["1s"],
+              "type": "time"
+            },
+            {
+              "params": ["null"],
+              "type": "fill"
+            }
+          ],
+          "hide": false,
+          "measurement": "successSearchBy100EmailsAnd100Phones",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "refId": "C",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": ["value"],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "count"
+              }
+            ]
+          ],
+          "tags": []
+        },
+        {
+          "alias": "Search By Client Only Active True",
+          "datasource": "combrick2-stress-testing",
+          "groupBy": [
+            {
+              "params": ["1s"],
+              "type": "time"
+            },
+            {
+              "params": ["null"],
+              "type": "fill"
+            }
+          ],
+          "hide": false,
+          "measurement": "successSearchByClientOnlyActiveTrue",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "refId": "H",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": ["value"],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "count"
+              }
+            ]
+          ],
+          "tags": []
+        },
+        {
+          "alias": "Search By Client Only Active False",
+          "datasource": "combrick2-stress-testing",
+          "groupBy": [
+            {
+              "params": ["1s"],
+              "type": "time"
+            },
+            {
+              "params": ["null"],
+              "type": "fill"
+            }
+          ],
+          "hide": false,
+          "measurement": "successSearchByClientOnlyActiveFalse",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "refId": "D",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": ["value"],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "count"
+              }
+            ]
+          ],
+          "tags": []
+        },
+        {
+          "alias": "Search By One Contact",
+          "datasource": "combrick2-stress-testing",
+          "groupBy": [
+            {
+              "params": ["1s"],
+              "type": "time"
+            },
+            {
+              "params": ["null"],
+              "type": "fill"
+            }
+          ],
+          "hide": false,
+          "measurement": "successSearchByOneContact",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "refId": "E",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": ["value"],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "count"
+              }
+            ]
+          ],
+          "tags": []
+        },
+        {
+          "alias": "Search By Client Number And Contact And 2 Emails And 2 Phones Only Active True",
+          "datasource": "combrick2-stress-testing",
+          "groupBy": [
+            {
+              "params": ["1s"],
+              "type": "time"
+            },
+            {
+              "params": ["null"],
+              "type": "fill"
+            }
+          ],
+          "hide": false,
+          "measurement": "successSearchByClientNumberAndContactAnd2EmailsAnd2PhonesOnlyActiveTrue",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "refId": "F",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": ["value"],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "count"
+              }
+            ]
+          ],
+          "tags": []
+        },
+        {
+          "alias": "Search By Client Number And Contact And 2 Emails And 2 Phones Only Active False",
+          "datasource": "combrick2-stress-testing",
+          "groupBy": [
+            {
+              "params": ["1s"],
+              "type": "time"
+            },
+            {
+              "params": ["null"],
+              "type": "fill"
+            }
+          ],
+          "hide": false,
+          "measurement": "successSearchByClientNumberAndContactAnd2EmailsAnd2PhonesOnlyActiveFalse",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "refId": "G",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": ["value"],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "count"
+              }
+            ]
+          ],
+          "tags": []
+        },
+        {
+          "alias": "Search By One Unknown Contact",
+          "datasource": "combrick2-stress-testing",
+          "groupBy": [
+            {
+              "params": ["1s"],
+              "type": "time"
+            },
+            {
+              "params": ["null"],
+              "type": "fill"
+            }
+          ],
+          "hide": false,
+          "measurement": "successSearchByOneUnknownContact",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "refId": "I",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": ["value"],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "count"
+              }
+            ]
+          ],
+          "tags": []
+        },
+        {
+          "alias": "Search By 100 One Unknown Contacts",
+          "datasource": "combrick2-stress-testing",
+          "groupBy": [
+            {
+              "params": ["1s"],
+              "type": "time"
+            },
+            {
+              "params": ["null"],
+              "type": "fill"
+            }
+          ],
+          "hide": false,
+          "measurement": "successSearchBy100UnknownContacts",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "refId": "J",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": ["value"],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "count"
+              }
+            ]
+          ],
+          "tags": []
+        },
+        {
+          "alias": "Allowed Contact",
+          "datasource": "combrick2-stress-testing",
+          "groupBy": [
+            {
+              "params": ["1s"],
+              "type": "time"
+            },
+            {
+              "params": ["null"],
+              "type": "fill"
+            }
+          ],
+          "hide": false,
+          "measurement": "successAllowedContact",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "refId": "K",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": ["value"],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "count"
+              }
+            ]
+          ],
+          "tags": []
+        }
+      ],
+      "title": "RPS (Request per Seconds)",
+      "type": "timeseries"
+    },
+    {
+      "datasource": "combrick2-stress-testing",
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "ms"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 3,
+        "x": 12,
+        "y": 0
+      },
+      "id": 5,
+      "interval": ">1s",
+      "links": [],
+      "options": {
+        "colorMode": "background",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "vertical",
+        "reduceOptions": {
+          "calcs": ["lastNotNull"],
+          "fields": "",
+          "values": true
+        },
+        "text": {
+          "titleSize": 45
+        },
+        "textMode": "value_and_name"
+      },
+      "pluginVersion": "8.5.13",
+      "targets": [
+        {
+          "alias": "P(95)",
+          "datasource": "combrick2-stress-testing",
+          "dsType": "influxdb",
+          "groupBy": [],
+          "hide": false,
+          "measurement": "http_req_duration",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT percentile(\"value\", 95) FROM \"http_req_duration\" WHERE $timeFilter",
+          "rawQuery": false,
+          "refId": "D",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": ["value"],
+                "type": "field"
+              },
+              {
+                "params": ["95"],
+                "type": "percentile"
+              }
+            ]
+          ],
+          "tags": []
+        }
+      ],
+      "title": "Percentile 95",
+      "type": "stat"
+    },
+    {
+      "datasource": "combrick2-stress-testing",
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "semi-dark-yellow",
+            "mode": "fixed"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "ms"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 3,
+        "x": 15,
+        "y": 0
+      },
+      "id": 33,
+      "interval": ">1s",
+      "links": [],
+      "options": {
+        "colorMode": "background",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "vertical",
+        "reduceOptions": {
+          "calcs": ["lastNotNull"],
+          "fields": "",
+          "values": true
+        },
+        "text": {
+          "titleSize": 45
+        },
+        "textMode": "value_and_name"
+      },
+      "pluginVersion": "8.5.13",
+      "targets": [
+        {
+          "alias": "P(90)",
+          "datasource": "combrick2-stress-testing",
+          "dsType": "influxdb",
+          "groupBy": [],
+          "hide": false,
+          "measurement": "http_req_duration",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT percentile(\"value\", 90) FROM \"http_req_duration\" WHERE $timeFilter",
+          "rawQuery": false,
+          "refId": "C",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": ["value"],
+                "type": "field"
+              },
+              {
+                "params": ["90"],
+                "type": "percentile"
+              }
+            ]
+          ],
+          "tags": []
+        }
+      ],
+      "title": "Percentile 90",
+      "type": "stat"
+    },
+    {
+      "datasource": "combrick2-stress-testing",
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "light-blue",
+            "mode": "fixed"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "ms"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 3,
+        "x": 18,
+        "y": 0
+      },
+      "id": 32,
+      "interval": ">1s",
+      "links": [],
+      "options": {
+        "colorMode": "background",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "vertical",
+        "reduceOptions": {
+          "calcs": ["lastNotNull"],
+          "fields": "",
+          "values": true
+        },
+        "text": {
+          "titleSize": 45
+        },
+        "textMode": "value_and_name"
+      },
+      "pluginVersion": "8.5.13",
+      "targets": [
+        {
+          "alias": "P(80)",
+          "datasource": "combrick2-stress-testing",
+          "dsType": "influxdb",
+          "groupBy": [],
+          "hide": false,
+          "measurement": "http_req_duration",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT percentile(\"value\", 80) FROM \"http_req_duration\" WHERE $timeFilter",
+          "rawQuery": false,
+          "refId": "A",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": ["value"],
+                "type": "field"
+              },
+              {
+                "params": ["80"],
+                "type": "percentile"
+              }
+            ]
+          ],
+          "tags": []
+        }
+      ],
+      "title": "Percentile 80",
+      "type": "stat"
+    },
+    {
+      "datasource": "combrick2-stress-testing",
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "orange",
+            "mode": "fixed"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "ms"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 3,
+        "x": 21,
+        "y": 0
+      },
+      "id": 31,
+      "interval": ">1s",
+      "links": [],
+      "options": {
+        "colorMode": "background",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "vertical",
+        "reduceOptions": {
+          "calcs": ["lastNotNull"],
+          "fields": "",
+          "values": true
+        },
+        "text": {
+          "titleSize": 45
+        },
+        "textMode": "value_and_name"
+      },
+      "pluginVersion": "8.5.13",
+      "targets": [
+        {
+          "alias": "P(50)",
+          "datasource": "combrick2-stress-testing",
+          "dsType": "influxdb",
+          "groupBy": [],
+          "hide": false,
+          "measurement": "http_req_duration",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT percentile(\"value\", 50) FROM \"http_req_duration\" WHERE $timeFilter",
+          "rawQuery": false,
+          "refId": "B",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": ["value"],
+                "type": "field"
+              },
+              {
+                "params": ["50"],
+                "type": "percentile"
+              }
+            ]
+          ],
+          "tags": []
+        }
+      ],
+      "title": "Percentile 50",
+      "type": "stat"
+    },
+    {
+      "datasource": "combrick2-stress-testing",
+      "description": "Allowed Contact Duration",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "ms"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 3,
+        "w": 3,
+        "x": 12,
+        "y": 6
+      },
+      "id": 16,
+      "interval": ">1s",
+      "links": [],
+      "options": {
+        "colorMode": "background",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": ["lastNotNull"],
+          "fields": "",
+          "values": true
+        },
+        "text": {
+          "titleSize": 20
+        },
+        "textMode": "value_and_name"
+      },
+      "pluginVersion": "8.5.13",
+      "targets": [
+        {
+          "alias": "P(95)",
+          "datasource": "combrick2-stress-testing",
+          "groupBy": [],
+          "measurement": "allowedContactDuration",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "refId": "A",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": ["value"],
+                "type": "field"
+              },
+              {
+                "params": [95],
+                "type": "percentile"
+              }
+            ]
+          ],
+          "tags": []
+        }
+      ],
+      "title": "Allowed Contact Duration",
+      "type": "stat"
+    },
+    {
+      "datasource": "combrick2-stress-testing",
+      "description": "Allowed Contact Duration",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "semi-dark-yellow",
+            "mode": "fixed"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "dark-orange",
+                "value": null
+              }
+            ]
+          },
+          "unit": "ms"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 3,
+        "w": 3,
+        "x": 15,
+        "y": 6
+      },
+      "id": 48,
+      "interval": ">1s",
+      "links": [],
+      "options": {
+        "colorMode": "background",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": ["lastNotNull"],
+          "fields": "",
+          "values": true
+        },
+        "text": {
+          "titleSize": 20
+        },
+        "textMode": "value_and_name"
+      },
+      "pluginVersion": "8.5.13",
+      "targets": [
+        {
+          "alias": "P(90)",
+          "datasource": "combrick2-stress-testing",
+          "groupBy": [],
+          "measurement": "allowedContactDuration",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "refId": "A",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": ["value"],
+                "type": "field"
+              },
+              {
+                "params": ["90"],
+                "type": "percentile"
+              }
+            ]
+          ],
+          "tags": []
+        }
+      ],
+      "title": "Allowed Contact Duration",
+      "type": "stat"
+    },
+    {
+      "datasource": "combrick2-stress-testing",
+      "description": "Allowed Contact Duration",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "light-blue",
+            "mode": "fixed"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "ms"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 3,
+        "w": 3,
+        "x": 18,
+        "y": 6
+      },
+      "id": 37,
+      "interval": ">1s",
+      "links": [],
+      "options": {
+        "colorMode": "background",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": ["lastNotNull"],
+          "fields": "",
+          "values": true
+        },
+        "text": {
+          "titleSize": 20
+        },
+        "textMode": "value_and_name"
+      },
+      "pluginVersion": "8.5.13",
+      "targets": [
+        {
+          "alias": "P(80)",
+          "datasource": "combrick2-stress-testing",
+          "groupBy": [],
+          "measurement": "allowedContactDuration",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "refId": "A",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": ["value"],
+                "type": "field"
+              },
+              {
+                "params": ["80"],
+                "type": "percentile"
+              }
+            ]
+          ],
+          "tags": []
+        }
+      ],
+      "title": "Allowed Contact Duration",
+      "type": "stat"
+    },
+    {
+      "datasource": "combrick2-stress-testing",
+      "description": "Allowed Contact Duration",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "orange",
+            "mode": "fixed"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "ms"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 3,
+        "w": 3,
+        "x": 21,
+        "y": 6
+      },
+      "id": 38,
+      "interval": ">1s",
+      "links": [],
+      "options": {
+        "colorMode": "background",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": ["lastNotNull"],
+          "fields": "",
+          "values": true
+        },
+        "text": {
+          "titleSize": 20
+        },
+        "textMode": "value_and_name"
+      },
+      "pluginVersion": "8.5.13",
+      "targets": [
+        {
+          "alias": "P(50)",
+          "datasource": "combrick2-stress-testing",
+          "groupBy": [],
+          "measurement": "allowedContactDuration",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "refId": "A",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": ["value"],
+                "type": "field"
+              },
+              {
+                "params": ["50"],
+                "type": "percentile"
+              }
+            ]
+          ],
+          "tags": []
+        }
+      ],
+      "title": "Allowed Contact Duration",
+      "type": "stat"
+    },
+    {
+      "datasource": "combrick2-stress-testing",
+      "description": "Search By 100 Emails And 100 Phones",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "ms"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 3,
+        "w": 3,
+        "x": 12,
+        "y": 9
+      },
+      "id": 14,
+      "interval": ">1s",
+      "links": [],
+      "options": {
+        "colorMode": "background",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "vertical",
+        "reduceOptions": {
+          "calcs": ["lastNotNull"],
+          "fields": "",
+          "values": false
+        },
+        "text": {
+          "titleSize": 20,
+          "valueSize": 50
+        },
+        "textMode": "value_and_name"
+      },
+      "pluginVersion": "8.5.13",
+      "targets": [
+        {
+          "alias": "P(95)",
+          "datasource": "combrick2-stress-testing",
+          "dsType": "influxdb",
+          "groupBy": [],
+          "measurement": "searchBy100EmailsAnd100PhonesDuration",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT percentile(\"value\", 95) FROM \"searchByOneContactDuration\" WHERE $timeFilter",
+          "rawQuery": false,
+          "refId": "D",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": ["value"],
+                "type": "field"
+              },
+              {
+                "params": [95],
+                "type": "percentile"
+              }
+            ]
+          ],
+          "tags": []
+        }
+      ],
+      "title": "Search By 100 Emails And 100 Phones",
+      "type": "stat"
+    },
+    {
+      "datasource": "combrick2-stress-testing",
+      "description": "Search By 100 Emails Duration",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "semi-dark-yellow",
+            "mode": "fixed"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "dark-orange",
+                "value": null
+              }
+            ]
+          },
+          "unit": "ms"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 3,
+        "w": 3,
+        "x": 15,
+        "y": 9
+      },
+      "id": 36,
+      "interval": ">1s",
+      "links": [],
+      "options": {
+        "colorMode": "background",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": ["lastNotNull"],
+          "fields": "",
+          "values": true
+        },
+        "text": {
+          "titleSize": 20
+        },
+        "textMode": "value_and_name"
+      },
+      "pluginVersion": "8.5.13",
+      "targets": [
+        {
+          "alias": "P(90)",
+          "datasource": "combrick2-stress-testing",
+          "groupBy": [],
+          "measurement": "searchBy100EmailsDuration",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "refId": "A",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": ["value"],
+                "type": "field"
+              },
+              {
+                "params": ["90"],
+                "type": "percentile"
+              }
+            ]
+          ],
+          "tags": []
+        }
+      ],
+      "title": "Search By 100 Emails Duration",
+      "type": "stat"
+    },
+    {
+      "datasource": "combrick2-stress-testing",
+      "description": "Search By 100 Emails And 100 Phones",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "light-blue",
+            "mode": "fixed"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "ms"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 3,
+        "w": 3,
+        "x": 18,
+        "y": 9
+      },
+      "id": 41,
+      "interval": ">1s",
+      "links": [],
+      "options": {
+        "colorMode": "background",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "vertical",
+        "reduceOptions": {
+          "calcs": ["lastNotNull"],
+          "fields": "",
+          "values": false
+        },
+        "text": {
+          "titleSize": 20,
+          "valueSize": 50
+        },
+        "textMode": "value_and_name"
+      },
+      "pluginVersion": "8.5.13",
+      "targets": [
+        {
+          "alias": "P(80)",
+          "datasource": "combrick2-stress-testing",
+          "dsType": "influxdb",
+          "groupBy": [],
+          "measurement": "searchByOneContactDuration",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT percentile(\"value\", 80) FROM \"searchByOneContactDuration\" WHERE $timeFilter",
+          "rawQuery": false,
+          "refId": "A",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": ["value"],
+                "type": "field"
+              },
+              {
+                "params": ["80"],
+                "type": "percentile"
+              }
+            ]
+          ],
+          "tags": []
+        }
+      ],
+      "title": "Search By 100 Emails And 100 Phones",
+      "type": "stat"
+    },
+    {
+      "datasource": "combrick2-stress-testing",
+      "description": "Search By 100 Emails Duration",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "orange",
+            "mode": "fixed"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "ms"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 3,
+        "w": 3,
+        "x": 21,
+        "y": 9
+      },
+      "id": 49,
+      "interval": ">1s",
+      "links": [],
+      "options": {
+        "colorMode": "background",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": ["lastNotNull"],
+          "fields": "",
+          "values": true
+        },
+        "text": {
+          "titleSize": 20
+        },
+        "textMode": "value_and_name"
+      },
+      "pluginVersion": "8.5.13",
+      "targets": [
+        {
+          "alias": "P(50)",
+          "datasource": "combrick2-stress-testing",
+          "groupBy": [],
+          "measurement": "searchBy100EmailsDuration",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "refId": "A",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": ["value"],
+                "type": "field"
+              },
+              {
+                "params": ["50"],
+                "type": "percentile"
+              }
+            ]
+          ],
+          "tags": []
+        }
+      ],
+      "title": "Search By 100 Emails Duration",
+      "type": "stat"
+    },
+    {
+      "datasource": "combrick2-stress-testing",
+      "description": "Search By One Contact Duration",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "ms"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 3,
+        "w": 12,
+        "x": 0,
+        "y": 12
+      },
+      "id": 44,
+      "interval": ">1s",
+      "links": [],
+      "options": {
+        "colorMode": "background",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "vertical",
+        "reduceOptions": {
+          "calcs": ["lastNotNull"],
+          "fields": "",
+          "values": true
+        },
+        "text": {
+          "titleSize": 20
+        },
+        "textMode": "auto"
+      },
+      "pluginVersion": "8.5.13",
+      "targets": [
+        {
+          "alias": "P(95)",
+          "dsType": "influxdb",
+          "groupBy": [],
+          "measurement": "searchByOneContactDuration",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT percentile(\"value\", 95) FROM \"searchBy100EmailsAnd100PhonesDuration\" WHERE $timeFilter",
+          "rawQuery": false,
+          "refId": "D",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": ["value"],
+                "type": "field"
+              },
+              {
+                "params": [95],
+                "type": "percentile"
+              }
+            ]
+          ],
+          "tags": []
+        },
+        {
+          "alias": "P(90)",
+          "dsType": "influxdb",
+          "groupBy": [],
+          "measurement": "searchByOneContactDuration",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT percentile(\"value\", 50) FROM \"searchBy100EmailsAnd100PhonesDuration\" WHERE $timeFilter",
+          "rawQuery": false,
+          "refId": "C",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": ["value"],
+                "type": "field"
+              },
+              {
+                "params": ["90"],
+                "type": "percentile"
+              }
+            ]
+          ],
+          "tags": []
+        },
+        {
+          "alias": "P(80)",
+          "dsType": "influxdb",
+          "groupBy": [],
+          "measurement": "searchByOneContactDuration",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT percentile(\"value\", 80) FROM \"searchBy100EmailsAnd100PhonesDuration\" WHERE $timeFilter",
+          "rawQuery": false,
+          "refId": "A",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": ["value"],
+                "type": "field"
+              },
+              {
+                "params": ["80"],
+                "type": "percentile"
+              }
+            ]
+          ],
+          "tags": []
+        },
+        {
+          "alias": "P(50)",
+          "dsType": "influxdb",
+          "groupBy": [],
+          "measurement": "searchByOneContactDuration",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT percentile(\"value\", 50) FROM \"searchBy100EmailsAnd100PhonesDuration\" WHERE $timeFilter",
+          "rawQuery": false,
+          "refId": "B",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": ["value"],
+                "type": "field"
+              },
+              {
+                "params": ["50"],
+                "type": "percentile"
+              }
+            ]
+          ],
+          "tags": []
+        }
+      ],
+      "title": "Search By One Contact Duration",
+      "type": "stat"
+    },
+    {
+      "datasource": "combrick2-stress-testing",
+      "description": "Search By 100 Emails Duration",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "ms"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 3,
+        "w": 3,
+        "x": 12,
+        "y": 12
+      },
+      "id": 46,
+      "interval": ">1s",
+      "links": [],
+      "options": {
+        "colorMode": "background",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": ["lastNotNull"],
+          "fields": "",
+          "values": true
+        },
+        "text": {
+          "titleSize": 20
+        },
+        "textMode": "value_and_name"
+      },
+      "pluginVersion": "8.5.13",
+      "targets": [
+        {
+          "alias": "P(95)",
+          "datasource": "combrick2-stress-testing",
+          "groupBy": [],
+          "measurement": "searchBy100EmailsDuration",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "refId": "A",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": ["value"],
+                "type": "field"
+              },
+              {
+                "params": [95],
+                "type": "percentile"
+              }
+            ]
+          ],
+          "tags": []
+        }
+      ],
+      "title": "Search By 100 Emails Duration",
+      "type": "stat"
+    },
+    {
+      "datasource": "combrick2-stress-testing",
+      "description": "Search By 100 Emails And 100 Phones",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "semi-dark-yellow",
+            "mode": "fixed"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "ms"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 3,
+        "w": 3,
+        "x": 15,
+        "y": 12
+      },
+      "id": 42,
+      "interval": ">1s",
+      "links": [],
+      "options": {
+        "colorMode": "background",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "vertical",
+        "reduceOptions": {
+          "calcs": ["lastNotNull"],
+          "fields": "",
+          "values": false
+        },
+        "text": {
+          "titleSize": 20,
+          "valueSize": 50
+        },
+        "textMode": "value_and_name"
+      },
+      "pluginVersion": "8.5.13",
+      "targets": [
+        {
+          "alias": "P(90)",
+          "datasource": "combrick2-stress-testing",
+          "dsType": "influxdb",
+          "groupBy": [],
+          "measurement": "searchByOneContactDuration",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT percentile(\"value\", 95) FROM \"searchByOneContactDuration\" WHERE $timeFilter",
+          "rawQuery": false,
+          "refId": "C",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": ["value"],
+                "type": "field"
+              },
+              {
+                "params": ["90"],
+                "type": "percentile"
+              }
+            ]
+          ],
+          "tags": []
+        }
+      ],
+      "title": "Search By 100 Emails And 100 Phones",
+      "type": "stat"
+    },
+    {
+      "datasource": "combrick2-stress-testing",
+      "description": "Search By 100 Emails Duration",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "light-blue",
+            "mode": "fixed"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "ms"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 3,
+        "w": 3,
+        "x": 18,
+        "y": 12
+      },
+      "id": 47,
+      "interval": ">1s",
+      "links": [],
+      "options": {
+        "colorMode": "background",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": ["lastNotNull"],
+          "fields": "",
+          "values": true
+        },
+        "text": {
+          "titleSize": 20
+        },
+        "textMode": "value_and_name"
+      },
+      "pluginVersion": "8.5.13",
+      "targets": [
+        {
+          "alias": "P(80)",
+          "datasource": "combrick2-stress-testing",
+          "groupBy": [],
+          "measurement": "searchBy100EmailsDuration",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "refId": "A",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": ["value"],
+                "type": "field"
+              },
+              {
+                "params": ["80"],
+                "type": "percentile"
+              }
+            ]
+          ],
+          "tags": []
+        }
+      ],
+      "title": "Search By 100 Emails Duration",
+      "type": "stat"
+    },
+    {
+      "datasource": "combrick2-stress-testing",
+      "description": "Search By 100 Emails And 100 Phones",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "semi-dark-orange",
+            "mode": "fixed"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "ms"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 3,
+        "w": 3,
+        "x": 21,
+        "y": 12
+      },
+      "id": 40,
+      "interval": ">1s",
+      "links": [],
+      "options": {
+        "colorMode": "background",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "vertical",
+        "reduceOptions": {
+          "calcs": ["lastNotNull"],
+          "fields": "",
+          "values": false
+        },
+        "text": {
+          "titleSize": 20,
+          "valueSize": 50
+        },
+        "textMode": "value_and_name"
+      },
+      "pluginVersion": "8.5.13",
+      "targets": [
+        {
+          "alias": "P(50)",
+          "datasource": "combrick2-stress-testing",
+          "dsType": "influxdb",
+          "groupBy": [],
+          "measurement": "searchByOneContactDuration",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT percentile(\"value\", 50) FROM \"searchByOneContactDuration\" WHERE $timeFilter",
+          "rawQuery": false,
+          "refId": "B",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": ["value"],
+                "type": "field"
+              },
+              {
+                "params": ["50"],
+                "type": "percentile"
+              }
+            ]
+          ],
+          "tags": []
+        }
+      ],
+      "title": "Search By 100 Emails And 100 Phones",
+      "type": "stat"
+    },
+    {
+      "datasource": "combrick2-stress-testing",
+      "description": "Search By Client Number And Contact And 2 Emails And 2 Phones Only Active True",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 95
+              }
+            ]
+          },
+          "unit": "ms"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 3,
+        "w": 12,
+        "x": 0,
+        "y": 15
+      },
+      "id": 12,
+      "interval": ">1s",
+      "links": [],
+      "options": {
+        "colorMode": "background",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "vertical",
+        "reduceOptions": {
+          "calcs": ["lastNotNull"],
+          "fields": "",
+          "values": true
+        },
+        "text": {
+          "titleSize": 20
+        },
+        "textMode": "value_and_name"
+      },
+      "pluginVersion": "8.5.13",
+      "targets": [
+        {
+          "alias": "P(95)",
+          "dsType": "influxdb",
+          "groupBy": [],
+          "measurement": "searchByClientNumberAndContactAnd2EmailsAnd2PhonesOnlyActiveTrueDuration",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT percentile(\"value\", 95) FROM \"searchByClientOnlyActiveTrue404Duration\" WHERE $timeFilter",
+          "rawQuery": false,
+          "refId": "D",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": ["value"],
+                "type": "field"
+              },
+              {
+                "params": [95],
+                "type": "percentile"
+              }
+            ]
+          ],
+          "tags": []
+        },
+        {
+          "alias": "P(90)",
+          "dsType": "influxdb",
+          "groupBy": [],
+          "measurement": "searchByClientNumberAndContactAnd2EmailsAnd2PhonesOnlyActiveTrueDuration",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT percentile(\"value\", 50) FROM \"searchByClientOnlyActiveTrue404Duration\" WHERE $timeFilter",
+          "rawQuery": false,
+          "refId": "C",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": ["value"],
+                "type": "field"
+              },
+              {
+                "params": ["90"],
+                "type": "percentile"
+              }
+            ]
+          ],
+          "tags": []
+        },
+        {
+          "alias": "P(80)",
+          "dsType": "influxdb",
+          "groupBy": [],
+          "measurement": "searchByClientNumberAndContactAnd2EmailsAnd2PhonesOnlyActiveTrueDuration",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT percentile(\"value\", 80) FROM \"searchByClientOnlyActiveTrue404Duration\" WHERE $timeFilter",
+          "rawQuery": false,
+          "refId": "A",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": ["value"],
+                "type": "field"
+              },
+              {
+                "params": ["80"],
+                "type": "percentile"
+              }
+            ]
+          ],
+          "tags": []
+        },
+        {
+          "alias": "P(50)",
+          "dsType": "influxdb",
+          "groupBy": [],
+          "measurement": "searchByClientNumberAndContactAnd2EmailsAnd2PhonesOnlyActiveTrueDuration",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT percentile(\"value\", 50) FROM \"searchByClientOnlyActiveTrue404Duration\" WHERE $timeFilter",
+          "rawQuery": false,
+          "refId": "B",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": ["value"],
+                "type": "field"
+              },
+              {
+                "params": ["50"],
+                "type": "percentile"
+              }
+            ]
+          ],
+          "tags": []
+        }
+      ],
+      "title": "Search By Client Number And Contact And 2 Emails And 2 Phones Only Active True",
+      "type": "stat"
+    },
+    {
+      "datasource": "combrick2-stress-testing",
+      "description": "searchByClientOnlyActiveTrueDuration",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "ms"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 3,
+        "w": 12,
+        "x": 12,
+        "y": 15
+      },
+      "id": 11,
+      "interval": ">1s",
+      "links": [],
+      "options": {
+        "colorMode": "background",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": ["lastNotNull"],
+          "fields": "",
+          "values": true
+        },
+        "text": {
+          "titleSize": 20
+        },
+        "textMode": "auto"
+      },
+      "pluginVersion": "8.5.13",
+      "targets": [
+        {
+          "alias": "P(95)",
+          "dsType": "influxdb",
+          "groupBy": [],
+          "measurement": "searchByClientOnlyActiveTrueDuration",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT percentile(\"value\", 95) FROM \"searchByClientOnlyActiveTrueDuration\" WHERE $timeFilter",
+          "rawQuery": false,
+          "refId": "D",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": ["value"],
+                "type": "field"
+              },
+              {
+                "params": [95],
+                "type": "percentile"
+              }
+            ]
+          ],
+          "tags": []
+        },
+        {
+          "alias": "P(90)",
+          "dsType": "influxdb",
+          "groupBy": [],
+          "measurement": "searchByClientOnlyActiveTrueDuration",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT percentile(\"value\", 50) FROM \"searchByClientOnlyActiveTrueDuration\" WHERE $timeFilter",
+          "rawQuery": false,
+          "refId": "C",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": ["value"],
+                "type": "field"
+              },
+              {
+                "params": ["90"],
+                "type": "percentile"
+              }
+            ]
+          ],
+          "tags": []
+        },
+        {
+          "alias": "P(80)",
+          "dsType": "influxdb",
+          "groupBy": [],
+          "measurement": "searchByClientOnlyActiveTrueDuration",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT percentile(\"value\", 80) FROM \"searchByClientOnlyActiveTrueDuration\" WHERE $timeFilter",
+          "rawQuery": false,
+          "refId": "A",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": ["value"],
+                "type": "field"
+              },
+              {
+                "params": ["80"],
+                "type": "percentile"
+              }
+            ]
+          ],
+          "tags": []
+        },
+        {
+          "alias": "P(50)",
+          "dsType": "influxdb",
+          "groupBy": [],
+          "measurement": "searchByClientOnlyActiveTrueDuration",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT percentile(\"value\", 50) FROM \"searchByClientOnlyActiveTrueDuration\" WHERE $timeFilter",
+          "rawQuery": false,
+          "refId": "B",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": ["value"],
+                "type": "field"
+              },
+              {
+                "params": ["50"],
+                "type": "percentile"
+              }
+            ]
+          ],
+          "tags": []
+        }
+      ],
+      "title": "Search By Client Only Active True",
+      "type": "stat"
+    },
+    {
+      "datasource": "combrick2-stress-testing",
+      "description": "Search By Client Number And Contact And 2 Emails And 2 Phones Only Active False",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "ms"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 3,
+        "w": 12,
+        "x": 0,
+        "y": 18
+      },
+      "id": 15,
+      "interval": ">1s",
+      "links": [],
+      "options": {
+        "colorMode": "background",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "vertical",
+        "reduceOptions": {
+          "calcs": ["lastNotNull"],
+          "fields": "",
+          "values": true
+        },
+        "text": {
+          "titleSize": 20
+        },
+        "textMode": "auto"
+      },
+      "pluginVersion": "8.5.13",
+      "targets": [
+        {
+          "alias": "P(95)",
+          "dsType": "influxdb",
+          "groupBy": [],
+          "measurement": "searchByClientNumberAndContactAnd2EmailsAnd2PhonesOnlyActiveFalseDuration",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT percentile(\"value\", 95) FROM \"searchBy100EmailsAnd100PhonesDuration\" WHERE $timeFilter",
+          "rawQuery": false,
+          "refId": "D",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": ["value"],
+                "type": "field"
+              },
+              {
+                "params": [95],
+                "type": "percentile"
+              }
+            ]
+          ],
+          "tags": []
+        },
+        {
+          "alias": "P(90)",
+          "dsType": "influxdb",
+          "groupBy": [],
+          "measurement": "searchByClientNumberAndContactAnd2EmailsAnd2PhonesOnlyActiveFalseDuration",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT percentile(\"value\", 50) FROM \"searchBy100EmailsAnd100PhonesDuration\" WHERE $timeFilter",
+          "rawQuery": false,
+          "refId": "C",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": ["value"],
+                "type": "field"
+              },
+              {
+                "params": ["90"],
+                "type": "percentile"
+              }
+            ]
+          ],
+          "tags": []
+        },
+        {
+          "alias": "P(80)",
+          "dsType": "influxdb",
+          "groupBy": [],
+          "measurement": "searchByClientNumberAndContactAnd2EmailsAnd2PhonesOnlyActiveFalseDuration",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT percentile(\"value\", 80) FROM \"searchBy100EmailsAnd100PhonesDuration\" WHERE $timeFilter",
+          "rawQuery": false,
+          "refId": "A",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": ["value"],
+                "type": "field"
+              },
+              {
+                "params": ["80"],
+                "type": "percentile"
+              }
+            ]
+          ],
+          "tags": []
+        },
+        {
+          "alias": "P(50)",
+          "dsType": "influxdb",
+          "groupBy": [],
+          "measurement": "searchByClientNumberAndContactAnd2EmailsAnd2PhonesOnlyActiveFalseDuration",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT percentile(\"value\", 50) FROM \"searchBy100EmailsAnd100PhonesDuration\" WHERE $timeFilter",
+          "rawQuery": false,
+          "refId": "B",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": ["value"],
+                "type": "field"
+              },
+              {
+                "params": ["50"],
+                "type": "percentile"
+              }
+            ]
+          ],
+          "tags": []
+        }
+      ],
+      "title": "Search By Client Number And Contact And 2 Emails And 2 Phones Only Active False",
+      "type": "stat"
+    },
+    {
+      "datasource": "combrick2-stress-testing",
+      "description": "Search By Client Only Active False",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "ms"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 3,
+        "w": 12,
+        "x": 12,
+        "y": 18
+      },
+      "id": 13,
+      "interval": ">1s",
+      "links": [],
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "vertical",
+        "reduceOptions": {
+          "calcs": ["lastNotNull"],
+          "fields": "",
+          "values": true
+        },
+        "text": {
+          "titleSize": 20
+        },
+        "textMode": "value_and_name"
+      },
+      "pluginVersion": "8.5.13",
+      "targets": [
+        {
+          "alias": "P(95)",
+          "dsType": "influxdb",
+          "groupBy": [],
+          "measurement": "searchByClientOnlyActiveFalseDuration",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT percentile(\"value\", 95) FROM \"searchByClientOnlyActiveFalseDuration\" WHERE $timeFilter",
+          "rawQuery": false,
+          "refId": "D",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": ["value"],
+                "type": "field"
+              },
+              {
+                "params": [95],
+                "type": "percentile"
+              }
+            ]
+          ],
+          "tags": []
+        },
+        {
+          "alias": "P(90)",
+          "dsType": "influxdb",
+          "groupBy": [],
+          "measurement": "searchByClientOnlyActiveFalseDuration",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT percentile(\"value\", 50) FROM \"searchByClientOnlyActiveFalseDuration\" WHERE $timeFilter",
+          "rawQuery": false,
+          "refId": "C",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": ["value"],
+                "type": "field"
+              },
+              {
+                "params": ["90"],
+                "type": "percentile"
+              }
+            ]
+          ],
+          "tags": []
+        },
+        {
+          "alias": "P(80)",
+          "dsType": "influxdb",
+          "groupBy": [],
+          "measurement": "searchByClientOnlyActiveFalseDuration",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT percentile(\"value\", 80) FROM \"searchByClientOnlyActiveFalseDuration\" WHERE $timeFilter",
+          "rawQuery": false,
+          "refId": "A",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": ["value"],
+                "type": "field"
+              },
+              {
+                "params": ["80"],
+                "type": "percentile"
+              }
+            ]
+          ],
+          "tags": []
+        },
+        {
+          "alias": "P(50)",
+          "dsType": "influxdb",
+          "groupBy": [],
+          "measurement": "searchByClientOnlyActiveFalseDuration",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT percentile(\"value\", 50) FROM \"searchByClientOnlyActiveFalseDuration\" WHERE $timeFilter",
+          "rawQuery": false,
+          "refId": "B",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": ["value"],
+                "type": "field"
+              },
+              {
+                "params": ["50"],
+                "type": "percentile"
+              }
+            ]
+          ],
+          "tags": []
+        }
+      ],
+      "title": "Search By Client Only Active False",
+      "type": "stat"
+    },
+    {
+      "cards": {},
+      "color": {
+        "cardColor": "rgb(0, 234, 255)",
+        "colorScale": "sqrt",
+        "colorScheme": "interpolateSpectral",
+        "exponent": 0.5,
+        "mode": "opacity"
+      },
+      "dataFormat": "timeseries",
+      "datasource": "combrick2-stress-testing",
+      "gridPos": {
+        "h": 11,
+        "w": 12,
+        "x": 0,
+        "y": 21
+      },
+      "heatmap": {},
+      "hideZeroBuckets": false,
+      "highlightCards": true,
+      "id": 8,
+      "interval": ">1s",
+      "legend": {
+        "show": false
+      },
+      "links": [],
+      "reverseYBuckets": false,
+      "targets": [
+        {
+          "dsType": "influxdb",
+          "groupBy": [
+            {
+              "params": ["$__interval"],
+              "type": "time"
+            },
+            {
+              "params": ["null"],
+              "type": "fill"
+            }
+          ],
+          "measurement": "http_req_duration",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT mean(\"value\") FROM \"http_req_duration\" WHERE $timeFilter GROUP BY time($__interval) fill(null)",
+          "rawQuery": true,
+          "refId": "A",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": ["value"],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "mean"
+              }
+            ]
+          ],
+          "tags": []
+        }
+      ],
+      "title": "Request Duration Capacity",
+      "tooltip": {
+        "show": true,
+        "showHistogram": false
+      },
+      "type": "heatmap",
+      "xAxis": {
+        "show": true
+      },
+      "yAxis": {
+        "format": "ms",
+        "logBase": 2,
+        "show": true
+      },
+      "yBucketBound": "auto"
+    },
+    {
+      "datasource": "combrick2-stress-testing",
+      "description": "Percentile of get history by customer number request 404 not found",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "ms"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 3,
+        "w": 12,
+        "x": 12,
+        "y": 21
+      },
+      "id": 17,
+      "interval": ">1s",
+      "links": [],
+      "options": {
+        "colorMode": "background",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "vertical",
+        "reduceOptions": {
+          "calcs": ["lastNotNull"],
+          "fields": "",
+          "values": true
+        },
+        "text": {
+          "titleSize": 20
+        },
+        "textMode": "auto"
+      },
+      "pluginVersion": "8.5.13",
+      "targets": [
+        {
+          "alias": "P(95)",
+          "dsType": "influxdb",
+          "groupBy": [],
+          "measurement": "searchByOneUnknownContactDuration",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT percentile(\"value\", 95) FROM \"searchBy100EmailsAnd100Phones404Duration\" WHERE $timeFilter",
+          "rawQuery": false,
+          "refId": "D",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": ["value"],
+                "type": "field"
+              },
+              {
+                "params": [95],
+                "type": "percentile"
+              }
+            ]
+          ],
+          "tags": []
+        },
+        {
+          "alias": "P(90)",
+          "dsType": "influxdb",
+          "groupBy": [],
+          "measurement": "searchByOneUnknownContactDuration",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT percentile(\"value\", 50) FROM \"searchBy100EmailsAnd100Phones404Duration\" WHERE $timeFilter",
+          "rawQuery": false,
+          "refId": "C",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": ["value"],
+                "type": "field"
+              },
+              {
+                "params": ["90"],
+                "type": "percentile"
+              }
+            ]
+          ],
+          "tags": []
+        },
+        {
+          "alias": "P(80)",
+          "dsType": "influxdb",
+          "groupBy": [],
+          "measurement": "searchByOneUnknownContactDuration",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT percentile(\"value\", 80) FROM \"searchBy100EmailsAnd100Phones404Duration\" WHERE $timeFilter",
+          "rawQuery": false,
+          "refId": "A",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": ["value"],
+                "type": "field"
+              },
+              {
+                "params": ["80"],
+                "type": "percentile"
+              }
+            ]
+          ],
+          "tags": []
+        },
+        {
+          "alias": "P(50)",
+          "dsType": "influxdb",
+          "groupBy": [],
+          "measurement": "searchByOneUnknownContactDuration",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT percentile(\"value\", 50) FROM \"searchBy100EmailsAnd100Phones404Duration\" WHERE $timeFilter",
+          "rawQuery": false,
+          "refId": "B",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": ["value"],
+                "type": "field"
+              },
+              {
+                "params": ["50"],
+                "type": "percentile"
+              }
+            ]
+          ],
+          "tags": []
+        }
+      ],
+      "title": "Search By One Unknown Contact Duration",
+      "type": "stat"
+    },
+    {
+      "datasource": "combrick2-stress-testing",
+      "description": "Percentile of get history by customer number request 404 not found",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "ms"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 3,
+        "w": 12,
+        "x": 12,
+        "y": 24
+      },
+      "id": 45,
+      "interval": ">1s",
+      "links": [],
+      "options": {
+        "colorMode": "background",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "vertical",
+        "reduceOptions": {
+          "calcs": ["lastNotNull"],
+          "fields": "",
+          "values": true
+        },
+        "text": {
+          "titleSize": 20
+        },
+        "textMode": "auto"
+      },
+      "pluginVersion": "8.5.13",
+      "targets": [
+        {
+          "alias": "P(95)",
+          "dsType": "influxdb",
+          "groupBy": [],
+          "measurement": "searchBy100UnknownContactsDuration",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT percentile(\"value\", 95) FROM \"searchBy100EmailsAnd100Phones404Duration\" WHERE $timeFilter",
+          "rawQuery": false,
+          "refId": "D",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": ["value"],
+                "type": "field"
+              },
+              {
+                "params": [95],
+                "type": "percentile"
+              }
+            ]
+          ],
+          "tags": []
+        },
+        {
+          "alias": "P(90)",
+          "dsType": "influxdb",
+          "groupBy": [],
+          "measurement": "searchBy100UnknownContactsDuration",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT percentile(\"value\", 50) FROM \"searchBy100EmailsAnd100Phones404Duration\" WHERE $timeFilter",
+          "rawQuery": false,
+          "refId": "C",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": ["value"],
+                "type": "field"
+              },
+              {
+                "params": ["90"],
+                "type": "percentile"
+              }
+            ]
+          ],
+          "tags": []
+        },
+        {
+          "alias": "P(80)",
+          "dsType": "influxdb",
+          "groupBy": [],
+          "measurement": "searchBy100UnknownContactsDuration",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT percentile(\"value\", 80) FROM \"searchBy100EmailsAnd100Phones404Duration\" WHERE $timeFilter",
+          "rawQuery": false,
+          "refId": "A",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": ["value"],
+                "type": "field"
+              },
+              {
+                "params": ["80"],
+                "type": "percentile"
+              }
+            ]
+          ],
+          "tags": []
+        },
+        {
+          "alias": "P(50)",
+          "dsType": "influxdb",
+          "groupBy": [],
+          "measurement": "searchBy100UnknownContactsDuration",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT percentile(\"value\", 50) FROM \"searchBy100EmailsAnd100Phones404Duration\" WHERE $timeFilter",
+          "rawQuery": false,
+          "refId": "B",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": ["value"],
+                "type": "field"
+              },
+              {
+                "params": ["50"],
+                "type": "percentile"
+              }
+            ]
+          ],
+          "tags": []
+        }
+      ],
+      "title": "Search By One Unknown Contact Duration",
+      "type": "stat"
+    },
+    {
+      "datasource": "combrick2-stress-testing",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 10,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "stepBefore",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "spanNulls": true,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Active VUs"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "dark-green",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 27
+      },
+      "id": 1,
+      "interval": ">1s",
+      "links": [],
+      "options": {
+        "legend": {
+          "calcs": ["lastNotNull", "max", "min"],
+          "displayMode": "table",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "8.2.6",
+      "targets": [
+        {
+          "alias": "Active VUs",
+          "dsType": "influxdb",
+          "groupBy": [
+            {
+              "params": ["$__interval"],
+              "type": "time"
+            },
+            {
+              "params": ["none"],
+              "type": "fill"
+            }
+          ],
+          "measurement": "vus",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "refId": "A",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": ["value"],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "mean"
+              }
+            ]
+          ],
+          "tags": []
+        }
+      ],
+      "title": "Virtual Users",
+      "type": "timeseries"
+    },
+    {
+      "datasource": "combrick2-stress-testing",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "fixed"
+          },
+          "custom": {
+            "align": "auto",
+            "displayMode": "auto",
+            "inspect": false
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Time"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Time"
+              },
+              {
+                "id": "unit",
+                "value": "time: YYYY-MM-DD HH:mm:ss"
+              },
+              {
+                "id": "custom.align"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": ""
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "short"
+              },
+              {
+                "id": "decimals",
+                "value": 2
+              },
+              {
+                "id": "custom.align"
+              },
+              {
+                "id": "custom.align"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Field"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 582
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 11,
+        "w": 12,
+        "x": 0,
+        "y": 32
+      },
+      "id": 27,
+      "links": [],
+      "options": {
+        "footer": {
+          "fields": "",
+          "reducer": ["sum"],
+          "show": false
+        },
+        "showHeader": true,
+        "sortBy": []
+      },
+      "pluginVersion": "8.5.13",
+      "targets": [
+        {
+          "alias": "Requests",
+          "datasource": "combrick2-stress-testing",
+          "groupBy": [],
+          "measurement": "http_reqs",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "refId": "A",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": ["value"],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "count"
+              }
+            ]
+          ],
+          "tags": []
+        },
+        {
+          "alias": "Search By 100 Emails - Success",
+          "datasource": "combrick2-stress-testing",
+          "groupBy": [],
+          "hide": false,
+          "measurement": "successSearchBy100Emails",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "refId": "B",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": ["value"],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "count"
+              }
+            ]
+          ],
+          "tags": []
+        },
+        {
+          "alias": "Search By 100 Emails And 100 Phones - Success",
+          "datasource": "combrick2-stress-testing",
+          "groupBy": [],
+          "hide": false,
+          "measurement": "successSearchBy100EmailsAnd100Phones",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "refId": "C",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": ["value"],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "count"
+              }
+            ]
+          ],
+          "tags": []
+        },
+        {
+          "alias": "Search By Client Only Active True - Success",
+          "datasource": "combrick2-stress-testing",
+          "groupBy": [],
+          "hide": false,
+          "measurement": "successSearchByClientOnlyActiveTrue",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "refId": "D",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": ["value"],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "count"
+              }
+            ]
+          ],
+          "tags": []
+        },
+        {
+          "alias": "Search By Client Only Active False - Success",
+          "datasource": "combrick2-stress-testing",
+          "groupBy": [],
+          "hide": false,
+          "measurement": "successSearchByClientOnlyActiveFalse",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "refId": "E",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": ["value"],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "count"
+              }
+            ]
+          ],
+          "tags": []
+        },
+        {
+          "alias": "Search By Client Number And Contact And 2 Emails And 2 Phones Only Active True - Success",
+          "datasource": "combrick2-stress-testing",
+          "groupBy": [],
+          "hide": false,
+          "measurement": "successSearchByClientNumberAndContactAnd2EmailsAnd2PhonesOnlyActiveTrue",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "refId": "F",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": ["value"],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "count"
+              }
+            ]
+          ],
+          "tags": []
+        },
+        {
+          "alias": "Search By One Contact - Success ",
+          "datasource": "combrick2-stress-testing",
+          "groupBy": [],
+          "hide": false,
+          "measurement": "successSearchByOneContact",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "refId": "H",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": ["value"],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "count"
+              }
+            ]
+          ],
+          "tags": []
+        },
+        {
+          "alias": "search By One Unknown Contact - Success",
+          "datasource": "combrick2-stress-testing",
+          "groupBy": [],
+          "hide": false,
+          "measurement": "successSearchByOneUnknownContact",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "refId": "I",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": ["value"],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "count"
+              }
+            ]
+          ],
+          "tags": []
+        },
+        {
+          "alias": "Search By 100 Unknown Contacts - Success",
+          "datasource": "combrick2-stress-testing",
+          "groupBy": [],
+          "hide": false,
+          "measurement": "successSearchBy100UnknownContacts",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "refId": "J",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": ["value"],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "count"
+              }
+            ]
+          ],
+          "tags": []
+        }
+      ],
+      "title": "Number of Iterations",
+      "transformations": [
+        {
+          "id": "reduce",
+          "options": {
+            "includeTimeField": false,
+            "reducers": ["sum"]
+          }
+        }
+      ],
+      "type": "table"
+    },
+    {
+      "datasource": "combrick2-stress-testing",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": ""
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 7,
+        "w": 12,
+        "x": 12,
+        "y": 35
+      },
+      "id": 35,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "center",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": ["lastNotNull"],
+          "fields": "",
+          "values": false
+        },
+        "text": {},
+        "textMode": "value_and_name"
+      },
+      "pluginVersion": "8.5.13",
+      "targets": [
+        {
+          "datasource": "combrick2-stress-testing",
+          "groupBy": [],
+          "measurement": "errors400th",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "refId": "A",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": ["value"],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "count"
+              }
+            ]
+          ],
+          "tags": []
+        },
+        {
+          "datasource": "combrick2-stress-testing",
+          "groupBy": [],
+          "hide": false,
+          "measurement": "errors500th",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "refId": "B",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": ["value"],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "count"
+              }
+            ]
+          ],
+          "tags": []
+        }
+      ],
+      "title": "Errors",
+      "type": "stat"
+    },
+    {
+      "aliasColors": {
+        "http_req_blocked.percentile": "#bf1b00"
+      },
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": "combrick2-stress-testing",
+      "description": "Time spent blocked (waiting for a free TCP connection slot) before initiating the request",
+      "fill": 1,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 7,
+        "w": 12,
+        "x": 12,
+        "y": 42
+      },
+      "hiddenSeries": false,
+      "id": 9,
+      "interval": ">1s",
+      "legend": {
+        "alignAsTable": true,
+        "avg": true,
+        "current": false,
+        "max": true,
+        "min": true,
+        "show": true,
+        "total": false,
+        "values": true
+      },
+      "lines": true,
+      "linewidth": 1,
+      "links": [],
+      "nullPointMode": "null",
+      "options": {
+        "alertThreshold": true
+      },
+      "percentage": false,
+      "pluginVersion": "8.5.13",
+      "pointradius": 5,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "dsType": "influxdb",
+          "groupBy": [
+            {
+              "params": ["$__interval"],
+              "type": "time"
+            },
+            {
+              "params": ["none"],
+              "type": "fill"
+            }
+          ],
+          "measurement": "http_req_blocked",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT percentile(\"value\", 95) FROM \"http_req_blocked\" WHERE $timeFilter GROUP BY time($__interval) fill(none)",
+          "rawQuery": true,
+          "refId": "C",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": ["value"],
+                "type": "field"
+              },
+              {
+                "params": [95],
+                "type": "percentile"
+              }
+            ]
+          ],
+          "tags": []
+        }
+      ],
+      "thresholds": [],
+      "timeRegions": [],
+      "title": "Request blocked time (95%ile)",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "mode": "time",
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "format": "ms",
+          "logBase": 1,
+          "show": true
+        },
+        {
+          "format": "short",
+          "logBase": 1,
+          "show": true
+        }
+      ],
+      "yaxis": {
+        "align": false
+      }
+    },
+    {
+      "datasource": "combrick2-stress-testing",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            }
+          },
+          "mappings": [],
+          "unit": "none"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 12,
+        "x": 0,
+        "y": 43
+      },
+      "id": 39,
+      "links": [],
+      "options": {
+        "legend": {
+          "displayMode": "table",
+          "placement": "right",
+          "values": ["percent", "value"]
+        },
+        "pieType": "pie",
+        "reduceOptions": {
+          "calcs": ["lastNotNull"],
+          "fields": "",
+          "values": true
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "8.5.2",
+      "targets": [],
+      "title": "Propotion",
+      "transformations": [
+        {
+          "id": "reduce",
+          "options": {
+            "includeTimeField": false,
+            "reducers": ["sum"]
+          }
+        }
+      ],
+      "type": "piechart"
+    }
+  ],
+  "refresh": false,
+  "schemaVersion": 36,
+  "style": "dark",
+  "tags": [],
+  "templating": {
+    "list": []
+  },
+  "time": {
+    "from": "now-1h",
+    "to": "now"
+  },
+  "timepicker": {},
+  "timezone": "",
+  "title": "combrick2-stress-testing",
+  "uid": "zaltM2v4z",
+  "version": 4,
+  "weekStart": ""
+}

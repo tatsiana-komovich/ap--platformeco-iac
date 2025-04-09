@@ -1,0 +1,26 @@
+---
+apiVersion: deckhouse.io/v1
+kind: VsphereInstanceClass
+metadata:
+  name: loadbalancer
+spec:
+  numCPUs: 2
+  memory: 4096
+  rootDiskSize: 30
+  mainNetwork: devops_3893
+  datastore: 3par_4_Lun102
+  additionalNetworks:
+    - DEVOPS_5
+  template: Templates/ubuntu-jammy-22.04-packer
+---
+apiVersion: deckhouse.io/v1
+kind: VsphereInstanceClass
+metadata:
+  name: application-nodes
+spec:
+  memory: 16384
+  numCPUs: 8
+  rootDiskSize: 50
+  template: Templates/ubuntu-jammy-22.04-packer
+  datastore: 3par_4_Lun102
+  mainNetwork: DEVOPS_5

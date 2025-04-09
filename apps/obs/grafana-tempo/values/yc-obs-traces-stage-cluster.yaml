@@ -1,0 +1,382 @@
+# Configuration for `grafana/tempo-distributed` helm chart.
+#
+# Chart repository: https://github.com/grafana/helm-charts/tree/main/charts/tempo-distributed.
+#
+# This config contains only options with non-default values.
+# See the rest in the original config file: https://github.com/grafana/helm-charts/blob/main/charts/tempo-distributed/values.yaml.
+#
+---
+env: stage
+createNamespace: true
+createSecret: true
+clusterPrometheusAccess: true
+distributorIngress:
+  enabled: true
+  ingressClassName: nginx
+  tls:
+    - hosts:
+        - "tempo-distributor-traces-stage.obs.lmru.tech"
+      secretName: tempo-gateway-tls
+  host:
+    name: "tempo-distributor-traces-stage.obs.lmru.tech"
+    service:
+      name: otel-tempo-distributor
+      port: 4318
+distributorGRPCIngress:
+  enabled: true
+  ingressClassName: nginx
+  annotations:
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/backend-protocol: "GRPC"
+  tls:
+    - hosts:
+        - "tempo-distributor-grpc-traces-stage.obs.lmru.tech"
+      secretName: tempo-gateway-tls
+  host:
+    name: "tempo-distributor-grpc-traces-stage.obs.lmru.tech"
+    service:
+      name: otel-tempo-distributor
+      port: 4317
+
+tempo-distributed:
+  tempo:
+    memberlist:
+      appProtocol: tcp
+    structuredConfig:
+      query_frontend:
+        search:
+          # Параметры глубины для поиска данных
+          # Значение по умолчанию 168 часов. Скорее всего более поздняя выборка будет не нужна, но хочется проверить насколько темпо хорошо достает старые данные
+          max_duration: 72h
+          # Пока не работала выборка из s3 было видно что трейсы доступны как раз в течении 30 минут, поэтому пока ставим 30 минут, с учетом большой нагрузки возможно придеться уменьшить
+          query_ingesters_until: 30m
+          # Что бы запросы не были пустыми нужно что бы время этого параметра было меньше параметра query_ingesters_until. Опять же ставить этот параметр слишком маленьким нежелательно,
+          # так как будет больше обращений к s3
+          query_backend_after: 25m
+
+  global:
+    image:
+      registry: "docker.art.lmru.tech"
+    extraEnvFrom:
+      - configMapRef:
+          name: 'otel-tempo-env'
+
+  fullnameOverride: 'otel-tempo'
+
+  reportingEnabled: false
+
+  global_overrides:
+    max_bytes_per_trace: 75000000
+    max_traces_per_user: 0
+    ingestion_rate_limit_bytes: 50000000
+    ingestion_burst_size_bytes: 50000000
+    metrics_generator_processors:
+      - service-graphs
+      - span-metrics
+    per_tenant_override_config: /runtime-config/overrides.yaml
+
+  serviceAccount:
+    automountServiceAccountToken: true
+
+  ingester:
+    replicas: 5
+    resources:
+      limits:
+        memory: 4Gi
+      requests:
+        cpu: "1"
+        memory: 4Gi
+    extraEnvFrom:
+      - secretRef:
+          name: tempo-s3-auth
+    nodeSelector:
+      node-role/tempo: ""
+    tolerations:
+      - key: dedicated
+        value: tempo
+        operator: Equal
+        effect: NoSchedule
+
+  metricsGenerator:
+    enabled: true
+    replicas: 1
+    resources:
+      limits:
+        memory: 4Gi
+      requests:
+        cpu: "3"
+        memory: 4Gi
+    extraEnvFrom:
+      - secretRef:
+          name: tempo-s3-auth
+    nodeSelector:
+      node-role/tempo: ""
+    tolerations:
+      - key: dedicated
+        value: tempo
+        operator: Equal
+        effect: NoSchedule
+    # -- More information on configuration: https://grafana.com/docs/tempo/latest/configuration/#metrics-generator
+    config:
+      processor:
+        service_graphs:
+          # Значение по умолчанию 10000. Уходим от warning drop spans (msg="skipped processing of spans" maxItems=10000 err="dropped 63 spans")
+          max_items: 100000
+      storage:
+        remote_write:
+          - url: https://mimir-metrics-stage.obs.lmru.tech/api/v1/push
+            headers:
+              X-Scope-OrgID: P0729--otel--tempo
+            basic_auth:
+              username: P0729--otel--tempo
+              password: '<path:stage/data/tempo#mimir_password>'
+
+  distributor:
+    replicas: 3
+    autoscaling:
+      enabled: true
+      minReplicas: 3
+      maxReplicas: 12
+      behavior:
+        scaleUp:
+          stabilizationWindowSeconds: 120
+        scaleDown:
+          stabilizationWindowSeconds: 300
+      targetCPUUtilizationPercentage: 80
+    resources:
+      limits:
+        memory: 2Gi
+      requests:
+        cpu: "1"
+        memory: 2Gi
+    nodeSelector:
+      node-role/tempo: ""
+    tolerations:
+      - key: dedicated
+        value: tempo
+        operator: Equal
+        effect: NoSchedule
+
+  compactor:
+    replicas: 3
+    autoscaling:
+      enabled: true
+      minReplicas: 3
+      maxReplicas: 12
+      behavior:
+        scaleUp:
+          stabilizationWindowSeconds: 120
+        scaleDown:
+          stabilizationWindowSeconds: 300
+      targetCPUUtilizationPercentage: 80
+    resources:
+      limits:
+        memory: 6Gi
+      requests:
+        cpu: "1"
+        memory: 6Gi
+    extraEnvFrom:
+      - secretRef:
+          name: tempo-s3-auth
+    config:
+      compaction:
+        # -- Duration to keep blocks
+        block_retention: 72h
+    nodeSelector:
+      node-role/tempo: ""
+    tolerations:
+      - key: dedicated
+        value: tempo
+        operator: Equal
+        effect: NoSchedule
+
+  querier:
+    config:
+      # https://grafana.com/docs/tempo/latest/operations/backend_search/#general-guidelines
+      # согласно документации, увеличение max_concurrent_queries увеличивает производительность запросов.
+      # дефолтное значение: 20
+      # увеличение max_concurrent_queries до 50, а так же query_timeout на данный момент устранило 500 ошибки при запросе старых трейсов
+      max_concurrent_queries: 50
+      # Увеличение таймаутов trace_by_id.query_timeout и search.query_timeout повысит вероятность выполнения тяжелых запросов.
+      # Дефолтное значение trace_by_id.query_timeout и search.query_timeout 30s
+      trace_by_id:
+        query_timeout: 40s
+      search:
+        query_timeout: 40s
+    replicas: 3
+    autoscaling:
+      enabled: true
+      minReplicas: 3
+      maxReplicas: 12
+      behavior:
+        scaleUp:
+          stabilizationWindowSeconds: 120
+        scaleDown:
+          stabilizationWindowSeconds: 300
+      targetCPUUtilizationPercentage: 80
+    resources:
+      limits:
+        memory: 4Gi
+      requests:
+        cpu: "1"
+        memory: 4Gi
+    extraEnvFrom:
+      - secretRef:
+          name: tempo-s3-auth
+    nodeSelector:
+      node-role/tempo: ""
+    tolerations:
+      - key: dedicated
+        value: tempo
+        operator: Equal
+        effect: NoSchedule
+
+  queryFrontend:
+    replicas: 3
+    autoscaling:
+      enabled: true
+      minReplicas: 3
+      maxReplicas: 12
+      behavior:
+        scaleUp:
+          stabilizationWindowSeconds: 120
+        scaleDown:
+          stabilizationWindowSeconds: 300
+      targetCPUUtilizationPercentage: 80
+    resources:
+      limits:
+        memory: 4Gi
+      requests:
+        cpu: "1"
+        memory: 4Gi
+    extraEnvFrom:
+      - secretRef:
+          name: tempo-s3-auth
+    nodeSelector:
+      node-role/tempo: ""
+    tolerations:
+      - key: dedicated
+        value: tempo
+        operator: Equal
+        effect: NoSchedule
+
+  memcached:
+    extraArgs:
+      - --conn-limit=4096  # default is 1024
+      - --memory-limit=4000  # item memory in megabytes (default: 64)
+      - --max-item-size=128m  # adjusts max item size (default: 1m, min: 1k, max: 1024m)
+    replicas: 3
+    resources:
+      limits:
+        memory: 4Gi
+      requests:
+        cpu: "300m"
+        memory: 4Gi
+    nodeSelector:
+      node-role/tempo: ""
+    tolerations:
+      - key: dedicated
+        value: tempo
+        operator: Equal
+        effect: NoSchedule
+
+  memberlist:
+    abort_if_cluster_join_fails: false
+    dead_node_reclaim_time: 60s
+
+  gateway:
+    enabled: true
+    replicas: 3
+    resources:
+      limits:
+        memory: 4Gi
+      requests:
+        cpu: "2"
+        memory: 4Gi
+    verboseLogging: false
+    nodeSelector:
+      node-role/tempo: ""
+    tolerations:
+      - key: dedicated
+        value: tempo
+        operator: Equal
+        effect: NoSchedule
+    ingress:
+      enabled: true
+      ingressClassName: nginx
+      annotations: {}
+      hosts:
+        - host: grafana-tempo-traces-stage.obs.lmru.tech
+          paths:
+            - path: /
+              pathType: Prefix
+      tls:
+        - secretName: tempo-gateway-tls
+          hosts:
+            - grafana-tempo-traces-stage.obs.lmru.tech
+
+  storage:
+    trace:
+      backend: s3
+      # https://console.yandex.cloud/folders/b1gc45ir8pqg29397sdt/storage/buckets/t-spans
+      s3:
+        bucket: t-spans
+        endpoint: storage.yandexcloud.net
+
+  traces:
+    jaeger:
+      grpc:
+        enabled: true # for tempo-vulture
+    otlp:
+      http:
+        enabled: true
+      grpc:
+        enabled: true
+
+  metaMonitoring:
+    serviceMonitor:
+      enabled: true
+      labels:
+        prometheus: main
+      relabelings:
+        - targetLabel: "cluster"
+          replacement: "yc-obs-traces-stage"
+
+  prometheusRule:
+    enabled: false # TODO: return this one into true, seems might conflict with `obs-tempo` namespace installation
+    labels:
+      prometheus: main
+
+  server:
+    grpc_server_max_recv_msg_size: 75000000
+    grpc_server_max_send_msg_size: 75000000
+
+vultureServiceMonitor: false
+tempo-vulture:
+  image:
+    repository: "docker.art.lmru.tech/grafana/tempo-vulture"
+
+  fullnameOverride: 'otel-tempo-vulture'
+
+  nodeSelector:
+    node-role/tempo: ""
+  tolerations:
+    - key: dedicated
+      value: tempo
+      operator: Equal
+      effect: NoSchedule
+  serviceMonitor:
+    enabled: false # trick for simple switch back to "vanilla" resource
+    labels:
+      prometheus: main
+    relabelings:
+      - targetLabel: "cluster"
+        replacement: "yc-obs-traces-stage"
+
+  tempoAddress:
+    # -- the url towards your Tempo distributor, e.g. http://distributor
+    # Vulture only works with Jaeger GRPC, so make sure 14250 is open on your distributor.
+    # You don't need to specify the port in the distributor url.
+    push: http://otel-tempo-distributor
+    # -- the url towards your Tempo query-frontend, e.g. http://query-frontend:3100
+    query: http://otel-tempo-query-frontend:3100

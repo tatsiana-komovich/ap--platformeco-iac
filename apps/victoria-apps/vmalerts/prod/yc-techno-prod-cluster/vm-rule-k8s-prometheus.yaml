@@ -1,0 +1,19 @@
+---
+apiVersion: operator.victoriametrics.com/v1beta1
+kind: VMRule
+metadata:
+  name: vm-rule-k8s-prometheus
+  namespace: devops-core-victoria-alerts
+spec:
+  groups:
+    - name: kubernetes.prometheus
+      rules:
+        - alert: KubePrometheusDown
+          expr: |
+                (sum by (job, pod, k8s_cluster) (up{job=~"prometheus.*", k8s_cluster=~".*"} == 1 default 0)) == 0
+          for: 5m
+          labels:
+            severity: warning
+          annotations:
+            summary: "Prometheus is down"
+            description: "Prometheus is down"

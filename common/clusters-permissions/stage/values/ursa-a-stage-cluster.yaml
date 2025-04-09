@@ -1,0 +1,401 @@
+---
+cluster_authorization:
+  defaults:
+    default_sa_permissions: &default
+      accessLevel: User
+      limitNamespaces:
+        - default
+      allowScale: true
+      allowAccessToSystemNamespaces: false
+      portForwarding: true
+  crowd:
+    groups:
+      # <--- start vspspdm --->
+      crowd-vspspdm-admin:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - vspspdm-.*
+          - vspspdm
+      crowd-vspspdm-ro:
+        <<: *default
+        accessLevel: User
+        limitNamespaces:
+          - vspspdm-.*
+          - vspspdm
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+      crowd-vspspdm-rw:
+        <<: *default
+        accessLevel: Editor
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - vspspdm-.*
+          - vspspdm
+      crowd-sa-vspspdm:
+        <<: *default
+        accessLevel: Admin
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - vspspdm-.*
+          - vspspdm
+      # <--- end vspspdm --->
+      # <--- start vspspr --->
+      crowd-vspspr-admin:
+        <<: *default
+        accessLevel: Admin
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - vspspr-.*
+          - vspspr
+      crowd-vspspr-rw:
+        <<: *default
+        accessLevel: Editor
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - vspspr-.*
+          - vspspr
+      crowd-vspspr-ro:
+        <<: *default
+        accessLevel: User
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+        limitNamespaces:
+          - vspspr-.*
+          - vspspr
+      crowd-sa-vspspr:
+        <<: *default
+        accessLevel: Admin
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - vspspr-.*
+          - vspspr
+      # <--- end vspspr --->
+      # <--- start vspspc --->
+      crowd-vspspc-admin:
+        <<: *default
+        accessLevel: Admin
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - vspspc-.*
+          - vspspc
+      crowd-vspspc-rw:
+        <<: *default
+        accessLevel: Editor
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - vspspc-.*
+          - vspspc
+      crowd-vspspc-ro:
+        <<: *default
+        accessLevel: User
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+        limitNamespaces:
+          - vspspc-.*
+          - vspspc
+      crowd-sa-vspspc:
+        <<: *default
+        accessLevel: Admin
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - vspspc-.*
+          - vspspc
+      # <--- end vspspc --->
+      # <--- start vspsspc --->
+      crowd-vspsspc-admin:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - vspsspc-.*
+          - vspsspc
+      crowd-vspsspc-ro:
+        <<: *default
+        accessLevel: User
+        limitNamespaces:
+          - vspsspc-.*
+          - vspsspc
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+      crowd-vspsspc-rw:
+        <<: *default
+        accessLevel: Editor
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - vspsspc-.*
+          - vspsspc
+      crowd-sa-vspsspc:
+        <<: *default
+        accessLevel: Admin
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - vspsspc-.*
+          - vspsspc
+      # <--- end vspsspc --->
+      # <--- start vsppm --->
+      crowd-vsppm-admin:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - vsppm-.*
+          - vsppm
+      crowd-vsppm-ro:
+        <<: *default
+        accessLevel: User
+        limitNamespaces:
+          - vsppm-.*
+          - vsppm
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+      crowd-vsppm-rw:
+        <<: *default
+        accessLevel: Editor
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - vsppm-.*
+          - vsppm
+      crowd-sa-vsppm:
+        <<: *default
+        accessLevel: Admin
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - vsppm-.*
+          - vsppm
+      # <--- end vsppm --->
+      # <--- start b2br --->
+      crowd-b2br-admin:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - b2br-.*
+          - b2br
+      crowd-b2br-ro:
+        <<: *default
+        accessLevel: User
+        limitNamespaces:
+          - b2br-.*
+          - b2br
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+      crowd-b2br-rw:
+        <<: *default
+        accessLevel: Editor
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - b2br-.*
+          - b2br
+      crowd-sa-b2br:
+        <<: *default
+        accessLevel: Admin
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - b2br-.*
+          - b2br
+      # <--- end b2br --->
+      # <--- start vspsplm --->
+      crowd-vspsplm-admin:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - vspsplm-.*
+          - vspsplm
+      crowd-vspsplm-ro:
+        <<: *default
+        accessLevel: User
+        limitNamespaces:
+          - vspsplm-.*
+          - vspsplm
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+      crowd-vspsplm-rw:
+        <<: *default
+        accessLevel: Editor
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - vspsplm-.*
+          - vspsplm
+      crowd-sa-vspsplm:
+        <<: *default
+        accessLevel: Admin
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - vspsplm-.*
+          - vspsplm
+      # <--- end vspsplm --->
+      # <--- start market-radar --->
+      crowd-market-radar-admin:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - mr-crawler-.*
+          - mr-crawler
+          - mr-matcher-.*
+          - mr-matcher
+          - market-radar-.*
+          - market-radar
+      crowd-market-radar-ro:
+        <<: *default
+        accessLevel: User
+        limitNamespaces:
+          - mr-crawler-.*
+          - mr-crawler
+          - mr-matcher-.*
+          - mr-matcher
+          - market-radar-.*
+          - market-radar
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+      crowd-market-radar-rw:
+        <<: *default
+        accessLevel: Editor
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - mr-crawler-.*
+          - mr-crawler
+          - mr-matcher-.*
+          - mr-matcher
+          - market-radar-.*
+          - market-radar
+      crowd-sa-market-radar:
+        <<: *default
+        accessLevel: Admin
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - mr-crawler-.*
+          - mr-crawler
+          - mr-matcher-.*
+          - mr-matcher
+          - market-radar-.*
+          - market-radar
+      # <--- end market-radar --->
+      # <--- start vsppih --->
+      crowd-vsppih-admin:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - vsppih-.*
+          - vsppih
+      crowd-vsppih-ro:
+        <<: *default
+        accessLevel: User
+        limitNamespaces:
+          - vsppih-.*
+          - vsppih
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+      crowd-vsppih-rw:
+        <<: *default
+        accessLevel: Editor
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - vsppih-.*
+          - vsppih
+      crowd-sa-vsppih:
+        <<: *default
+        accessLevel: Admin
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - vsppih-.*
+          - vsppih
+      # <--- end vsppih --->
+      # <--- start vspcm --->
+      crowd-vspcm-admin:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - vspcm-.*
+          - vspcm
+      crowd-vspcm-ro:
+        <<: *default
+        accessLevel: User
+        limitNamespaces:
+          - vspcm-.*
+          - vspcm
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+      crowd-vspcm-rw:
+        <<: *default
+        accessLevel: Editor
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - vspcm-.*
+          - vspcm
+      crowd-sa-vspcm:
+        <<: *default
+        accessLevel: Admin
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - vspcm-.*
+          - vspcm
+      # <--- end vspcm --->
+      # <--- start vspprm --->
+      crowd-vspprm-admin:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - vspprm-.*
+      crowd-vspprm-ro:
+        <<: *default
+        accessLevel: User
+        limitNamespaces:
+          - vspprm-.*
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+      crowd-vspprm-rw:
+        <<: *default
+        accessLevel: Editor
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - vspprm-.*
+      crowd-sa-vspprm:
+        <<: *default
+        accessLevel: Admin
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - vspprm-.*
+      # <--- end vspprm --->
+      # vspplsm
+      crowd-vspplsm-admin:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - vspplsm-.*
+          - vspplsm
+      crowd-vspplsm-ro:
+        <<: *default
+        accessLevel: User
+        limitNamespaces:
+          - vspplsm-.*
+          - vspplsm
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+      crowd-vspplsm-rw:
+        <<: *default
+        accessLevel: Editor
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - vspplsm-.*
+          - vspplsm
+      crowd-sa-vspplsm:
+        <<: *default
+        accessLevel: Admin
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - vspplsm-.*
+          - vspplsm
+
+DexProvider:
+  clientID: k8s-argocd
+  clientSecret: crowd_app_k8s-argocd

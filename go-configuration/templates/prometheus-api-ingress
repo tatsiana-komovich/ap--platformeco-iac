@@ -1,0 +1,7 @@
+---
+k8s_prometheus_api_ingress:
+  {{- if eq .Environment "stage" }}
+  host: prometheus-api-{{ .Cluster }}-{{ .Environment }}.{{ .Zone }}
+  {{- else }}
+  host: prometheus-api-{{ .Cluster }}.{{ .Zone }}
+  {{- end }}

@@ -1,0 +1,29 @@
+---
+apiVersion: deckhouse.io/v1
+kind: OpenStackInstanceClass
+metadata:
+  name: application-nodes
+spec:
+  flavorName: t-c8m16
+  imageName: ubuntu-22-04-cloud-amd64
+  mainNetwork: s-platformeco-ks
+  rootDiskSize: 100
+---
+apiVersion: deckhouse.io/v1
+kind: OpenStackInstanceClass
+metadata:
+  name: system
+spec:
+  flavorName: t-c8m24
+  imageName: ubuntu-22-04-cloud-amd64
+  rootDiskSize: 40
+---
+apiVersion: deckhouse.io/v1
+kind: OpenStackInstanceClass
+metadata:
+  name: d8-loki
+spec:
+  flavorName: t-c4m8
+  imageName: ubuntu-22-04-cloud-amd64
+  mainNetwork: s-platformeco-ks
+  rootDiskSize: 50

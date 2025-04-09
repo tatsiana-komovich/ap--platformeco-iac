@@ -1,0 +1,11 @@
+---
+apiVersion: deckhouse.io/v1
+kind: CustomPrometheusRules
+metadata:
+  name: lmru-devops-running-pods-metrics
+spec:
+  groups:
+  - name: lmru-devops-running-pods-metrics
+    rules:
+    - expr: sum (kubelet_running_pods) by (job)
+      record: cluster_running_pods

@@ -1,0 +1,42 @@
+clusterName: "k8s-marfak-b-stage"
+
+aquaSecret:
+  kubeEnforcerToken: enforcer-marfak-b-stage-k8s
+
+enforcer:
+  enforcerToken: enforcer-marfak-b-stage
+  nodeSelector:
+    node-role.k8s.lmru.tech/application: ''
+  tolerations:
+    - key: dedicated
+      operator: Equal
+      effect: "NoSchedule"
+      value: ghe-runners
+    - key: dedicated
+      operator: Equal
+      effect: "NoExecute"
+      value: perf-nodes
+    - key: dedicated
+      operator: Equal
+      effect: "NoExecute"
+      value: gpu-a100
+    - key: dedicated
+      operator: Equal
+      effect: "NoExecute"
+      value: intenzo
+    - key: dedicated
+      operator: Equal
+      effect: "NoExecute"
+      value: lopus
+    - key: dedicated
+      operator: Equal
+      effect: "NoExecute"
+      value: lopus-family
+    - key: node-role/jenkins-slave
+      operator: Equal
+      effect: "NoExecute"
+      value: ""
+    - key: dedicated
+      operator: Equal
+      effect: "NoExecute"
+      value: chords

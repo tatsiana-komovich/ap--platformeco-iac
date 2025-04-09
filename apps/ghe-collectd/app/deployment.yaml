@@ -1,0 +1,51 @@
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: rrd-pv-storage
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 8Gi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: collectd-deployment
+  labels:
+    app: collectd
+spec:
+  selector:
+    matchLabels:
+      app: collectd
+  replicas: 1
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: collectd
+    spec:
+      volumes:
+        - name: rrd-pv-storage
+          persistentVolumeClaim:
+            claimName: rrd-pv-storage
+      containers:
+        - name: collectd
+          image: docker-devops.art.lmru.tech/collectd/collectd-ghe:5
+          resources:
+            limits:
+              memory: 512Mi
+            requests:
+              cpu: 100m
+              memory: 200Mi
+          ports:
+            - containerPort: 25826
+              name: "graphite"
+            - containerPort: 9103
+              name: "metrics"
+          volumeMounts:
+            - mountPath: "/var/lib/collectd/rrd"
+              name: rrd-pv-storage

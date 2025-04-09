@@ -1,0 +1,63 @@
+---
+cluster_authorization:
+  defaults:
+    default_sa_permissions: &default
+      accessLevel: User
+      limitNamespaces:
+        - default
+      allowScale: true
+      allowAccessToSystemNamespaces: true
+      portForwarding: true
+  crowd:
+    groups:
+      gitlab-runner-deploy:
+        <<: *default
+        accessLevel: SuperAdmin
+        limitNamespaces:
+          - .*
+        allowAccessToSystemNamespaces: true
+        allowScale: false
+        portForwarding: false
+        kind: ServiceAccount
+        namespace: d8-service-accounts
+      crowd-obs-rw:
+        accessLevel: Editor
+        allowScale: false
+        limitNamespaces:
+          - .*
+        portForwarding: false
+      crowd-obs-admin:
+        accessLevel: Admin
+        allowScale: false
+        limitNamespaces:
+          - .*
+      crowd-sa-obs:
+        accessLevel: Admin
+        allowScale: false
+        limitNamespaces:
+          - .*
+        portForwarding: false
+      crowd-sa-gogomonia:
+        accessLevel: Admin
+        allowScale: false
+        limitNamespaces:
+          - .*
+        portForwarding: false
+      crowd-gogomonia-admin:
+        accessLevel: Admin
+        allowScale: false
+        limitNamespaces:
+          - .*
+        portForwarding: false
+      crowd-gogomonia-users:
+        <<: *default
+        accessLevel: User
+        limitNamespaces:
+          - default
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+
+DexProvider:
+  clientID: k8s-ggmon
+  clientSecret: crowd_app_k8s-ggmon-prod

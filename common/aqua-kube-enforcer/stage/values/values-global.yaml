@@ -1,0 +1,583 @@
+global:
+  # Specify the Kubernetes (k8s) platform acronym.
+  # Allowed values are:
+  # - aks: Azure Kubernetes Service
+  # - eks: Amazon Elastic Kubernetes Service
+  # - gke: Google Kubernetes Engine
+  # - openshift: Red Hat OpenShift/OCP
+  # - tkg: VMware Tanzu Kubernetes Grid
+  # - tkgi: VMware Tanzu Kubernetes Grid Integrated Edition
+  # - k8s: Plain/on-prem Vanilla Kubernetes
+  # - rancher: Rancher Kubernetes Platform
+  # - gs: Giant Swarm platform
+  # - k3s: k3s Kubernetes platform
+  # - mke: Mirantis Kubernetes Engine
+  platform: "k8s"
+  dnsNdots:
+  enforcer:
+    enabled: true
+  gateway:
+    # change address to gateway endpoint. For Saas use the hostname containing `-gw` 
+    # from your onboarding email and switch port to 443
+    address: 10.203.19.195
+    port: 8443
+  # Specifies the secret data for imagePullSecrets needed to fetch the private docker images
+  imageCredentials:
+    # If imageCredentials.create=false and imageCredentials.name not defined
+    # then will be used secret aqua-registry-secret which created by aqua-server helm chart
+    #####################
+    # If imageCredentials.create=false and imageCredentials.name defined then will be used secret with defined name
+    # but in this case secret should be created manually before chart deploying
+    #####################
+    # If imageCredentials.create=create and imageCredentials.name not defined
+    # then will be created a secret with name <Chart ReleaseName>-registry-secret
+    #####################
+    # If imageCredentials.create=create and imageCredentials.name defined
+    # then will be created a secret with name provided name
+    create: true
+    name: "aqua-registry"
+    # repositoryUriPrefix: "registry.aquasec.com" # for dockerhub - "docker.io"
+    repositoryUriPrefix: "docker-aquasec.art.lmru.tech"
+    registry: "docker-aquasec.art.lmru.tech" #REQUIRED only if create is true, for dockerhub - "index.docker.io/v1/"
+    # registry: "registry.aquasec.com" #REQUIRED only if create is true, for dockerhub - "index.docker.io/v1/"
+    username: ""
+    password: ""
+
+# If serviceAccount.create=false and serviceAccount.name not defined then will be used serviceAccount aqua-kube-enforcer-sa
+# but in this case serviceAccount should be created manually before chart deploying
+#####################
+# If serviceAccount.create=false and serviceAccount.name defined then will be used serviceAccount with defined name
+# but in this case serviceAccount should be created manually before chart deploying
+#####################
+# If serviceAccount.create=create and serviceAccount.name not defined
+# then will be created a serviceAccount with name <Chart ReleaseName>-sa
+#####################
+# If serviceAccount.create=create and serviceAccount.name defined
+# then will be created a serviceAccount with name provided name
+serviceAccount:
+  create: true
+  name: ""
+
+# Replica count
+ke_ReplicaCount: "1"
+
+# Specify whether to enable/disable the cache by using "yes", "true", "no", "false" values.
+aqua_enable_cache: "yes"
+# default value is 60
+aqua_cache_expiration_period: "60"
+
+# Kube-Enforcer Image
+image:
+  repositoryUriPrefix: "docker-aquasec.art.lmru.tech" # for dockerhub - "docker.io"
+  repository: "kube-enforcer"
+  tag: "2022.4.759"
+  pullPolicy: Always
+
+# MicroEnforcer & KubeBench custom image registry
+# Default is KE image registry and KE image pull secrets
+me_ke_custom_registry:
+  enable: false             # Enable to true to pull microEnforcer and kubeBench images from custom registry
+  registry: ""              # Custom registry name of microEnforcer and kubeBench
+  imagePullSecretName: ""   # Custom registry image pull secret name to pull microEnforcer and kubeBench
+
+# Micro Enforcer Image
+microEnforcerImage:
+  repositoryUriPrefix: "docker-aquasec.art.lmru.tech"
+  repository: "microenforcer"   # Default aqua registry MicroEnforcer repository name
+  tag: "2022.4.759"
+
+# KubeBench Image
+kubebenchImage:
+  repositoryUriPrefix: "docker.art.lmru.tech"
+  repository: "aquasec/kube-bench"  # Default aqua registry KubeBench repository name
+  tag: "v0.7.0"
+
+# Enable/Disable KB scanning on tainted nodes
+kubeBench:
+  scanTainted: "true"
+
+nameOverride: "aqua-kube-enforcer"
+fullnameOverride: "aqua-kube-enforcer"
+
+# Display a custom cluster name in the infrastructure tab of Aqua Enterprise
+# Follow https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#dns-label-names for naming conventions
+clusterName: ""
+logicalName: ""
+logLevel: ""
+
+# Comma-separated node-labels for nodes on which Kube-Bench is to be skipped. key1=val1,key2=val2,...
+skipNodes: ""
+
+# Set create to false if you want to use an existing secret for the kube-enforcer certs
+# If certsSecret.create and certsSecret.name defined then need provide certsSecret.serverCertificate and
+# certsSecret.serverKey and webhooks.caBundle encrypted with base64 and secret for TLS connectivity with kube-api will be created
+# If you want to use auto generated self-signed certificates use option certsSecret.autoGenerated=true and all required self-signed
+# certificates will be created and added to secret with name certsSecret.name
+# Please be aware that if you already have TLS secret created in cluster and decided to use option certsSecret.autoGenerate
+# It will fail with following error. To solve it delete previously create secret kubectl delete secret aqua-kube-enforcer-certs -n aqua
+# Error: UPGRADE FAILED: error validating "": error validating data: unknown object type "nil" in Secret.data.ca.crt
+certsSecret:
+  autoGenerate: false
+  create: false
+  annotations: {}
+  # If you're using existing certs change the name to existing secret name
+  name: "aqua-kube-enforcer-certs"
+  serverCertificate: tls.crt
+  serverKey: tls.key
+
+# Hashicorp Vault is a secrets management tool
+# Below vaultSecret and vaultAnnotations section helps setting vault sidecar/initContainer agents to load enforcer-token securely
+vaultSecret:
+  enabled: false         # Enable to true once you have secrets in vault and annotations are enabled to load enforcer token from hashicorp vault
+  vaultFilepath: ""      # Change the path to "/vault/secrets/<filename>" as per the setup
+
+# Add hashicorp Vault annotations to enable sidecar/init-container vault agent to load enforcer token
+# example annotations for self-hosted vault server:
+vaultAnnotations:
+  ####
+  # vault.hashicorp.com/agent-inject: "true"
+  # vault.hashicorp.com/agent-inject-status: update
+  # vault.hashicorp.com/agent-pre-populate-only: 'false'                     # Enable to true to add vault agent as init-container without sidecar
+  # vault.hashicorp.com/role: "kube-enforcer"                                # Specify your role used by vault agent auto-auth
+  # vault.hashicorp.com/agent-inject-secret-kube-enforcer-token: ""          # Specify your vault secrets path eg: `aqua-path/data/aqua-enforcer/token`
+  # vault.hashicorp.com/agent-inject-template-kube-enforcer-token: |
+  #   {{- with secret "aqua-path/data/kube-enforcer/token" -}}
+  #   export AQUA_TOKEN="{{ .Data.data.token}}"
+  #   {{- end -}}
+  ####
+  # Change aqua secret path as per the setup
+  # Add the secrets in Key Value pair as environment variable
+
+aquaSecret:
+  create: true
+  name: "aqua-kube-enforcer-token"
+  # Enter the enforcer token in "clear-text" format without quotes generated from the Console UI, if `aquaSecret.create: true`
+  kubeEnforcerToken: ""
+
+clusterRole:
+  name: "aqua-kube-enforcer"
+  usingPodEnforcer: true
+
+clusterRoleBinding:
+  name: "aqua-kube-enforcer"
+
+role:
+  name: "aqua-kube-enforcer"
+
+roleBinding:
+  name: "aqua-kube-enforcer"
+
+webhooks:
+  # set this field true if you're using cert-manager and don't need to pass a caBundle
+  certManager: true
+  # Add base64 value of the CA cert/Ca Bundle/RootCA Cert if certificates are not generated from cert-manager to webhooks.caBundle
+  caBundle: ""
+  failurePolicy: Ignore
+  validatingWebhook:
+    enabled: true
+    name: "kube-enforcer-admission-hook-config"
+    timeout: 2
+    annotations: 
+      cert-manager.io/inject-ca-from: "aqua/aqua-kube-enforcer-certs"
+  mutatingWebhook:
+    enabled: true
+    name: "kube-enforcer-me-injection-hook-config"
+    timeout: 2
+    annotations:
+      cert-manager.io/inject-ca-from: "aqua/aqua-kube-enforcer-certs"
+
+securityContext:
+  runAsUser: 11431
+  runAsGroup: 11433
+  fsGroup: 11433
+
+container_securityContext: {}
+
+readinessProbe:
+  httpGet:
+    path: /readyz
+    port: 8080
+  initialDelaySeconds: 60
+  periodSeconds: 30
+
+livenessProbe:
+  httpGet:
+    path: /healthz
+    port: 8080
+  initialDelaySeconds: 60
+  periodSeconds: 30
+
+## Please use the below probes for KubeEnforcer version < 6.5.22052 or version != latest
+## livenessProbe:
+##   httpGet:
+##   tcpSocket:
+##     port: 8080
+##   initialDelaySeconds: 60
+##   periodSeconds: 30
+##
+## readinessProbe:
+##   httpGet:
+##   tcpSocket:
+##     port: 8080
+##   initialDelaySeconds: 60
+##   periodSeconds: 30
+
+resources: 
+  requests:
+    cpu: 400m
+    memory: 500Mi
+  limits:
+    cpu: 1200m
+    memory: 1.5Gi
+
+nodeSelector: {}
+tolerations: []
+podAnnotations: {}
+podLabels: {}
+
+# Allows you to specify the API version for the PodDisruptionBudget
+# This is useful where .Capabilities.APIVersions.Has does not work e.g. Helm template & ArgoCD
+# For example: policy/v1beta1 or policy/v1
+pdbApiVersion:
+
+affinity: {}
+
+podDisruptionBudget:
+  minAvailable: 1
+
+priorityClass:
+  create: true
+  name: "aquasec-priority"
+  preemptionPolicy: "PreemptLowerPriority"
+  value: 1000000
+
+TLS:
+  # enable to true for secure communication
+  enabled: false
+  # provide certificates secret name created to enable tls/mtls communication between enforcer and gateway/envoy
+  secretName: ""
+  # provide filename of the public key eg: aqua_web.crt
+  publicKey_fileName: ""
+  # provide filename of the private key eg: aqua_web.key
+  privateKey_fileName: ""
+  # provide filename of the rootCA, if using self-signed certificates eg: rootCA.crt
+  rootCA_fileName: ""
+  # change it to true for enabling mTLS between enforcer and gateway/envoy
+  tls_verify: false
+
+# extraEnvironmentVars is a list of extra environment variables to set in the kube-enforcer deployment
+# https://docs.aquasec.com/docs/kubeenforcer-variables
+# The variables could be provided via values.yaml file as shown below
+# or using cli command, for example:  --set extraEnvironmentVars.http_proxy="1.1.1.1",extraEnvironmentVars.https_proxy="2.2.2.2"
+extraEnvironmentVars: {}
+  # http_proxy: < >
+  # https_proxy: < >
+  # no_proxy: < >
+  # ENV_NAME: value
+
+# extraSecretEnvironmentVars is a list of extra environment variables to set in the enforcer daemonSet.
+# These variables take value from existing Secret objects.
+extraSecretEnvironmentVars: []
+  # - envName: ENV_NAME
+  #   secretName: name
+  #   secretKey: key
+
+# extraVolumeMounts is a list of extra volumes to mount into the container's filesystem of the KubeEnforcer deployment
+extraVolumeMounts: []
+
+# extraVolumes is a list of volumes that can be mounted inside the KubeEnforcer deployment
+extraVolumes: []
+
+starboard:
+  enabled: false
+  replicaCount: "1"
+  appName: "starboard-operator"
+  serviceAccount:
+    create: true
+    name: "starboard-operator"
+  clusterRoleBinding:
+    name: "starboard-operator"
+  clusterRole:
+    name: "starboard-operator"
+  automountServiceAccountToken: "true"
+
+  securityContext: {}
+
+  image:
+    repositoryUriPrefix: "docker.art.lmru.tech"
+    repository: "aquasec/starboard-operator"
+    tag: "0.15.19"
+    pullPolicy: Always
+
+  container_securityContext:
+    privileged: false
+    readOnlyRootFilesystem: true
+    allowPrivilegeEscalation: false
+    capabilities:
+      drop:
+        - ALL
+
+  OPERATOR_NAMESPACE: ""
+  OPERATOR_TARGET_NAMESPACES: ""
+  OPERATOR_LOG_DEV_MODE: "false"
+  OPERATOR_CONCURRENT_SCAN_JOBS_LIMIT: "10"
+  OPERATOR_SCAN_JOB_RETRY_AFTER: "30s"
+  OPERATOR_METRICS_BIND_ADDRESS: ":8080"
+  OPERATOR_HEALTH_PROBE_BIND_ADDRESS: ":9090"
+  OPERATOR_CIS_KUBERNETES_BENCHMARK_ENABLED: "false"
+  OPERATOR_VULNERABILITY_SCANNER_ENABLED: "false"
+  OPERATOR_CONFIG_AUDIT_SCANNER_SCAN_ONLY_CURRENT_REVISIONS: "true"
+  OPERATOR_BATCH_DELETE_LIMIT: "10"
+  OPERATOR_BATCH_DELETE_DELAY: "10s"
+  OPERATOR_CLUSTER_COMPLIANCE_ENABLED: false
+
+  ports:
+    metricContainerPort: 8080
+    probeCntainerPort: 9090
+
+  resources: {}
+
+  readinessProbe:
+    httpGet:
+      path: /readyz/
+      port: probes
+    initialDelaySeconds: 5
+    periodSeconds: 10
+    successThreshold: 1
+    failureThreshold: 3
+
+  livenessProbe:
+    httpGet:
+      path: /healthz/
+      port: probes
+    initialDelaySeconds: 5
+    periodSeconds: 10
+    successThreshold: 1
+    failureThreshold: 10
+
+  podLabels: {}
+  nodeSelector: {}
+  tolerations: []
+  podAnnotations: {}
+  affinity: {}
+
+## To Enable Trivy Operator instead of Starboard Operator
+trivy:
+  enabled: false    #Enable to install trivy operator and make starboard.enabled to false(only one operator can be enabled for KE per deployment)
+  appName: "trivy-operator"
+  image:
+    repositoryUriPrefix: "docker.art.lmru.tech"
+    repository: "aquasec/trivy-operator"
+    tag: "0.16.1"
+    pullPolicy: IfNotPresent
+    # Reference the secret for private registry
+    secretName: ""
+  replicaCount: 1
+  ports:
+    metricContainerPort: 8080
+    probeContainerPort: 9090
+  serviceAccount:
+    create: true
+    name: "trivy-operator"
+  livenessProbe:
+    httpGet:
+      path: /healthz/
+      port: probes
+    initialDelaySeconds: 5
+    periodSeconds: 10
+    successThreshold: 1
+    failureThreshold: 10
+  resources: {}
+  nodeSelector: {}
+  securityContext: {}
+
+
+##Kube Enforcer advance deployment options
+### Advanced Deployment (for Pod Enforcer injection)
+### When using KubeEnforcers for Pod Enforcer injection, it is recommended that you deploy the KubeEnforcers in a special Advanced configuration.
+### This will cause Pod Enforcer traffic to be routed to the KubeEnforcers via a local envoy, which then forwards the traffic to an Aqua Gateway.
+### This configuration improves performance and reduces remote network connections between pods and Gateways.
+kubeEnforcerAdvance:
+  enable: false
+  nodeID: "envoy"
+
+  envoy:
+    image:
+      repositoryUriPrefix: "docker-aquasec.art.lmru.tech"
+      repository: "envoy"
+      tag: "2022.4.759"
+      pullPolicy: Always
+
+    # Enabling Envoy requires the use of TLS certificates for the cluster section, while the cluster TLS section is optional and to be enabled if TLS is in use for kube-enforcer and gateway.
+    # Find the instructions in the readme for help with generating the required certificates.
+    TLS:
+      listener:
+        # true to enable secure communication between Aqua Envoy and Gateways
+        enabled: false
+        # provide secret name containing the certificates
+        secretName: "envoy-mtls-certs"
+        # provide filename of the public key in the secret eg: aqua-lb.crt
+        publicKey_fileName: ""
+        # provide filename of the private key in the secret eg: aqua-lb.key
+        privateKey_fileName: ""
+        # optional: use this field if using a custom CA or chain
+        rootCA_fileName: ""
+
+    readinessProbe:
+      exec:
+        command:
+        - cat
+        - /etc/aquasec/envoy/configured
+      initialDelaySeconds: 30
+      periodSeconds: 10
+
+    livenessProbe: {}
+
+    resources: {}
+
+    ## Enabling this will replace any templated envoy configuration with the list of files passed below
+    custom_envoy_files: {}
+
+enforcer:
+  serviceAccount:
+    create: true
+    name: ""
+
+  clusterRole:
+    roleRef: ""
+
+  # Hashicorp Vault is a secrets management tool
+  # Below vaultSecret and vaultAnnotations section helps setting vault sidecar/initContainer agents to load enforcer-token securely
+  vaultSecret:
+    enabled: false          # Enable to true once you have secrets in vault and annotations are enabled to load enforcer token from hashicorp vault
+    vaultFilepath: ""       # Change the path to "/vault/secrets/<filename>" as per the setup
+
+  # Add hashicorp Vault annotations to enable sidecar/init-container vault agent to load enforcer token
+  # example annotations for self-hosted vault server:
+  vaultAnnotations:
+    ####
+    # vault.hashicorp.com/agent-inject: "true"
+    # vault.hashicorp.com/agent-inject-status: update
+    # vault.hashicorp.com/agent-pre-populate-only: 'false'                 # Enable to true to add vault agent as init-container without sidecar
+    # vault.hashicorp.com/role: "aqua-enforcer"                            # Specify your role used by vault agent auto-auth
+    # vault.hashicorp.com/agent-inject-secret-enforcer-token: ""           # Specify your vault secrets path eg: `aqua-path/data/aqua-enforcer/token`
+    # vault.hashicorp.com/agent-inject-template-enforcer-token: |
+    #  {{- with secret "aqua-path/data/aqua-enforcer/token" -}}
+    #  export AQUA_TOKEN="{{ .Data.data.token}}"
+    #  {{- end -}}
+    ####
+    # Change aqua secret path as per the setup
+    # Add the secrets in Key Value pair as environment variable
+
+  # Enter the enforcer token in "clear-text" format without quotes generated from the Console UI
+  enforcerToken: ""
+  expressMode: true
+  enforcerTokenSecretName: null
+  enforcerTokenSecretKey: null
+
+  logicalName:
+  nodeName:
+  nameOverride:
+
+  securityContext:
+    privileged: true
+  #  capabilities:
+  #    add:
+  #      - SYS_ADMIN
+  #      - NET_ADMIN
+  #      - NET_RAW
+  #      - SYS_PTRACE
+  #      - KILL
+  #      - MKNOD
+  #      - SETGID
+  #      - SETUID
+  #      - SYS_MODULE
+  #      - AUDIT_CONTROL
+  #      - SYSLOG
+  #      - SYS_CHROOT
+  #      - SYS_RESOURCE
+  #      - IPC_LOCK
+
+  hostRunPath: # pks - /var/vcap/sys/run/docker
+  # enable this to connect enforcer with multiple gateways
+  multiple_gateway:
+    enabled: false
+  # use the below hosts to add multiple gateways as required to enforcer. Format is <hostname>:<port_number>
+  multi_gates:
+    - aqua-gateway1-svc:8443 #example gateway 1
+    - aqua-gateway2-svc:8443 #example gateway 2
+
+  image:
+    repositoryUriPrefix: "docker-aquasec.art.lmru.tech"
+    repository: "enforcer"
+    tag: "2022.4.759"
+    pullPolicy: Always
+
+  restartPolicy: Always
+
+  healthMonitor:
+    enabled: "true"
+
+  livenessProbe:
+    httpGet:
+      path: /healthz
+      port: 8096
+    initialDelaySeconds: 60
+    periodSeconds: 30
+  readinessProbe:
+    httpGet:
+      path: /readinessz
+      port: 8096
+    initialDelaySeconds: 60
+    periodSeconds: 30
+  resources:
+    requests:
+      cpu: 350m
+      memory: 512Mi
+    limits:
+      cpu: 1500m
+      memory: 1.5Gi
+  nodeSelector: {}
+  tolerations: []
+  podAnnotations: {}
+  affinity: {}
+  #  my-annotation-key: my value; more value
+  podLabels: {}
+
+  dnsPolicy: "ClusterFirst"
+  hostPID: "true"
+  schedulerName: "default-scheduler"
+  terminationGracePeriodSeconds: "30"
+
+  TLS:
+    enabled: false
+    # provide certificates secret name created to enable tls/mtls communication between enforcer and gateway/envoy
+    secretName: ""
+    #provide filename of the public key eg: aqua_enforcer.crt
+    publicKey_fileName: ""
+    #provide filename of the private key eg: aqua_enforcer.key
+    privateKey_fileName: ""
+    #provide filename of the rootCA, if using self-signed certificates eg: rootCA.crt
+    rootCA_fileName: ""
+    # change it to true for enabling mTLS between enforcer and gateway/envoy
+    tls_verify: false
+
+  # extraEnvironmentVars is a list of extra environment variables to set in the enforcer daemonSet.
+  # https://docs.aquasec.com/docs/enforcer-optional-variables
+  # The variables could be provided via values.yaml file as shown below
+  # or using cli command, for example:  --set extraEnvironmentVars.http_proxy="1.1.1.1",extraEnvironmentVars.https_proxy="2.2.2.2"
+  extraEnvironmentVars: {}
+    # http_proxy: < >
+    # https_proxy: < >
+    # no_proxy: < >
+    # ENV_NAME: value
+
+  # extraSecretEnvironmentVars is a list of extra environment variables to set in the enforcer daemonSet.
+  # These variables take value from existing Secret objects.
+  extraSecretEnvironmentVars: []
+    # - envName: ENV_NAME
+    #   secretName: name
+    #   secretKey: key
+
+# AquaEnforcer DaemonSet name for KubEnforcer config map
+enforcer_ds_name: ""

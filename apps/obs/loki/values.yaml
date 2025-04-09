@@ -1,0 +1,25 @@
+---
+global:
+  image:
+    registry: docker.art.lmru.tech
+  dnsService: "d8-kube-dns"
+loki-distributed:
+  loki:
+    image:
+      registry: docker.art.lmru.tech
+      repository: grafana/loki
+    ingress:
+      apiVersion: networking.k8s.io/v1
+  gateway:
+    enabled: true
+    ingress:
+      enabled: true
+      ingressClassName: nginx
+      hosts:
+        - host: "obs-loki-services-stage.apps.lmru.tech"
+          paths:
+            - path: /
+              pathType: ImplementationSpecific
+      tls:
+        - hosts:
+            - "obs-loki-services-stage.apps.lmru.tech"

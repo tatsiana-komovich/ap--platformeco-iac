@@ -1,0 +1,59 @@
+{{ $global := . }}
+{{- if .Values.cluster_authorization.crowd }}
+{{- range $key, $value := .Values.cluster_authorization.crowd.groups }}
+---
+{{- with $.Values.apiVersion | default "deckhouse.io/v1" }}
+apiVersion: {{ . }}
+{{- end }}
+kind: ClusterAuthorizationRule
+metadata:
+  name: {{ $key | replace "_" "-"}}
+spec:
+{{- if $value.additionalRoles }}
+  additionalRoles:
+{{- range $k, $v := $value.additionalRoles }}
+    - apiGroup: rbac.authorization.k8s.io
+      kind: {{ default "ClusterRole" $v.kind }}
+      name: {{ $v.roleName }}
+{{- end }}
+{{- end }}
+  accessLevel: {{ $value.accessLevel }}
+  allowAccessToSystemNamespaces: {{ $value.allowAccessToSystemNamespaces }}
+  limitNamespaces:
+{{- range $k, $v := $value.limitNamespaces }}
+    - {{ $v }}
+{{- end }}
+  portForwarding: {{ $value.portForwarding }}
+  allowScale: {{ $value.allowScale }}
+  subjects:
+    - kind: {{ default "Group" $value.kind }}
+      name: {{ $key }}
+  {{- if $value.namespace }}
+      namespace: {{ $value.namespace }}
+  {{- end }}
+  {{- if $value.name }}
+      name: {{ $value.name | quote }}
+  {{- end }}
+{{- end }}
+{{- end }}
+
+{{ $k8sWideCrowdGroups := (list
+    "crowd-grafana-users"
+   ) }}
+{{- range $group := $k8sWideCrowdGroups }}
+---
+apiVersion: deckhouse.io/v1alpha1
+kind: ClusterAuthorizationRule
+metadata:
+  name: {{ $group }}
+spec:
+  accessLevel: User
+  allowAccessToSystemNamespaces: false
+  allowScale: false
+  limitNamespaces:
+    - default
+  portForwarding: false
+  subjects:
+    - kind: Group
+      name: {{ $group }}
+  {{- end }}

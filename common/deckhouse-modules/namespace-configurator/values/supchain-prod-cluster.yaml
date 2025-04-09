@@ -1,0 +1,82 @@
+---
+extended_monitoring_enable_on_all_ns: {}
+
+products:
+  - product-id: P0471
+    namespace_pattern:
+      - ^devops-core-vector$
+
+  - product-id: P0303
+    namespace_pattern:
+      - ^ots-prod$
+
+  - product-id: P0486
+    namespace_pattern:
+      - ^wms-inbound-prod$
+      - ^wms-inbound-storybook$
+
+  - product-id: P0665
+    namespace_pattern:
+      - ^carrier-portal-gts-prod$
+      - ^cp-gts-prod$
+
+  - product-id: P0666
+    namespace_pattern:
+      - ^gts-prod$
+      - ^gts-tms-prod$
+      - ^tms-gts-prod$
+
+  - product-id: P0327 # LogBrick
+    namespace_pattern:
+      - ^lmdb-.*
+      - ^lmdb$
+
+  - product-id: P0767 # New Replenishment (aLMaz)
+    namespace_pattern:
+      - ^replenishment-.*$
+
+  - product-id: P0680
+    namespace_pattern:
+      - ^infra-sentry.*
+
+  - product-id: P0471
+    namespace_pattern:
+      - ^okmeter$
+
+  - product-id: P0157
+    namespace_pattern:
+      - ^les-.*
+
+  - product-id: P0158
+    namespace_pattern:
+      - ^lynx-.*
+
+  - product-id: P0624
+    namespace_pattern:
+      - ^updrepo-.*
+
+  - product-id: P0177
+    namespace_pattern:
+      - ^quota-prod$
+
+  - product-id: P0499
+    namespace_pattern:
+      - ^supplier-calendar-.*
+
+istio:
+  - istio-injection: enabled
+    namespace_pattern:
+      - ^replenishment-.*
+  - istio.deckhouse.io/auto-upgrade: "true"
+    namespace_pattern:
+      - ^replenishment-.*
+
+prometheus:
+  - prometheus.deckhouse.io/monitor-watcher-enabled: "true"
+    namespace_pattern:
+      - ^replenishment-.*$
+
+devops-core-vector:
+  - security.deckhouse.io/pod-policy-action: warn
+    namespace_pattern:
+      - ^devops-core-vector$

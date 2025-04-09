@@ -1,0 +1,63 @@
+---
+apiVersion: operator.victoriametrics.com/v1beta1
+kind: VMAlertmanager
+metadata:
+  name: victoria-alerts-vmalertmanager
+spec:
+  configReloaderImageTag: docker.art.lmru.tech/jimmidyson/configmap-reload:v0.9.0
+  replicaCount: 2
+  image:
+      repository: docker-remote-docker-io.art.lmru.tech/prom/alertmanager
+      tag: v0.28.1
+      pullPolicy: IfNotPresent
+  affinity:
+    podAntiAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        - labelSelector:
+            matchExpressions:
+              - key: "app.kubernetes.io/name"
+                operator: In
+                values:
+                  - "alertmananger"
+          topologyKey: "kubernetes.io/hostname"
+  tolerations:
+    - effect: NoExecute
+      key: dedicated
+      value: victoria-alerts
+  nodeSelector:
+    node-role/victoria-alerts: ""
+  resources:
+    requests:
+      memory: "64Mi"
+      cpu: "250m"
+    limits:
+      memory: "128Mi"
+      cpu: "500m"
+  configRawYaml: |
+      global:
+        resolve_timeout: 5m
+      route:
+        group_wait: 30s
+        group_interval: 1m
+        group_by: [...]
+        repeat_interval: 1480h
+        receiver: 'default-receiver'
+        routes:
+        - receiver: 'LMRU-K8S-ALERTS-P2'
+          matchers:
+            - severity="warning"
+        - receiver: 'LMRU-K8S-ALERTS-P1'
+          matchers:
+            - severity="critical"
+      receivers:
+      - name: 'default-receiver'
+      - name: 'LMRU-K8S-ALERTS-P2'
+        telegram_configs:
+          - api_url: 'https://api.telegram.org'
+            bot_token: '<path:services/data/victoria-alerts#telegram_bot_token>'
+            chat_id: -1002052646603
+      - name: 'LMRU-K8S-ALERTS-P1'
+        telegram_configs:
+          - api_url: 'https://api.telegram.org'
+            bot_token: '<path:services/data/victoria-alerts#telegram_bot_token>'
+            chat_id: -1002042929268

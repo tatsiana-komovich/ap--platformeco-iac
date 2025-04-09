@@ -1,0 +1,37 @@
+---
+apiVersion: operator.victoriametrics.com/v1beta1
+kind: VMAlert
+metadata:
+  name: victoria-alerts-vmalert
+spec:
+  affinity:
+    podAntiAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        - labelSelector:
+            matchExpressions:
+              - key: "app.kubernetes.io/name"
+                operator: In
+                values:
+                  - "alertmananger"
+          topologyKey: "kubernetes.io/hostname"
+  tolerations:
+    - effect: NoExecute
+      key: dedicated
+      value: victoria-alerts
+  nodeSelector:
+    node-role/victoria-alerts: ""
+  image:
+    repository: docker-remote-docker-io.art.lmru.tech/victoriametrics/vmalert
+    tag: v1.93.11
+    pullPolicy: IfNotPresent
+  replicaCount: 1
+  datasource:
+    url: "http://vmselect-victoria-alerts-main.devops-core-victoria-alerts.svc:8481/select/0/prometheus"
+  notifier:
+      url: "http://vmalertmanager-victoria-alerts-vmalertmanager.devops-core-victoria-alerts.svc:9093"
+  remoteWrite:
+      url: "http://vminsert-victoria-alerts-main.devops-core-victoria-alerts.svc:8480/insert/0/prometheus"
+  evaluationInterval: "30s"
+  ruleNamespaceSelector:
+    matchLabels:
+      kubernetes.io/metadata.name: devops-core-victoria-alerts

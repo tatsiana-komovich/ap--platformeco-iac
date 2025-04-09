@@ -1,0 +1,153 @@
+{
+    "annotations": {
+      "list": [
+        {
+          "builtIn": 1,
+          "datasource": {
+            "type": "grafana",
+            "uid": "-- Grafana --"
+          },
+          "enable": true,
+          "hide": true,
+          "iconColor": "rgba(0, 211, 255, 1)",
+          "name": "Annotations & Alerts",
+          "target": {
+            "limit": 100,
+            "matchAny": false,
+            "tags": [],
+            "type": "dashboard"
+          },
+          "type": "dashboard"
+        }
+      ]
+    },
+    "editable": true,
+    "fiscalYearStartMonth": 0,
+    "graphTooltip": 0,
+    "id": 73,
+    "iteration": 1717680268597,
+    "links": [],
+    "liveNow": false,
+    "panels": [
+      {
+        "datasource": {
+          "type": "loki",
+          "uid": "P3603B8DDCEA59141"
+        },
+        "gridPos": {
+          "h": 24,
+          "w": 24,
+          "x": 0,
+          "y": 0
+        },
+        "id": 2,
+        "options": {
+          "dedupStrategy": "none",
+          "enableLogDetails": true,
+          "prettifyLogMessage": false,
+          "showCommonLabels": false,
+          "showLabels": false,
+          "showTime": false,
+          "sortOrder": "Descending",
+          "wrapLogMessage": false
+        },
+        "targets": [
+          {
+            "datasource": {
+              "type": "loki",
+              "uid": "P3603B8DDCEA59141"
+            },
+            "expr": "{namespace=\"$Namespace\", container=\"keycloak\"} |= \"$Filter\"",
+            "hide": false,
+            "queryType": "range",
+            "refId": "A"
+          }
+        ],
+        "title": "PREPROD/STAGE keycloak logs",
+        "type": "logs"
+      }
+    ],
+    "schemaVersion": 36,
+    "style": "dark",
+    "tags": [],
+    "templating": {
+      "list": [
+        {
+          "current": {
+            "selected": false,
+            "text": "keycloak-customer-test",
+            "value": "keycloak-customer-test"
+          },
+          "hide": 0,
+          "includeAll": false,
+          "multi": false,
+          "name": "Namespace",
+          "options": [
+            {
+              "selected": true,
+              "text": "keycloak-customer-test",
+              "value": "keycloak-customer-test"
+            },
+            {
+              "selected": false,
+              "text": "keycloak-customer-preprod",
+              "value": "keycloak-customer-preprod"
+            },
+            {
+              "selected": false,
+              "text": "keycloak-employee-preprod",
+              "value": "keycloak-employee-preprod"
+            },
+            {
+              "selected": false,
+              "text": "keycloak-employee-stage",
+              "value": "keycloak-employee-stage"
+            },
+            {
+              "selected": false,
+              "text": "keycloak-partner-preprod-2",
+              "value": "keycloak-partner-preprod-2"
+            },
+            {
+              "selected": false,
+              "text": "keycloak-partners-test-2",
+              "value": "keycloak-partners-test-2"
+            }
+          ],
+          "query": "keycloak-customer-test,keycloak-customer-preprod,keycloak-employee-preprod,keycloak-employee-stage,keycloak-partner-preprod-2,keycloak-partners-test-2",
+          "skipUrlSync": false,
+          "type": "custom"
+        },
+        {
+          "current": {
+            "selected": false,
+            "text": "WARN",
+            "value": "WARN"
+          },
+          "hide": 0,
+          "name": "Filter",
+          "options": [
+            {
+              "selected": false,
+              "text": "",
+              "value": ""
+            }
+          ],
+          "query": "WARN",
+          "skipUrlSync": false,
+          "type": "textbox"
+        }
+      ]
+    },
+    "time": {
+      "from": "now-6h",
+      "to": "now"
+    },
+    "timepicker": {},
+    "timezone": "",
+    "title": "Keycloak logs",
+    "uid": "DK8J-wyIz",
+    "version": 3,
+    "weekStart": ""
+  }
+

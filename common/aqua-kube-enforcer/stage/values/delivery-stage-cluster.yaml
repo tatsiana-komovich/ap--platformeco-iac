@@ -1,0 +1,22 @@
+clusterName: "k8s-delivery-stage"
+
+aquaSecret:
+  kubeEnforcerToken: enforcer-delivery-stage-k8s
+
+nodeSelector:
+  node-role.k8s.lmru.tech/application: ''
+tolerations:
+  - key: dedicated
+    operator: Equal
+    effect: "NoSchedule"
+    value: dnp-appointment-delivery-time-calculator-updater
+
+enforcer:
+  enforcerToken: enforcer-delivery-stage
+  nodeSelector:
+    node-role.k8s.lmru.tech/application: ''
+  tolerations:
+    - key: dedicated
+      operator: Equal
+      effect: "NoSchedule"
+      value: dnp-appointment-delivery-time-calculator-updater

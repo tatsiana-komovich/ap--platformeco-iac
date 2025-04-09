@@ -1,0 +1,31 @@
+---
+apiVersion: operator.victoriametrics.com/v1beta1
+kind: VMRule
+metadata:
+  name: vm-rule-k8s-restic-backup
+  namespace: devops-core-victoria-alerts
+spec:
+  groups:
+    - name: kubernetes.restic-backup
+      rules:
+        - alert: BackupETCDIsFailed
+          expr: |
+           flant_backups_restic_health != 1
+          for: 1h
+          labels:
+            severity: warning
+          annotations:
+            summary: Backup ETCD in cluster {{ $labels.k8s_cluster }} was failed.
+            description: |
+              Backup ETCD in cluster {{ $labels.k8s_cluster }} was failed. Check logs in lmru-devops-k8s-backup namespace.
+
+        - alert: BackupETCDIsNotPerformed
+          expr: |
+           flant_backups_restic_hours_passed_since_last_backup > 24
+          for: 3h
+          labels:
+            severity: warning
+          annotations:
+            summary: From the last backup of ETCD in cluster {{ $labels.k8s_cluster }} more than 24 hours have passed.
+            description: |
+              From the last backup of ETCD in cluster {{ $labels.k8s_cluster }} more than 24 hours have passed. Check logs in lmru-devops-k8s-backup namespace.

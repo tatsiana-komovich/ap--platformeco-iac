@@ -1,0 +1,26 @@
+---
+extended_monitoring_enable_on_all_ns: {}
+infra-elklogs:
+  - security.deckhouse.io/pod-policy: privileged
+    namespace_pattern:
+      - ^infra-elklogs$
+products:
+  - product-id: P0116 # Lopus
+    namespace_pattern:
+      - ^opp-.*
+      - ^jenkins-slaves
+    exclusions:
+      - ^opp-feed-.*
+  - product-id: P0465 # Chords & Content-validator(temp)
+    namespace_pattern:
+      - ^chords-.*
+
+istio:
+  - istio-injection: enabled
+    namespace_pattern:
+      - ^opp-prod
+
+devops-core-vector:
+  - security.deckhouse.io/pod-policy-action: warn
+    namespace_pattern:
+      - ^devops-core-vector$

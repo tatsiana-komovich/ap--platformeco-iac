@@ -1,0 +1,31 @@
+---
+apiVersion: operator.victoriametrics.com/v1beta1
+kind: VMRule
+metadata:
+  name: vm-rule-cloud-data
+  namespace: devops-core-victoria-alerts
+spec:
+  groups:
+    - name: cloud-data-discoverer.general
+      concurrency: 1
+      rules:
+        - alert: D8OpenstackCloudDataDiscovererCloudRequestError
+          expr: "max by(job)(cloud_data_discovery_cloud_request_error == 1)"
+          for: 1h
+          labels:
+            severity: warning
+          annotations:
+            summary: "Cloud data discoverer cannot get data from cloud"
+            description: |
+              Cloud data discoverer cannot get data from cloud. See cloud data discoverer logs for more information:
+              `kubectl -n d8-cloud-provider-openstack logs deploy/cloud-data-discoverer`
+        - alert: D8OpenstackCloudDataDiscovererSaveError
+          expr: "max by(job)(cloud_data_discovery_update_resource_error == 1)"
+          for: 1h
+          labels:
+            severity: warning
+          annotations:
+            summary: "Cloud data discoverer cannot save data to k8s resource"
+            description: |
+              Cloud data discoverer cannot save data to k8s resource. See cloud data discoverer logs for more information:
+              `kubectl -n d8-cloud-provider-openstack logs deploy/cloud-data-discoverer`

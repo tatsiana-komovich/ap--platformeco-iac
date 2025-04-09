@@ -1,0 +1,9 @@
+{{- with (get .Values "cert-manager") }}
+---
+apiVersion: deckhouse.io/v1alpha1
+kind: ModuleConfig
+metadata:
+  name: cert-manager
+spec:
+  {{- toYaml . | nindent 2 }}
+{{- end }}

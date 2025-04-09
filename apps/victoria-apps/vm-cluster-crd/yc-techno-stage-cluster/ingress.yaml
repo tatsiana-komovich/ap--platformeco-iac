@@ -1,0 +1,41 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: vm-insert
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: vminsert-vm-cluster-main-yc-techno-stage.apps.lmru.tech
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: vm-cluster-main-insert
+                port:
+                  number: 8480
+  tls:
+    - hosts:
+        - vminsert-vm-cluster-main-yc-techno-stage.apps.lmru.tech
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: vm-select
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: vmselect-vm-cluster-main-yc-techno-stage.apps.lmru.tech
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: vm-cluster-main-access
+                port:
+                  number: 8481
+  tls:
+    - hosts:
+        - vmselect-vm-cluster-main-yc-techno-stage.apps.lmru.tech

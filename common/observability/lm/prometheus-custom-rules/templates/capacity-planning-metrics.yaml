@@ -1,0 +1,373 @@
+apiVersion: deckhouse.io/v1
+kind: CustomPrometheusRules
+metadata:
+  name: lmru-devops-capacity-planning-metrics
+spec:
+  groups:
+    - name: lmru-devops.capacity-planning.controller.max_usage_over_time.1h
+      rules:
+        # sum by to lower cardinality
+        - expr: >
+            sum by (controller_name, controller_type, namespace, label_product_id)
+            (
+            max_over_time(
+            (
+            (
+            (
+            sum by (pod, namespace) (container_memory_working_set_bytes:without_kmem{container!="POD"}) 
+            * on (pod, namespace) 
+            group_right(job, controller) kube_controller_pod{controller!~"(No Controller|Node/.*)"}
+            )
+            * on (pod, namespace) group_left() (kube_pod_status_phase{phase="Running"} > 0)
+            )
+            * on (namespace) 
+            group_left (label_product_id) billing:namespace:labels:product_id
+            )[1h:]
+            )
+            )
+          record: capacity_planning:controller:max_memory_usage_bytes
+        - expr: >
+            sum by (controller_name, controller_type, namespace, label_product_id)
+            (
+            max_over_time(
+            (
+            (
+            (
+            (sum by (pod, namespace)(rate(container_cpu_system_seconds_total{container!="POD"}[1h]) + rate(container_cpu_user_seconds_total{container!="POD"}[1h]))
+            * on (pod, namespace) group_right (job, controller)
+            kube_controller_pod{controller!~"(No Controller|Node/.*)"}
+            )
+            * on (pod, namespace) group_left ()
+            (kube_pod_status_phase{phase="Running"} > 0)
+            )
+            * on (namespace) group_left (label_product_id)
+            billing:namespace:labels:product_id
+            )[1h:]
+            )
+            )
+            )
+          record: capacity_planning:controller:max_cpu_usage_seconds
+    - name: lmru-devops.capacity-planning.resources.max_over_time.1h
+      rules:  
+        - expr: >
+            sum by (controller_name, controller_type, resource, namespace, label_product_id)
+            (
+            max_over_time(
+            (
+            (
+            (
+            kube_pod_container_resource_requests{resource!="ephemeral_storage"} 
+            * 
+            on (pod, namespace)
+            group_left(controller_name, controller_type) kube_controller_pod{controller!~"(No Controller|Node/.*)"}
+            )
+            * on (pod, namespace) group_left() (kube_pod_status_phase{phase="Running"} > 0)
+            )
+            * 
+            on (namespace)
+            group_left (label_product_id) billing:namespace:labels:product_id
+            )[1h:]
+            )
+            )
+          record: capacity_planning:controller:max_requests
+    - name: lmru-devops.capacity-planning.resources.limits.max_over_time.1h
+      rules:  
+        - expr: >
+            sum by (controller_name, controller_type, resource, namespace, label_product_id)
+            (
+            max_over_time(
+            (
+            (
+            (
+            kube_pod_container_resource_limits{resource!="ephemeral_storage"} 
+            * 
+            on (pod, namespace)
+            group_left(controller_name, controller_type) kube_controller_pod{controller!~"(No Controller|Node/.*)"}
+            )
+            * on (pod, namespace) group_left() (kube_pod_status_phase{phase="Running"} > 0)
+            )
+            * 
+            on (namespace)
+            group_left (label_product_id) billing:namespace:labels:product_id
+            )[1h:]
+            )
+            )
+          record: capacity_planning:controller:max_limits
+    - name: lmru-devops.capacity-planning.controller.usage_sum
+      rules:
+        - expr: >
+            sum by (controller_name, controller_type, namespace, label_product_id) 
+            (
+            (
+            (
+            sum by (pod, namespace) (container_memory_working_set_bytes:without_kmem{container!="POD"}) 
+            * on (pod, namespace)
+            group_right(job) kube_controller_pod{controller!~"(No Controller|Node/.*)"}
+            )
+            * on (pod, namespace) group_left() (kube_pod_status_phase{phase="Running"} > 0)
+            )
+            * on (namespace) 
+            group_left (label_product_id) billing:namespace:labels:product_id
+            )
+          record: capacity_planning:controller:memory_usage_bytes:sum
+        - expr: >
+            sum by (controller_name, controller_type, namespace, label_product_id)
+            (
+            (
+            (
+            (
+            (sum by (pod, namespace)(rate(container_cpu_system_seconds_total{container!="POD"}[1h]) + rate(container_cpu_user_seconds_total{container!="POD"}[1h]))
+            * on (pod, namespace) group_right (job, controller)
+            kube_controller_pod{controller!~"(No Controller|Node/.*)"}
+            )
+            * on (pod, namespace) group_left ()
+            (kube_pod_status_phase{phase="Running"} > 0)
+            )
+            * on (namespace) group_left (label_product_id)
+            billing:namespace:labels:product_id
+            )
+            )
+            )
+          record: capacity_planning:controller:container_cpu_usage:sum
+    - name: lmru-devops.capacity-planning.controller.requests_sum
+      rules:
+        - expr: >
+            sum by (controller_name, controller_type, namespace, resource, label_product_id) 
+            (
+            (
+            (
+            kube_pod_container_resource_requests{resource!="ephemeral_storage"} 
+            * 
+            on (pod, namespace) 
+            group_left(controller_name, controller_type) 
+            kube_controller_pod{controller!~"(No Controller|Node/.*)"}
+            )
+            * on (pod, namespace) group_left() (kube_pod_status_phase{phase="Running"} > 0)
+            )
+            * on (namespace) 
+            group_left(label_product_id) 
+            billing:namespace:labels:product_id
+            )
+          record: capacity_planning:controller:requests:sum
+    - name: lmru-devops.capacity-planning.controller.limits_sum
+      rules:
+        - expr: >
+            sum by (controller_name, controller_type, namespace, resource, label_product_id) 
+            (
+            (
+            (
+            kube_pod_container_resource_limits{resource!="ephemeral_storage"} 
+            * 
+            on (pod, namespace) 
+            group_left(controller_name, controller_type) 
+            kube_controller_pod{controller!~"(No Controller|Node/.*)"}
+            )
+            * on (pod, namespace) group_left() (kube_pod_status_phase{phase="Running"} > 0)
+            )
+            * on (namespace) 
+            group_left(label_product_id) 
+            billing:namespace:labels:product_id
+            )
+          record: capacity_planning:controller:limits:sum
+    - name: lmru-devops.capacity-planning.node.capacity_by_label
+      rules:
+        - expr: >
+            sum by (
+              resource,label_node_deckhouse_io_group,label_topology_kubernetes_io_zone
+              ) (
+                kube_node_status_capacity{resource=~"cpu|memory"}
+                * on(node)
+                group_left(label_node_deckhouse_io_group,label_topology_kubernetes_io_zone)
+                kube_node_labels{node!~".*-(master.*|front.*|loadbalancer.*|opendistro.*|system.*|otel-system.*|otel-collector.*|odfe.*|d8.*|sentry.*|mimir.*|router.*|elastic.*|moon.*|deckhouse.*|opensearch.*)"}
+            )
+          record: capacity_planning:nodes_application:capacity_by_label:sum
+        - expr: >
+            sum by (
+              resource,label_node_deckhouse_io_group,label_topology_kubernetes_io_zone
+              ) (
+                kube_node_status_capacity{resource=~"cpu|memory"}
+                * on(node)
+                group_left(label_node_deckhouse_io_group,label_topology_kubernetes_io_zone)
+                kube_node_labels{node=~".*-(master.*|front.*|loadbalancer.*|opendistro.*|system.*|otel-system.*|otel-collector.*|odfe.*|d8.*|sentry.*|mimir.*|router.*|elastic.*|moon.*|deckhouse.*|opensearch.*)"}
+            )
+          record: capacity_planning:nodes_system:capacity_by_label:sum
+        - expr: >
+            sum by (
+              label_node_deckhouse_io_group,label_topology_kubernetes_io_zone
+              ) (
+                kubelet_volume_stats_capacity_bytes
+                * on(node)
+                group_left(label_node_deckhouse_io_group,label_topology_kubernetes_io_zone)
+                kube_node_labels{node=~".*-(master.*|front.*|loadbalancer.*|opendistro.*|system.*|otel-system.*|otel-collector.*|odfe.*|d8.*|sentry.*|mimir.*|router.*|elastic.*|moon.*|deckhouse.*|opensearch.*)"}
+            )
+          record: capacity_planning:nodes_system:capacity_by_label:pvc:sum
+        - expr: >
+            sum by (
+              label_node_deckhouse_io_group,label_topology_kubernetes_io_zone
+              ) (
+                kubelet_volume_stats_capacity_bytes
+                * on(node)
+                group_left(label_node_deckhouse_io_group,label_topology_kubernetes_io_zone)
+                kube_node_labels{node!~".*-(master.*|front.*|loadbalancer.*|opendistro.*|system.*|otel-system.*|otel-collector.*|odfe.*|d8.*|sentry.*|mimir.*|router.*|elastic.*|moon.*|deckhouse.*|opensearch.*)"}
+            )
+          record: capacity_planning:nodes_application:capacity_by_label:pvc:sum
+    - name: lmru-devops.capacity-planning.node.capacity_by_label.1h
+      rules:
+        # applications node
+        - expr: >
+            avg by (
+              label_node_deckhouse_io_group,label_topology_kubernetes_io_zone
+              ) (
+                100 - (avg by (node) (rate(node_cpu_seconds_total{mode="idle"}[1h:])) * 100 )
+                * on(node)
+                group_left(label_node_deckhouse_io_group,label_topology_kubernetes_io_zone)
+                kube_node_labels{node!~".*-(master.*|front.*|loadbalancer.*|opendistro.*|system.*|otel-system.*|otel-collector.*|odfe.*|d8.*|sentry.*|mimir.*|router.*|elastic.*|moon.*|deckhouse.*|opensearch.*)"}
+            )
+          record: capacity_planning:nodes_application:cpu_usage_rate:sum
+        - expr: >
+            sum by (label_node_deckhouse_io_group,label_topology_kubernetes_io_zone)
+            (
+            max_over_time(
+            (
+            sum (rate(node_cpu_seconds_total{mode!="idle"}[1h:])) by (node)
+            * on (node) 
+                group_left(label_node_deckhouse_io_group,label_topology_kubernetes_io_zone)
+                kube_node_labels{node!~".*-(master.*|front.*|loadbalancer.*|opendistro.*|system.*|otel-system.*|otel-collector.*|odfe.*|d8.*|sentry.*|mimir.*|router.*|elastic.*|moon.*|deckhouse.*|opensearch.*)"}
+            )[1h:]
+            )
+            )
+          record: capacity_planning:nodes_application:max_cpu_usage:sum
+        - expr: >
+            sum by (
+              label_node_deckhouse_io_group,label_topology_kubernetes_io_zone
+            ) (
+            max_over_time
+            (
+            sum by (node) 
+            (
+              node_memory_MemTotal_bytes
+              -
+              node_memory_MemAvailable_bytes
+            )[1h:]
+            )
+            * on(node)
+            group_left(label_node_deckhouse_io_group,label_topology_kubernetes_io_zone)
+            kube_node_labels{node!~".*-(master.*|front.*|loadbalancer.*|opendistro.*|system.*|otel-system.*|otel-collector.*|odfe.*|d8.*|sentry.*|mimir.*|router.*|elastic.*|moon.*|deckhouse.*|opensearch.*)"}
+            )
+          record: capacity_planning:nodes_application:max_memory_usage_bytes:sum
+        - expr: >
+            sum by (
+              label_node_deckhouse_io_group,label_topology_kubernetes_io_zone
+              ) (
+                sum by (node) 
+                (
+                  node_memory_MemTotal_bytes
+                  -
+                  node_memory_MemAvailable_bytes
+
+                )
+                * on(node)
+                group_left(label_node_deckhouse_io_group,label_topology_kubernetes_io_zone)
+                kube_node_labels{node!~".*-(master.*|front.*|loadbalancer.*|opendistro.*|system.*|otel-system.*|otel-collector.*|odfe.*|d8.*|sentry.*|mimir.*|router.*|elastic.*|moon.*|deckhouse.*|opensearch.*)"}
+            )
+          record: capacity_planning:nodes_application:memory_usage_bytes:sum
+        - expr: >
+            avg by (
+              label_node_deckhouse_io_group,label_topology_kubernetes_io_zone
+              ) (
+                sum by (node) 
+                (
+                  (
+                    node_memory_MemTotal_bytes
+                    -
+                    node_memory_MemAvailable_bytes
+                  )
+                  /
+                  node_memory_MemTotal_bytes
+                  *
+                  100
+                )
+                * on(node)
+                group_left(label_node_deckhouse_io_group,label_topology_kubernetes_io_zone)
+                kube_node_labels{node!~".*-(master.*|front.*|loadbalancer.*|opendistro.*|system.*|otel-system.*|otel-collector.*|odfe.*|d8.*|sentry.*|mimir.*|router.*|elastic.*|moon.*|deckhouse.*|opensearch.*)"}
+            )
+          record: capacity_planning:nodes_application:memory_usage_rate:sum
+        # system nodes
+        - expr: >
+            avg by (
+              label_node_deckhouse_io_group,label_topology_kubernetes_io_zone
+              ) (
+                100 - (avg by (node) (rate(node_cpu_seconds_total{mode="idle"}[1h:])) * 100 )
+                * on(node)
+                group_left(label_node_deckhouse_io_group,label_topology_kubernetes_io_zone)
+                kube_node_labels{node=~".*-(master.*|front.*|loadbalancer.*|opendistro.*|system.*|otel-system.*|otel-collector.*|odfe.*|d8.*|sentry.*|mimir.*|router.*|elastic.*|moon.*|deckhouse.*|opensearch.*)"}
+            )
+          record: capacity_planning:nodes_system:cpu_usage_rate:sum
+        - expr: >
+            sum by (label_node_deckhouse_io_group,label_topology_kubernetes_io_zone)
+            (
+            max_over_time(
+            (
+            sum (rate(node_cpu_seconds_total{mode!="idle"}[1h:])) by (node)
+            * on (node) 
+                group_left(label_node_deckhouse_io_group,label_topology_kubernetes_io_zone)
+                kube_node_labels{node=~".*-(master.*|front.*|loadbalancer.*|opendistro.*|system.*|otel-system.*|otel-collector.*|odfe.*|d8.*|sentry.*|mimir.*|router.*|elastic.*|moon.*|deckhouse.*|opensearch.*)"}
+            )[1h:]
+            )
+            )
+          record: capacity_planning:nodes_system:max_cpu_usage:sum
+        - expr: >
+            sum by (
+              label_node_deckhouse_io_group,label_topology_kubernetes_io_zone
+            ) (
+            max_over_time
+            (
+            sum by (node) 
+            (
+              node_memory_MemTotal_bytes
+              -
+              node_memory_MemAvailable_bytes
+            )[1h:]
+            )
+            * on(node)
+            group_left(label_node_deckhouse_io_group,label_topology_kubernetes_io_zone)
+            kube_node_labels{node=~".*-(master.*|front.*|loadbalancer.*|opendistro.*|system.*|otel-system.*|otel-collector.*|odfe.*|d8.*|sentry.*|mimir.*|router.*|elastic.*|moon.*|deckhouse.*|opensearch.*)"}
+            )
+          record: capacity_planning:nodes_system:max_memory_usage_bytes:sum
+        - expr: >
+            sum by (
+              label_node_deckhouse_io_group,label_topology_kubernetes_io_zone
+              ) (
+                sum by (node) 
+                (
+                  node_memory_MemTotal_bytes
+                  -
+                  node_memory_MemAvailable_bytes
+
+                )
+                * on(node)
+                group_left(label_node_deckhouse_io_group,label_topology_kubernetes_io_zone)
+                kube_node_labels{node=~".*-(master.*|front.*|loadbalancer.*|opendistro.*|system.*|otel-system.*|otel-collector.*|odfe.*|d8.*|sentry.*|mimir.*|router.*|elastic.*|moon.*|deckhouse.*|opensearch.*)"}
+            )
+          record: capacity_planning:nodes_system:memory_usage_bytes:sum
+        - expr: >
+            avg by (
+              label_node_deckhouse_io_group,label_topology_kubernetes_io_zone
+              ) (
+                sum by (node) 
+                (
+                  (
+                    node_memory_MemTotal_bytes
+                    -
+                    node_memory_MemAvailable_bytes
+                  )
+                  /
+                  node_memory_MemTotal_bytes
+                  *
+                  100
+                )
+                * on(node)
+                group_left(label_node_deckhouse_io_group,label_topology_kubernetes_io_zone)
+                kube_node_labels{node=~".*-(master.*|front.*|loadbalancer.*|opendistro.*|system.*|otel-system.*|otel-collector.*|odfe.*|d8.*|sentry.*|mimir.*|router.*|elastic.*|moon.*|deckhouse.*|opensearch.*)"}
+            )
+          record: capacity_planning:nodes_system:memory_usage_rate:sum

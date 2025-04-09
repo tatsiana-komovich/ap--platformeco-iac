@@ -1,0 +1,205 @@
+---
+apiVersion: deckhouse.io/v1
+kind: OpenStackInstanceClass
+metadata:
+  name: elastic
+spec:
+  flavorName: p-c4m12
+  imageName: ubuntu-22-04-cloud-amd64
+  mainNetwork: p-devops-ks
+  rootDiskSize: 30
+---
+apiVersion: deckhouse.io/v1
+kind: OpenStackInstanceClass
+metadata:
+  name: ist-perf-test
+spec:
+  flavorName: p-c4m8
+  imageName: ubuntu-22-04-cloud-amd64
+  mainNetwork: p-devops-ks
+  rootDiskSize: 30
+---
+apiVersion: deckhouse.io/v1
+kind: OpenStackInstanceClass
+metadata:
+  name: jenkins-slaves
+spec:
+  flavorName: p-c8m16
+  imageName: ubuntu-22-04-cloud-amd64
+  mainNetwork: p-devops-ks
+  rootDiskSize: 50
+---
+apiVersion: deckhouse.io/v1
+kind: OpenStackInstanceClass
+metadata:
+  name: application-nodes
+spec:
+  flavorName: p-c8m16
+  imageName: ubuntu-22-04-cloud-amd64
+  mainNetwork: p-devops-ks
+  rootDiskSize: 50
+  capacity:
+    cpu: 8
+    memory: 16Gi
+---
+apiVersion: deckhouse.io/v1
+kind: OpenStackInstanceClass
+metadata:
+  name: large-nodes
+spec:
+  flavorName: p-c4m16
+  imageName: ubuntu-22-04-cloud-amd64
+  mainNetwork: p-devops-ks
+  rootDiskSize: 50
+  capacity:
+    cpu: 4
+    memory: 16Gi
+---
+apiVersion: deckhouse.io/v1
+kind: OpenStackInstanceClass
+metadata:
+  name: node
+spec:
+  flavorName: p-c4m8
+  imageName: ubuntu-22-04-cloud-amd64
+  mainNetwork: p-devops-ks
+  rootDiskSize: 30
+  capacity:
+    cpu: 4
+    memory: 8Gi
+---
+apiVersion: deckhouse.io/v1
+kind: OpenStackInstanceClass
+metadata:
+  name: odfe-common
+spec:
+  flavorName: p-c4m8
+  imageName: ubuntu-22-04-cloud-amd64
+  mainNetwork: p-devops-ks
+  rootDiskSize: 30
+---
+apiVersion: deckhouse.io/v1
+kind: OpenStackInstanceClass
+metadata:
+  name: system
+spec:
+  flavorName: p-c4m16
+  imageName: ubuntu-22-04-cloud-amd64
+  mainNetwork: p-devops-ks
+  rootDiskSize: 30
+---
+apiVersion: deckhouse.io/v1
+kind: OpenStackInstanceClass
+metadata:
+  name: keycloak-employee
+spec:
+  flavorName: p-c8m8d40
+  imageName: ubuntu-22-04-cloud-amd64
+  mainNetwork: p-devops-ks
+  rootDiskSize: 40
+---
+apiVersion: deckhouse.io/v1
+kind: OpenStackInstanceClass
+metadata:
+  name: keycloak-partner
+spec:
+  flavorName: p-c8m8d40
+  imageName: ubuntu-22-04-cloud-amd64
+  mainNetwork: p-devops-ks
+  rootDiskSize: 40
+---
+apiVersion: deckhouse.io/v1
+kind: OpenStackInstanceClass
+metadata:
+  name: keycloak-customer
+spec:
+  flavorName: p-c10m16
+  imageName: ubuntu-22-04-cloud-amd64
+  mainNetwork: p-devops-ks
+  rootDiskSize: 40
+---
+apiVersion: deckhouse.io/v1
+kind: OpenStackInstanceClass
+metadata:
+  name: d8-loadbalancer
+spec:
+  flavorName: p-c2m4
+  imageName: ubuntu-22-04-cloud-amd64
+  rootDiskSize: 30
+  mainNetwork: BGP-VLAN-3894
+  additionalNetworks:
+    - p-devops-ks
+---
+apiVersion: deckhouse.io/v1
+kind: OpenStackInstanceClass
+metadata:
+  name: cloud-print-loadbalancer
+spec:
+  flavorName: p-c4m8
+  imageName: ubuntu-22-04-cloud-amd64
+  rootDiskSize: 30
+  mainNetwork: BGP-VLAN-3894
+  additionalNetworks:
+    - p-devops-ks
+---
+apiVersion: deckhouse.io/v1
+kind: OpenStackInstanceClass
+metadata:
+  name: otel-system
+spec:
+  flavorName: p-c8m16
+  imageName: ubuntu-22-04-cloud-amd64
+  mainNetwork: p-devops-ks
+  rootDiskSize: 50
+---
+apiVersion: deckhouse.io/v1
+kind: OpenStackInstanceClass
+metadata:
+  name: legoauth
+spec:
+  flavorName: p-c8m16
+  imageName: ubuntu-22-04-cloud-amd64
+  mainNetwork: p-devops-ks
+  rootDiskSize: 40
+---
+apiVersion: deckhouse.io/v1
+kind: OpenStackInstanceClass
+metadata:
+  name: devops-core-loki
+spec:
+  flavorName: p-c6m12
+  imageName: ubuntu-22-04-cloud-amd64
+  mainNetwork: p-devops-ks
+  rootDiskSize: 40
+---
+apiVersion: deckhouse.io/v1
+kind: OpenStackInstanceClass
+metadata:
+  name: victoria-alerts
+spec:
+  flavorName: p-c8m16
+  imageName: ubuntu-22-04-cloud-amd64
+  mainNetwork: p-devops-ks
+  rootDiskSize: 40
+---
+apiVersion: deckhouse.io/v1
+kind: OpenStackInstanceClass
+metadata:
+  name: victoria-metrics
+spec:
+  flavorName: p-c2m4
+  imageName: ubuntu-22-04-cloud-amd64
+  mainNetwork: p-devops-ks
+  rootDiskSize: 40
+---
+apiVersion: deckhouse.io/v1
+kind: OpenStackInstanceClass
+metadata:
+  name: devops-loki-loadbalancer
+spec:
+  flavorName: p-c2m4
+  imageName: ubuntu-22-04-cloud-amd64
+  rootDiskSize: 30
+  mainNetwork: BGP-VLAN-3894
+  additionalNetworks:
+    - p-devops-ks

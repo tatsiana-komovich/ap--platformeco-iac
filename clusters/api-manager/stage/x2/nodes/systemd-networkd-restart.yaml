@@ -1,0 +1,28 @@
+---
+apiVersion: deckhouse.io/v1alpha1
+kind: NodeGroupConfiguration
+metadata:
+  name: systemd-networkd-restart.sh
+spec:
+  weight: 110
+  bundles: ["*"]
+  nodeGroups: ["*"]
+  content: |
+    LOCK_FILE="/tmp/systemd-networkd-restarted.lock"
+
+    if [ -f "$LOCK_FILE" ]; then
+      echo "/tmp/systemd-networkd-restarted.lock lockfile exists. Skip"
+      exit 0
+    fi
+
+    echo "Restarting systemd-networkd..."
+    systemctl restart systemd-networkd
+
+    if [ $? -eq 0 ]; then
+      echo "Restart successful"
+
+      touch "$LOCK_FILE"
+    else
+      echo "Error during restart"
+      exit 1
+    fi

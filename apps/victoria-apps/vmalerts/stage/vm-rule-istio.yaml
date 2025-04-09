@@ -1,0 +1,351 @@
+---
+apiVersion: operator.victoriametrics.com/v1beta1
+kind: VMRule
+metadata:
+  name: vm-rule-istio
+  namespace: devops-core-victoria-alerts
+spec:
+  groups:
+    - name: d8.istio.controlplane
+      concurrency: 1
+      rules:
+        - alert: D8IstioGlobalControlplaneDoesntWork
+          expr: |-
+            # all_revision_pods - revision_non_running_pods == 0 -> controlplane is dead
+            # count all istiod pods for revision
+            count by (label_istio_io_rev)
+                    (
+                      (
+                        kube_pod_labels{namespace="d8-istio", pod=~"istiod-.+"}
+                      )
+                      * on (label_istio_io_rev,k8s_cluster) group_left kube_service_labels{namespace="d8-istio", service="istiod"}
+                    )
+            -
+            # count all istiod pods in non running phase for revision
+            count by (label_istio_io_rev)
+                    (
+                      (
+                        kube_pod_status_phase{namespace="d8-istio", pod=~"istiod-.+", phase="Running"}
+                        * on (pod) group_left (label_istio_io_rev) kube_pod_labels{namespace="d8-istio", pod=~"istiod-.+"} == 0
+                      )
+                    * on (label_istio_io_rev,k8s_cluster) group_left kube_service_labels{namespace="d8-istio", service="istiod"}
+                    )
+            # there are no running control plane pods
+            == 0
+          for: 5m
+          labels:
+            severity: warning
+          annotations:
+            summary: "Global controlplane doesn't work."
+            description: |
+              Global istio controlplane `{{$labels.label_istio_io_rev}}` doesn' work.
+              Impact — sidecar injection for Pods with global revision doesn't work, validating webhook for istio resources is absent.
+              ```
+              kubectl get pods -n d8-istio -l istio.io/rev={{$labels.label_istio_io_rev}}
+              ```
+        - alert: D8IstioAdditionalControlplaneDoesntWork
+          expr: |-
+            # all_revision_pods - revision_non_running_pods == 0 -> controlplane is dead
+            # count all istiod pods for revision
+            count by (label_istio_io_rev)
+                    (
+                      (
+                        kube_pod_labels{namespace="d8-istio", pod=~"istiod-.+"}
+                      )
+                      * on (label_istio_io_rev,k8s_cluster) group_left kube_service_labels{namespace="d8-istio", service=~"istiod-.+"}
+                      # exclude global revision
+                      unless on (label_istio_io_rev) kube_service_labels{namespace="d8-istio", service="istiod"}
+                    )
+            -
+            # count all istiod pods in non running phase for revision
+            count by (label_istio_io_rev)
+                    (
+                      (
+                        kube_pod_status_phase{namespace="d8-istio", pod=~"istiod-.+", phase="Running"}
+                        * on (pod,k8s_cluster) group_left (label_istio_io_rev) kube_pod_labels{namespace="d8-istio", pod=~"istiod-.+"} == 0
+                      )
+                    * on (label_istio_io_rev) group_left kube_service_labels{namespace="d8-istio", service=~"istiod-.+"}
+                    # exclude global revision
+                    unless on (label_istio_io_rev) kube_service_labels{namespace="d8-istio", service="istiod"}
+                    )
+            == 0
+          for: 5m
+          labels:
+            severity: warning
+          annotations:
+            summary: "Additional controlplane doesn't work."
+            description: |-
+              Additional istio controlplane `{{$labels.label_istio_io_rev}}` doesn' work.
+              Impact — sidecar injection for Pods with `{{$labels.label_istio_io_rev}}` revision doesn't work.
+              ```
+              kubectl get pods -n d8-istio -l istio.io/rev={{$labels.label_istio_io_rev}}
+              ```
+    # - name: d8.istio.dataplane
+    #   concurrency: 1
+    #   rules:
+    #     - alert: D8IstioActualVersionIsNotInstalled
+    #       expr: |-
+    #         (
+    #           max by (dataplane_pod, namespace, revision, desired_revision, version, desired_version)
+    #           (
+    #             d8_istio_dataplane_metadata{ revision!="absent" }
+    #             unless on (revision)
+    #             (
+    #               istio_build{ component="pilot" }
+    #               * on (pod,namespace) group_left(revision)
+    #               (
+    #                 label_replace(kube_pod_labels, "revision", "$1", "label_istio_io_rev", "(.+)")
+    #               )
+    #             )
+    #           )
+    #         # labels kube-state-metrics should exist
+    #         ) and on() count( up{ job="kube-state-metrics", scrape_endpoint="main" } == 1 ) > 0
+    #       for: 5m
+    #       labels:
+    #         severity: warning
+    #       annotations:
+    #         summary: "control-plane version for Pod with already injected sidecar isn't installed"
+    #         description: |-
+    #           There are pods with injected sidecar with version `{{$labels.version}}` (revision `{{$labels.revision}}`) in namespace `{{$labels.namespace}}`, but the control-plane version isn't installed. Consider installing it or change the Namespace or Pod configuration.
+    #           Impact — Pods have lost their sync with k8s state.
+    #           Getting orphaned pods:
+    #           ```
+    #           kubectl -n {{ $labels.namespace }} get pods -l 'service.istio.io/canonical-name' -o json | jq --arg revision {{ $labels.revision }} '.items[] | select(.metadata.annotations."sidecar.istio.io/status" // "{}" | fromjson | .revision == $revision) | .metadata.name'
+    #           ```
+        # - alert: D8IstioDesiredVersionIsNotInstalled
+        #   expr: |-
+        #     (
+        #       max by (dataplane_pod, namespace, revision, version, desired_version)
+        #       (
+        #         label_replace( d8_istio_dataplane_metadata{ desired_revision!="absent" }, "revision", "$1", "desired_revision", "(.+)" )
+        #         unless on (revision)
+        #         (
+        #           istio_build{ component="pilot" }
+        #           * on (pod,namespace) group_left(revision)
+        #           (
+        #             label_replace(kube_pod_labels, "revision", "$1", "label_istio_io_rev", "(.+)")
+        #           )
+        #         )
+        #       )
+        #     # labels kube-state-metrics should exist
+        #     ) and on() count( up{ job="kube-state-metrics", scrape_endpoint="main" } == 1 ) > 0
+        #   for: 5m
+        #   labels:
+        #     severity: warning
+        #   annotations:
+        #     summary: "Desired control-plane version isn't installed"
+        #     description: |-
+        #       There is desired istio control plane version `{{$labels.desired_version}}` (revision `{{$labels.revision}}`) configured for pods in namespace `{{$labels.namespace}}`, but the version isn't installed. Consider installing it or change the Namespace or Pod configuration.
+        #       Impact — Pods won't be able to re-create in the `{{$labels.namespace}}` Namespace.
+        #       Cheat sheet:
+        #       ```
+        #       ### namespace-wide configuration
+        #       # istio.io/rev=vXYZ — use specific revision
+        #       # istio-injection=enabled — use global revision
+        #       kubectl get ns {{$labels.namespace}} --show-labels
+
+        #       ### pod-wide configuration
+        #       kubectl -n {{$labels.namespace}} get pods -l istio.io/rev={{$labels.revision}}
+        #       ```
+        # - alert: D8IstioDataPlaneWithoutIstioInjectionConfigured
+        #   expr: |
+        #     max by (dataplane_pod, namespace, revision, desired_revision, version, desired_version)
+        #       (
+        #           d8_istio_dataplane_metadata{desired_revision="absent",revision!="absent"}
+        #       )
+        #   for: 5m
+        #   labels:
+        #     severity: warning
+        #   annotations:
+        #     summary: "There are Pods with istio sidecars, but without istio-injection configured"
+        #     description: |-
+        #       There are Pods in `{{$labels.namespace}}` Namespace with istio sidecars, but the istio-injection isn't configured.
+        #       Impact — Pods will lose their istio sidecars after re-creation.
+        #       Getting affected Pods:
+        #       ```
+        #       kubectl -n {{$labels.namespace}} get pods -o json | jq -r --arg revision {{$labels.revision}} '.items[] | select(.metadata.annotations."sidecar.istio.io/status" // "{}" | fromjson | .revision == $revision) | .metadata.name'
+        #       ```
+        # - alert: D8IstioPodsWithoutIstioSidecar
+        #   expr: |-
+        #     max by (dataplane_pod, namespace, revision, desired_revision, version, desired_version, k8s_cluster)
+        #       (
+        #           d8_istio_dataplane_metadata{revision="absent", desired_revision!=""}[10m]
+        #       )
+        #   for: 10m
+        #   labels:
+        #     severity: warning
+        #   annotations:
+        #     summary: "There are Pods without istio sidecars, but with istio-injection configured"
+        #     description: |
+        #       There is a Pod `{{$labels.dataplane_pod}}` in `{{$labels.namespace}}` Namespace without istio sidecars, but the istio-injection is configured.
+        #       Getting affected Pods:
+        #       ```
+        #       kubectl -n {{$labels.namespace}} get pods -l '!service.istio.io/canonical-name' -o json | jq -r '.items[] | select(.metadata.annotations."sidecar.istio.io/inject" != "false") | .metadata.name'
+        #       ```
+        # - alert: D8IstioActualDataPlaneVersionNeDesired
+        #   expr: |-
+        #     max by (dataplane_pod, namespace, revision, desired_revision, version, desired_version)
+        #     (
+        #       d8_istio_dataplane_metadata{revision!="absent", desired_revision!="absent"}
+        #     )
+        #     unless on (revision, dataplane_pod, namespace) label_replace(d8_istio_dataplane_metadata{}, "revision", "$1", "desired_revision", "(.+)")
+        #   for: 5m
+        #   labels:
+        #     severity: warning
+        #   annotations:
+        #     summary: "There are Pods with istio data-plane version `{{$labels.version}}`, but desired version is `{{$labels.desired_version}}`"
+        #     description: |
+        #       There are Pods in Namespace `{{$labels.namespace}}` with istio data-plane version `{{$labels.version}}`, but the desired one is `{{$labels.desired_version}}`.
+        #       Impact — istio version is to change after Pod restarting.
+        #       Cheat sheet:
+        #       ```
+        #       ### namespace-wide configuration
+        #       # istio.io/rev=vXYZ — use specific revision
+        #       # istio-injection=enabled — use global revision
+        #       kubectl get ns {{$labels.namespace}} --show-labels
+
+        #       ### pod-wide configuration
+        #       kubectl -n {{$labels.namespace}} get pods -l istio.io/rev={{$labels.desired_revision}}
+        #       ```
+        # - alert: D8IstioDataPlaneVersionMismatch
+        #   expr: |-
+        #     max by (dataplane_pod, namespace, full_version, desired_full_version)
+        #     (
+        #       (
+        #         d8_istio_dataplane_metadata{full_version!~"(unknown|absent)", desired_full_version!="absent"}
+        #         # ignore pods with different revisions
+        #         * on (namespace, dataplane_pod, full_version, desired_full_version, revision, k8s_cluster) label_replace(d8_istio_dataplane_metadata{}, "revision", "$1", "desired_revision", "(.+)")
+        #       )
+        #       unless on (full_version, dataplane_pod, namespace, k8s_cluster) label_replace(d8_istio_dataplane_metadata{}, "full_version", "$1", "desired_full_version", "(.+)")
+        #     )
+        #   for: 5m
+        #   labels:
+        #     severity: warning
+        #   annotations:
+        #     summary: "There are Pods with data-plane version different from control-plane one."
+        #     description: |-
+        #       There are Pods in `{{$labels.namespace}}` namespace with istio data-plane version `{{$labels.full_version}}` which differ from control-plane one `{{$labels.desired_full_version}}`.
+        #       Consider restarting affected Pods, use PromQL query to get the list:
+        #       ```
+        #       max by (namespace, dataplane_pod) (d8_istio_dataplane_metadata{version="{{$labels.full_version}}"})
+        #       ```
+        #       Also consider using the automatic istio data-plane update described in the documentation: https://deckhouse.io/documentation/v1/modules/110-istio/examples.html#upgrading-istio
+    - name: d8.istio.federation
+      concurrency: 1
+      rules:
+        - alert: D8IstioFederationMetadataEndpointDoesntWork
+          expr: "max by (federation_name, endpoint) (d8_istio_federation_metadata_endpoints_fetch_error_count == 1)"
+          for: 5m
+          labels:
+            severity: warning
+          annotations:
+            summary: "Federation metadata endpoint failed"
+            description: |-
+              Metadata endpoint `{{$labels.endpoint}}` for IstioFederation `{{$labels.federation_name}}` has failed to fetch by d8 hook.
+              Reproducing request to public endpoint:
+              ```
+              curl {{$labels.endpoint}}
+              ```
+              Reproducing request to private endpoints (run from deckhouse pod):
+              ```
+              KEY="$(deckhouse-controller module values istio -o json | jq -r .internal.remoteAuthnKeypair.priv)"
+              LOCAL_CLUSTER_UUID="$(deckhouse-controller module values -g istio -o json | jq -r .global.discovery.clusterUUID)"
+              REMOTE_CLUSTER_UUID="$(kubectl get istiofederation {{$labels.federation_name}} -o json | jq -r .status.metadataCache.public.clusterUUID)"
+              TOKEN="$(deckhouse-controller helper gen-jwt --private-key-path <(echo "$KEY") --claim iss=d8-istio --claim sub=$LOCAL_CLUSTER_UUID --claim aud=$REMOTE_CLUSTER_UUID --claim scope=private-federation --ttl 1h)"
+              curl -H "Authorization: Bearer $TOKEN" {{$labels.endpoint}}
+              ```
+    - name: d8.istio.multicluster
+      concurrency: 1
+      rules:
+        - alert: D8IstioMulticlusterRemoteAPIHostDoesntWork
+          expr: "max by (multicluster_name, api_host) (d8_istio_multicluster_api_host_check_error_count == 1)"
+          for: 5m
+          labels:
+            severity: warning
+          annotations:
+            summary: "Multicluster remote api host failed"
+            description: |-
+              Remote api host `{{$labels.api_host}}` for IstioMulticluster `{{$labels.multicluster_name}}` has failed healthcheck by d8 monitoring hook.
+
+              Reproducing (run from deckhouse pod):
+              ```
+              TOKEN="$(deckhouse-controller module values istio -o json | jq -r --arg ah {{$labels.api_host}} '.istio.internal.multiclusters[] | select(.apiHost == $ah) | .apiJWT')"
+              curl -H "Authorization: Bearer $TOKEN" https://{{$labels.api_host}}/version
+              ```
+        - alert: D8IstioMulticlusterMetadataEndpointDoesntWork
+          expr: "max by (multicluster_name, endpoint) (d8_istio_multicluster_metadata_endpoints_fetch_error_count == 1)"
+          for: 5m
+          labels:
+            severity: warning
+          annotations:
+            summary: "Multicluster metadata endpoint failed"
+            description: |-
+              Metadata endpoint `{{$labels.endpoint}}` for IstioMulticluster `{{$labels.multicluster_name}}` has failed to fetch by d8 hook.
+              Reproducing request to public endpoint:
+              ```
+              curl {{$labels.endpoint}}
+              ```
+              Reproducing request to private endpoints (run from deckhouse pod):
+              ```
+              KEY="$(deckhouse-controller module values istio -o json | jq -r .internal.remoteAuthnKeypair.priv)"
+              LOCAL_CLUSTER_UUID="$(deckhouse-controller module values -g istio -o json | jq -r .global.discovery.clusterUUID)"
+              REMOTE_CLUSTER_UUID="$(kubectl get istiomulticluster {{$labels.multicluster_name}} -o json | jq -r .status.metadataCache.public.clusterUUID)"
+              TOKEN="$(deckhouse-controller helper gen-jwt --private-key-path <(echo "$KEY") --claim iss=d8-istio --claim sub=$LOCAL_CLUSTER_UUID --claim aud=$REMOTE_CLUSTER_UUID --claim scope=private-multicluster --ttl 1h)"
+              curl -H "Authorization: Bearer $TOKEN" {{$labels.endpoint}}
+              ```
+    - name: d8.istio.operator
+      concurrency: 1
+      rules:
+        - alert: D8IstioOperatorReconcileError
+          expr: |-
+            max(increase(controller_runtime_reconcile_errors_total{job="istio-operator"}[15m])) by (revision) > 0
+          for: 5m
+          labels:
+            severity: warning
+          annotations:
+            summary: "istio-operator is unable to reconcile istio control-plane setup."
+            description: |-
+              There is some error in istio-operator reconcilation loop. Please check the logs out:
+
+              ```kubectl -n d8-istio logs -l app=operator,revision={{$labels.revision}}```
+    - name: d8.istio.services
+      concurrency: 1
+      rules:
+        - alert: IstioIrrelevantExternalServiceFound
+          expr: max by (namespace, name,k8s_cluster) (d8_istio_irrelevant_service == 1)
+          for: 5m
+          labels:
+            severity: warning
+          annotations:
+            summary: "Found external service with irrelevant ports spec"
+            description: |-
+              There is service in the namespace: `{{$labels.namespace}}` with the name: `{{$labels.name}}` which has irrelevant ports spec.
+              .spec.ports[] do not make any sense for services with a type `ExternalName` but
+              istio renders for External Services with ports listener "0.0.0.0:port" which catch all the traffic to the port. It is a problem for services out of istio registry.
+
+              It is recommended to get rid of ports section (`.spec.ports`). It is safe.
+    # - name: d8.istio.versions
+    #   concurrency: 1
+    #   rules:
+    #     - alert: D8IstioDeprecatedIstioVersionInstalled
+    #       expr: d8_istio_deprecated_version_installed{}
+    #       for: 5m
+    #       labels:
+    #         severity: warning
+    #       annotations:
+    #         summary: "There is deprecated istio version installed"
+    #         description: |-
+    #           There is deprecated istio version `{{$labels.version}}` installed.
+    #           Impact — version support will be removed in future deckhouse releases. The higher alert severity — the higher probability of support cancelling.
+    #           Upgrading instructions — https://deckhouse.io/documentation/v1.57.6/modules/110-istio/examples.html#upgrading-istio.
+        - alert: D8IstioVersionIsIncompatibleWithK8sVersion
+          expr: "d8_telemetry_istio_version_incompatible_with_k8s_version{}"
+          for: 5m
+          labels:
+            severity: warning
+          annotations:
+            summary: "The installed istio version is incompatible with the k8s version"
+            description: |-
+              The current istio version `{{$labels.istio_version}}` may not work properly with the current k8s version `{{$labels.k8s_version}}`, because it is unsupported officially.
+              Please upgrade istio as soon as possible.
+              Upgrading instructions — https://deckhouse.io/documentation/v1.57.6/modules/110-istio/examples.html#upgrading-istio.

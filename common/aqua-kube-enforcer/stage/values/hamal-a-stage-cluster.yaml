@@ -1,0 +1,31 @@
+clusterName: "k8s-hamal-a-stage"
+
+aquaSecret:
+  kubeEnforcerToken: enforcer-hamal-a-stage-k8s
+
+enforcer:
+  enforcerToken: enforcer-hamal-a-stage
+
+  extraVolumeMounts:
+    - name: aquasec-audit
+      mountPath: /opt/aquasec/audit
+    - name: aquasec-data
+      mountPath: /data
+      
+  extraVolumes:
+    - name: aquasec-audit
+      persistentVolumeClaim:
+        claimName: "hamal-a-stage-aqua-audit-pvc"
+    - name: aquasec-data
+      persistentVolumeClaim:
+        claimName: "hamal-a-stage-aqua-data-pvc"
+
+  extrapvc:
+    enabled: true
+    namespace: aqua 
+    storageClassName: network-hdd
+    volumeList:
+      hamal-a-stage-aqua-data-pvc:
+        size: 10Gi
+      hamal-a-stage-aqua-audit-pvc:
+        size: 10Gi

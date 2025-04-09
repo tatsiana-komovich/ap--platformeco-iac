@@ -1,0 +1,805 @@
+---
+cluster_authorization:
+  defaults:
+    default_sa_permissions: &default
+      accessLevel: User
+      limitNamespaces:
+        - default
+      allowScale: true
+      allowAccessToSystemNamespaces: true
+      portForwarding: true
+  crowd:
+    groups:
+    # Default
+      all-lmru:
+        <<: *default
+        accessLevel: User
+        limitNamespaces:
+          - default
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+    # Flant
+      crowd-flant-ro:
+        <<: *default
+        limitNamespaces:
+          - default
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+    # Technologies - Observability
+      crowd-opensearch-ro:
+        <<: *default
+        accessLevel: User
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+        limitNamespaces:
+          - .*
+      crowd-opensearch-rw:
+        <<: *default
+        accessLevel: Editor
+        allowScale: true
+        allowAccessToSystemNamespaces: false
+        portForwarding: true
+        limitNamespaces:
+          - .*
+      crowd-opensearch-admin:
+        <<: *default
+        accessLevel: Admin
+        allowScale: true
+        allowAccessToSystemNamespaces: true
+        portForwarding: true
+        limitNamespaces:
+          - .*
+      crowd-sa-opensearch:
+        <<: *default
+        accessLevel: SuperAdmin
+        allowAccessToSystemNamespaces: true
+        limitNamespaces:
+          - .*
+      crowd-obs-ro:
+        <<: *default
+        accessLevel: User
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+        limitNamespaces:
+          - .*
+      crowd-obs-rw:
+        <<: *default
+        accessLevel: Editor
+        allowScale: true
+        allowAccessToSystemNamespaces: false
+        portForwarding: true
+        limitNamespaces:
+          - .*
+      crowd-obs-admin:
+        <<: *default
+        accessLevel: Admin
+        allowScale: true
+        allowAccessToSystemNamespaces: true
+        portForwarding: true
+        limitNamespaces:
+          - .*
+      crowd-sa-obs:
+        <<: *default
+        accessLevel: SuperAdmin
+        allowAccessToSystemNamespaces: true
+        limitNamespaces:
+          - .*
+      crowd-obs-elk-users:
+        <<: *default
+        accessLevel: User
+        limitNamespaces:
+          - default
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+      crowd-obs-elk-users-rw:
+        <<: *default
+        accessLevel: User
+        limitNamespaces:
+          - default
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+    # Omni-channel Sale - Customer Care
+      crowd-wecare-admin:
+        <<: *default
+        accessLevel: User
+        limitNamespaces:
+          - default
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+      crowd-wecare-rw:
+        <<: *default
+        accessLevel: User
+        limitNamespaces:
+          - default
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+      crowd-wecare-ro:
+        <<: *default
+        accessLevel: User
+        limitNamespaces:
+          - default
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+      crowd-crm-admin:
+        <<: *default
+        accessLevel: User
+        limitNamespaces:
+          - default
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+      crowd-crm-rw:
+        <<: *default
+        accessLevel: User
+        limitNamespaces:
+          - default
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+      crowd-crm-ro:
+        <<: *default
+        accessLevel: User
+        limitNamespaces:
+          - default
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+    # Data - Development of Platform Services
+      crowd-corp-scheduler-admin:
+        <<: *default
+        accessLevel: User
+        limitNamespaces:
+          - default
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+      department-713:
+        <<: *default
+        accessLevel: User
+        limitNamespaces:
+          - default
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+    # Partner Engagement - Product Suppliers Experience Development
+      crowd-gha-rw:
+        <<: *default
+        accessLevel: User
+        limitNamespaces:
+          - default
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+      crowd-gha-admin:
+        <<: *default
+        accessLevel: User
+        limitNamespaces:
+          - default
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+      crowd-gha-ro:
+        <<: *default
+        accessLevel: User
+        limitNamespaces:
+          - default
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+    # Omni-channel Sale - Search and catalog
+      crowd-search-navigation-rw:
+        <<: *default
+        accessLevel: User
+        limitNamespaces:
+          - default
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+    # Services - Transversal Services
+      crowd-services-platform-admin:
+        <<: *default
+        accessLevel: User
+        limitNamespaces:
+          - default
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+      crowd-services-platform-rw:
+        <<: *default
+        accessLevel: User
+        limitNamespaces:
+          - default
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+      crowd-services-platform-ro:
+        <<: *default
+        accessLevel: User
+        limitNamespaces:
+          - default
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+    # Technologies - Infrastructure Operations
+      it-platform_app:
+        <<: *default
+        accessLevel: User
+        limitNamespaces:
+          - default
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+      department-702:
+        <<: *default
+        accessLevel: User
+        limitNamespaces:
+          - default
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+      department-703:
+        <<: *default
+        accessLevel: User
+        limitNamespaces:
+          - default
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+      l1-supportteam:
+        <<: *default
+        accessLevel: User
+        limitNamespaces:
+          - default
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+      itop-l1:
+        <<: *default
+        accessLevel: User
+        limitNamespaces:
+          - default
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+      itop-l2:
+        <<: *default
+        accessLevel: User
+        limitNamespaces:
+          - default
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+      itopsw:
+        <<: *default
+        accessLevel: User
+        limitNamespaces:
+          - default
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+      l2-contractors:
+        <<: *default
+        accessLevel: User
+        limitNamespaces:
+          - default
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+      it_division1_sec:
+        <<: *default
+        accessLevel: User
+        limitNamespaces:
+          - default
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+      it_division2_sec:
+        <<: *default
+        accessLevel: User
+        limitNamespaces:
+          - default
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+      it_division3_sec:
+        <<: *default
+        accessLevel: User
+        limitNamespaces:
+          - default
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+      it_division4_sec:
+        <<: *default
+        accessLevel: User
+        limitNamespaces:
+          - default
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+      it_division5_sec:
+        <<: *default
+        accessLevel: User
+        limitNamespaces:
+          - default
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+      it_division6_sec:
+        <<: *default
+        accessLevel: User
+        limitNamespaces:
+          - default
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+      it_division7_sec:
+        <<: *default
+        accessLevel: User
+        limitNamespaces:
+          - default
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+      it_division8_sec:
+        <<: *default
+        accessLevel: User
+        limitNamespaces:
+          - default
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+      it_division9_sec:
+        <<: *default
+        accessLevel: User
+        limitNamespaces:
+          - default
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+      it_division10_sec:
+        <<: *default
+        accessLevel: User
+        limitNamespaces:
+          - default
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+      it_division11_sec:
+        <<: *default
+        accessLevel: User
+        limitNamespaces:
+          - default
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+      l2-st-infra-access:
+        <<: *default
+        accessLevel: User
+        limitNamespaces:
+          - default
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+    # Technologies - IT Access Management
+      crowd-keycloak-ro:
+        <<: *default
+        limitNamespaces:
+          - default
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+      crowd-keycloak-rw:
+        <<: *default
+        limitNamespaces:
+          - default
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+      crowd-keycloak-admin:
+        <<: *default
+        limitNamespaces:
+          - default
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+      crowd-mtools-admin:
+        <<: *default
+        limitNamespaces:
+          - default
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+      crowd-mtools-ro:
+        <<: *default
+        limitNamespaces:
+          - default
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+    # Payment - Entire Domain
+      crowd-payment-admin:
+        <<: *default
+        limitNamespaces:
+          - default
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+      crowd-payment-rw:
+        <<: *default
+        limitNamespaces:
+          - default
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+      crowd-payment-ro:
+        <<: *default
+        limitNamespaces:
+          - default
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+    # marfak/qcms - Entire Domain
+      crowd-qcms-admin:
+        <<: *default
+        limitNamespaces:
+          - default
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+      crowd-qcms-rw:
+        <<: *default
+        limitNamespaces:
+          - default
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+      crowd-qcms-ro:
+        <<: *default
+        limitNamespaces:
+          - default
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+    # cdsng - Entire Domain
+      crowd-cdsng-admin:
+        <<: *default
+        limitNamespaces:
+          - default
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+      crowd-cdsng-rw:
+        <<: *default
+        limitNamespaces:
+          - default
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+      crowd-cdsng-ro:
+        <<: *default
+        limitNamespaces:
+          - default
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+    # carrier-portal - Transportation - GTS - Carrier Portal
+      crowd-carrier-portal-admin:
+        <<: *default
+        limitNamespaces:
+          - default
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+      crowd-carrier-portal-rw:
+        <<: *default
+        limitNamespaces:
+          - default
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+      crowd-carrier-portal-ro:
+        <<: *default
+        limitNamespaces:
+          - default
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+    # gtsst-tms - Transportation - Global Transport System
+      crowd-gts-tms-admin:
+        <<: *default
+        limitNamespaces:
+          - default
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+      crowd-gts-tms-rw:
+        <<: *default
+        limitNamespaces:
+          - default
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+      crowd-gts-tms-ro:
+        <<: *default
+        limitNamespaces:
+          - default
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+    # ss-oper - Transportation - Selling Shipping
+      crowd-dnp-admin:
+        <<: *default
+        limitNamespaces:
+          - default
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+      crowd-dnp-rw:
+        <<: *default
+        limitNamespaces:
+          - default
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+      crowd-dnp-ro:
+        <<: *default
+        limitNamespaces:
+          - default
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+    # Inventory planning - StockRepository
+      crowd-stockrepository-admin:
+        <<: *default
+        limitNamespaces:
+          - default
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+      crowd-stockrepository-rw:
+        <<: *default
+        limitNamespaces:
+          - default
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+      crowd-stockrepository-ro:
+        <<: *default
+        limitNamespaces:
+          - default
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+    # Inventory planning - replenishment
+      crowd-replenishment-admin:
+        <<: *default
+        limitNamespaces:
+          - default
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+      crowd-replenishment-rw:
+        <<: *default
+        limitNamespaces:
+          - default
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+      crowd-replenishment-ro:
+        <<: *default
+        limitNamespaces:
+          - default
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+    # Inventory planning - networkconfiguration
+      crowd-networkconfiguration-admin:
+        <<: *default
+        limitNamespaces:
+          - default
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+      crowd-networkconfiguration-rw:
+        <<: *default
+        limitNamespaces:
+          - default
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+      crowd-networkconfiguration-ro:
+        <<: *default
+        limitNamespaces:
+          - default
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+    # Inventory planning - Demand forecasting
+      crowd-sf-admin:
+        <<: *default
+        limitNamespaces:
+          - default
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+      crowd-sf-rw:
+        <<: *default
+        limitNamespaces:
+          - default
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+      crowd-sf-ro:
+        <<: *default
+        limitNamespaces:
+          - default
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+    # Openstack
+      crowd-openstack-admin:
+        <<: *default
+        limitNamespaces:
+          - default
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+      crowd-openstack-rw:
+        <<: *default
+        limitNamespaces:
+          - default
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+      crowd-openstack-ro:
+        <<: *default
+        limitNamespaces:
+          - default
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+    # Offer-repository
+      crowd-offer-repository-admin:
+        <<: *default
+        limitNamespaces:
+          - default
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+      crowd-offer-repository-rw:
+        <<: *default
+        limitNamespaces:
+          - default
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+      crowd-offer-repository-ro:
+        <<: *default
+        limitNamespaces:
+          - default
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+    # Supply Chain Development - Location Repository
+      crowd-location-repository-admin:
+        <<: *default
+        limitNamespaces:
+          - default
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+      crowd-location-repository-rw:
+        <<: *default
+        limitNamespaces:
+          - default
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+      crowd-location-repository-ro:
+        <<: *default
+        limitNamespaces:
+          - default
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+    # Inventory planning - Log Services catalog
+      crowd-logistic-service-cat-admin:
+        <<: *default
+        limitNamespaces:
+          - default
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+      crowd-logistic-service-cat-rw:
+        <<: *default
+        limitNamespaces:
+          - default
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+      crowd-logistic-service-cat-ro:
+        <<: *default
+        limitNamespaces:
+          - default
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+    # Inventory planning - quota
+      crowd-quota-admin:
+        <<: *default
+        limitNamespaces:
+          - default
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+      crowd-quota-rw:
+        <<: *default
+        limitNamespaces:
+          - default
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+      crowd-quota-ro:
+        <<: *default
+        limitNamespaces:
+          - default
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+    # Inventory planning - logbonus
+      crowd-logbonus-admin:
+        <<: *default
+        limitNamespaces:
+          - default
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+      crowd-logbonus-rw:
+        <<: *default
+        limitNamespaces:
+          - default
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+      crowd-logbonus-ro:
+        <<: *default
+        limitNamespaces:
+          - default
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+    # Inventory planning - cdcalendar
+      crowd-cdcalendar-admin:
+        <<: *default
+        limitNamespaces:
+          - default
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+      crowd-cdcalendar-rw:
+        <<: *default
+        limitNamespaces:
+          - default
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+      crowd-cdcalendar-ro:
+        <<: *default
+        limitNamespaces:
+          - default
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+DexProvider:
+  clientID: k8s-argocd
+  clientSecret: crowd_app_k8s-argocd

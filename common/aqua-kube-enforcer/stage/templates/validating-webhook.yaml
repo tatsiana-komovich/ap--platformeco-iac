@@ -1,0 +1,51 @@
+{{- if .Values.webhooks.validatingWebhook.enabled }}
+{{- if not .Values.certsSecret.autoGenerate }}
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingWebhookConfiguration
+metadata:
+  name: {{ .Values.webhooks.validatingWebhook.name }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    role: {{ .Release.Name }}
+    app: {{ include "kube-enforcer.fullname" . }}
+    aqua.component: kubeenforcer
+{{- if .Values.webhooks.validatingWebhook.annotations }}
+  annotations:
+{{ toYaml .Values.webhooks.validatingWebhook.annotations | indent 4 }}
+{{- end }}
+webhooks:
+  - name: imageassurance.aquasec.com
+    failurePolicy: {{ .Values.webhooks.failurePolicy }}
+    sideEffects: "None"
+    rules:
+      - operations: ["CREATE", "UPDATE"]
+        apiGroups: ["*"]
+        apiVersions: ["*"]
+        resources:
+          - pods
+          - deployments
+          - deploymentconfigs
+          - replicasets
+          - replicationcontrollers
+          - statefulsets
+          - daemonsets
+          - jobs
+          - cronjobs
+          - configmaps
+          - services
+          - roles
+          - rolebindings
+          - clusterroles
+          - clusterrolebindings
+          - customresourcedefinitions
+    clientConfig:
+      {{- if not .Values.webhooks.certManager }}
+      caBundle: {{ template "caBundle" . }}
+      {{- end }}
+      service:
+        namespace: {{ .Release.Namespace }}
+        name: {{ include "kube-enforcer.fullname" . }}
+    timeoutSeconds: {{ .Values.webhooks.validatingWebhook.timeout }}
+    admissionReviewVersions: ["v1beta1"]
+{{- end }}
+{{- end }}

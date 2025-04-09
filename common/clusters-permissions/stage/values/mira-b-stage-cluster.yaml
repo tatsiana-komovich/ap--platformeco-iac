@@ -1,0 +1,110 @@
+---
+cluster_authorization:
+  defaults:
+    default_sa_permissions: &default
+      accessLevel: User
+      limitNamespaces:
+        - default
+      allowScale: true
+      allowAccessToSystemNamespaces: false
+      portForwarding: true
+  crowd:
+    groups:
+      crowd-sa-cp:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - cp-.*
+      crowd-cp-admin:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - cp-.*
+      crowd-cp-rw:
+        <<: *default
+        accessLevel: Editor
+        limitNamespaces:
+          - cp-.*
+      crowd-cp-ro:
+        <<: *default
+        accessLevel: User
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - cp-.*
+      #pac
+      crowd-sa-pac:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - pac-.*
+          - pac
+      crowd-pac-admin:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - pac-.*
+          - pac
+      crowd-pac-rw:
+        <<: *default
+        accessLevel: Editor
+        limitNamespaces:
+          - pac-.*
+          - pac
+      crowd-pac-ro:
+        <<: *default
+        accessLevel: User
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - pac-.*
+          - pac
+      # devops cluster admin ro
+      crowd-omni-channel-sales-k8s-ro:
+        <<: *default
+        accessLevel: User
+        limitNamespaces:
+          - ".*"
+        allowAccessToSystemNamespaces: false
+      # -- search p0356 permissions
+      crowd-search-navigation-admin:
+        <<: *default
+        accessLevel: Admin
+        allowAccessToSystemNamespaces: true
+        limitNamespaces:
+          - .*
+      crowd-search-navigation-ro:
+        <<: *default
+        accessLevel: User
+        limitNamespaces:
+          - search-.*
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+      crowd-search-navigation-rw:
+        <<: *default
+        accessLevel: Editor
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - search-.*
+      # Revert SuperAdmin role as it required to create ClusterRole and ClusterRoleBinding, for search-rms-receiver
+      # application because of using hazelcast
+      crowd-sa-search-navigation:
+        <<: *default
+        accessLevel: SuperAdmin
+        allowAccessToSystemNamespaces: true
+        limitNamespaces:
+          - search-.*
+ClusterRoleBinding:
+  omni-channel-sales-devops-ro:
+    metadata:
+      name: omni-channel-sales-devops-ro
+    roleRef:
+      kind: ClusterRole
+      name: cluster-admin-ro
+    subjects:
+      - kind: Group
+        apiGroup: rbac.authorization.k8s.io
+        name: crowd-omni-channel-sales-k8s-ro
+
+DexProvider:
+  clientID: k8s-argocd
+  clientSecret: crowd_app_k8s-argocd

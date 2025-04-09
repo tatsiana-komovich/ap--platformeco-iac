@@ -1,0 +1,212 @@
+---
+# Default values for IngressNginxController.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+IngressNginxController:
+  sentry-external-a:
+    apiVersion: deckhouse.io/v1
+    name: sentry-external-a
+    acceptRequestsFrom: {}
+    spec:
+      maxReplicas: 1
+      minReplicas: 1
+      chaosMonkey: false
+      disableHTTP2: false
+      hsts: false
+      underscoresInHeaders: false
+      validationEnabled: true
+      ingressClass: sentry-external
+      inlet: LoadBalancer
+      enableIstioSidecar: true
+    config:
+      client-body-buffer-size: 4M
+    loadBalancer:
+      annotations:
+        yandex.cloud/load-balancer-type: Internal
+        yandex.cpi.flant.com/listener-subnet-id: e9bjc8bg31seb4ba4rgi
+        yandex.cpi.flant.com/target-group-network-id: enpofm2o1fd0e01e2rfb
+      behindL7Proxy: true
+      realIPHeader: X-Forwarded-For
+    nodeSelector:
+      node-role/frontend-sentryext: ""
+    tolerations:
+      - effect: NoExecute
+        key: dedicated
+        operator: Equal
+        value: frontend-sentryext
+
+  main-a:
+    apiVersion: deckhouse.io/v1
+    name: main-a
+    acceptRequestsFrom: {}
+    spec:
+      maxReplicas: 1
+      minReplicas: 1
+      chaosMonkey: false
+      disableHTTP2: false
+      hsts: false
+      underscoresInHeaders: false
+      validationEnabled: true
+      ingressClass: nginx
+      inlet: LoadBalancer
+      enableIstioSidecar: true
+    loadBalancer:
+      annotations:
+        yandex.cloud/load-balancer-type: Internal
+        yandex.cpi.flant.com/listener-subnet-id: e9bjc8bg31seb4ba4rgi
+        yandex.cpi.flant.com/target-group-network-id: enpofm2o1fd0e01e2rfb
+      behindL7Proxy: true
+      realIPHeader: X-Forwarded-For
+    resourcesRequests:
+      mode: Static
+      static:
+        cpu: 500m
+        memory: 500Mi
+
+  main-b:
+    apiVersion: deckhouse.io/v1
+    name: main-b
+    acceptRequestsFrom: {}
+    spec:
+      maxReplicas: 1
+      minReplicas: 1
+      chaosMonkey: false
+      disableHTTP2: false
+      hsts: false
+      underscoresInHeaders: false
+      validationEnabled: true
+      ingressClass: nginx
+      inlet: LoadBalancer
+      enableIstioSidecar: true
+    loadBalancer:
+      annotations:
+        yandex.cloud/load-balancer-type: Internal
+        yandex.cpi.flant.com/listener-subnet-id: e2litrpcsnovr77sidqk
+        yandex.cpi.flant.com/target-group-network-id: enpofm2o1fd0e01e2rfb
+      behindL7Proxy: true
+      realIPHeader: X-Forwarded-For
+    resourcesRequests:
+      mode: Static
+      static:
+        cpu: 500m
+        memory: 500Mi
+
+  d8-main-b:
+    apiVersion: deckhouse.io/v1
+    name: d8-main-b
+    acceptRequestsFrom: {}
+    spec:
+      chaosMonkey: false
+      disableHTTP2: false
+      enableIstioSidecar: true
+      hsts: false
+      ingressClass: nginx-d8s
+      inlet: LoadBalancer
+      maxReplicas: 1
+      minReplicas: 1
+      underscoresInHeaders: false
+      validationEnabled: true
+    loadBalancer:
+      annotations:
+        yandex.cloud/load-balancer-type: Internal
+        yandex.cpi.flant.com/listener-subnet-id: e2litrpcsnovr77sidqk
+        yandex.cpi.flant.com/target-group-network-id: enpofm2o1fd0e01e2rfb
+      behindL7Proxy: true
+      realIPHeader: X-Forwarded-For
+    nodeSelector:
+      node-role/d8-frontend: ""
+    tolerations:
+      - effect: NoExecute
+        key: dedicated
+        operator: Equal
+        value: d8-frontend
+
+  devops-core-loki-d:
+    apiVersion: deckhouse.io/v1
+    name: devops-core-loki-d
+    acceptRequestsFrom: {}
+    spec:
+      chaosMonkey: false
+      disableHTTP2: false
+      enableIstioSidecar: true
+      hsts: false
+      ingressClass: devops-loki
+      inlet: LoadBalancer
+      maxReplicas: 1
+      minReplicas: 1
+      underscoresInHeaders: false
+      validationEnabled: true
+    loadBalancer:
+      annotations:
+        yandex.cloud/load-balancer-type: Internal
+        yandex.cpi.flant.com/listener-subnet-id: e2lsrtbp9bkigtcv68la
+        yandex.cpi.flant.com/target-group-network-id: enpofm2o1fd0e01e2rfb
+      behindL7Proxy: true
+      realIPHeader: X-Forwarded-For
+    nodeSelector:
+      node-role/devops-core-loki-lb: ""
+    tolerations:
+      - effect: NoExecute
+        key: dedicated
+        operator: Equal
+        value: devops-core-loki-lb
+
+  devops-core-loki-a:
+    apiVersion: deckhouse.io/v1
+    name: devops-core-loki-a
+    acceptRequestsFrom: {}
+    spec:
+      chaosMonkey: false
+      disableHTTP2: false
+      enableIstioSidecar: true
+      hsts: false
+      ingressClass: devops-loki
+      inlet: LoadBalancer
+      maxReplicas: 1
+      minReplicas: 1
+      underscoresInHeaders: false
+      validationEnabled: true
+    loadBalancer:
+      annotations:
+        yandex.cloud/load-balancer-type: Internal
+        yandex.cpi.flant.com/listener-subnet-id: e9bjc8bg31seb4ba4rgi
+        yandex.cpi.flant.com/target-group-network-id: enpofm2o1fd0e01e2rfb
+      behindL7Proxy: true
+      realIPHeader: X-Forwarded-For
+    nodeSelector:
+      node-role/devops-core-loki-lb-a: ""
+    tolerations:
+      - effect: NoExecute
+        key: dedicated
+        operator: Equal
+        value: devops-core-loki-lb
+
+  cloud-print-a:
+    name: cloud-print
+    labels:
+      istio.io/rev: v1x19
+    spec:
+      chaosMonkey: false
+      disableHTTP2: false
+      hsts: false
+      ingressClass: nginx
+      inlet: LoadBalancer
+      maxReplicas: 1
+      minReplicas: 1
+      underscoresInHeaders: false
+      validationEnabled: true
+      enableIstioSidecar: true
+    loadBalancer:
+      annotations:
+        yandex.cloud/load-balancer-type: Internal
+        yandex.cpi.flant.com/listener-subnet-id: e9bv3jiti8877voh95qj
+        yandex.cpi.flant.com/target-group-network-id: enpofm2o1fd0e01e2rfb
+      behindL7Proxy: true
+      realIPHeader: X-Forwarded-For
+    nodeSelector:
+      node-role/cloud-print-loadbalancer-a: ""
+    tolerations:
+      - effect: NoExecute
+        key: dedicated
+        operator: Equal
+        value: cloud-print-loadbalancer-a

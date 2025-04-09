@@ -1,0 +1,126 @@
+---
+logShipper:
+  enabled: false
+  settings:
+    debug: false
+
+logDestination:
+  enabled: false
+  custom:
+    - name: pnr-logstash
+      spec:
+        type: Logstash
+        logstash:
+          endpoint: logstash.infra-elklogs.svc.cluster.local:9045
+        extraLabels:
+          product_id: p0076
+    - name: carrier-portal-logstash
+      spec:
+        type: Logstash
+        logstash:
+          endpoint: logstash.infra-elklogs.svc.cluster.local:9045
+        extraLabels:
+          product_id: p0665
+    - name: gts-logstash
+      spec:
+        type: Logstash
+        logstash:
+          endpoint: logstash.infra-elklogs.svc.cluster.local:9045
+        extraLabels:
+          product_id: p0666
+    - name: del-oper-logstash
+      spec:
+        type: Logstash
+        logstash:
+          endpoint: logstash.infra-elklogs.svc.cluster.local:9045
+        extraLabels:
+          product_id: p0482
+    - name: del-sell-logstash
+      spec:
+        type: Logstash
+        logstash:
+          endpoint: logstash.infra-elklogs.svc.cluster.local:9045
+        extraLabels:
+          product_id: p0479
+    - name: del-repo-logstash
+      spec:
+        type: Logstash
+        logstash:
+          endpoint: logstash.infra-elklogs.svc.cluster.local:9045
+        extraLabels:
+          product_id: p0442
+    - name: pickup-point-logstash
+      spec:
+        type: Logstash
+        logstash:
+          endpoint: logstash.infra-elklogs.svc.cluster.local:9045
+        extraLabels:
+          product_id: p0752
+
+loggingConfig:
+  enabled: false
+  custom:
+    - name: pnr--prod-logging
+      spec:
+        type: KubernetesPods
+        kubernetesPods:
+          namespaceSelector:
+            matchNames:
+              - pnr--prod
+        destinationRefs:
+          - pnr-logstash
+    - name: carrier-portal--prod-logging
+      spec:
+        type: KubernetesPods
+        kubernetesPods:
+          namespaceSelector:
+            matchNames:
+              - carrier-portal--prod
+        destinationRefs:
+          - carrier-portal-logstash
+    - name: gts--prod-logging
+      spec:
+        type: KubernetesPods
+        kubernetesPods:
+          namespaceSelector:
+            matchNames:
+              - gts--prod
+              - gts-tms--prod
+        destinationRefs:
+          - gts-logstash
+    - name: del-oper--prod-logging
+      spec:
+        type: KubernetesPods
+        kubernetesPods:
+          namespaceSelector:
+            matchNames:
+              - del-oper--prod
+        destinationRefs:
+          - del-oper-logstash
+    - name: del-sell--prod-logging
+      spec:
+        type: KubernetesPods
+        kubernetesPods:
+          namespaceSelector:
+            matchNames:
+              - del-sell--prod
+        destinationRefs:
+          - del-sell-logstash
+    - name: del-repo--prod-logging
+      spec:
+        type: KubernetesPods
+        kubernetesPods:
+          namespaceSelector:
+            matchNames:
+              - del-repo--prod
+        destinationRefs:
+          - del-repo-logstash
+    - name: pickup-point--prod-logging
+      spec:
+        type: KubernetesPods
+        kubernetesPods:
+          namespaceSelector:
+            matchNames:
+              - pickup-point--prod
+        destinationRefs:
+          - pickup-point-logstash

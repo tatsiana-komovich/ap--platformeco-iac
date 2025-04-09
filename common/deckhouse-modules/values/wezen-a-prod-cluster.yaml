@@ -1,0 +1,168 @@
+---
+istio:
+  enabled: true
+  settings:
+    dataPlane:
+      trafficRedirectionSetupMode: CNIPlugin
+    globalVersion: "1.21"
+    sidecar:
+      resourcesManagement:
+        mode: Static
+        static:
+          limits:
+            cpu: "10"
+            memory: 10Gi
+          requests:
+            cpu: 100m
+            memory: 128Mi
+    alliance:
+      ingressGateway:
+        inlet: LoadBalancer
+        serviceAnnotations:
+          yandex.cpi.flant.com/listener-subnet-id: e9bdfjr98fmkg6vm2nj2
+          yandex.cpi.flant.com/target-group-network-id: enpofm2o1fd0e01e2rfb
+        nodeSelector:
+          node-role.deckhouse.io/frontend: ""
+        tolerations:
+          - effect: NoExecute
+            key: dedicated.deckhouse.io
+            operator: Equal
+            value: frontend
+    federation:
+      enabled: true
+    multicluster:
+      enabled: true
+  version: 2
+
+admission-policy-engine:
+  spec:
+    version: 1
+    enabled: true
+  internal-lb-policy: true
+  artifactory-repos:
+    enforcementAction: deny
+
+global:
+  settings:
+    modules:
+      ingressClass: nginx-d8s
+
+monitoring-ping:
+  enabled: true
+  settings:
+    externalTargets:
+      - host: 10.203.128.11
+        name: wezen-b-gw
+      - host: 77.88.8.8
+        name: dns-yandex
+      - host: 8.8.4.4
+        name: dns-google
+      - host: p-wms-packman-patroni-01-db-01.p-wms-packman-x1.x1-a.cloud.lmru.tech
+        name: packman-patroni-01-db-01
+      - host: p-wms-packman-patroni-01-db-02.ru-central1.internal
+        name: packman-patroni-01-db-02
+      - host: p-wms-packman-patroni-01-db-03.ru-central1.internal
+        name: packman-patroni-01-db-03
+      - host: p-wms-packman-patroni-02-db-01.p-wms-packman-x1.x1-a.cloud.lmru.tech
+        name: packman-patroni-02-db-01
+      - host: p-wms-packman-patroni-02-db-02.ru-central1.internal
+        name: packman-patroni-02-db-02
+      - host: p-wms-packman-patroni-02-db-03.ru-central1.internal
+        name: packman-patroni-02-db-03
+      - host: p-wms-packman-patroni-03-db-01.p-wms-packman-x1.x1-a.cloud.lmru.tech
+        name: packman-patroni-03-db-01
+      - host: p-wms-packman-patroni-03-db-02.ru-central1.internal
+        name: packman-patroni-03-db-02
+      - host: p-wms-packman-patroni-03-db-03.ru-central1.internal
+        name: packman-patroni-03-db-03
+      - host: p-wms-packman-patroni-04-db-01.p-wms-packman-x1.x1-a.cloud.lmru.tech
+        name: packman-patroni-04-db-01
+      - host: p-wms-packman-patroni-04-db-02.ru-central1.internal
+        name: packman-patroni-04-db-02
+      - host: p-wms-packman-patroni-04-db-03.ru-central1.internal
+        name: packman-patroni-04-db-03
+      - host: p-wms-packman-patroni-05-db-01.p-wms-packman-x1.x1-a.cloud.lmru.tech
+        name: packman-patroni-05-db-01
+      - host: p-wms-packman-patroni-05-db-02.ru-central1.internal
+        name: packman-patroni-05-db-02
+      - host: p-wms-packman-patroni-05-db-03.ru-central1.internal
+        name: packman-patroni-05-db-03
+  version: 1
+
+prometheus-pushgateway:
+  version: 1
+  enabled: true
+  settings:
+    instances:
+      - first
+
+prometheus:
+  enabled: true
+  settings:
+    externalLabels:
+      k8s_cluster: wezen-a
+      project_name: warehousing
+      datacenter: yc
+      environment: prod
+      platform: yandex
+  version: 2
+
+user-authn:
+  enabled: true
+  settings:
+    publishAPI:
+      enabled: true
+      https:
+        global:
+          kubeconfigGeneratorMasterCA: ""
+        mode: Global
+  version: 2
+
+cert-manager:
+  enabled: true
+  settings:
+    enableCAInjector: true
+  version: 1
+
+okmeter:
+  enabled: true
+  settings:
+    apiKey: 7e43e9d1-ca9d-4d42-9d49-e478e1f825d6
+    nodeSelector:
+      node-role.kubernetes.io/control-plane: ""
+    tolerations:
+      - key: node-role.kubernetes.io/control-plane
+        operator: Exists
+      - key: node-role.kubernetes.io/master
+        operator: Exists
+      - key: dedicated
+        operator: Equal
+        value: router
+  version: 1
+
+control-plane-manager:
+  enabled: true
+  settings:
+    apiserver:
+      auditPolicyEnabled: true
+      certSANs:
+        - kubernetes.default.svc.cluster.local
+        - kubernetes.default.svc.wezen-a.p.mesh
+        - kubernetes.default.svc.wezen.p.mesh
+  version: 1
+
+logShipper:
+  enabled: false
+  version: 1
+
+extended-monitoring:
+  enabled: true
+  settings:
+    events:
+      exporterEnabled: true
+      severityLevel: All
+  version: 2
+
+cni-simple-bridge:
+  enabled: true
+  version: 1

@@ -1,0 +1,83 @@
+---
+### Runner Scale Set
+# full values here: https://github.com/actions/actions-runner-controller/blob/master/charts/gha-runner-scale-set/values.yaml
+gha-runner-scale-set:
+  githubConfigUrl: "https://github.lmru.tech/adeo"
+  githubConfigSecret:
+    github_token: "<path:services/data/github-enterprise#github_runner_create_admin_token>"
+  minRunners: 3
+  maxRunners: 20
+  runnerGroup: "LMRU-k8s-runners"
+  runnerScaleSetName: "lmru-common"
+  containerMode:
+  template:
+    spec:
+      initContainers:
+        - name: init-dind-externals
+          image: docker-release-devops.art.lmru.tech/actions-runner:latest
+          command:
+            ["cp", "-r", "-v", "/home/runner/externals/.", "/home/runner/tmpDir/"]
+          volumeMounts:
+            - name: dind-externals
+              mountPath: /home/runner/tmpDir
+      containers:
+        - name: runner
+          image: docker-release-devops.art.lmru.tech/actions-runner:latest
+          command: ["/home/runner/run.sh"]
+          env:
+            - name: DOCKER_HOST
+              value: unix:///var/run/docker.sock
+          resources:
+            limits:
+              memory: 8Gi
+            requests:
+              cpu: 500m
+              memory: 2Gi
+          volumeMounts:
+            - name: work
+              mountPath: /home/runner/_work
+            - name: dind-sock
+              mountPath: /var/run
+        - name: dind
+          image: docker-remote-docker-io.art.lmru.tech/docker:dind
+          imagePullPolicy: IfNotPresent
+          args:
+            - dockerd
+            - --host=tcp://localhost:2376
+            - --host=unix:///var/run/docker.sock
+            - --group=$(DOCKER_GROUP_GID)
+          env:
+            - name: DOCKER_GROUP_GID
+              value: "123"
+          resources:
+            limits:
+              memory: 8Gi
+            requests:
+              cpu: 200m
+              memory: 2Gi
+          securityContext:
+            privileged: true
+          volumeMounts:
+            - name: work
+              mountPath: /home/runner/_work
+            - name: dind-sock
+              mountPath: /var/run
+            - name: dind-externals
+              mountPath: /home/runner/externals
+      volumes:
+        - name: work
+          emptyDir: {}
+        - name: dind-sock
+          emptyDir: {}
+        - name: dind-externals
+          emptyDir: {}
+      nodeSelector:
+        node-role/ghe-runners: ""
+      tolerations:
+        - effect: NoSchedule
+          key: dedicated
+          value: ghe-runners
+
+  controllerServiceAccount:
+    namespace: devops-core-github-actions-runner-controller
+    name: arc-scale-set-controller

@@ -1,0 +1,72 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Chart.Name }}-issue-creator-issue-creator
+  labels:
+    helm.sh/chart: {{ .Chart.Name }}
+    name: {{ .Chart.Name }}-issue-creator
+spec:
+  selector:
+    matchLabels:
+      name: {{ .Chart.Name }}-issue-creator
+  replicas: {{ .Values.global.replicas }}
+  template:
+    metadata:
+      labels:
+        name: {{ .Chart.Name }}-issue-creator
+    spec:
+      affinity: {{ .Values.affinity | toYaml | nindent 8 }}
+      tolerations: {{ .Values.tolerations | toYaml | nindent 8 }}
+      initContainers:
+        - name: wait-rabbitmq
+          image: docker-remote-docker-io.art.lmru.tech/busybox:glibc@sha256:42279ede3600b4e63af075a5e27d68232ff837d9cdcaba74feffc7ab0dfec0dc
+          command:
+            - sh
+            - -c
+            - while ! nc -vz rabbitmq 5672; do echo waiting for rabbitmq; sleep 1; done
+      containers:
+        - name: {{ .Chart.Name }}-issue-creator
+          image: {{ .Values.issue_creator.image }}
+          envFrom:
+            - configMapRef:
+                name: {{ .Chart.Name }}
+            - secretRef:
+                name: rabbitmq-user-secret
+          env:
+            - name: AMQP_SERVER_URL
+              value: amqp://$(RABBITMQ_USER):$(RABBITMQ_PASSWORD)@rabbitmq:5672/
+          volumeMounts:
+            - name: public-key
+              readOnly: true
+              mountPath: "/bin/public.key"
+              subPath: "public.key"
+            - name: private-key
+              readOnly: true
+              mountPath: "/bin/private.key"
+              subPath: "private.key"
+      volumes:
+        - name: public-key
+          secret:
+            secretName: {{ .Chart.Name }}-yandex-tracker-cert
+            items:
+              - key: public_key
+                path: public.key
+        - name: private-key
+          secret:
+            secretName: {{ .Chart.Name }}-yandex-tracker-cert
+            items:
+              - key: private_key
+                path: private.key
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Chart.Name }}-issue-creator
+spec:
+  selector:
+    name: {{ .Chart.Name }}-issue-creator
+  ports:
+    - name: web
+      protocol: TCP
+      port: 80
+      targetPort: 8080

@@ -1,0 +1,71 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name }}-web-config
+  namespace: {{ .Release.Namespace }}
+data:
+  LICENSE_TOKEN: {{ .Values.web.license }}
+  SCALOCK_DBUSER: {{ .Values.global.db.external.enabled | ternary .Values.global.db.external.user "postgres" }}
+  SCALOCK_DBNAME: {{ .Values.global.db.external.enabled | ternary .Values.global.db.external.name "scalock" }}
+  {{- if .Values.global.db.external.enabled }}
+  SCALOCK_DBHOST: {{ .Values.global.db.external.host }}
+  {{- else }}
+  SCALOCK_DBHOST: {{ .Release.Name }}-database-svc
+  {{- end }}
+  SCALOCK_DBPORT: {{ .Values.global.db.external.enabled | ternary .Values.global.db.external.port "5432" | quote }}
+  SCALOCK_AUDIT_DBUSER: {{ .Values.global.db.external.enabled | ternary .Values.global.db.external.auditUser "postgres" }}
+  SCALOCK_AUDIT_DBNAME: {{ .Values.global.db.external.enabled | ternary .Values.global.db.external.auditName "slk_audit" }}
+  {{- if .Values.global.db.external.enabled }}
+  SCALOCK_AUDIT_DBHOST: {{ .Values.global.db.external.auditHost }}
+  {{- else }}
+  SCALOCK_AUDIT_DBHOST: {{ .Release.Name }}-audit-database-svc
+  {{- end }}
+  SCALOCK_AUDIT_DBPORT: {{ .Values.global.db.external.enabled | ternary .Values.global.db.external.auditPort "5432" | quote }}
+  {{- if .Values.activeactive }}
+  AQUA_PUBSUB_DBUSER: {{ .Values.global.db.external.enabled | ternary .Values.global.db.external.pubsubUser "postgres" }}
+  AQUA_PUBSUB_DBNAME: {{ .Values.global.db.external.enabled | ternary .Values.global.db.external.pubsubName "aqua_pubsub" }}
+  {{- if .Values.global.db.external.enabled }}
+  AQUA_PUBSUB_DBHOST: {{ .Values.global.db.external.pubsubHost }}
+  {{- else }}
+  AQUA_PUBSUB_DBHOST: {{ .Release.Name }}-database-svc
+  {{- end }}
+  AQUA_PUBSUB_DBPORT: {{ .Values.global.db.external.enabled | ternary .Values.global.db.external.pubsubPort "5432" | quote }}
+  {{- end }}
+  {{- if .Values.global.db.ssl }}
+  SCALOCK_DBSSL: {{ .Values.global.db.sslmode }}
+  {{- end }}
+  {{- if .Values.global.db.auditssl }}
+  SCALOCK_AUDIT_DBSSL: {{ .Values.global.db.auditsslmode }}
+  {{- end }}
+  {{- if .Values.global.db.pubsubssl }}
+  AQUA_PUBSUB_DBSSL: {{ .Values.global.db.pubsubsslmode }}
+  {{- end }}
+  # DNS name or IP address of an Aqua Gateway that the Aqua Enforcer will first connect to.
+  BATCH_INSTALL_GATEWAY: "aqua-gateway"
+  # Orchestrator type to be configured on enforcers.
+  BATCH_INSTALL_ORCHESTRATOR: "Kubernetes"
+  # Name of the Batch Install object used to connect Aqua Enforcers to the environment.
+  BATCH_INSTALL_NAME: "helm-default-enforcer-group"
+  # Batch installation to token to authenticate enforcer with server
+  BATCH_INSTALL_TOKEN: "enforcer-token"
+  # Batch installation group name for KubeEnforcer
+  AQUA_KE_GROUP_NAME: "helm-default-ke-group"
+  AQUA_KE_GROUP_TOKEN: "ke-token"
+  SCALOCK_LOG_LEVEL: {{ .Values.web.logLevel | default "INFO" }}
+  {{- if .Values.clustermode }}
+  CLUSTER_MODE: "enable"  
+  {{- end }}
+  {{- if .Values.activeactive }}
+  AQUA_CLUSTER_MODE: "active-active"  
+  {{- end }}
+  {{- if .Values.web.maintenance_db.name }}
+  AQUA_MAINTENANCE_DBNAME: {{ .Values.web.maintenance_db.name }}
+  {{- end }}
+  {{- if .Values.web.TLS.enabled }}
+  AQUA_PRIVATE_KEY: "/opt/aquasec/ssl/key.pem"
+  AQUA_PUBLIC_KEY: "/opt/aquasec/ssl/cert.pem"
+  {{- if .Values.web.TLS.rootCA_fileName }}
+  AQUA_ROOT_CA: "/opt/aquasec/ssl/ca.pem"
+  {{- end }}
+  {{- end }}

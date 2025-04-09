@@ -1,0 +1,118 @@
+---
+opendistro:
+  tariff: basic
+
+  project: hadar-a
+
+  node_pref: p
+
+  cluster: production
+  cluster_env: prod
+
+  userlist:
+    services: []
+
+  common:
+    nodegroup: opendistro-common
+
+  opendistro:
+    enabled: false
+    certificates: "custom"
+
+  exporter:
+    enabled: false
+
+  snapshot_exporter:
+    enabled: false
+
+  oneday_exporter:
+    enabled: false
+
+  csi:
+    enabled: false
+
+  vector:
+    enabled: false
+
+  recoverer:
+    enabled: false
+
+  filebeat:
+    enabled: true
+    resources:
+      limits:
+        memory: 1Gi
+      requests:
+        cpu: 30m
+        memory: 64Mi
+    image:
+      repo: "docker-flant.art.lmru.tech/lmru/devops/opensearch--"
+      name: "filebeat"
+      tag: "0.0.2"
+
+  logstash:
+    enabled: true
+    image:
+      repo: "docker-flant.art.lmru.tech/lmru/devops/opensearch--"
+      name: "logstash"
+      tag: "0.0.1"
+    loadbalancer: {}
+    remote_os:
+      enabled: true
+      host: "10.203.2.238:9200"
+      index_name:
+        - "pnr"
+        - "del-oper"
+        - "del-repo"
+        - "gts"
+        - "gts-tms"
+        - "carrier-portal"
+        - "pickup-point"
+        - "del-sell"
+      user: logstash
+      password: '<path:services/data/opensearch#remote_os.password>'
+    external:
+      enabled: false
+    replicas: 4
+    workers: 8
+    queuesize: 83gb
+    tcpPort: 9045
+    resources:
+      limits:
+        memory: 6Gi
+      requests:
+        cpu: 1
+        memory: 6Gi
+    pv:
+      size: 93Gi
+      storageclass: network-ssd-io-m3
+
+  kibana:
+    enabled: false
+
+  pv_retain_operator:
+    enabled: false
+
+  cerebro:
+    enabled: false
+
+  xtractor:
+    enabled: false
+
+  xkibana:
+    enabled: false
+
+  retention:
+    enabled: false
+
+  dereplicator:
+    enabled: false
+
+  node_updater:
+    enabled: false
+    image:
+      repo: "docker-flant.art.lmru.tech/lmru/devops/opensearch--"
+      name: "node-updater"
+      tag: "0.0.1"
+billing-resource:
+  resourceName: opendistro

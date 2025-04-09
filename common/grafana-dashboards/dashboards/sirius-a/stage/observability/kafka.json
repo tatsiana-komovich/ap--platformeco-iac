@@ -1,0 +1,743 @@
+{
+    "annotations": {
+        "list": [
+            {
+                "builtIn": 1,
+                "datasource": {
+                    "type": "datasource",
+                    "uid": "grafana"
+                },
+                "enable": true,
+                "hide": true,
+                "iconColor": "rgba(0, 211, 255, 1)",
+                "name": "Annotations & Alerts",
+                "target": {
+                    "limit": 100,
+                    "matchAny": false,
+                    "tags": [],
+                    "type": "dashboard"
+                },
+                "type": "dashboard"
+            }
+        ]
+    },
+    "editable": true,
+    "fiscalYearStartMonth": 0,
+    "graphTooltip": 1,
+    "id": 86,
+    "iteration": 1677509290643,
+    "links": [],
+    "liveNow": false,
+    "panels": [
+        {
+            "datasource": {
+                "type": "prometheus",
+                "uid": "${datasource}"
+            },
+            "description": "acks=0 The producer never waits for an ack from the broker when the ack value is set to 0. No guarantee can be made that the broker has received the message. The producer doesn’t try to send the record again since the producer never knows that the record was lost. This setting provides lower latency and higher throughput at the cost of much higher risk of message loss.\n\nacks=1 When setting the ack value to 1, the producer gets an ack after the leader has received the record. The leader will write the record to its log but will respond without awaiting a full acknowledgment from all followers. The message will be lost only if the leader fails immediately after acknowledging the record, but before the followers have replicated it. This setting is the middle ground for latency, throughput, and durability. It is slower but more durable than acks=0.\n\nacks=all Setting the ack value to all means that the producer gets an ack when all in-sync replicas have received the record. The leader will wait for the full set of in-sync replicas to acknowledge the record. This means that it takes a longer time to send a message with ack value all, but it gives the strongest message durability.",
+            "fieldConfig": {
+                "defaults": {
+                    "color": {
+                        "mode": "thresholds"
+                    },
+                    "mappings": [],
+                    "thresholds": {
+                        "mode": "absolute",
+                        "steps": [
+                            {
+                                "color": "green",
+                                "value": null
+                            },
+                            {
+                                "color": "red",
+                                "value": 80
+                            }
+                        ]
+                    }
+                },
+                "overrides": []
+            },
+            "gridPos": {
+                "h": 6,
+                "w": 12,
+                "x": 0,
+                "y": 0
+            },
+            "id": 64,
+            "options": {
+                "colorMode": "value",
+                "graphMode": "area",
+                "justifyMode": "auto",
+                "orientation": "auto",
+                "reduceOptions": {
+                    "calcs": [
+                        "lastNotNull"
+                    ],
+                    "fields": "",
+                    "values": false
+                },
+                "textMode": "auto"
+            },
+            "pluginVersion": "8.5.13",
+            "targets": [
+                {
+                    "datasource": {
+                        "type": "prometheus",
+                        "uid": "${datasource}"
+                    },
+                    "editorMode": "code",
+                    "expr": "kafka_cluster_partition_insyncreplicascount{topic=\"$topic\", instance=~\"$instance.*\"}",
+                    "hide": false,
+                    "legendFormat": "partition {{partition}}",
+                    "range": true,
+                    "refId": "A"
+                }
+            ],
+            "title": "In-Sync Replicas",
+            "type": "stat"
+        },
+        {
+            "datasource": {
+                "type": "prometheus",
+                "uid": "${datasource}"
+            },
+            "fieldConfig": {
+                "defaults": {
+                    "color": {
+                        "mode": "palette-classic"
+                    },
+                    "custom": {
+                        "axisLabel": "",
+                        "axisPlacement": "auto",
+                        "barAlignment": 0,
+                        "drawStyle": "line",
+                        "fillOpacity": 10,
+                        "gradientMode": "none",
+                        "hideFrom": {
+                            "legend": false,
+                            "tooltip": false,
+                            "viz": false
+                        },
+                        "lineInterpolation": "linear",
+                        "lineWidth": 1,
+                        "pointSize": 5,
+                        "scaleDistribution": {
+                            "type": "linear"
+                        },
+                        "showPoints": "never",
+                        "spanNulls": false,
+                        "stacking": {
+                            "group": "A",
+                            "mode": "none"
+                        },
+                        "thresholdsStyle": {
+                            "mode": "off"
+                        }
+                    },
+                    "mappings": [],
+                    "thresholds": {
+                        "mode": "absolute",
+                        "steps": [
+                            {
+                                "color": "green",
+                                "value": null
+                            },
+                            {
+                                "color": "red",
+                                "value": 80
+                            }
+                        ]
+                    },
+                    "unit": "short"
+                },
+                "overrides": []
+            },
+            "gridPos": {
+                "h": 6,
+                "w": 12,
+                "x": 12,
+                "y": 0
+            },
+            "id": 4,
+            "options": {
+                "legend": {
+                    "calcs": [
+                        "lastNotNull",
+                        "min",
+                        "max",
+                        "mean"
+                    ],
+                    "displayMode": "table",
+                    "placement": "bottom",
+                    "showLegend": true
+                },
+                "tooltip": {
+                    "mode": "multi",
+                    "sort": "none"
+                }
+            },
+            "pluginVersion": "9.1.1",
+            "targets": [
+                {
+                    "datasource": {
+                        "type": "prometheus",
+                        "uid": "${datasource}"
+                    },
+                    "editorMode": "code",
+                    "expr": "sum(rate(kafka_server_brokertopicmetrics_messagesin_total{topic=\"$topic\"}[1m]))",
+                    "legendFormat": "Value",
+                    "range": true,
+                    "refId": "A"
+                }
+            ],
+            "title": "New messages per sec in topic",
+            "type": "timeseries"
+        },
+        {
+            "datasource": {
+                "type": "prometheus",
+                "uid": "${datasource}"
+            },
+            "description": "",
+            "fieldConfig": {
+                "defaults": {
+                    "color": {
+                        "mode": "palette-classic"
+                    },
+                    "custom": {
+                        "axisLabel": "",
+                        "axisPlacement": "auto",
+                        "barAlignment": 0,
+                        "drawStyle": "line",
+                        "fillOpacity": 0,
+                        "gradientMode": "none",
+                        "hideFrom": {
+                            "legend": false,
+                            "tooltip": false,
+                            "viz": false
+                        },
+                        "lineInterpolation": "linear",
+                        "lineWidth": 1,
+                        "pointSize": 5,
+                        "scaleDistribution": {
+                            "type": "linear"
+                        },
+                        "showPoints": "auto",
+                        "spanNulls": false,
+                        "stacking": {
+                            "group": "A",
+                            "mode": "none"
+                        },
+                        "thresholdsStyle": {
+                            "mode": "off"
+                        }
+                    },
+                    "mappings": [],
+                    "thresholds": {
+                        "mode": "absolute",
+                        "steps": [
+                            {
+                                "color": "green",
+                                "value": null
+                            },
+                            {
+                                "color": "red",
+                                "value": 80
+                            }
+                        ]
+                    },
+                    "unit": "binBps"
+                },
+                "overrides": []
+            },
+            "gridPos": {
+                "h": 6,
+                "w": 12,
+                "x": 0,
+                "y": 6
+            },
+            "id": 119,
+            "options": {
+                "legend": {
+                    "calcs": [
+                        "last",
+                        "min",
+                        "max",
+                        "mean"
+                    ],
+                    "displayMode": "list",
+                    "placement": "bottom",
+                    "showLegend": true
+                },
+                "tooltip": {
+                    "mode": "single",
+                    "sort": "none"
+                }
+            },
+            "pluginVersion": "9.1.1",
+            "targets": [
+                {
+                    "datasource": {
+                        "type": "prometheus",
+                        "uid": "${datasource}"
+                    },
+                    "editorMode": "code",
+                    "expr": "sum by(topic) (rate(kafka_server_brokertopicmetrics_bytesin_total{topic=\"$topic\"}[1m]))",
+                    "hide": false,
+                    "legendFormat": "Value",
+                    "range": true,
+                    "refId": "A"
+                }
+            ],
+            "title": "Broker topic bytes in",
+            "type": "timeseries"
+        },
+        {
+            "datasource": {
+                "type": "prometheus",
+                "uid": "${datasource}"
+            },
+            "description": "",
+            "fieldConfig": {
+                "defaults": {
+                    "color": {
+                        "mode": "palette-classic"
+                    },
+                    "custom": {
+                        "axisLabel": "",
+                        "axisPlacement": "auto",
+                        "barAlignment": 0,
+                        "drawStyle": "line",
+                        "fillOpacity": 0,
+                        "gradientMode": "none",
+                        "hideFrom": {
+                            "legend": false,
+                            "tooltip": false,
+                            "viz": false
+                        },
+                        "lineInterpolation": "linear",
+                        "lineWidth": 1,
+                        "pointSize": 5,
+                        "scaleDistribution": {
+                            "type": "linear"
+                        },
+                        "showPoints": "auto",
+                        "spanNulls": false,
+                        "stacking": {
+                            "group": "A",
+                            "mode": "none"
+                        },
+                        "thresholdsStyle": {
+                            "mode": "off"
+                        }
+                    },
+                    "mappings": [],
+                    "thresholds": {
+                        "mode": "absolute",
+                        "steps": [
+                            {
+                                "color": "green",
+                                "value": null
+                            },
+                            {
+                                "color": "red",
+                                "value": 80
+                            }
+                        ]
+                    },
+                    "unit": "binBps"
+                },
+                "overrides": []
+            },
+            "gridPos": {
+                "h": 6,
+                "w": 12,
+                "x": 12,
+                "y": 6
+            },
+            "id": 120,
+            "options": {
+                "legend": {
+                    "calcs": [
+                        "last",
+                        "min",
+                        "max",
+                        "mean"
+                    ],
+                    "displayMode": "list",
+                    "placement": "bottom",
+                    "showLegend": true
+                },
+                "tooltip": {
+                    "mode": "single",
+                    "sort": "none"
+                }
+            },
+            "pluginVersion": "9.1.1",
+            "targets": [
+                {
+                    "datasource": {
+                        "type": "prometheus",
+                        "uid": "${datasource}"
+                    },
+                    "editorMode": "code",
+                    "expr": "sum by(topic) (rate(kafka_server_brokertopicmetrics_bytesout_total{topic=\"$topic\"}[1m]))",
+                    "hide": false,
+                    "legendFormat": "Value",
+                    "range": true,
+                    "refId": "A"
+                }
+            ],
+            "title": "Broker topic bytes out",
+            "type": "timeseries"
+        },
+        {
+            "collapsed": false,
+            "gridPos": {
+                "h": 1,
+                "w": 24,
+                "x": 0,
+                "y": 12
+            },
+            "id": 8,
+            "panels": [],
+            "repeat": "group",
+            "repeatDirection": "h",
+            "title": "$group",
+            "type": "row"
+        },
+        {
+            "datasource": {
+                "type": "prometheus",
+                "uid": "${datasource}"
+            },
+            "fieldConfig": {
+                "defaults": {
+                    "color": {
+                        "mode": "palette-classic"
+                    },
+                    "custom": {
+                        "axisLabel": "",
+                        "axisPlacement": "auto",
+                        "barAlignment": 0,
+                        "drawStyle": "line",
+                        "fillOpacity": 10,
+                        "gradientMode": "none",
+                        "hideFrom": {
+                            "legend": false,
+                            "tooltip": false,
+                            "viz": false
+                        },
+                        "lineInterpolation": "linear",
+                        "lineWidth": 1,
+                        "pointSize": 5,
+                        "scaleDistribution": {
+                            "type": "linear"
+                        },
+                        "showPoints": "never",
+                        "spanNulls": false,
+                        "stacking": {
+                            "group": "A",
+                            "mode": "none"
+                        },
+                        "thresholdsStyle": {
+                            "mode": "off"
+                        }
+                    },
+                    "mappings": [],
+                    "min": 0,
+                    "thresholds": {
+                        "mode": "absolute",
+                        "steps": [
+                            {
+                                "color": "green",
+                                "value": null
+                            },
+                            {
+                                "color": "red",
+                                "value": 80
+                            }
+                        ]
+                    },
+                    "unit": "short"
+                },
+                "overrides": []
+            },
+            "gridPos": {
+                "h": 8,
+                "w": 12,
+                "x": 0,
+                "y": 13
+            },
+            "id": 2,
+            "options": {
+                "legend": {
+                    "calcs": [
+                        "lastNotNull",
+                        "min",
+                        "max",
+                        "mean"
+                    ],
+                    "displayMode": "table",
+                    "placement": "bottom",
+                    "showLegend": true
+                },
+                "tooltip": {
+                    "mode": "multi",
+                    "sort": "none"
+                }
+            },
+            "pluginVersion": "9.1.1",
+            "targets": [
+                {
+                    "datasource": {
+                        "type": "prometheus",
+                        "uid": "${datasource}"
+                    },
+                    "editorMode": "code",
+                    "expr": "sum(kafka_burrow_partition_lag{topic=\"$topic\", instance=\"$instance_orig\", group=~\"$group\"})",
+                    "hide": false,
+                    "legendFormat": "Total",
+                    "range": true,
+                    "refId": "B"
+                },
+                {
+                    "datasource": {
+                        "type": "prometheus",
+                        "uid": "${datasource}"
+                    },
+                    "editorMode": "code",
+                    "expr": "kafka_burrow_partition_lag{topic=\"$topic\", instance=\"$instance_orig\", group=~\"$group\"}",
+                    "legendFormat": "Partition - {{partition}}",
+                    "range": true,
+                    "refId": "A"
+                }
+            ],
+            "title": "Lag on reading",
+            "transparent": true,
+            "type": "timeseries"
+        },
+        {
+            "datasource": {
+                "type": "prometheus",
+                "uid": "${datasource}"
+            },
+            "fieldConfig": {
+                "defaults": {
+                    "color": {
+                        "mode": "thresholds"
+                    },
+                    "mappings": [],
+                    "min": 0,
+                    "thresholds": {
+                        "mode": "absolute",
+                        "steps": [
+                            {
+                                "color": "green",
+                                "value": null
+                            },
+                            {
+                                "color": "red",
+                                "value": 80
+                            }
+                        ]
+                    },
+                    "unit": "string"
+                },
+                "overrides": []
+            },
+            "gridPos": {
+                "h": 8,
+                "w": 12,
+                "x": 12,
+                "y": 13
+            },
+            "id": 157,
+            "options": {
+                "colorMode": "value",
+                "graphMode": "area",
+                "justifyMode": "auto",
+                "orientation": "auto",
+                "reduceOptions": {
+                    "calcs": [],
+                    "fields": "",
+                    "values": false
+                },
+                "textMode": "auto"
+            },
+            "pluginVersion": "8.5.13",
+            "targets": [
+                {
+                    "datasource": {
+                        "type": "prometheus",
+                        "uid": "${datasource}"
+                    },
+                    "editorMode": "code",
+                    "expr": "max by (partition) (kafka_burrow_partition_current_offset{topic=\"$topic\", group=~\"$group\", instance=\"$instance_orig\"})",
+                    "legendFormat": "Current offset - {{partition}}",
+                    "range": true,
+                    "refId": "A"
+                },
+                {
+                    "datasource": {
+                        "type": "prometheus",
+                        "uid": "${datasource}"
+                    },
+                    "editorMode": "code",
+                    "expr": "max by (partition) (kafka_burrow_partition_max_offset{topic=\"$topic\", group=~\"$group\", instance=\"$instance_orig\"})",
+                    "hide": false,
+                    "legendFormat": "Max offset - {{partition}}",
+                    "range": true,
+                    "refId": "B"
+                }
+            ],
+            "title": "Lag on reading",
+            "transparent": true,
+            "type": "stat"
+        }
+    ],
+    "refresh": false,
+    "schemaVersion": 36,
+    "style": "dark",
+    "tags": [],
+    "templating": {
+        "list": [
+            {
+                "current": {
+                    "selected": false,
+                    "text": "default",
+                    "value": "default"
+                },
+                "hide": 0,
+                "includeAll": false,
+                "multi": false,
+                "name": "datasource",
+                "options": [],
+                "query": "prometheus",
+                "queryValue": "",
+                "refresh": 1,
+                "regex": "",
+                "skipUrlSync": false,
+                "type": "datasource"
+            },
+            {
+                "current": {
+                    "selected": false,
+                    "text": "10.80.50.14",
+                    "value": "10.80.50.14"
+                },
+                "datasource": {
+                    "type": "prometheus",
+                    "uid": "${datasource}"
+                },
+                "definition": "label_values(kafka_burrow_partition_lag,instance)",
+                "hide": 0,
+                "includeAll": false,
+                "multi": false,
+                "name": "instance",
+                "options": [],
+                "query": {
+                    "query": "label_values(kafka_burrow_partition_lag,instance)",
+                    "refId": "StandardVariableQuery"
+                },
+                "refresh": 1,
+                "regex": "(.*):.*",
+                "skipUrlSync": false,
+                "sort": 0,
+                "type": "query"
+            },
+            {
+                "current": {
+                    "selected": false,
+                    "text": "10.80.50.14:8001",
+                    "value": "10.80.50.14:8001"
+                },
+                "datasource": {
+                    "type": "prometheus",
+                    "uid": "${datasource}"
+                },
+                "definition": "label_values(kafka_burrow_partition_lag{instance=~\"$instance.*\"},instance)",
+                "hide": 2,
+                "includeAll": false,
+                "multi": false,
+                "name": "instance_orig",
+                "options": [],
+                "query": {
+                    "query": "label_values(kafka_burrow_partition_lag{instance=~\"$instance.*\"},instance)",
+                    "refId": "StandardVariableQuery"
+                },
+                "refresh": 1,
+                "regex": "",
+                "skipUrlSync": false,
+                "sort": 0,
+                "type": "query"
+            },
+            {
+                "current": {
+                    "selected": false,
+                    "text": "rmssaleprice-canonical-int-prices-prices-v1",
+                    "value": "rmssaleprice-canonical-int-prices-prices-v1"
+                },
+                "datasource": {
+                    "type": "prometheus",
+                    "uid": "${datasource}"
+                },
+                "definition": "label_values(kafka_burrow_partition_lag{instance=\"$instance_orig\"},topic)",
+                "hide": 0,
+                "includeAll": false,
+                "multi": false,
+                "name": "topic",
+                "options": [],
+                "query": {
+                    "query": "label_values(kafka_burrow_partition_lag{instance=\"$instance_orig\"},topic)",
+                    "refId": "StandardVariableQuery"
+                },
+                "refresh": 1,
+                "regex": "",
+                "skipUrlSync": false,
+                "sort": 0,
+                "type": "query"
+            },
+            {
+                "current": {
+                    "selected": false,
+                    "text": [
+                        "All"
+                    ],
+                    "value": [
+                        "$__all"
+                    ]
+                },
+                "datasource": {
+                    "type": "prometheus",
+                    "uid": "${datasource}"
+                },
+                "definition": "label_values(kafka_burrow_partition_lag{topic=\"$topic\", instance=\"$instance_orig\"}, group)",
+                "hide": 0,
+                "includeAll": true,
+                "multi": true,
+                "name": "group",
+                "options": [],
+                "query": {
+                    "query": "label_values(kafka_burrow_partition_lag{topic=\"$topic\", instance=\"$instance_orig\"}, group)",
+                    "refId": "StandardVariableQuery"
+                },
+                "refresh": 1,
+                "regex": "",
+                "skipUrlSync": false,
+                "sort": 0,
+                "type": "query"
+            }
+        ]
+    },
+    "time": {
+        "from": "now-7d",
+        "to": "now"
+    },
+    "timepicker": {},
+    "timezone": "",
+    "title": "Kafka",
+    "uid": "w4sdAp4az",
+    "version": 4,
+    "weekStart": ""
+}

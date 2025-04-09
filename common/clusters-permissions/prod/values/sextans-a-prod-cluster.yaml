@@ -1,0 +1,54 @@
+---
+cluster_authorization:
+  defaults:
+    default_sa_permissions: &default
+      accessLevel: User
+      limitNamespaces:
+        - default
+      allowScale: true
+      allowAccessToSystemNamespaces: true
+      portForwarding: true
+  crowd:
+    groups:
+      crowd-obs-ro:
+        <<: *default
+        accessLevel: User
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+        limitNamespaces:
+          - .*
+      crowd-obs-rw:
+        <<: *default
+        accessLevel: Editor
+        allowScale: true
+        allowAccessToSystemNamespaces: false
+        portForwarding: true
+        limitNamespaces:
+          - .*
+      crowd-obs-admin:
+        <<: *default
+        accessLevel: Admin
+        allowScale: true
+        allowAccessToSystemNamespaces: true
+        portForwarding: true
+        limitNamespaces:
+          - .*
+      crowd-sa-obs:
+        <<: *default
+        accessLevel: SuperAdmin
+        allowAccessToSystemNamespaces: true
+        limitNamespaces:
+          - .*
+      crowd-sentry-users:
+        <<: *default
+        accessLevel: User
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - default
+        allowScale: false
+        portForwarding: false
+
+DexProvider:
+  clientID: k8s-argocd
+  clientSecret: crowd_app_k8s-argocd

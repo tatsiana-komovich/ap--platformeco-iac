@@ -1,0 +1,10 @@
+---
+default:
+  project: {{ .Domain }}
+  {{- if eq .Environment "stage" }}
+  clusterName: {{ .Cluster }}-{{ .Environment }}
+  {{- else }}
+  clusterName: {{ .Cluster }}
+  {{- end }}
+  environment: {{ .Environment }}
+  victoriaUrl: https://vminsert.devops.lmru.tech/insert/0/prometheus/

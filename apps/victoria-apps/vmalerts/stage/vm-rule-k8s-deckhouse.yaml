@@ -1,0 +1,120 @@
+---
+apiVersion: operator.victoriametrics.com/v1beta1
+kind: VMRule
+metadata:
+  name: vm-rule-extended
+  namespace: devops-core-victoria-alerts
+spec:
+  groups:
+  - name: d8.deckhouse.image
+    rules:
+    - alert: D8DeckhouseIsNotOnReleaseChannel
+      expr: max by (release_channel, k8s_cluster) (deckhouse_release_channel{release_channel=""} == 1) > 0
+      labels:
+        severity: warning
+      annotations:
+        description: |
+          Deckhouse is on a custom branch instead of one of the regular release channels.
+
+          It is recommended that Deckhouse be subscribed to one of the following channels: `Alpha`, `Beta`, `EarlyAccess`, `Stable`, `RockSolid`.
+
+          Use the command below to find out what release channel is currently in use: `kubectl -n d8-system  get deploy deckhouse -o json | jq '.spec.template.spec.containers[0].image' -r`
+
+          Subscribe the cluster to one of the regular release channels.
+        summary: |
+          Deckhouse in the cluster is not subscribed to one of the regular release channels.
+    - alert: DeckhouseReleaseIsBlocked
+      expr: sum by (name, k8s_cluster) (d8_release_info{requirementsNotMet="true"})
+      labels:
+        severity: warning
+      annotations:
+        description: |
+          Deckhouse release requirements is not met.
+
+          Please run `kubectl describe DeckhouseRelease {{ $labels.name }}` for details.
+        summary: |
+          Deckhouse release requirements unmet.
+
+    - alert: D8DeckhousePodIsNotReady
+      expr: |
+        min by (pod, k8s_cluster) (
+          kube_controller_pod{namespace="d8-system", controller_type="Deployment", controller_name="deckhouse"}
+          * on (pod) group_right() kube_pod_status_ready{condition="true", namespace="d8-system"}
+        ) != 1
+      for: 3h
+      labels:
+        severity: critical
+      annotations:
+        summary: The Deckhouse Pod is NOT Ready.
+
+    - alert: D8DeckhousePodIsNotRunning
+      expr: |
+        absent(
+          kube_controller_pod{namespace="d8-system", controller_type="Deployment", controller_name="deckhouse"}
+          * on (pod) group_right() kube_pod_status_phase{namespace="d8-system",phase="Running"}
+        )
+      for: 3h
+      labels:
+        severity: critical
+      annotations:
+        summary: The Deckhouse Pod is NOT Running.
+
+    - alert: D8DeckhouseIsHung
+      expr: max without (container, job) (increase(deckhouse_live_ticks[5m])) < 1
+      labels:
+        severity: warning
+      annotations:
+        summary: Deckhouse is down.
+        description: |
+          Deckhouse is probably down since the `deckhouse_live_ticks` metric in Prometheus is no longer increasing (it is supposed to increment every 10 seconds).
+
+  - name: d8.deckhouse.malfunctioning
+    rules:
+    - alert: D8DeckhousePodIsRestartingTooOften
+      expr: |
+        max by (pod, k8s_cluster) (
+          kube_controller_pod{namespace="d8-system", controller_type="Deployment", controller_name="deckhouse"}
+          * on (pod) group_right() increase(kube_pod_container_status_restarts_total{namespace="d8-system"}[1h])
+          and
+          kube_controller_pod{namespace="d8-system", controller_type="Deployment", controller_name="deckhouse"}
+          * on (pod) group_right() kube_pod_container_status_restarts_total{namespace="d8-system"}
+        ) > 10
+      for: 1h
+      labels:
+        severity: critical
+      annotations:
+        summary: Excessive Deckhouse restarts detected.
+        description: |
+          The number of restarts in the last hour: {{ $value }}.
+
+          Excessive Deckhouse restarts indicate that something is wrong. Normally, Deckhouse should be up and running all the time.
+
+          Please, refer to the corresponding logs: `kubectl -n d8-system logs -f -l app=deckhouse`.
+
+
+    - alert: D8DeckhouseQueueIsHung
+      expr: max by (pod, instance, queue, k8s_cluster) (min_over_time(deckhouse_tasks_queue_length{queue!~"main-subqueue-kubernetes-.*|/modules/upmeter/update_selector.*|/modules/secret-copier|/modules/deckhouse/update_deckhouse_image"}[5m])) != 0
+      for: 1h
+      labels:
+        severity: warning
+      annotations:
+        summary: The {{ $labels.queue }} Deckhouse queue has hung; there are {{ $value }} task(s) in the queue.
+        description: |
+          Deckhouse cannot finish processing of the {{ $labels.queue }} queue with {{ $value }} tasks piled up.
+
+          Please, refer to the corresponding logs: `kubectl -n d8-system logs -f -l app=deckhouse`.
+
+    - alert: D8DeckhouseConfigInvalid
+      expr: increase(deckhouse_config_values_errors_total[5m]) > 0
+      for: 1h
+      labels:
+        severity: warning
+      annotations:
+        description: |
+          Deckhouse config contains errors.
+
+          Please check Deckhouse logs by running `kubectl -n d8-system logs -f -l app=deckhouse`.
+
+          Edit Deckhouse global configuration by running `kubectl edit mc global` or configuration of the specific module by running `kubectl edit mc <MODULE_NAME>`
+        summary: |
+          Deckhouse config is invalid.

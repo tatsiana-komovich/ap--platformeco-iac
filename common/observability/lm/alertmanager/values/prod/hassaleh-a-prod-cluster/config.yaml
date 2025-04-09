@@ -1,0 +1,100 @@
+---
+alertmanager:
+  templates:
+    alertmanager.tmpl: |-
+      '{{ define "generator.url" }} {{ (index .Alerts 0).GeneratorURL | reReplaceAll "&g0.tab=1$" "&g0.tab=0" }} {{ end }}'
+
+  config:
+    global:
+      smtp_from: 'alertmanager@leroy-merlin.ru'
+      smtp_smarthost: 'massmail.hq.ru.corp.leroymerlin.com:25'
+      smtp_require_tls: false
+
+    templates:
+      - '/etc/alertmanager/*.tmpl'
+
+    route:
+      group_by: ['alertname', 'namespace', 'product_id', 'environment']
+      receiver: 'void'
+      repeat_interval: 4h
+
+  ## Add your Alertmanager configuration below
+
+      routes:
+        - matchers:
+            - cool_label="cool_value"
+          receiver: 'my-grafana-oncall-webhook'
+
+      # LMRU Collaborator Front (Sourcing UI)
+        - matchers:
+            - product_id="P0631"
+          receiver: 'rao-grafana-oncall-cfsui'
+
+      # LMRU Partner Portal
+        - matchers:
+            - product_id="P0812"
+          receiver: 'rao-grafana-oncall-pp'
+
+      # LMRU Partner and Contacts Storage
+        - matchers:
+            - product_id="P0813"
+          receiver: 'rao-grafana-oncall-pacs'
+
+      # LMRU Partner Engagement: Development of Pricing and Quality of Product Suppliers
+        - matchers:
+            - product_id="P0803"
+          receiver: 'dpqps-grafana-oncall'
+
+      # LMRU EDI Exchange Platform
+        - matchers:
+            - product_id="P0335"
+          receiver: 'rprtn-grafana-oncall'
+
+      # LMRU Product Suppliers Experience Development: Partner Tender Management
+        - matchers:
+            - product_id="P1026"
+          receiver: 'psedv-grafana-oncall-tender'
+
+    receivers:
+      - name: 'void'
+
+      - name: 'my-grafana-oncall-webhook'
+        webhook_configs:
+          - url: 'https://obs-grafana-oncall-yc-techno.apps.lmru.tech/00/integrations/v1/alertmanager/AABBCCC112233/'
+            send_resolved: true
+
+      # LMRU Collaborator Front (Sourcing UI)
+      - name: 'rao-grafana-oncall-cfsui'
+        webhook_configs:
+          - url: 'https://obs-grafana-oncall-yc-techno.apps.lmru.tech/107/integrations/v1/alertmanager/zeDaEYmfiLWoq883lpWRIGsO1/'
+            send_resolved: true
+
+      # LMRU Partner Portal
+      - name: 'rao-grafana-oncall-pp'
+        webhook_configs:
+          - url: 'https://obs-grafana-oncall-yc-techno.apps.lmru.tech/107/integrations/v1/alertmanager/2eRgSSkMti73uNjFjIQgwERqk/'
+            send_resolved: true
+
+      # LMRU Partner and Contacts Storage
+      - name: 'rao-grafana-oncall-pacs'
+        webhook_configs:
+          - url: 'https://obs-grafana-oncall-yc-techno.apps.lmru.tech/107/integrations/v1/alertmanager/r8obhkWWKdYa4YXAI0D4wxOsk/'
+            send_resolved: true
+
+      # LMRU Partner Engagement: Development of Pricing and Quality of Product Suppliers
+      - name: 'dpqps-grafana-oncall'
+        webhook_configs:
+          - url: 'https://obs-grafana-oncall-yc-techno.apps.lmru.tech/13/integrations/v1/alertmanager/qHEUeROsHeeRsNZ7Ag0oOfBJD/'
+            send_resolved: true
+
+      # LMRU EDI Exchange Platform
+      - name: 'rprtn-grafana-oncall'
+        webhook_configs:
+          - url: 'https://obs-grafana-oncall-yc-techno.apps.lmru.tech/75/integrations/v1/alertmanager/XI6AQwNeNfCxyxIV8IyFmp5L4/'
+            send_resolved: true
+
+      # LMRU Product Suppliers Experience Development: Partner Tender Management
+      - name: 'psedv-grafana-oncall-tender'
+        webhook_configs:
+          - url: 'https://obs-grafana-oncall-yc-techno.apps.lmru.tech/24/integrations/v1/alertmanager/IbZwIUtObftfa6VkiZzQ2cOCM/'
+            send_resolved: true

@@ -1,0 +1,25 @@
+clusterName: "k8s-yc-obs-metrics-prod-prod"
+image:
+  tag: "2022.4.721"
+
+aquaSecret:
+  kubeEnforcerToken: enforcer-yc-obs-metrics-prod-k8s
+
+enforcer:
+  enforcerToken: enforcer-yc-obs-metrics-prod
+  nodeSelector:
+    node-role.k8s.lmru.tech/application: ''
+  tolerations:
+    - key: dedicated
+      operator: Equal
+      effect: "NoSchedule"
+      value: tempo
+    - key: dedicated
+      operator: Equal
+      effect: "NoSchedule"
+      value: k6
+  image:
+    tag: "2022.4.721"
+
+microEnforcerImage:
+  tag: "2022.4.721"

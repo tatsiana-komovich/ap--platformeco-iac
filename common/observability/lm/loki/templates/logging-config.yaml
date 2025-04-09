@@ -1,0 +1,79 @@
+{{- if .Values.loggingConfig.enabled }}
+{{- if hasKey .Values.loggingConfig "custom" }}
+
+{{- if hasKey .Values.loggingConfig.custom "byNsName" }}
+---
+apiVersion: deckhouse.io/v1alpha1
+kind: ClusterLoggingConfig
+metadata:
+  name: loki-deckhouse-ns-name
+spec: {{ toYaml .Values.loggingConfig.custom.byNsName | nindent 2 }}
+  destinationRefs:
+    - d8-loki
+{{- end }}
+
+{{- if hasKey .Values.loggingConfig.custom "byNsLabel" }}
+---
+apiVersion: deckhouse.io/v1alpha1
+kind: ClusterLoggingConfig
+metadata:
+  name: loki-deckhouse-ns-label
+spec: {{ toYaml .Values.loggingConfig.custom.byNsLabel | nindent 2 }}
+  destinationRefs:
+    - d8-loki
+{{- end }}
+
+{{- if hasKey .Values.loggingConfig.custom "byPodLabel" }}
+---
+apiVersion: deckhouse.io/v1alpha1
+kind: ClusterLoggingConfig
+metadata:
+  name: loki-deckhouse-pod-label
+spec: {{ toYaml .Values.loggingConfig.custom.byPodLabel | nindent 2 }}
+  destinationRefs:
+    - d8-loki
+{{- end }}
+
+{{- if hasKey .Values.loggingConfig.custom "byFilePath" }}
+---
+apiVersion: deckhouse.io/v1alpha1
+kind: ClusterLoggingConfig
+metadata:
+  name: loki-deckhouse-file-path
+spec: {{ toYaml .Values.loggingConfig.custom.byFilePath | nindent 2 }}
+  destinationRefs:
+    - d8-loki
+{{- end }}
+
+{{- else }}
+---
+apiVersion: deckhouse.io/v1alpha1
+kind: ClusterLoggingConfig
+metadata:
+  name: loki-deckhouse-simple
+spec:
+  type: KubernetesPods
+  destinationRefs:
+    - d8-loki
+{{- end }}
+
+{{- end }}
+
+{{- if .Values.eventsExporterPod.enabled }}
+---
+apiVersion: deckhouse.io/v1alpha1
+kind: ClusterLoggingConfig
+metadata:
+  name: loki-deckhouse-events-exporter-pod
+spec:
+  type: KubernetesPods
+  kubernetesPods:
+    labelSelector:
+      matchLabels:
+        app: events-exporter
+    namespaceSelector:
+      matchNames:
+        - d8-monitoring
+  destinationRefs:
+    - d8-loki
+{{- end }}

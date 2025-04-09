@@ -1,0 +1,289 @@
+---
+cni-simple-bridge:
+  enabled: true
+  version: 1
+
+admission-policy-engine:
+  spec:
+    version: 1
+    enabled: true
+  internal-lb-policy: true
+  disallowed-tags:
+    enforcementAction: warn # TODO: remove 28.08
+
+istio:
+  enabled: false
+  settings:
+    alliance:
+      ingressGateway:
+        inlet: NodePort
+        nodeSelector:
+          node-role.deckhouse.io/frontend: ""
+        tolerations:
+          - effect: NoExecute
+            key: dedicated.deckhouse.io
+            operator: Equal
+            value: frontend
+    federation:
+      enabled: true
+    globalVersion: "1.19"
+  version: 2
+
+okmeter:
+  enabled: true
+  settings:
+    apiKey: 3302a310-b64a-4aa1-9d69-18df9a77128f
+    nodeSelector:
+      okmeter.io/enabled: ""
+    tolerations:
+      - key: node-role.kubernetes.io/control-plane
+        operator: Exists
+      - key: node-role.kubernetes.io/master
+        operator: Exists
+      - key: dedicated
+        operator: Equal
+        value: router
+  version: 1
+
+upmeter:
+  enabled: true
+  settings:
+    smokeMiniDisabled: true
+  version: 3
+
+prometheus:
+  enabled: true
+  settings:
+    externalLabels:
+      k8s_cluster: yc-platformeco
+      project_name: api-manager
+      datacenter: yc
+      environment: prod
+      platform: yandex
+  version: 2
+
+monitoring-ping:
+  enabled: true
+  settings:
+    externalTargets:
+      - host: api-apim.apps.lmru.tech
+      - host: api-apim-stage.apps.lmru.tech
+      - host: api-yc-elk-kong.apim.lmru.tech
+      - host: api-metrics.platformeco.lmru.tech
+      - host: api-yc.platformeco.lmru.tech
+      - host: api.platformeco.lmru.tech
+      - host: api-stage.platformeco.lmru.tech
+      - host: api-x1.platformeco.lmru.tech
+      - host: api-x1-stage.platformeco.lmru.tech
+      - host: api-x1-kong.apim.lmru.tech
+      - host: api-x1-kong-stage.apim.lmru.tech
+      - host: api-yc-kong.apim.lmru.tech
+      - host: api-x2-kong.apim.lmru.tech
+      - host: api-yc-cloud-studio.platformeco.lmru.tech
+      - host: api.internal.leroymerlin.ru
+  version: 1
+
+monitoring-service-latency:
+  enabled: true
+  settings:
+    config:
+      - dsn: https://api-apim.apps.lmru.tech
+        name: api-apim.apps.lmru.tech
+        type: http
+      - dsn: https://api-apim-stage.apps.lmru.tech
+        name: api-apim-stage.apps.lmru.tech
+        type: http
+      - dsn: https://api-yc-elk-kong.apim.lmru.tech
+        name: api-yc-elk-kong.apim.lmru.tech
+        type: http
+      - dsn: https://api-metrics.platformeco.lmru.tech
+        name: api-metrics.platformeco.lmru.tech
+        type: http
+      - dsn: https://api-yc.platformeco.lmru.tech
+        name: api-yc.platformeco.lmru.tech
+        type: http
+      - dsn: https://api.platformeco.lmru.tech
+        name: api.platformeco.lmru.tech
+        type: http
+      - dsn: https://api-stage.platformeco.lmru.tech
+        name: api-stage.platformeco.lmru.tech
+        type: http
+      - dsn: https://api-x1.platformeco.lmru.tech
+        name: api-x1.platformeco.lmru.tech
+        type: http
+      - dsn: https://api-x1-stage.platformeco.lmru.tech
+        name: api-x1-stage.platformeco.lmru.tech
+        type: http
+      - dsn: https://api-x1-kong.apim.lmru.tech
+        name: api-x1-kong.apim.lmru.tech
+        type: http
+      - dsn: https://api-x1-kong-stage.apim.lmru.tech
+        name: api-x1-kong-stage.apim.lmru.tech
+        type: http
+      - dsn: https://api-yc-kong.apim.lmru.tech
+        name: api-yc-kong.apim.lmru.tech
+        type: http
+      - dsn: https://api-x2-kong.apim.lmru.tech
+        name: api-x2-kong.apim.lmru.tech
+        type: http
+      - dsn: https://api-yc-cloud-studio.platformeco.lmru.tech
+        name: api-yc-cloud-studio.platformeco.lmru.tech
+        type: http
+      - dsn: 10.220.214.85:443
+        name: apim-d8-main-load-balancer
+        type: tcp
+      - dsn: 10.220.212.105:443
+        name: apim-main-a-load-balancer
+        type: tcp
+      - dsn: 10.220.214.82:443
+        name: apim-main-load-balancer
+        type: tcp
+      - dsn: 10.220.214.4:443
+        name: platformeco-d8-main-load-balancer
+        type: tcp
+      - dsn: 10.220.214.7:443
+        name: platformeco-main-a-load-balancer
+        type: tcp
+      - dsn: 10.220.214.0:443
+        name: platformeco-main-load-balancer
+        type: tcp
+      - dsn: 10.80.214.130:443
+        name: x1-platformeco-d8-main-load-balancer
+        type: tcp
+      - dsn: 10.80.214.131:443
+        name: x1-platformeco-main-a-load-balancer
+        type: tcp
+      - dsn: 10.80.214.129:443
+        name: x1-platformeco-main-load-balancer
+        type: tcp
+      - dsn: 10.203.193.74:30443
+        name: yc-platformeco-d8-frontend-0
+        type: tcp
+      - dsn: 10.203.193.78:30443
+        name: yc-platformeco-d8-frontend-1
+        type: tcp
+      - dsn: 10.203.31.216:30443
+        name: yc-platformeco-frontend-0
+        type: tcp
+      - dsn: 10.203.31.206:30443
+        name: yc-platformeco-frontend-1
+        type: tcp
+      - dsn: 10.203.193.69:30443
+        name: yc-platformeco-metrics-d8-front-0
+        type: tcp
+      - dsn: 10.203.193.97:30443
+        name: yc-platformeco-metrics-d8-front-1
+        type: tcp
+      - dsn: 10.203.31.230:30443
+        name: yc-platformeco-metrics-frontend-0
+        type: tcp
+      - dsn: 10.203.31.218:30443
+        name: yc-platformeco-metrics-frontend-1
+        type: tcp
+      - dsn: 10.220.212.90:443
+        name: apim-stage-d8-main-load-balancer
+        type: tcp
+      - dsn: 10.220.212.89:443
+        name: apim-stage-main-a-load-balancer
+        type: tcp
+      - dsn: 10.220.214.73:443
+        name: apim-stage-main-load-balancer
+        type: tcp
+      - dsn: 10.80.214.139:443
+        name: x1-platformeco-stage-d8-main-load-balancer
+        type: tcp
+      - dsn: 10.80.214.138:443
+        name: x1-platformeco-stage-main-a-load-balancer
+        type: tcp
+      - dsn: 10.80.214.137:443
+        name: x1-platformeco-stage-main-load-balancer
+        type: tcp
+      - dsn: 10.220.214.227:443
+        name: platformeco-stage-d8-main-load-balancer
+        type: tcp
+      - dsn: 10.220.214.226:443
+        name: platformeco-stage-main-a-load-balancer
+        type: tcp
+      - dsn: 10.220.214.224:443
+        name: platformeco-stage-main-load-balancer
+        type: tcp
+      - dsn: 10.203.5.217:30443
+        name: platformeco-logs-a-d8-frontend-0
+        type: tcp
+      - dsn: 10.203.5.213:30443
+        name: platformeco-logs-a-d8-frontend-1
+        type: tcp
+      - dsn: 10.203.5.198:30443
+        name: platformeco-logs-a-frontend-0
+        type: tcp
+      - dsn: 10.203.5.211:30443
+        name: platformeco-logs-a-frontend-1
+        type: tcp
+      - dsn: 10.203.21.184:30443
+        name: yc-cloud-studio-d8-front-zone-b-0
+        type: tcp
+      - dsn: 10.203.21.170:30443
+        name: yc-cloud-studio-d8-front-zone-b-1
+        type: tcp
+      - dsn: 10.203.21.164:30443
+        name: yc-cloud-studio-frontend-zone-b-0
+        type: tcp
+      - dsn: 10.203.21.185:30443
+        name: yc-cloud-studio-frontend-zone-b-1
+        type: tcp
+      - dsn: 10.80.210.11:443
+        name: platformeco-dev-d8-main-load-balancer
+        type: tcp
+      - dsn: 10.80.210.9:443
+        name: platformeco-dev-main-load-balancer
+        type: tcp
+      - dsn: 10.203.201.195:30443
+        name: hamal-a-stage-d8-frontend
+        type: tcp
+      - dsn: 10.203.201.205:30443
+        name: hamal-a-stage-frontend
+        type: tcp
+    nodeSelector:
+      node.deckhouse.io/group: app-nodes-d
+  version: 1
+  updatePolicy: flant-team-alfa
+
+cert-manager:
+  enabled: true
+  settings:
+    enableCAInjector: true
+  version: 1
+
+extended-monitoring:
+  enabled: true
+  settings:
+    events:
+      exporterEnabled: true
+      severityLevel: All
+  version: 2
+
+user-authn:
+  enabled: true
+  settings:
+    publishAPI:
+      enabled: true
+      https:
+        mode: Global
+  version: 2
+
+node-manager:
+  enabled: true
+  settings:
+    earlyOomEnabled: false
+  version: 2
+
+global:
+  settings:
+    modules:
+      https:
+        certManager:
+          clusterIssuerName: selfsigned
+        mode: CertManager
+      ingressClass: d8-nginx
+      publicDomainTemplate: '%s-yc.platformeco.lmru.tech'
+  version: 2

@@ -1,0 +1,100 @@
+---
+clusterName: naos-a
+clusterDomain: naos-a.p.mesh
+
+admission-policy-engine:
+  spec:
+    version: 1
+    enabled: true
+  artifactory-repos:
+    enforcementAction: deny
+
+user-authn:
+  enabled: true
+  settings:
+    publishAPI:
+      enable: true
+      https:
+        global:
+          kubeconfigGeneratorMasterCA: ""
+        mode: Global
+  version: 1
+
+prometheus:
+  enabled: true
+  settings:
+    externalLabels:
+      k8s_cluster: naos-a
+      project_name: magfront
+      environment: prod
+      datacenter: x2
+      platform: vsphere
+  version: 2
+
+control-plane-manager:
+  enabled: true
+  settings:
+    apiserver:
+      auditPolicyEnabled: true
+      certSANs:
+        - kubernetes.default.svc.cluster.local
+        - kubernetes.default.svc.naos-a.p.mesh
+        - kubernetes.default.svc.magfront.p.mesh
+      serviceAccount:
+        additionalAPIAudiences:
+          - https://kubernetes.default.svc.naos-a.p.mesh
+          - https://kubernetes.default.svc.magfront.p.mesh
+        additionalAPIIssuers:
+          - https://kubernetes.default.svc.naos-a.p.mes
+          - https://kubernetes.default.svc.magfront.p.mesh
+  version: 1
+
+istio:
+  enabled: true
+  settings:
+    sidecar:
+      resourcesManagement:
+        mode: Static
+        static:
+          limits:
+            cpu: "10"
+            memory: 10Gi
+          requests:
+            cpu: 100m
+            memory: 128Mi
+    globalVersion: "1.21"
+    alliance:
+      ingressGateway:
+        inlet: LoadBalancer
+        nodeSelector:
+          node-role/loadbalancer: ""
+        tolerations:
+          - operator: Exists
+    federation:
+      enabled: true
+    dataPlane:
+      trafficRedirectionSetupMode: CNIPlugin
+    multicluster:
+      enabled: true
+  version: 2
+
+logShipper:
+  enabled: false
+  version: 1
+
+extended-monitoring:
+  enabled: true
+  settings:
+    events:
+      exporterEnabled: true
+      severityLevel: All
+  version: 1
+
+deckhouse:
+  webhookReceiverUrl: "https://auto-rfc-x2-techno.apps.lmru.tech"
+  updateMode: Auto
+  windows:
+    - from: "23:00"
+      to: "23:59"
+      days:
+        - Wed

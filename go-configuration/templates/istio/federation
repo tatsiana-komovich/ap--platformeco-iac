@@ -1,0 +1,16 @@
+---
+apiVersion: deckhouse.io/v1alpha1
+kind: IstioFederation
+{{- if eq .Environment "stage" }}
+metadata:
+  name: {{ .Cluster }}-s-mesh
+spec:
+  metadataEndpoint: https://istio-{{ .Cluster }}-{{ .Environment }}.{{ .Zone }}/metadata/
+  trustDomain: {{ .Cluster }}.s.mesh
+{{- else }}
+metadata:
+  name: {{ .Cluster }}-p-mesh
+spec:
+  metadataEndpoint: https://istio-{{ .Cluster }}.{{ .Zone }}/metadata/
+  trustDomain: {{ .Cluster }}.p.mesh
+{{- end }}

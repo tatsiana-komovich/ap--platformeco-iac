@@ -1,0 +1,78 @@
+---
+apiVersion: deckhouse.io/v1
+kind: OpenStackInstanceClass
+metadata:
+  name: elastic
+spec:
+  flavorName: p-c4m8
+  imageName: ubuntu-22-04-cloud-amd64
+  rootDiskSize: 30
+---
+apiVersion: deckhouse.io/v1
+kind: OpenStackInstanceClass
+metadata:
+  name: odfe-common
+spec:
+  flavorName: p-c4m8
+  imageName: ubuntu-22-04-cloud-amd64
+  rootDiskSize: 30
+---
+apiVersion: deckhouse.io/v1
+kind: OpenStackInstanceClass
+metadata:
+  name: node
+spec:
+  flavorName: p-c4m8
+  imageName: ubuntu-22-04-cloud-amd64
+  rootDiskSize: 50
+---
+apiVersion: deckhouse.io/v1
+kind: OpenStackInstanceClass
+metadata:
+  name: node-ml
+spec:
+  flavorName: p-c10m16
+  imageName: ubuntu-22-04-cloud-amd64
+  rootDiskSize: 30
+---
+apiVersion: deckhouse.io/v1
+kind: OpenStackInstanceClass
+metadata:
+  name: loadbalancer
+spec:
+  additionalNetworks:
+    - p-search-nav-ks
+  flavorName: p-c4m8
+  imageName: ubuntu-22-04-cloud-amd64
+  mainNetwork: BGP-VLAN-3894
+  rootDiskSize: 20
+---
+apiVersion: deckhouse.io/v1
+kind: OpenStackInstanceClass
+metadata:
+  name: d8-loadbalancer
+spec:
+  additionalNetworks:
+    - p-search-nav-ks
+  flavorName: p-c2m4
+  imageName: ubuntu-22-04-cloud-amd64
+  mainNetwork: BGP-VLAN-3894
+  rootDiskSize: 30
+---
+apiVersion: deckhouse.io/v1
+kind: OpenStackInstanceClass
+metadata:
+  name: system
+spec:
+  flavorName: p-c8m16
+  imageName: ubuntu-22-04-cloud-amd64
+  rootDiskSize: 20
+---
+apiVersion: deckhouse.io/v1
+kind: OpenStackInstanceClass
+metadata:
+  name: custom-sorts
+spec:
+  flavorName: p-c4m16
+  imageName: ubuntu-22-04-cloud-amd64
+  rootDiskSize: 50

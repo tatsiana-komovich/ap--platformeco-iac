@@ -1,0 +1,275 @@
+---
+opendistro:
+
+  alerts:
+    check_disk:
+      enabled: true
+      limit: 85
+      severity_level: 5
+    check_record:
+      enabled: true
+    shards_limit:
+      enabled: true
+      limit: 90
+      severity_level: 4
+    check_status:
+      enabled: true
+      red:
+        severity_level: 4
+      yellow:
+        severity_level: 5
+    fields_limit:
+      enabled: true
+      severity_level: 4
+
+  clusterSettings:
+    persistent:
+      "cluster.routing.allocation.disk.threshold_enabled": true
+      "cluster.routing.allocation.disk.watermark.low": 75%
+      "cluster.routing.allocation.disk.watermark.high": 85%
+      "cluster.routing.allocation.disk.watermark.flood_stage": 93%
+      "cluster.routing.allocation.node_concurrent_incoming_recoveries": 10
+      "cluster.routing.allocation.node_concurrent_outgoing_recoveries": 10
+      "cluster.routing.allocation.cluster_concurrent_rebalance": 5
+      "cluster.routing.allocation.node_concurrent_recoveries": 5
+      "indices.recovery.max_bytes_per_sec": 50mb
+      "cluster.max_shards_per_node": 2000
+    transient:
+      "cluster.routing.allocation.disk.threshold_enabled": true
+      "cluster.routing.allocation.disk.watermark.low": 75%
+      "cluster.routing.allocation.disk.watermark.high": 85%
+      "cluster.routing.allocation.disk.watermark.flood_stage": 93%
+      "cluster.routing.allocation.node_concurrent_incoming_recoveries": 10
+      "cluster.routing.allocation.node_concurrent_outgoing_recoveries": 10
+      "cluster.routing.allocation.cluster_concurrent_rebalance": 5
+      "cluster.routing.allocation.node_concurrent_recoveries": 5
+      "indices.recovery.max_bytes_per_sec": 50mb
+      "cluster.max_shards_per_node": 2000
+
+  project: apiplatform
+  platform: yandex
+
+  cluster: trace
+
+  node_pref: p
+
+  clusterDomain: yc-elk-kong-prod.p.mesh
+
+  userlist:
+    services: ["admin", "kibana", "apiuser"]
+
+  common:
+    nodegroup: opendistro-common
+
+  init:
+    image:
+      repo: "docker-flant.art.lmru.tech/lmru/devops/opensearch--"
+      name: "init-image"
+      tag: "0.0.2"
+
+  opendistro:
+    image:
+      repo: "docker-flant.art.lmru.tech/lmru/devops/opensearch--"
+      name: "opensearch"
+      tag: "2.16.0"
+    # custom - самодельные сертификаты только для старых серверов
+    # cluster - выписываются при помощи k8s
+    certificates: "custom"
+    disk_threshold_critical: 90
+    disk_threshold_warning: 86
+    bauth: '<path:services/data/opensearch#kong.opendistro.bauth.prod>'
+    external:
+      enabled: true
+      security_ssl_http_clientauth_mode: OPTIONAL
+      anonymous_auth_enabled: "false"
+      username: elastic
+      password: '<path:services/data/opensearch#kong.external.password.prod>'
+    loadbalancer:
+      type: Internal
+      traffic_policy: Local
+      listener_subnet_id: e2lln5fq9frc30sspfhd
+      sourceRanges:
+        - 10.203.106.223/32
+        - 10.203.118.151/32
+        - 10.203.118.177/32
+        - 10.203.107.149/32
+        - 10.203.39.188/32
+      nodePort: 32069
+    host: "elastic-apiplatform-yc-elk-kong.apim.lmru.tech"
+    nodegroup: opendistro-apiplatform
+    port_http: "9200"
+    port_transport: "9300"
+    port_metrics: "9600"
+    localstorage: false
+    pv_storageclass: network-ssd-io-m3
+    pv_size: 186Gi
+    replicas: "3"
+    limits:
+      memory: 6Gi
+    requests:
+      cpu: "1"
+      memory: 6Gi
+    s3_backup:
+      enabled: false
+    internal:
+      cookiePassword: '<path:services/data/opensearch#opendistro.internal.cookiepassword>'
+
+  exporter:
+    enabled: true
+    image:
+      repo: "docker-flant.art.lmru.tech/lmru/devops/opensearch--"
+      name: "os-exporter"
+      tag: "0.0.2"
+    version: 1.1.0
+    samplelimit: "200000"
+    uri: https://opendistro:9200
+    all: true
+    indices: true
+    indices_settings: true
+    shards: true
+    snapshots: false
+    cluster_settings: true
+    timeout: 5s
+    sslSkipVerify: true
+    resources:
+      requests:
+        cpu: 100m
+        memory: 512Mi
+      limits:
+        memory: 512Mi
+  snapshot_exporter:
+    enabled: false
+  oneday_exporter:
+    enabled: true
+    image:
+      repo: "docker-flant.art.lmru.tech/lmru/devops/opensearch--"
+      name: "os-oneday-exporter"
+      tag: "0.0.2"
+    date_pattern: "2006-01-02"
+    resources:
+      requests:
+        cpu: 10m
+        memory: 64Mi
+      limits:
+        memory: 64Mi
+
+  coldCluster:
+    enabled: false
+
+  csi:
+    enabled: false
+
+  recoverer:
+    enabled: false
+
+  filebeat:
+    enabled: false
+
+  apiuser:
+    elasticsearch:
+      password: '<path:services/data/opensearch#apiuser.elasticsearch.password.prod>'
+      username: apiuser
+      roles:
+        - admin
+
+  admin:
+    elasticsearch:
+      username: admin
+      roles:
+        - admin
+      password: '<path:services/data/opensearch#kong.admin.password.prod>'
+
+  kibana:
+    enabled: true
+    image:
+      repo: "docker-flant.art.lmru.tech/lmru/devops/opensearch--"
+      name: "opensearch-dashboards"
+      tag: "2.16.0"
+    index_patterns:
+      enabled: false
+    resources:
+      limits:
+        memory: 2Gi
+      requests:
+        cpu: 500m
+        memory: 1Gi
+    maxpayloadbytes: 1572864
+    # must be < resources.request.memory : if resources.request.memory=1024M than maxoldspacesize = 1000Mb
+    maxoldspacesize: 1000
+    host: kibana-apiplatform-yc-elk-kong.apim.lmru.tech
+    connecturl: dex-yc-elk-kong.apim.lmru.tech
+    auth: '<path:services/data/opensearch#kong.kibana.auth.prod>'
+    elasticsearch:
+      username: kibanaserver
+      password: '<path:services/data/opensearch#kong.kibana.password.prod>'
+      roles: [""]
+
+  pv_retain_operator:
+    enabled: false
+
+  cerebro:
+    enabled: false
+
+  xtractor:
+    enabled: false
+
+  xkibana:
+    enabled: false
+
+  curator:
+    image:
+      repo: "docker-flant.art.lmru.tech/lmru/devops/opensearch--"
+      name: "os-curator"
+      tag: "0.0.1"
+
+  shell_operator:
+    image:
+      repo: "docker-flant.art.lmru.tech/lmru/devops/opensearch--"
+      name: "shell-operator"
+      tag: "0.0.1"
+
+  node_updater:
+    enabled: false
+    image:
+      repo: "docker-flant.art.lmru.tech/lmru/devops/opensearch--"
+      name: "node-updater"
+      tag: "0.0.1"
+
+  retention:
+    enabled: false
+
+  dereplicator:
+    enabled: false
+
+  danglingChecker:
+    enabled: true
+    schedule: "0 10 * * *"
+
+  madison:
+    key: 1536260704b11625ae05be56879a002921d423bf3914d9a9e9a53b899d1509db
+    project: lm-api-manager
+
+  sheet_reporter:
+    enabled: true
+    image:
+      repo: "docker-flant.art.lmru.tech/lmru/devops/opensearch--"
+      name: "sheet-reporter"
+      tag: "0.2.0"
+    job:
+      schedule: "50 22 * * *"
+    app:
+      server:
+        port: "17700"
+
+  osecurity_extend:
+    permission: |-
+      - "*"
+    groups: |-
+      - crowd-sa-ausweis
+      - crowd-sa-devops-examples
+      - crowd-sa-keycloak
+      - crowd-sa-obs
+      - crowd-apiinfra-admin
+
+billing-resource:
+  resourceName: opendistro

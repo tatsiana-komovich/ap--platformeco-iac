@@ -1,0 +1,34 @@
+clusterName: "k8s-chara-a-stage"
+
+aquaSecret:
+  kubeEnforcerToken: enforcer-chara-a-stage-k8s
+
+enforcer:
+  enforcerToken: enforcer-chara-a-stage
+  nodeSelector:
+    node-role.k8s.lmru.tech/application: ''
+  tolerations:
+    - key: dedicated
+      operator: Equal
+      effect: "NoExecute"
+      value: spark-driver-dev
+    - key: dedicated
+      operator: Equal
+      effect: "NoExecute"
+      value: spark-executor-dev
+    - key: dedicated
+      operator: Equal
+      effect: "NoExecute"
+      value: spark-driver
+    - key: dedicated
+      operator: Equal
+      effect: "NoExecute"
+      value: spark-executor
+    - key: dedicated
+      operator: Equal
+      effect: "NoExecute"
+      value: spark-executor-research
+    - key: node-role/jenkins-slave
+      operator: Equal
+      effect: "NoExecute"
+      value: ''

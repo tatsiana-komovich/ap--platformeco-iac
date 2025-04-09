@@ -1,0 +1,66 @@
+---
+alertmanager:
+  templates:
+    alertmanager.tmpl: |-
+      '{{ define "generator.url" }} {{ (index .Alerts 0).GeneratorURL | reReplaceAll "&g0.tab=1$" "&g0.tab=0" }} {{ end }}'
+
+  config:
+    global:
+      smtp_from: 'alertmanager@leroy-merlin.ru'
+      smtp_smarthost: 'massmail.hq.ru.corp.leroymerlin.com:25'
+      smtp_require_tls: false
+
+    templates:
+      - '/etc/alertmanager/*.tmpl'
+
+    route:
+      group_by: ['alertname', 'job']
+      receiver: 'void'
+      repeat_interval: 4h
+
+  ## Add your Alertmanager configuration below
+
+      routes:
+        - matchers:
+            - qratorId=~"23360|9548"
+          receiver: 'iplt-grafana-oncall-qrator'
+        - matchers:
+            - product_id="P0567"
+          receiver: 'wecare'
+        - matchers:
+            - product_id="P0989"
+          receiver: 'pro-grafana-oncall-clientsab'
+        - matchers:
+            - product_id="P0457"
+          receiver: 'pro-grafana-oncall-b2brebate'
+        - matchers:
+            - qratorId=~"20034|15868|15853|23361"
+          receiver: 'itam-grafana-oncall-qrator'
+
+    receivers:
+      - name: 'void'
+
+      - name: 'iplt-grafana-oncall-qrator'
+        webhook_configs:
+          - url: 'https://obs-grafana-oncall-yc-techno.apps.lmru.tech/26/integrations/v1/alertmanager/JEuUZAyQye8urYIMGjtpwjWRM/'
+            send_resolved: true
+
+      - name: 'wecare'
+        webhook_configs:
+          - url: 'https://obs-grafana-oncall-yc-techno.apps.lmru.tech/63/integrations/v1/alertmanager/LduhypAAFLj6PzKAAVVikNiKC/'
+            send_resolved: true
+
+      - name: 'pro-grafana-oncall-clientsab'
+        webhook_configs:
+          - url: https://obs-grafana-oncall-yc-techno.apps.lmru.tech/33/integrations/v1/alertmanager/BoXqDWjvEox4HhvMiANh6jaC7/
+            send_resolved: true
+
+      - name: 'pro-grafana-oncall-b2brebate'
+        webhook_configs:
+          - url: https://obs-grafana-oncall-yc-techno.apps.lmru.tech/33/integrations/v1/alertmanager/SMVAuUxODvVI0rcJfUNy8jvHx/
+            send_resolved: true
+
+      - name: 'itam-grafana-oncall-qrator'
+        webhook_configs:
+          - url: 'https://obs-grafana-oncall-yc-techno.apps.lmru.tech/37/integrations/v1/alertmanager/RgbKlWXWtYrxVqrds8dkhAi0D/'
+            send_resolved: true

@@ -1,0 +1,33 @@
+---
+opentelemetry-collector:
+  gateway:
+    config:
+      exporters:
+        otlp:
+          # URL tempo distributor (Ingress GRPC)
+          endpoint: "tempo-distributor-grpc-traces.obs.lmru.tech:443"
+        otlphttp:
+          # URL tempo distributor (Ingress HTTP)
+          endpoint: "https://tempo-distributor-traces.obs.lmru.tech"
+
+  tempo:
+    enabled: true
+
+    tempo:
+      storage:
+        trace:
+          backend: local
+          local:
+            path: /var/tempo/traces
+          wal:
+            path: /var/tempo/wal
+      retention: 720h
+
+    persistence:
+      enabled: true
+        # -- Enable StatefulSetAutoDeletePVC feature
+      enableStatefulSetAutoDeletePVC: false
+      # storageClassName: local-path
+      accessModes:
+        - ReadWriteOnce
+      size: 1024Gi

@@ -1,0 +1,86 @@
+---
+opendistro:
+  filebeat:
+    kubernetesyml: |-
+      - type: container
+        paths:
+          - /var/log/containers/*.log
+        exclude_files:
+          - '^\/var\/log\/containers\/(logstash|opendistro|vector|filebeat|kibana)[\w-]+infra-elklogs[\w-]+\.log$'
+        close_inactive: 10m
+        close_removed: true
+        ignore_older: 30m
+        clean_inactive: 66m
+        clean_removed: true
+        multiline.pattern: '^((([a-zA-Z\-0-9]+)_([a-zA-Z\-0-9]+)\s)|(([a-zA-Z\-0-9]+)\s)|(.{0}))(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\.\d{3}) \[|^(\{\s{0,1}\")|^(\d{2}-\w{3}-\d{4}\s\d{2}:\d{2}:\d{2}\.{0,1}\d{2,3})\s(\w+)|^([A-Z][0-9]{0,4}\s\d{2}:\d{2}:\d{2}\.\d{0,6})|^(\d{2}.\d{2}.\d{2},\s\d{2}:\d{2})|(\d{4}\/\d{2}\/\d{2} \d{2}:\d{2}:\d{2}\ \[\w{0,8}\])'
+        multiline.negate: true
+        multiline.match: after
+        processors:
+          - add_kubernetes_metadata:
+              in_cluster: true
+              matchers:
+              - logs_path:
+                  logs_path: "/var/log/containers/"
+          - drop_event:
+              when:
+                and:
+                  - not.equals:
+                      kubernetes.namespace: "carrier-portal--alfa"
+                  - not.equals:
+                      kubernetes.namespace: "carrier-portal--beta"
+                  - not.equals:
+                      kubernetes.namespace: "carrier-portal--gamma"
+                  - not.equals:
+                      kubernetes.namespace: "carrier-portal--dev"
+                  - not.equals:
+                      kubernetes.namespace: "carrier-portal--perf"
+                  - not.equals:
+                      kubernetes.namespace: "carrier-portal--preprod"
+                  - not.equals:
+                      kubernetes.namespace: "carrier-portal--test"
+                  - not.equals:
+                      kubernetes.namespace: "gts-tms--alfa"
+                  - not.equals:
+                      kubernetes.namespace: "gts-tms--beta"
+                  - not.equals:
+                      kubernetes.namespace: "gts-tms--gamma"
+                  - not.equals:
+                      kubernetes.namespace: "gts-tms--dev"
+                  - not.equals:
+                      kubernetes.namespace: "gts-tms--perf"
+                  - not.equals:
+                      kubernetes.namespace: "gts-tms--preprod"
+                  - not.equals:
+                      kubernetes.namespace: "gts-tms--test"
+                  - not.equals:
+                      kubernetes.namespace: "gts-tms--transptech-135"
+                  - not.equals:
+                      kubernetes.namespace: "del-sell--test"
+                  - not.equals:
+                      kubernetes.namespace: "del-sell--preprod"
+                  - not.equals:
+                      kubernetes.namespace: "del-sell--autotest"
+                  - not.equals:
+                      kubernetes.namespace: "del-sell--aqa"
+                  - not.equals:
+                      kubernetes.namespace: "del-repo--test"
+                  - not.equals:
+                      kubernetes.namespace: "del-repo--dev"
+                  - not.equals:
+                      kubernetes.namespace: "del-repo--preprod"
+                  - not.equals:
+                      kubernetes.namespace: "del-oper--test"
+                  - not.equals:
+                      kubernetes.namespace: "del-oper--preprod"
+                  - not.equals:
+                      kubernetes.namespace: "pickup-point--test"
+                  - not.equals:
+                      kubernetes.namespace: "pickup-point--dev"
+                  - not.equals:
+                      kubernetes.namespace: "pickup-point--preprod"
+                  - not.equals:
+                      kubernetes.namespace_labels.product-id: "P0076"
+          - decode_json_fields:
+              fields: ['message']
+              target: 'json'
+              max_depth: 1

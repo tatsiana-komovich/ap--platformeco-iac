@@ -1,0 +1,74 @@
+---
+apiVersion: deckhouse.io/v1
+kind: VsphereInstanceClass
+metadata:
+  name: deckhouse
+spec:
+  datastore: 3par_4_Lun101
+  mainNetwork: DEVOPS_39
+  memory: 8192
+  numCPUs: 4
+  rootDiskSize: 30
+  template: Templates/ubuntu-jammy-22.04-packer
+---
+apiVersion: deckhouse.io/v1
+kind: VsphereInstanceClass
+metadata:
+  name: node-worker
+spec:
+  datastore: 3par_4_Lun101
+  mainNetwork: DEVOPS_39
+  memory: 32768
+  numCPUs: 24
+  rootDiskSize: 70
+  template: Templates/ubuntu-focal-20.04-packer
+---
+apiVersion: deckhouse.io/v1
+kind: VsphereInstanceClass
+metadata:
+  name: prometheus
+spec:
+  datastore: 3par_4_Lun101
+  mainNetwork: DEVOPS_39
+  memory: 65104
+  numCPUs: 14
+  rootDiskSize: 30
+  template: Templates/ubuntu-jammy-22.04-packer
+---
+apiVersion: deckhouse.io/v1
+kind: VsphereInstanceClass
+metadata:
+  name: d8-loki
+spec:
+  datastore: 3par_4_Lun101
+  mainNetwork: DEVOPS_39
+  memory: 8192
+  numCPUs: 4
+  rootDiskSize: 50
+  template: Templates/ubuntu-jammy-22.04-packer
+---
+apiVersion: deckhouse.io/v1
+kind: VsphereInstanceClass
+metadata:
+  name: system
+spec:
+  datastore: 3par_4_Lun101
+  mainNetwork: DEVOPS_39
+  memory: 8192
+  numCPUs: 4
+  rootDiskSize: 30
+  template: Templates/ubuntu-jammy-22.04-packer
+---
+apiVersion: deckhouse.io/v1
+kind: VsphereInstanceClass
+metadata:
+  name: d8-loadbalancer
+spec:
+  additionalNetworks:
+    - DEVOPS_39
+  datastore: 3par_4_Lun101
+  mainNetwork: devops_3893
+  memory: 8192
+  numCPUs: 6
+  rootDiskSize: 50
+  template: Templates/ubuntu-jammy-22.04-packer

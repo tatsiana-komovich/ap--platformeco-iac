@@ -1,0 +1,512 @@
+{
+    "annotations": {
+      "list": [
+        {
+          "builtIn": 1,
+          "datasource": "-- Grafana --",
+          "enable": true,
+          "hide": true,
+          "iconColor": "rgba(0, 211, 255, 1)",
+          "name": "Annotations & Alerts",
+          "type": "dashboard"
+        }
+      ]
+    },
+    "description": "",
+    "editable": true,
+    "gnetId": null,
+    "graphTooltip": 0,
+    "id": 38,
+    "iteration": 1619621094988,
+    "links": [],
+    "panels": [
+      {
+        "alerting": {},
+        "aliasColors": {},
+        "bars": false,
+        "dashLength": 10,
+        "dashes": false,
+        "datasource": "$ds_prometheus",
+        "editable": true,
+        "error": false,
+        "fieldConfig": {
+          "defaults": {
+            "custom": {}
+          },
+          "overrides": []
+        },
+        "fill": 1,
+        "fillGradient": 0,
+        "grid": {},
+        "gridPos": {
+          "h": 7,
+          "w": 24,
+          "x": 0,
+          "y": 0
+        },
+        "hiddenSeries": false,
+        "id": 39,
+        "legend": {
+          "alignAsTable": true,
+          "avg": true,
+          "current": false,
+          "max": false,
+          "min": false,
+          "rightSide": true,
+          "show": true,
+          "sort": "avg",
+          "sortDesc": true,
+          "total": false,
+          "values": true
+        },
+        "lines": true,
+        "linewidth": 2,
+        "links": [],
+        "nullPointMode": "connected",
+        "options": {
+          "dataLinks": []
+        },
+        "percentage": false,
+        "pointradius": 5,
+        "points": false,
+        "renderer": "flot",
+        "seriesOverrides": [],
+        "spaceLength": 10,
+        "stack": false,
+        "steppedLine": true,
+        "targets": [
+          {
+            "expr": "quantile by (namespace) (0.75, sum by (namespace) (rate(container_cpu_usage_seconds_total{}[$__rate_interval])) or count (avg_over_time(kube_controller_pod{}[$__rate_interval])) by (namespace) * 0 )",
+            "format": "time_series",
+            "hide": false,
+            "interval": "",
+            "intervalFactor": 1,
+            "legendFormat": "{{ node }}",
+            "refId": "A",
+            "step": 50
+          }
+        ],
+        "thresholds": [],
+        "timeFrom": null,
+        "timeRegions": [],
+        "timeShift": null,
+        "title": "CPU Usage (75%)",
+        "tooltip": {
+          "msResolution": false,
+          "shared": true,
+          "sort": 0,
+          "value_type": "cumulative"
+        },
+        "type": "graph",
+        "xaxis": {
+          "buckets": null,
+          "mode": "time",
+          "name": null,
+          "show": true,
+          "values": []
+        },
+        "yaxes": [
+          {
+            "format": "short",
+            "label": "",
+            "logBase": 1,
+            "max": null,
+            "min": 0,
+            "show": true
+          },
+          {
+            "format": "short",
+            "label": null,
+            "logBase": 1,
+            "max": null,
+            "min": null,
+            "show": true
+          }
+        ],
+        "yaxis": {
+          "align": false,
+          "alignLevel": null
+        }
+      },
+      {
+        "alerting": {},
+        "aliasColors": {},
+        "bars": false,
+        "dashLength": 10,
+        "dashes": false,
+        "datasource": "$ds_prometheus",
+        "editable": true,
+        "error": false,
+        "fieldConfig": {
+          "defaults": {
+            "custom": {}
+          },
+          "overrides": []
+        },
+        "fill": 1,
+        "fillGradient": 0,
+        "grid": {},
+        "gridPos": {
+          "h": 7,
+          "w": 24,
+          "x": 0,
+          "y": 7
+        },
+        "hiddenSeries": false,
+        "id": 40,
+        "legend": {
+          "alignAsTable": true,
+          "avg": true,
+          "current": false,
+          "max": false,
+          "min": false,
+          "rightSide": true,
+          "show": true,
+          "sort": "avg",
+          "sortDesc": true,
+          "total": false,
+          "values": true
+        },
+        "lines": true,
+        "linewidth": 2,
+        "links": [],
+        "nullPointMode": "connected",
+        "options": {
+          "dataLinks": []
+        },
+        "percentage": false,
+        "pointradius": 5,
+        "points": false,
+        "renderer": "flot",
+        "seriesOverrides": [],
+        "spaceLength": 10,
+        "stack": false,
+        "steppedLine": true,
+        "targets": [
+          {
+            "expr": "quantile by (namespace) (0.75, sum by (namespace) (avg_over_time(container_memory_working_set_bytes:without_kmem{}[$__rate_interval])) or count (avg_over_time(kube_controller_pod{}[$__rate_interval])) by (namespace) * 0 )",
+            "format": "time_series",
+            "hide": false,
+            "interval": "",
+            "intervalFactor": 1,
+            "legendFormat": "{{ node }}",
+            "refId": "A",
+            "step": 50
+          }
+        ],
+        "thresholds": [],
+        "timeFrom": null,
+        "timeRegions": [],
+        "timeShift": null,
+        "title": "Memory Usage (75%)",
+        "tooltip": {
+          "msResolution": false,
+          "shared": true,
+          "sort": 0,
+          "value_type": "cumulative"
+        },
+        "type": "graph",
+        "xaxis": {
+          "buckets": null,
+          "mode": "time",
+          "name": null,
+          "show": true,
+          "values": []
+        },
+        "yaxes": [
+          {
+            "format": "short",
+            "label": "",
+            "logBase": 1,
+            "max": null,
+            "min": 0,
+            "show": true
+          },
+          {
+            "format": "short",
+            "label": null,
+            "logBase": 1,
+            "max": null,
+            "min": null,
+            "show": true
+          }
+        ],
+        "yaxis": {
+          "align": false,
+          "alignLevel": null
+        }
+      },
+      {
+        "alerting": {},
+        "aliasColors": {},
+        "bars": false,
+        "dashLength": 10,
+        "dashes": false,
+        "datasource": "$ds_prometheus",
+        "editable": true,
+        "error": false,
+        "fieldConfig": {
+          "defaults": {
+            "custom": {}
+          },
+          "overrides": []
+        },
+        "fill": 1,
+        "fillGradient": 0,
+        "grid": {},
+        "gridPos": {
+          "h": 7,
+          "w": 24,
+          "x": 0,
+          "y": 14
+        },
+        "hiddenSeries": false,
+        "id": 42,
+        "legend": {
+          "alignAsTable": true,
+          "avg": true,
+          "current": false,
+          "max": false,
+          "min": false,
+          "rightSide": true,
+          "show": true,
+          "sort": "avg",
+          "sortDesc": true,
+          "total": false,
+          "values": true
+        },
+        "lines": true,
+        "linewidth": 2,
+        "links": [],
+        "nullPointMode": "connected",
+        "options": {
+          "dataLinks": []
+        },
+        "percentage": false,
+        "pointradius": 5,
+        "points": false,
+        "renderer": "flot",
+        "seriesOverrides": [],
+        "spaceLength": 10,
+        "stack": false,
+        "steppedLine": true,
+        "targets": [
+          {
+            "expr": "quantile by (namespace) (0.5, sum by (namespace) (rate(container_cpu_usage_seconds_total{}[$__rate_interval])) or count (avg_over_time(kube_controller_pod{}[$__rate_interval])) by (namespace) * 0 )",
+            "format": "time_series",
+            "hide": false,
+            "interval": "",
+            "intervalFactor": 1,
+            "legendFormat": "{{ node }}",
+            "refId": "A",
+            "step": 50
+          }
+        ],
+        "thresholds": [],
+        "timeFrom": null,
+        "timeRegions": [],
+        "timeShift": null,
+        "title": "CPU Usage (50%)",
+        "tooltip": {
+          "msResolution": false,
+          "shared": true,
+          "sort": 0,
+          "value_type": "cumulative"
+        },
+        "type": "graph",
+        "xaxis": {
+          "buckets": null,
+          "mode": "time",
+          "name": null,
+          "show": true,
+          "values": []
+        },
+        "yaxes": [
+          {
+            "format": "short",
+            "label": "",
+            "logBase": 1,
+            "max": null,
+            "min": 0,
+            "show": true
+          },
+          {
+            "format": "short",
+            "label": null,
+            "logBase": 1,
+            "max": null,
+            "min": null,
+            "show": true
+          }
+        ],
+        "yaxis": {
+          "align": false,
+          "alignLevel": null
+        }
+      },
+      {
+        "alerting": {},
+        "aliasColors": {},
+        "bars": false,
+        "dashLength": 10,
+        "dashes": false,
+        "datasource": "$ds_prometheus",
+        "editable": true,
+        "error": false,
+        "fieldConfig": {
+          "defaults": {
+            "custom": {}
+          },
+          "overrides": []
+        },
+        "fill": 1,
+        "fillGradient": 0,
+        "grid": {},
+        "gridPos": {
+          "h": 7,
+          "w": 24,
+          "x": 0,
+          "y": 21
+        },
+        "hiddenSeries": false,
+        "id": 44,
+        "legend": {
+          "alignAsTable": true,
+          "avg": true,
+          "current": false,
+          "max": false,
+          "min": false,
+          "rightSide": true,
+          "show": true,
+          "sort": "avg",
+          "sortDesc": true,
+          "total": false,
+          "values": true
+        },
+        "lines": true,
+        "linewidth": 2,
+        "links": [],
+        "nullPointMode": "connected",
+        "options": {
+          "dataLinks": []
+        },
+        "percentage": false,
+        "pointradius": 5,
+        "points": false,
+        "renderer": "flot",
+        "seriesOverrides": [],
+        "spaceLength": 10,
+        "stack": false,
+        "steppedLine": true,
+        "targets": [
+          {
+            "expr": "quantile by (namespace) (0.50, sum by (namespace) (avg_over_time(container_memory_working_set_bytes:without_kmem{}[$__rate_interval])) or count (avg_over_time(kube_controller_pod{}[$__rate_interval])) by (namespace) * 0 )",
+            "format": "time_series",
+            "hide": false,
+            "interval": "",
+            "intervalFactor": 1,
+            "legendFormat": "{{ node }}",
+            "refId": "A",
+            "step": 50
+          }
+        ],
+        "thresholds": [],
+        "timeFrom": null,
+        "timeRegions": [],
+        "timeShift": null,
+        "title": "Memory Usage (50%)",
+        "tooltip": {
+          "msResolution": false,
+          "shared": true,
+          "sort": 0,
+          "value_type": "cumulative"
+        },
+        "type": "graph",
+        "xaxis": {
+          "buckets": null,
+          "mode": "time",
+          "name": null,
+          "show": true,
+          "values": []
+        },
+        "yaxes": [
+          {
+            "format": "short",
+            "label": "",
+            "logBase": 1,
+            "max": null,
+            "min": 0,
+            "show": true
+          },
+          {
+            "format": "short",
+            "label": null,
+            "logBase": 1,
+            "max": null,
+            "min": null,
+            "show": true
+          }
+        ],
+        "yaxis": {
+          "align": false,
+          "alignLevel": null
+        }
+      }
+    ],
+    "refresh": "30s",
+    "schemaVersion": 25,
+    "style": "dark",
+    "tags": [],
+    "templating": {
+      "list": [
+        {
+          "current": {
+            "selected": false,
+            "text": "default",
+            "value": "default"
+          },
+          "hide": 0,
+          "includeAll": false,
+          "label": "Prometheus",
+          "multi": false,
+          "name": "ds_prometheus",
+          "options": [],
+          "query": "prometheus",
+          "refresh": 1,
+          "regex": "",
+          "skipUrlSync": false,
+          "type": "datasource"
+        }
+      ]
+    },
+    "time": {
+      "from": "now-3h",
+      "to": "now"
+    },
+    "timepicker": {
+      "refresh_intervals": [
+        "1m",
+        "5m",
+        "15m",
+        "30m",
+        "1h",
+        "2h",
+        "1d"
+      ],
+      "time_options": [
+        "5m",
+        "15m",
+        "1h",
+        "6h",
+        "12h",
+        "24h",
+        "2d",
+        "7d",
+        "30d"
+      ]
+    },
+    "timezone": "browser",
+    "title": "cpu, memory by namespace",
+    "uid": "wfw2324234",
+    "version": 8
+  }

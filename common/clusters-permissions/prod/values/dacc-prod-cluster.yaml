@@ -1,0 +1,110 @@
+---
+cluster_authorization:
+  defaults:
+    default_sa_permissions: &default
+      accessLevel: User
+      limitNamespaces:
+        - default
+      allowScale: true
+      allowAccessToSystemNamespaces: true
+      portForwarding: true
+  crowd:
+    groups:
+      crowd-dataplatform-admin:
+        <<: *default
+        accessLevel: Admin
+      crowd-dataplatform-rw:
+        <<: *default
+        accessLevel: Editor
+      crowd-sa-dataplatform:
+        <<: *default
+        accessLevel: Admin
+      crowd-sqc-rw:
+        <<: *default
+        accessLevel: Editor
+        limitNamespaces:
+          - sqc-.*
+          - sqc
+      crowd-sqc-ro:
+        <<: *default
+        accessLevel: User
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - sqc-.*
+          - sqc
+      crowd-sqc-admin:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - sqc-.*
+          - sqc
+      crowd-sa-sqc:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - sqc-.*
+          - sqc
+      # dg
+      crowd-dg-admin:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - dg-.*
+          - dg
+      crowd-dg-ro:
+        <<: *default
+        accessLevel: User
+        limitNamespaces:
+          - dg-.*
+          - dg
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+      crowd-dg-rw:
+        <<: *default
+        accessLevel: Editor
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - dg-.*
+          - dg
+      crowd-sa-dg:
+        <<: *default
+        accessLevel: Admin
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - dg-.*
+          - dg
+      crowd-obs-ro:
+        <<: *default
+        accessLevel: User
+        limitNamespaces:
+          - .*
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+      # svetofor2
+      crowd-svetofor2-ro:
+        <<: *default
+        accessLevel: User
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - prod
+      crowd-svetofor2-admin:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - prod
+      crowd-svetofor2-rw:
+        <<: *default
+        accessLevel: Editor
+        limitNamespaces:
+          - prod
+      crowd-sa-svetofor2:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - prod
+
+DexProvider:
+  clientID: k8s-datap4m-prod
+  clientSecret: crowd_app_k8s-dacc-prod

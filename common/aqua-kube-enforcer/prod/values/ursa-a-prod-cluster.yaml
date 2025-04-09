@@ -1,0 +1,25 @@
+clusterName: "k8s-ursa-a-prod"
+image:
+  tag: "2022.4.721"
+
+aquaSecret:
+  kubeEnforcerToken: enforcer-ursa-a-k8s
+
+enforcer:
+  enforcerToken: enforcer-ursa-a
+  nodeSelector:
+    node-role.k8s.lmru.tech/application: ''
+  tolerations:
+    - key: dedicated.deckhouse.io
+      operator: Equal
+      effect: "NoExecute"
+      value: mr-crawler
+    - key: dedicated.deckhouse.io
+      operator: Equal
+      effect: "NoExecute"
+      value: mr-matcher
+  image:
+    tag: "2022.4.721"
+
+microEnforcerImage:
+  tag: "2022.4.721"

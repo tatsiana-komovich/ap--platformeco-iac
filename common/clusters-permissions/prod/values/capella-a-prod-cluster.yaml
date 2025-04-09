@@ -1,0 +1,144 @@
+---
+cluster_authorization:
+  defaults:
+    default_sa_permissions: &default
+      accessLevel: User
+      limitNamespaces:
+        - default
+      allowScale: true
+      allowAccessToSystemNamespaces: true
+      portForwarding: true
+  crowd:
+    groups:
+      crowd-microfronts-admin:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - mf-.*
+          - mf
+      crowd-microfronts-ro:
+        <<: *default
+        accessLevel: User
+        limitNamespaces:
+          - mf-.*
+          - mf
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+      crowd-microfronts-rw:
+        <<: *default
+        accessLevel: Editor
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - mf-.*
+          - mf
+      crowd-sa-microfronts:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - mf-.*
+          - mf
+          - triffle-.*
+          - jenkins-slaves
+      crowd-fronton-admin:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - fronton-.*
+          - fronton
+      crowd-fronton-ro:
+        <<: *default
+        accessLevel: User
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+        limitNamespaces:
+          - fronton-.*
+          - fronton
+      crowd-fronton-rw:
+        <<: *default
+        accessLevel: Editor
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - fronton-.*
+          - fronton
+      crowd-sa-fronton:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - fronton-.*
+          - fronton
+          - triffle-.*
+      crowd-triffle-admin:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - triffle-.*
+          - triffle
+          - mf-.*
+          - mf
+      crowd-triffle-ro:
+        <<: *default
+        accessLevel: User
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+        limitNamespaces:
+          - triffle-.*
+          - triffle
+          - mf-.*
+          - mf
+      crowd-triffle-rw:
+        <<: *default
+        accessLevel: Editor
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - triffle-.*
+          - triffle
+          - mf-.*
+          - mf
+      crowd-sa-triffle:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - triffle-.*
+          - triffle
+          - mf-.*
+          - mf
+      crowd-obs-ro:
+        <<: *default
+        accessLevel: User
+        limitNamespaces:
+          - .*
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+      crowd-fudzi-admin:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - fudzi
+      crowd-fudzi-ro:
+        <<: *default
+        accessLevel: User
+        limitNamespaces:
+          - fudzi
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+      crowd-fudzi-rw:
+        <<: *default
+        accessLevel: Editor
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - fudzi
+      crowd-sa-fudzi:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - fudzi
+          - triffle-.*
+
+DexProvider:
+  clientID: k8s-argocd
+  clientSecret: crowd_app_k8s-argocd

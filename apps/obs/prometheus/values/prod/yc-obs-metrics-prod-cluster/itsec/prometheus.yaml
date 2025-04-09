@@ -1,0 +1,125 @@
+---
+prometheus:
+  prometheus:
+    enabled: true
+
+    serviceAccount:
+      create: true
+      name: 'promaas-itsec'
+
+    service:
+      sessionAffinity: ClientIP
+      sessionAffinityConfig:
+        clientIP:
+          timeoutSeconds: 10800
+
+    ingress:
+      enabled: true
+      annotations:
+        nginx.ingress.kubernetes.io/use-regex: 'true'
+        nginx.ingress.kubernetes.io/affinity: 'cookie'
+        nginx.ingress.kubernetes.io/affinity-mode: 'persistent'
+        nginx.ingress.kubernetes.io/session-cookie-name: 'PROMETHEUSAFFINITY'
+        nginx.ingress.kubernetes.io/session-cookie-path: '/prometheus'
+        nginx.ingress.kubernetes.io/session-cookie-expires: '10800'
+        nginx.ingress.kubernetes.io/session-cookie-max-age: '10800'
+        nginx.ingress.kubernetes.io/rewrite-target: /$2
+      hosts:
+        - itsec-metrics.obs.lmru.tech
+      paths:
+        - /prometheus(/|$)(.*)
+      pathType: ImplementationSpecific
+      tls:
+        - hosts:
+            - 'itsec-metrics.obs.lmru.tech'
+
+    podDisruptionBudget:
+      enabled: true
+      minAvailable: 1
+
+    serviceMonitor:
+      selfMonitor: false
+      additionalLabels:
+        prometheus: main
+
+    prometheusSpec:
+
+      ruleNamespaceSelector:
+        matchLabels:
+          promaas-customer-name: itsec
+
+      scrapeInterval: '30s'
+      scrapeTimeout: '10s'
+      evaluationInterval: '30s'
+      enableAdminAPI: false
+      retention: 15d
+      retentionSize: 360GB
+      disableCompaction: true
+      enableRemoteWriteReceiver: true
+      externalUrl: 'https://itsec-metrics.obs.lmru.tech/prometheus/'
+      logLevel: info
+      logFormat: json
+      ruleSelectorNilUsesHelmValues: false
+
+      additionalScrapeConfigsSecret:
+        enabled: true
+        name: additional-scrape-configs
+        key: additional-scrape-configs.yaml
+
+      additionalArgs:
+        - name: enable-feature
+          value: auto-gomemlimit
+
+      ## The remote_write spec configuration for Prometheus.
+      ## ref: https://github.com/prometheus-operator/prometheus-operator/blob/main/Documentation/api.md#remotewritespec
+      # remoteWrite:
+      #   - url: "https://mimir-metrics-stage.obs.lmru.tech/api/v1/push"
+      #     headers:
+      #       "X-Scope-OrgID": "itsec-prod"
+      ## additionalRemoteWrite is appended to remoteWrite
+      additionalRemoteWrite: []
+
+      ## Allow out-of-order/out-of-bounds samples ingested into Prometheus for a specified duration
+      ## See https://prometheus.io/docs/prometheus/lakong/configuration/configuration/#tsdb
+      tsdb:
+        outOfOrderTimeWindow: 10m
+
+      image:
+        registry: docker.art.lmru.tech
+        repository: prometheus/prometheus
+      # if not set appVersion field from Chart.yaml is used
+        tag: v2.55.1
+
+      replicas: 2
+      shards: 1
+
+      resources:
+        requests:
+          cpu: 4
+          memory: 8Gi
+        limits:
+          memory: 8Gi
+
+      storageSpec:
+        volumeClaimTemplate:
+          spec:
+            storageClassName: network-ssd
+            accessModes: ['ReadWriteOnce']
+            resources:
+              requests:
+                storage: 400Gi
+
+      priorityClassName: 'production-high'
+
+      nodeSelector:
+        node-role/prometheus-xxlarge: ''
+
+      tolerations:
+        - effect: NoSchedule
+          key: dedicated
+          operator: Equal
+          value: prometheus
+
+      podAntiAffinity: 'hard'
+      # podAntiAffinityTopologyKey: kubernetes.io/hostname
+      podAntiAffinityTopologyKey: kubernetes.io/zone

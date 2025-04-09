@@ -1,0 +1,199 @@
+---
+cluster_authorization:
+  defaults:
+    default_sa_permissions: &default
+      accessLevel: User
+      limitNamespaces:
+        - default
+      allowScale: true
+      allowAccessToSystemNamespaces: true
+      portForwarding: true
+  crowd:
+    groups:
+      # keycloak
+      crowd-keycloak-ro:
+        <<: *default
+        accessLevel: User
+        portForwarding: false
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - keycloak
+          - keycloak-.*
+      crowd-keycloak-rw:
+        <<: *default
+        accessLevel: Editor
+        allowScale: true
+        portForwarding: true
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - keycloak
+          - keycloak-.*
+      crowd-keycloak-admin:
+        <<: *default
+        accessLevel: Admin
+        allowScale: true
+        portForwarding: true
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - keycloak
+          - keycloak-.*
+      crowd-sa-keycloak:
+        <<: *default
+        accessLevel: Admin
+        allowScale: true
+        portForwarding: true
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - keycloak
+          - keycloak-.*
+      crowd-finops-ro:
+        <<: *default
+        accessLevel: User
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+      crowd-finops-rw:
+        <<: *default
+        accessLevel: Editor
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - finops-.*
+      crowd-finops-admin:
+        <<: *default
+        accessLevel: Admin
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - finops-.*
+      crowd-sa-finops:
+        <<: *default
+        accessLevel: SuperAdmin
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - finops-.*
+      # techgate
+      crowd-techgate-ro:
+        <<: *default
+        accessLevel: User
+        portForwarding: false
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - techgate
+          - techgate-.*
+      crowd-techgate-rw:
+        <<: *default
+        accessLevel: Editor
+        allowScale: true
+        portForwarding: true
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - techgate
+          - techgate-.*
+      crowd-techgate-admin:
+        <<: *default
+        accessLevel: Admin
+        allowScale: true
+        portForwarding: true
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - techgate
+          - techgate-.*
+      crowd-sa-techgate:
+        <<: *default
+        accessLevel: Admin
+        allowScale: true
+        portForwarding: true
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - techgate
+          - techgate-.*
+      # otel for tracing
+      crowd-otel-ro:
+        <<: *default
+        accessLevel: User
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+      crowd-otel-rw:
+        <<: *default
+        accessLevel: Editor
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - otel-.*
+      crowd-otel-admin:
+        <<: *default
+        accessLevel: Admin
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - otel-.*
+      crowd-sa-otel:
+        <<: *default
+        accessLevel: SuperAdmin
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - otel-.*
+      #ausweis
+      crowd-ausweis-ro:
+        <<: *default
+        accessLevel: User
+        portForwarding: false
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - ausweis
+          - ausweis-.*
+      crowd-ausweis-rw:
+        <<: *default
+        accessLevel: Editor
+        allowScale: true
+        portForwarding: true
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - ausweis
+          - ausweis-.*
+      crowd-ausweis-admin:
+        <<: *default
+        accessLevel: Admin
+        allowScale: true
+        portForwarding: true
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - ausweis
+          - ausweis-.*
+      crowd-sa-ausweis:
+        <<: *default
+        accessLevel: Admin
+        allowScale: true
+        portForwarding: true
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - ausweis
+          - ausweis-.*
+
+DexProvider:
+  clientID: k8s-argocd
+  clientSecret: crowd_app_k8s-argocd
+
+ClusterRole:
+  jgroups-kubeping-pod-reader-cluster-role:
+    metadata:
+      name: jgroups-kubeping-pod-reader
+    rules:
+      - apiGroups:
+          - ""
+        resources:
+          - pods
+        verbs:
+          - get
+          - list
+
+ClusterRoleBinding:
+  jgroups-kubeping-pod-reader-role-binding:
+    metadata:
+      name: jgroups-kubeping-api-access
+    roleRef:
+      kind: ClusterRole
+      apiGroup: rbac.authorization.k8s.io
+      name: jgroups-kubeping-pod-reader
+    subjects:
+      - kind: ServiceAccount
+        name: jgroups-kubeping-service-account
+        namespace: keycloak-employee-stage

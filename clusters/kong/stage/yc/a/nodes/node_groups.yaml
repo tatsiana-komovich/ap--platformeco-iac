@@ -1,0 +1,166 @@
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  name: application-nodes
+spec:
+  cloudInstances:
+    classReference:
+      kind: YandexInstanceClass
+      name: application-nodes
+    minPerZone: 9
+    maxPerZone: 9
+    zones:
+      - ru-central1-a
+  disruptions:
+    approvalMode: Automatic
+  nodeType: CloudEphemeral
+  nodeTemplate:
+    labels:
+      node-role.k8s.lmru.tech/application: ''
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  name: sb-application-nodes
+spec:
+  cloudInstances:
+    classReference:
+      kind: YandexInstanceClass
+      name: sb-application-nodes
+    minPerZone: 1
+    maxPerZone: 9
+    zones:
+      - ru-central1-a
+  disruptions:
+    approvalMode: Automatic
+  nodeTemplate:
+    labels:
+      node-role/sb-application-nodes: ""
+      node-role.k8s.lmru.tech/application: ''
+    taints:
+      - effect: NoExecute
+        key: dedicated
+        value: sb-application-nodes
+  nodeType: CloudEphemeral
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  name: st-application-nodes
+spec:
+  cloudInstances:
+    classReference:
+      kind: YandexInstanceClass
+      name: st-application-nodes
+    minPerZone: 2
+    maxPerZone: 9
+    zones:
+      - ru-central1-a
+  disruptions:
+    approvalMode: Automatic
+  nodeTemplate:
+    labels:
+      node-role/st-application-nodes: ""
+      node-role.k8s.lmru.tech/application: ''
+    taints:
+      - effect: NoExecute
+        key: dedicated
+        value: st-application-nodes
+  nodeType: CloudEphemeral
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  name: system
+spec:
+  cloudInstances:
+    classReference:
+      kind: YandexInstanceClass
+      name: system
+    minPerZone: 1
+    maxPerZone: 9
+    zones:
+      - ru-central1-a
+  disruptions:
+    approvalMode: Automatic
+  nodeTemplate:
+    labels:
+      node-role.deckhouse.io/system: ""
+    taints:
+      - effect: NoExecute
+        key: dedicated.deckhouse.io
+        value: system
+  nodeType: CloudEphemeral
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  name: sb-frontend
+spec:
+  cloudInstances:
+    classReference:
+      kind: YandexInstanceClass
+      name: sb-frontend
+    minPerZone: 1
+    maxPerZone: 3
+    zones:
+      - ru-central1-a
+  disruptions:
+    approvalMode: Automatic
+  nodeTemplate:
+    labels:
+      node-role/sb-frontend: ""
+    taints:
+      - effect: NoExecute
+        key: dedicated
+        value: sb-frontend
+  nodeType: CloudEphemeral
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  name: st-frontend
+spec:
+  cloudInstances:
+    classReference:
+      kind: YandexInstanceClass
+      name: st-frontend
+    minPerZone: 1
+    maxPerZone: 3
+    zones:
+      - ru-central1-a
+  disruptions:
+    approvalMode: Automatic
+  nodeTemplate:
+    labels:
+      node-role/st-frontend: ""
+    taints:
+      - effect: NoExecute
+        key: dedicated
+        value: st-frontend
+  nodeType: CloudPermanent
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  name: otel-system
+spec:
+  cloudInstances:
+    classReference:
+      kind: YandexInstanceClass
+      name: otel-system
+    maxPerZone: 1
+    minPerZone: 1
+    zones:
+      - ru-central1-a
+  disruptions:
+    approvalMode: Automatic
+  nodeTemplate:
+    labels:
+      node-role/otel-system: ""
+    taints:
+      - key: dedicated
+        value: otel-system
+        effect: NoSchedule
+  nodeType: CloudEphemeral

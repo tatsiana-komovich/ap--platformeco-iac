@@ -1,0 +1,51 @@
+---
+enabled: false
+
+namespace:
+  shared_telemetry_prod: opendistro-shared-telemetry-prod
+
+grafana: https://grafana-metrics.platformeco.lmru.tech
+
+alerts:
+  enable:
+    _default: false
+  ElasticDown:
+    severity_level:
+      _default: 4
+      shared_telemetry_prod: 1
+  ElasticClusterRed:
+    severity_level:
+      _default: 4
+      shared_telemetry_prod: 1
+  ElasticClusterYellow:
+    severity_level:
+      _default: 4
+  ElasticReadOnlyIndex:
+    severity_level:
+      _default: 4
+  ElasticUnassignedShards:
+    severity_level:
+      _default: 4
+  ElasticHeapUsageTooHigh:
+    severity_level:
+      _default: 4
+  ElasticBackupIndiciesFailed:
+    severity_level:
+      _default: 4
+  ElasticCheckDisk:
+    severity_level: 5
+    limit: 85
+  ElkClusterDiskWriteLatencyTooHigh:
+    severity_level: 4
+    limit: 0.01
+
+watermark_exporter:
+  prometheus_threshold:
+    high:
+      _default: 3
+    flood_stage:
+      _default: 5
+    low:
+      _default: 10
+    crit_severity_level:
+      _default: 4

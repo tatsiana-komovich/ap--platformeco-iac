@@ -1,0 +1,47 @@
+---
+logShipper:
+  enabled: "true"
+  settings:
+    debug: false
+
+logDestination:
+  enabled: "true"
+  custom:
+    - name: lmru-p0001-my-service
+      spec:
+        type: Logstash
+        logstash:
+          endpoint: logstash.logs.lmru.tech:9045
+        extraLabels:
+          cluster: yc-techno-stage
+          ext_index_name: lmru-p0001-my-service
+    - name: lmru-p0002-my-service-2
+      spec:
+        type: Logstash
+        logstash:
+          endpoint: logstash.logs.lmru.tech:9045
+        extraLabels:
+          cluster: yc-techno-stage
+          ext_index_name: lmru-p0002-my-service-2
+
+loggingConfig:
+  enabled: "true"
+  custom:
+    - name: lmru-p0001-my-service
+      spec:
+        type: KubernetesPods
+        kubernetesPods:
+          namespaceSelector:
+            matchNames:
+              - d8-ingress-nginx
+        destinationRefs:
+          - lmru-p0001-my-service
+    - name: lmru-p0002-my-service-2
+      spec:
+        type: KubernetesPods
+        kubernetesPods:
+          labelSelector:
+            matchLabels:
+              app: my-service-2
+        destinationRefs:
+          - lmru-p0002-my-service-2

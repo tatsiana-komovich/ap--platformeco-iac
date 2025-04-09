@@ -1,0 +1,81 @@
+---
+admission-policy-engine:
+  spec:
+    version: 1
+    enabled: true
+  internal-lb-policy: true
+  disallowed-tags:
+    enforcementAction: warn # TODO: remove 28.08
+
+istio:
+  enabled: false
+  settings:
+    alliance:
+      ingressGateway:
+        inlet: NodePort
+        nodeSelector:
+          node-role.deckhouse.io/frontend: ""
+        tolerations:
+          - effect: NoExecute
+            key: dedicated.deckhouse.io
+            operator: Equal
+            value: frontend
+    federation:
+      enabled: true
+    globalVersion: "1.19"
+  version: 2
+
+prometheus:
+  enabled: true
+  settings:
+    externalLabels:
+      k8s_cluster: yc-elk-kong
+      project_name: kong
+      datacenter: yc
+      environment: prod
+      platform: yandex
+  version: 2
+
+cert-manager:
+  enabled: true
+  settings:
+    enableCAInjector: true
+  version: 1
+
+extended-monitoring:
+  enabled: true
+  settings:
+    events:
+      exporterEnabled: true
+      severityLevel: All
+  version: 2
+
+okmeter:
+  enabled: true
+  settings:
+    apiKey: f4a6c069-e5b2-4e6b-85b9-5d0351ed8dfd
+    disableAutoDiscovery: true
+    nodeSelector:
+      okmeter.io/enabled: ""
+    tolerations:
+      - operator: Exists
+  version: 1
+
+user-authn:
+  enabled: true
+  settings:
+    publishAPI:
+      enabled: true
+      https:
+        mode: Global
+  version: 2
+
+global:
+  settings:
+    modules:
+      https:
+        certManager:
+          clusterIssuerName: selfsigned
+        mode: CertManager
+      publicDomainTemplate: '%s-yc-elk-kong.apim.lmru.tech'
+  version: 2

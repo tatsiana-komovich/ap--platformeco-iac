@@ -1,0 +1,41 @@
+---
+alertmanager:
+  templates:
+    alertmanager.tmpl: |-
+      ''
+
+  config:
+    global:
+      smtp_from: 'alertmanager@leroy-merlin.ru'
+      smtp_smarthost: 'massmail.hq.ru.corp.leroymerlin.com:25'
+      smtp_require_tls: false
+
+    templates:
+      - '/etc/alertmanager/*.tmpl'
+
+    route:
+      group_by: ['alertname', 'job']
+      receiver: 'void'
+      repeat_interval: 4h
+
+  ## Add your Alertmanager configuration below
+
+      routes:
+        # - matchers:
+        #     - cool_label="cool_value"
+        #   receiver: 'my-grafana-oncall-webhook'
+        - matchers:
+            - namespace=~"keycloak-.*"
+          receiver: 'itam-grafana-oncall-keycloak'
+
+    receivers:
+      - name: 'void'
+
+    #   - name: 'my-grafana-oncall-webhook'
+    #     webhook_configs:
+    #       - url: 'https://obs-grafana-oncall-yc-techno.apps.lmru.tech/00/integrations/v1/alertmanager/AABBCCC112233/'
+    #         send_resolved: true
+      - name: 'itam-grafana-oncall-keycloak'
+        webhook_configs:
+          - url: 'https://obs-grafana-oncall-yc-techno.apps.lmru.tech/37/integrations/v1/alertmanager/u7ZJyUE8WUCyoxv2HwiMLKg5B/'
+            send_resolved: true

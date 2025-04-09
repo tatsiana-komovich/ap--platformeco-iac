@@ -1,0 +1,37 @@
+---
+apiVersion: operator.victoriametrics.com/v1beta1
+kind: VMRule
+metadata:
+  name: vm-rule-k8s-d8-chrony
+  namespace: devops-core-victoria-alerts
+spec:
+  groups:
+    - name: kubernetes.d8-chrony
+      rules:
+        - alert: NTPDaemonOnNodeDoesNotSynchronizeTime
+          expr: (min by (k8s_cluster, node) (node_timex_sync_status{job="node-exporter"})) == 0
+          for: 30m
+          labels:
+            severity: warning
+          annotations:
+            description: |
+              1. check if Chrony pod is running on the node by executing the following command:
+                 * 'kubectl -n d8-chrony --field-selector spec.nodeName="{{$labels.node}}" get pods'
+              2. check the Chrony daemon's status by executing the following command:
+                 * 'kubectl -n d8-chrony exec <POD_NAME> -- /opt/chrony-static/bin/chronyc sources'
+              3. Correct the time synchronization problems:
+                 * correct network problems:
+                   - provide availability to upstream time synchronization servers defined in the module [configuration](https://deckhouse.io/products/kubernetes-platform/documentation/v1/modules/470-chrony/configuration.html);
+                   - eliminate large packet loss and excessive latency to upstream time synchronization servers.
+                 * Modify NTP servers list defined in the module [configuration](https://deckhouse.io/products/kubernetes-platform/documentation/v1/modules/470-chrony/configuration.html).
+            summary: NTP daemon on node {{$labels.node}} have not synchronized time for too long.
+
+        - alert: NodeTimeOutOfSync
+          expr: max by(k8s_cluster) (abs(node_ntp_offset_seconds:abs - (node_ntp_rtt_seconds/2)) > 0.5)
+          for: 30m
+          labels:
+            severity: warning
+          annotations:
+            description: |
+              Node's {{$labels.node}} time is out of sync from ntp server by {{ $value }} seconds.
+            summary: Node's {{$labels.node}} clock is drifting.

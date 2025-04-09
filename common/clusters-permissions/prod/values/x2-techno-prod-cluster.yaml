@@ -1,0 +1,482 @@
+---
+cluster_authorization:
+  defaults:
+    default_sa_permissions: &default
+      accessLevel: User
+      limitNamespaces:
+        - default
+      allowScale: true
+      allowAccessToSystemNamespaces: true
+      portForwarding: true
+  crowd:
+    groups:
+      crowd-finops-ro:
+        <<: *default
+        accessLevel: User
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+      crowd-finops-rw:
+        <<: *default
+        accessLevel: Editor
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - finops-.*
+      crowd-finops-admin:
+        <<: *default
+        accessLevel: Admin
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - finops-.*
+      crowd-sa-finops:
+        <<: *default
+        accessLevel: Admin
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - finops-.*
+      crowd-solution-ro:
+        <<: *default
+        accessLevel: User
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+      crowd-dnp-ro:
+        <<: *default
+        accessLevel: User
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+      crowd-obs-ro:
+        <<: *default
+        accessLevel: User
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+      crowd-obs-rw:
+        <<: *default
+        accessLevel: Editor
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - obs-.*
+      crowd-obs-admin:
+        <<: *default
+        accessLevel: Admin
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - obs-.*
+      crowd-sa-obs:
+        <<: *default
+        accessLevel: Admin
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - obs-.*
+      crowd-hybridcloud-admin:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - finops-.*
+      crowd-sa-hybridcloud:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - finops-.*
+      crowd-sa-devops-examples:
+        <<: *default
+        accessLevel: Admin
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - devops-examples-.*
+          - devops-examples
+      crowd-devops-core-rw:
+        <<: *default
+        accessLevel: Editor
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - .*
+      crowd-chatops-slack-bot-ro:
+        <<: *default
+        accessLevel: User
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+      crowd-chatops-slack-bot-rw:
+        <<: *default
+        accessLevel: Editor
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - chatops-slack-bot-.*
+      crowd-chatops-slack-bot-admin:
+        <<: *default
+        accessLevel: Admin
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - -chatops-slack-bot-.*
+      crowd-sa-chatops-slack-bot:
+        <<: *default
+        accessLevel: Admin
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - chatops-slack-bot-.*
+      crowd-dbaas-ro:
+        <<: *default
+        accessLevel: User
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - dbaas-.*
+      crowd-dbaas-rw:
+        <<: *default
+        accessLevel: Editor
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - dbaas-.*
+      crowd-dbaas-admin:
+        <<: *default
+        accessLevel: Admin
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - dbaas-.*
+        additionalRoles:
+          - kind: ClusterRole
+            roleName: patroni-cluster-role
+      crowd-sa-dbaas:
+        <<: *default
+        accessLevel: Admin
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - dbaas-.*
+        additionalRoles:
+          - kind: ClusterRole
+            roleName: patroni-cluster-role
+      crowd-ssp-ro:
+        <<: *default
+        accessLevel: User
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - ssp.*
+      crowd-ssp-rw:
+        <<: *default
+        accessLevel: Editor
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - ssp.*
+      crowd-ssp-admin:
+        <<: *default
+        accessLevel: Admin
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - ssp.*
+      crowd-sa-ssp:
+        <<: *default
+        accessLevel: Admin
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - ssp.*
+      crowd-self-control-tool-ro:
+        <<: *default
+        accessLevel: User
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - sct.*
+      crowd-self-control-tool-rw:
+        <<: *default
+        accessLevel: Editor
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - sct.*
+      crowd-self-control-tool-admin:
+        <<: *default
+        accessLevel: Admin
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - sct.*
+      crowd-sa-self-control-tool:
+        <<: *default
+        accessLevel: Admin
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - sct.*
+      crowd-devops-intern-admin:
+        <<: *default
+        accessLevel: Admin
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - candi-dashboard-test
+          - lighthouse-.*
+          - devops-core-monitoring-tools
+      #blender
+      crowd-blender-ro:
+        <<: *default
+        accessLevel: User
+        allowAccessToSystemNamespaces: true
+        limitNamespaces:
+          - devops-core-k8s-blender-.*
+          - kube-blender-.*
+      crowd-blender-rw:
+        <<: *default
+        accessLevel: Editor
+        allowAccessToSystemNamespaces: true
+        limitNamespaces:
+          - devops-core-k8s-blender-.*
+          - kube-blender-.*
+      crowd-blender-admin:
+        <<: *default
+        accessLevel: Admin
+        allowAccessToSystemNamespaces: true
+        limitNamespaces:
+          - devops-core-k8s-blender-.*
+          - kube-blender-.*
+      crowd-sa-blender:
+        <<: *default
+        accessLevel: Admin
+        allowAccessToSystemNamespaces: true
+        limitNamespaces:
+          - devops-core-k8s-blender-.*
+          - kube-blender-.*
+      #keycloak
+      crowd-keycloak-admin:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - keycloak-.*
+          - keycloak
+      crowd-keycloak-ro:
+        <<: *default
+        accessLevel: User
+        limitNamespaces:
+          - keycloak-.*
+          - keycloak
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+      crowd-keycloak-rw:
+        <<: *default
+        accessLevel: Editor
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - keycloak-.*
+          - keycloak
+      crowd-sa-keycloak:
+        <<: *default
+        accessLevel: Admin
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - keycloak-.*
+          - keycloak
+      # techgate
+      crowd-techgate-ro:
+        <<: *default
+        accessLevel: User
+        portForwarding: false
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - techgate
+          - techgate-.*
+      crowd-techgate-rw:
+        <<: *default
+        accessLevel: Editor
+        allowScale: true
+        portForwarding: true
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - techgate
+          - techgate-.*
+      crowd-techgate-admin:
+        <<: *default
+        accessLevel: Admin
+        allowScale: true
+        portForwarding: true
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - techgate
+          - techgate-.*
+      crowd-sa-techgate:
+        <<: *default
+        accessLevel: Admin
+        allowScale: true
+        portForwarding: true
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - techgate
+          - techgate-.*
+      # irm
+      crowd-irm-ro:
+        <<: *default
+        accessLevel: User
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+        limitNamespaces:
+          - ^irm-.*
+      crowd-irm-rw:
+        <<: *default
+        accessLevel: Editor
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - ^irm-.*
+      crowd-irm-admin:
+        <<: *default
+        accessLevel: Admin
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - ^irm-.*
+      crowd-sa-irm:
+        <<: *default
+        accessLevel: Admin
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - ^irm-.*
+      # Statuspage
+      crowd-statuspage-ro:
+        <<: *default
+        accessLevel: User
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+        limitNamespaces:
+          - ^statuspage$
+          - ^statuspage-.*
+      crowd-statuspage-rw:
+        <<: *default
+        accessLevel: Editor
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - ^statuspage$
+          - ^statuspage-.*
+      crowd-statuspage-admin:
+        <<: *default
+        accessLevel: Admin
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - ^statuspage$
+          - ^statuspage-.*
+      crowd-sa-statuspage:
+        <<: *default
+        accessLevel: Admin
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - ^statuspage$
+          - ^statuspage-.*
+      # cloud print
+      crowd-cloud-print-ro:
+        <<: *default
+        accessLevel: User
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - ois-cloud-print.*
+      crowd-cloud-print-admin:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - ois-cloud-print.*
+      crowd-cloud-print-rw:
+        <<: *default
+        accessLevel: Editor
+        limitNamespaces:
+          - ois-cloud-print.*
+      crowd-sa-cloud-print:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - ois-cloud-print.*
+      #legoauth
+      crowd-legoauth-ro:
+        <<: *default
+        accessLevel: User
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+      crowd-legoauth-rw:
+        <<: *default
+        accessLevel: Editor
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - legoauth-.*
+      crowd-legoauth-admin:
+        <<: *default
+        accessLevel: Admin
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - legoauth-.*
+      crowd-sa-legoauth:
+        <<: *default
+        accessLevel: Admin
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - legoauth-.*
+      # otel for tracing
+      crowd-otel-ro:
+        <<: *default
+        accessLevel: User
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+      crowd-otel-rw:
+        <<: *default
+        accessLevel: Editor
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - otel-.*
+      crowd-otel-admin:
+        <<: *default
+        accessLevel: Admin
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - otel-.*
+      crowd-sa-otel:
+        <<: *default
+        accessLevel: SuperAdmin
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - otel-.*
+
+DexProvider:
+  clientID: k8s-devops-prod
+  clientSecret: crowd_app_k8s-devops-prod
+
+ClusterRole:
+  patroni-cluster-role:
+    metadata:
+      name: patroni-cluster-role
+    rules:
+      - apiGroups:
+          - "acid.zalan.do"
+        resources:
+          - postgresqls
+        verbs:
+          - "*"
+  finops-pod-reader-role:
+    metadata:
+      name: finops-pod-reader-role
+    rules:
+      - apiGroups:
+          - ""
+        resources:
+          - pods
+          - pods/log
+          - namespaces
+        verbs:
+          - get
+          - list
+
+ClusterRoleBinding:
+  finops-pod-reader-role-binding:
+    metadata:
+      name: finops-pod-reader-role-binding
+    roleRef:
+      kind: ClusterRole
+      name: finops-pod-reader-role
+    subjects:
+      - kind: ServiceAccount
+        name: finops-pod-reader
+        namespace: techgate-prod
+
+admin_crowd_permissions:
+  crowd:
+    groups:
+      crowd-devops-core-admin: &default
+        accessLevel: SuperAdmin
+        limitNamespaces:
+          - .*
+        allowScale: true
+        allowAccessToSystemNamespaces: true
+        portForwarding: true

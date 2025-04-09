@@ -1,0 +1,19 @@
+{{- if and .Values.extrapvc (hasKey .Values.extrapvc "enabled") -}}
+{{- range $key, $value := .Values.extrapvc.volumeList }}
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ $key }}
+  namespace: {{ $.Values.extrapvc.namespace }}
+spec:
+  accessModes:
+    - ReadWriteOnce
+  volumeMode: Filesystem
+  resources:
+    requests:
+      storage: {{ $value.size }}
+  storageClassName: {{ $.Values.extrapvc.storageClassName }}
+{{- end -}}
+{{- end -}}
+

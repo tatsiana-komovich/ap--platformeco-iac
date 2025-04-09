@@ -1,0 +1,120 @@
+---
+imageCredentials:
+  create: false
+  name:
+  repositoryUriPrefix: "docker-remote-aquasec.art.lmru.tech"
+  registry: "docker-remote-aquasec.art.lmru.tech"
+  username: ""
+  password: ""
+
+platform: "k8s"
+
+clusterRole:
+  roleRef: ""
+
+rbac:
+  create: true
+
+dockerSock:
+  mount: # put true for mount docker socket.
+  path: /var/run/docker.sock
+
+directCC:
+  enabled: true
+
+serviceAccount:
+  create: true
+  name:
+
+server:
+  scheme: "http"
+  serviceName: "aqua-server-console-svc"
+  port: 8080
+
+serverSSL:
+  enable: false
+
+cyberCenter:
+  mtls:
+    enabled: false
+
+image:
+  repository: scanner
+  tag: "2022.4.759"
+  pullPolicy: Always
+
+# logLevel: debug
+
+nameOverride: ""
+
+user: "administrator"
+password: "<path:preprod/data/console#admin_password>"
+scannerToken: ""
+scannerTokenSecret:
+  enable: false
+  secretName: ""
+  tokenKey: ""
+
+scannerUserSecret:
+  enable: false
+
+replicaCount: 10
+enableLivenessProbe: false
+livenessProbe:
+  httpGet:
+    path: /healthz
+    port: 8081
+    scheme: HTTP
+  initial_delay_seconds: 15
+  period_seconds: 60
+  success_threshold: 1
+  failure_threshold: 3
+  timeout_seconds: 1
+readinessProbe: {}
+resources:
+  requests:
+    cpu: 1500m
+    memory: 0.5Gi
+  limits:
+    cpu: 4000m
+    memory: 3Gi
+nodeSelector: {}
+tolerations: []
+affinity: {}
+podAnnotations: {}
+#  my-annotation-key: my value; more value
+podLabels: {}
+
+# Annotations for Scanner deployment
+annotations: {}
+
+securityContext:
+  runAsUser: 11431
+  runAsGroup: 11433
+  fsGroup: 11433
+container_securityContext: {}
+
+extraEnvironmentVars: {}
+  # ENV_NAME: value
+
+extraSecretEnvironmentVars: []
+  # - envName: ENV_NAME
+  #   secretName: name
+  #   secretKey: key
+
+# extraVolumeMounts is a list of extra volumes to mount into the container's filesystem of the KubeEnforcer deployment
+extraVolumeMounts: []
+
+# extraVolumes is a list of volumes that can be mounted inside the KubeEnforcer deployment
+extraVolumes: []
+
+registries: []
+# registries:
+# - registry1
+# - registry2
+
+persistence:
+  enabled: false
+  accessMode: ReadWriteOnce
+  size: 30Gi    # Change to required size
+  storageClass: # Optional

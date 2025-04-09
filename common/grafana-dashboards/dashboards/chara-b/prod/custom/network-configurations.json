@@ -1,0 +1,2543 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": {
+          "type": "grafana",
+          "uid": "-- Grafana --"
+        },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "target": {
+          "limit": 100,
+          "matchAny": false,
+          "tags": [],
+          "type": "dashboard"
+        },
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "id": 61,
+  "iteration": 1715065529327,
+  "links": [],
+  "liveNow": false,
+  "panels": [
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "P0D6E4079E36703EB"
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "id": 4,
+      "links": [],
+      "options": {
+        "content": "<h3> Network configuration dashboards </h3>\n<h4>Java</h4>\n<a href=\"/d/spring-boot-and-k8s-info/spring-boot-k8s-info?orgId=1&var-namespace=${namespace}&var-app=procurement-scheme\">Java and k8s dashboard</a></br>\n\n\n<h4>PostgreSQL</h4>\n<a href=\"https://grafana.lmru.tech/d/postgres/postgres?orgId=8&var-inter=1m&var-project=${PostgresqlProject}&var-env=${stand}&var-host=All&var-job=postgres_exporter&var-node_job=node_exporter\">PostgreSQL main dashboard</a></br>\n<a href=\"https://grafana.lmru.tech/d/4Te0kcd7z/postgres-tables-all-in_one?orgId=8&var-project=${PostgresqlProject}&var-job=postgres_exporter&var-env=${stand}\">Postgres tables ALL-in_ONE</a></br>\n<a href=\"https://grafana.lmru.tech/d/oi5Cyhdnk/postgres-tables-index-info?orgId=8&var-project=${PostgresqlProject}&var-job=postgres_exporter&var-env=${stand}\">Postgres statements ALL-in-ONE</a></br>\n\n<h4>kafka</h4>\n<a href=\"/d/kafka/kafka?orgId=1&var-namespace=${namespace}\">kafka main</a></br>\n\n\n<h4>Logs</h4>\n<a href=\"/d/LokiLogs/loki-dashboard?orgId=1&var-namespace=${namespace}\">Logs from Loki</a></br>\n",
+        "mode": "html"
+      },
+      "pluginVersion": "8.5.13",
+      "title": "Dashboard Network configuration",
+      "type": "text"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "P0D6E4079E36703EB"
+      },
+      "description": "Partition utilization, disk read, disk write, download bandwidth, upload bandwidth, if there are multiple network cards or multiple partitions, it is the value of the network card or partition with the highest utilization rate collected.\n\nCurrEstab: The number of TCP connections whose current status is ESTABLISHED or CLOSE-WAIT.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "align": "right",
+            "displayMode": "auto",
+            "inspect": false
+          },
+          "decimals": 2,
+          "displayName": "",
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "nodename"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Hostname"
+              },
+              {
+                "id": "unit",
+                "value": "bytes"
+              },
+              {
+                "id": "decimals",
+                "value": 1
+              },
+              {
+                "id": "links",
+                "value": [
+                  {
+                    "targetBlank": true,
+                    "title": "",
+                    "url": "d/nodeexporter/node-exporter-full-mii?orgId=1&var-name=${__value.text}&var-datasource=main&var-job=${job}&var-namespace=${namespace}"
+                  }
+                ]
+              },
+              {
+                "id": "custom.align",
+                "value": "left"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "instance"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "IP(Link to details)"
+              },
+              {
+                "id": "unit",
+                "value": "short"
+              },
+              {
+                "id": "decimals",
+                "value": 2
+              },
+              {
+                "id": "custom.align",
+                "value": "right"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Value #B"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Mem"
+              },
+              {
+                "id": "unit",
+                "value": "bytes"
+              },
+              {
+                "id": "decimals",
+                "value": 2
+              },
+              {
+                "id": "custom.align"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Value #C"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "CPU"
+              },
+              {
+                "id": "unit",
+                "value": "short"
+              },
+              {
+                "id": "custom.align"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Value #D"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": " Uptime"
+              },
+              {
+                "id": "unit",
+                "value": "s"
+              },
+              {
+                "id": "decimals",
+                "value": 2
+              },
+              {
+                "id": "custom.align"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Value #E"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Part used%"
+              },
+              {
+                "id": "unit",
+                "value": "percent"
+              },
+              {
+                "id": "decimals",
+                "value": 2
+              },
+              {
+                "id": "custom.displayMode",
+                "value": "color-background"
+              },
+              {
+                "id": "custom.align"
+              },
+              {
+                "id": "thresholds",
+                "value": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "rgba(50, 172, 45, 0.97)",
+                      "value": null
+                    },
+                    {
+                      "color": "rgba(237, 129, 40, 0.89)",
+                      "value": 70
+                    },
+                    {
+                      "color": "rgba(245, 54, 54, 0.9)",
+                      "value": 85
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Value #F"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "CPU used%"
+              },
+              {
+                "id": "unit",
+                "value": "percent"
+              },
+              {
+                "id": "decimals",
+                "value": 2
+              },
+              {
+                "id": "custom.displayMode",
+                "value": "color-background"
+              },
+              {
+                "id": "custom.align"
+              },
+              {
+                "id": "thresholds",
+                "value": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "rgba(50, 172, 45, 0.97)",
+                      "value": null
+                    },
+                    {
+                      "color": "rgba(237, 129, 40, 0.89)",
+                      "value": 70
+                    },
+                    {
+                      "color": "rgba(245, 54, 54, 0.9)",
+                      "value": 85
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Value #G"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Mem used%"
+              },
+              {
+                "id": "unit",
+                "value": "percent"
+              },
+              {
+                "id": "decimals",
+                "value": 2
+              },
+              {
+                "id": "custom.displayMode",
+                "value": "color-background"
+              },
+              {
+                "id": "custom.align"
+              },
+              {
+                "id": "thresholds",
+                "value": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "rgba(50, 172, 45, 0.97)",
+                      "value": null
+                    },
+                    {
+                      "color": "rgba(237, 129, 40, 0.89)",
+                      "value": 70
+                    },
+                    {
+                      "color": "rgba(245, 54, 54, 0.9)",
+                      "value": 85
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Value #H"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Disk read"
+              },
+              {
+                "id": "unit",
+                "value": "Bps"
+              },
+              {
+                "id": "decimals",
+                "value": 2
+              },
+              {
+                "id": "custom.displayMode",
+                "value": "color-background"
+              },
+              {
+                "id": "custom.align"
+              },
+              {
+                "id": "thresholds",
+                "value": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "rgba(50, 172, 45, 0.97)",
+                      "value": null
+                    },
+                    {
+                      "color": "rgba(237, 129, 40, 0.89)",
+                      "value": 10485760
+                    },
+                    {
+                      "color": "rgba(245, 54, 54, 0.9)",
+                      "value": 20485760
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Value #I"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Disk write"
+              },
+              {
+                "id": "unit",
+                "value": "Bps"
+              },
+              {
+                "id": "decimals",
+                "value": 2
+              },
+              {
+                "id": "custom.displayMode",
+                "value": "color-background"
+              },
+              {
+                "id": "custom.align"
+              },
+              {
+                "id": "thresholds",
+                "value": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "rgba(50, 172, 45, 0.97)",
+                      "value": null
+                    },
+                    {
+                      "color": "rgba(237, 129, 40, 0.89)",
+                      "value": 10485760
+                    },
+                    {
+                      "color": "rgba(245, 54, 54, 0.9)",
+                      "value": 20485760
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Value #J"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Receive"
+              },
+              {
+                "id": "unit",
+                "value": "bps"
+              },
+              {
+                "id": "decimals",
+                "value": 2
+              },
+              {
+                "id": "custom.displayMode",
+                "value": "color-background"
+              },
+              {
+                "id": "custom.align"
+              },
+              {
+                "id": "thresholds",
+                "value": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "rgba(50, 172, 45, 0.97)",
+                      "value": null
+                    },
+                    {
+                      "color": "rgba(237, 129, 40, 0.89)",
+                      "value": 30485760
+                    },
+                    {
+                      "color": "rgba(245, 54, 54, 0.9)",
+                      "value": 104857600
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Value #K"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Transmit"
+              },
+              {
+                "id": "unit",
+                "value": "bps"
+              },
+              {
+                "id": "decimals",
+                "value": 2
+              },
+              {
+                "id": "custom.displayMode",
+                "value": "color-background"
+              },
+              {
+                "id": "custom.align"
+              },
+              {
+                "id": "thresholds",
+                "value": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "rgba(50, 172, 45, 0.97)",
+                      "value": null
+                    },
+                    {
+                      "color": "rgba(237, 129, 40, 0.89)",
+                      "value": 30485760
+                    },
+                    {
+                      "color": "rgba(245, 54, 54, 0.9)",
+                      "value": 104857600
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Value #L"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Load(5m)"
+              },
+              {
+                "id": "unit",
+                "value": "short"
+              },
+              {
+                "id": "decimals",
+                "value": 2
+              },
+              {
+                "id": "custom.align"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Value #M"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "TCP_estab"
+              },
+              {
+                "id": "unit",
+                "value": "short"
+              },
+              {
+                "id": "decimals",
+                "value": 2
+              },
+              {
+                "id": "custom.displayMode",
+                "value": "color-background"
+              },
+              {
+                "id": "custom.align"
+              },
+              {
+                "id": "thresholds",
+                "value": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "rgba(50, 172, 45, 0.97)",
+                      "value": null
+                    },
+                    {
+                      "color": "rgba(237, 129, 40, 0.89)",
+                      "value": 1000
+                    },
+                    {
+                      "color": "rgba(245, 54, 54, 0.9)",
+                      "value": 1500
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Value #N"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "TCP_tw"
+              },
+              {
+                "id": "unit",
+                "value": "short"
+              },
+              {
+                "id": "custom.displayMode",
+                "value": "color-background"
+              },
+              {
+                "id": "custom.align",
+                "value": "center"
+              },
+              {
+                "id": "thresholds",
+                "value": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "rgba(50, 172, 45, 0.97)",
+                      "value": null
+                    },
+                    {
+                      "color": "rgba(237, 129, 40, 0.89)",
+                      "value": 5000
+                    },
+                    {
+                      "color": "rgba(245, 54, 54, 0.9)",
+                      "value": 20000
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 12,
+        "w": 24,
+        "x": 0,
+        "y": 9
+      },
+      "id": 8,
+      "options": {
+        "footer": {
+          "fields": "",
+          "reducer": [
+            "sum"
+          ],
+          "show": false
+        },
+        "showHeader": true
+      },
+      "pluginVersion": "8.5.13",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P0D6E4079E36703EB"
+          },
+          "editorMode": "code",
+          "expr": "node_uname_info{job=~\"$job\"} - 0",
+          "format": "table",
+          "instant": true,
+          "interval": "",
+          "legendFormat": "__auto",
+          "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P0D6E4079E36703EB"
+          },
+          "editorMode": "code",
+          "expr": "sum(time() - node_boot_time_seconds{job=~\"$job\"})by(instance)",
+          "format": "table",
+          "hide": false,
+          "instant": true,
+          "interval": "",
+          "legendFormat": "__auto",
+          "refId": "D"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P0D6E4079E36703EB"
+          },
+          "editorMode": "code",
+          "expr": "node_memory_MemTotal_bytes{job=~\"$job\"} - 0",
+          "format": "table",
+          "hide": false,
+          "instant": true,
+          "interval": "",
+          "legendFormat": "__auto",
+          "refId": "B"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P0D6E4079E36703EB"
+          },
+          "editorMode": "code",
+          "expr": "count(node_cpu_seconds_total{job=~\"$job\",mode='system'}) by (instance)",
+          "format": "table",
+          "hide": false,
+          "instant": true,
+          "interval": "",
+          "legendFormat": "__auto",
+          "refId": "C"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P0D6E4079E36703EB"
+          },
+          "editorMode": "code",
+          "expr": "node_load5{job=~\"$job\"}",
+          "format": "table",
+          "hide": false,
+          "instant": true,
+          "interval": "",
+          "legendFormat": "__auto",
+          "refId": "L"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P0D6E4079E36703EB"
+          },
+          "editorMode": "code",
+          "expr": "(1 - avg(rate(node_cpu_seconds_total{job=~\"$job\",mode=\"idle\"}[$__interval])) by (instance)) * 100",
+          "format": "table",
+          "hide": false,
+          "instant": true,
+          "interval": "",
+          "legendFormat": "__auto",
+          "refId": "F"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P0D6E4079E36703EB"
+          },
+          "editorMode": "code",
+          "exemplar": true,
+          "expr": "(node_memory_Buffers_bytes{job=~\"$job\"}+\nnode_memory_Cached_bytes{job=~\"$job\"}) / node_memory_MemTotal_bytes{job=~\"$job\"} * 100",
+          "format": "table",
+          "hide": false,
+          "instant": true,
+          "interval": "",
+          "legendFormat": "__auto",
+          "refId": "G"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P0D6E4079E36703EB"
+          },
+          "editorMode": "code",
+          "expr": "max((node_filesystem_size_bytes{job=~\"$job\",fstype=~\"ext.?|xfs\"}-node_filesystem_free_bytes{job=~\"$job\",fstype=~\"ext.?|xfs\"}) *100/(node_filesystem_avail_bytes {job=~\"$job\",fstype=~\"ext.?|xfs\"}+(node_filesystem_size_bytes{job=~\"$job\",fstype=~\"ext.?|xfs\"}-node_filesystem_free_bytes{job=~\"$job\",fstype=~\"ext.?|xfs\"})))by(instance)",
+          "format": "table",
+          "hide": false,
+          "instant": true,
+          "interval": "",
+          "legendFormat": "__auto",
+          "refId": "E"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P0D6E4079E36703EB"
+          },
+          "editorMode": "code",
+          "expr": "max(rate(node_disk_read_bytes_total{job=~\"$job\"}[$__interval])) by (instance)",
+          "format": "table",
+          "hide": false,
+          "instant": true,
+          "interval": "",
+          "legendFormat": "__auto",
+          "refId": "H"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P0D6E4079E36703EB"
+          },
+          "editorMode": "code",
+          "expr": "max(rate(node_disk_written_bytes_total{job=~\"$job\"}[$__interval])) by (instance)",
+          "format": "table",
+          "hide": false,
+          "instant": true,
+          "interval": "",
+          "legendFormat": "__auto",
+          "refId": "I"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P0D6E4079E36703EB"
+          },
+          "editorMode": "code",
+          "expr": "node_netstat_Tcp_CurrEstab{job=~\"$job\"} - 0",
+          "format": "table",
+          "hide": false,
+          "instant": true,
+          "interval": "",
+          "legendFormat": "__auto",
+          "refId": "M"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P0D6E4079E36703EB"
+          },
+          "expr": "node_sockstat_TCP_tw{job=~\"$job\"} - 0",
+          "format": "table",
+          "hide": false,
+          "instant": true,
+          "interval": "",
+          "legendFormat": "TIME_WAIT",
+          "refId": "N"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P0D6E4079E36703EB"
+          },
+          "editorMode": "code",
+          "expr": "max(rate(node_network_receive_bytes_total{job=~\"$job\"}[$__interval])*8) by (instance)",
+          "format": "table",
+          "hide": false,
+          "instant": true,
+          "interval": "",
+          "legendFormat": "__auto",
+          "refId": "J"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P0D6E4079E36703EB"
+          },
+          "editorMode": "code",
+          "expr": "max(rate(node_network_transmit_bytes_total{job=~\"$job\"}[$__interval])*8) by (instance)",
+          "format": "table",
+          "hide": false,
+          "instant": true,
+          "interval": "",
+          "legendFormat": "__auto",
+          "refId": "K"
+        }
+      ],
+      "title": "Infra Node Overview [Job: $namaspace, Total: $total]",
+      "transformations": [
+        {
+          "id": "merge",
+          "options": {
+            "reducers": []
+          }
+        },
+        {
+          "id": "filterFieldsByName",
+          "options": {
+            "include": {
+              "names": [
+                "instance",
+                "nodename",
+                "Value #D",
+                "Value #B",
+                "Value #C",
+                "Value #L",
+                "Value #F",
+                "Value #G",
+                "Value #E",
+                "Value #H",
+                "Value #I",
+                "Value #M",
+                "Value #N",
+                "Value #J",
+                "Value #K"
+              ]
+            }
+          }
+        },
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {},
+            "indexByName": {
+              "Value #B": 3,
+              "Value #C": 4,
+              "Value #D": 2,
+              "Value #E": 8,
+              "Value #F": 6,
+              "Value #G": 7,
+              "Value #H": 9,
+              "Value #I": 10,
+              "Value #J": 13,
+              "Value #K": 14,
+              "Value #L": 5,
+              "Value #M": 11,
+              "Value #N": 12,
+              "instance": 1,
+              "nodename": 0
+            },
+            "renameByName": {}
+          }
+        }
+      ],
+      "type": "table"
+    },
+    {
+      "aliasColors": {
+        "192.168.200.241:9100_Total": "dark-red",
+        "Idle - Waiting for something to happen": "#052B51",
+        "guest": "#9AC48A",
+        "idle": "#052B51",
+        "iowait": "#EAB839",
+        "irq": "#BF1B00",
+        "nice": "#C15C17",
+        "sdb_每秒I/O操作%": "#d683ce",
+        "softirq": "#E24D42",
+        "steal": "#FCE2DE",
+        "system": "#508642",
+        "user": "#5195CE",
+        "磁盘花费在I/O操作占比": "#ba43a9"
+      },
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": {
+        "type": "prometheus",
+        "uid": "P0D6E4079E36703EB"
+      },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "links": []
+        },
+        "overrides": []
+      },
+      "fill": 0,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 7,
+        "w": 8,
+        "x": 0,
+        "y": 21
+      },
+      "hiddenSeries": false,
+      "id": 12,
+      "legend": {
+        "alignAsTable": false,
+        "avg": false,
+        "current": true,
+        "hideEmpty": true,
+        "hideZero": true,
+        "max": false,
+        "min": false,
+        "rightSide": false,
+        "show": true,
+        "sort": "current",
+        "sortDesc": true,
+        "total": false,
+        "values": true
+      },
+      "lines": true,
+      "linewidth": 2,
+      "links": [],
+      "maxPerRow": 6,
+      "nullPointMode": "null",
+      "options": {
+        "alertThreshold": true
+      },
+      "percentage": false,
+      "pluginVersion": "8.5.13",
+      "pointradius": 5,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [
+        {
+          "$$hashKey": "object:2312",
+          "alias": "Overall average used%",
+          "lines": false,
+          "pointradius": 1,
+          "points": true,
+          "yaxis": 2
+        },
+        {
+          "$$hashKey": "object:2313",
+          "alias": "CPU Cores",
+          "color": "#C4162A"
+        }
+      ],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P0D6E4079E36703EB"
+          },
+          "expr": "count(node_cpu_seconds_total{job=~\"$job\", mode='system'})",
+          "format": "time_series",
+          "hide": false,
+          "instant": false,
+          "interval": "30m",
+          "intervalFactor": 1,
+          "legendFormat": "CPU Cores",
+          "refId": "B",
+          "step": 240
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P0D6E4079E36703EB"
+          },
+          "expr": "sum(node_load5{job=~\"$job\"})",
+          "format": "time_series",
+          "hide": false,
+          "interval": "30m",
+          "intervalFactor": 1,
+          "legendFormat": "Total 5m load",
+          "refId": "A",
+          "step": 240
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P0D6E4079E36703EB"
+          },
+          "editorMode": "code",
+          "exemplar": false,
+          "expr": "avg(1 - avg(rate(node_cpu_seconds_total{job=~\"$job\",mode=\"idle\"}[$__interval])) by (instance)) * 100",
+          "format": "time_series",
+          "hide": false,
+          "instant": false,
+          "interval": "30m",
+          "intervalFactor": 1,
+          "legendFormat": "Overall average used%",
+          "range": true,
+          "refId": "F",
+          "step": 240
+        }
+      ],
+      "thresholds": [],
+      "timeRegions": [],
+      "title": "$job：Overall total 5m load & average CPU used%",
+      "tooltip": {
+        "shared": true,
+        "sort": 2,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "mode": "time",
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "$$hashKey": "object:8791",
+          "format": "short",
+          "label": "Total 5m load",
+          "logBase": 1,
+          "show": true
+        },
+        {
+          "$$hashKey": "object:8792",
+          "decimals": 0,
+          "format": "percent",
+          "label": "Overall average used%",
+          "logBase": 1,
+          "show": true
+        }
+      ],
+      "yaxis": {
+        "align": false
+      }
+    },
+    {
+      "aliasColors": {
+        "192.168.200.241:9100_总内存": "dark-red",
+        "内存_Avaliable": "#6ED0E0",
+        "内存_Cached": "#EF843C",
+        "内存_Free": "#629E51",
+        "内存_Total": "#6d1f62",
+        "内存_Used": "#eab839",
+        "可用": "#9ac48a",
+        "总内存": "#bf1b00"
+      },
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": {
+        "type": "prometheus",
+        "uid": "P0D6E4079E36703EB"
+      },
+      "decimals": 1,
+      "fieldConfig": {
+        "defaults": {
+          "links": []
+        },
+        "overrides": []
+      },
+      "fill": 0,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 7,
+        "w": 8,
+        "x": 8,
+        "y": 21
+      },
+      "height": "300",
+      "hiddenSeries": false,
+      "id": 14,
+      "legend": {
+        "alignAsTable": false,
+        "avg": false,
+        "current": true,
+        "max": false,
+        "min": false,
+        "rightSide": false,
+        "show": true,
+        "sort": "current",
+        "sortDesc": false,
+        "total": false,
+        "values": true
+      },
+      "lines": true,
+      "linewidth": 2,
+      "links": [],
+      "nullPointMode": "null",
+      "options": {
+        "alertThreshold": true
+      },
+      "percentage": false,
+      "pluginVersion": "8.5.13",
+      "pointradius": 5,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [
+        {
+          "$$hashKey": "object:2494",
+          "alias": "Total",
+          "color": "#C4162A",
+          "fill": 0
+        },
+        {
+          "$$hashKey": "object:2495",
+          "alias": "Overall Average Used%",
+          "lines": false,
+          "pointradius": 1,
+          "points": true,
+          "yaxis": 2
+        }
+      ],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P0D6E4079E36703EB"
+          },
+          "expr": "sum(node_memory_MemTotal_bytes{job=~\"$job\"})",
+          "format": "time_series",
+          "hide": false,
+          "instant": false,
+          "interval": "30m",
+          "intervalFactor": 1,
+          "legendFormat": "Total",
+          "refId": "A",
+          "step": 4
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P0D6E4079E36703EB"
+          },
+          "expr": "sum(node_memory_MemTotal_bytes{job=~\"$job\"} - node_memory_MemAvailable_bytes{job=~\"$job\"})",
+          "format": "time_series",
+          "hide": false,
+          "interval": "30m",
+          "intervalFactor": 1,
+          "legendFormat": "Total Used",
+          "refId": "B",
+          "step": 4
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P0D6E4079E36703EB"
+          },
+          "expr": "(sum(node_memory_MemTotal_bytes{job=~\"$job\"} - node_memory_MemAvailable_bytes{job=~\"$job\"}) / sum(node_memory_MemTotal_bytes{job=~\"$job\"}))*100",
+          "format": "time_series",
+          "hide": false,
+          "interval": "30m",
+          "intervalFactor": 1,
+          "legendFormat": "Overall Average Used%",
+          "refId": "H"
+        }
+      ],
+      "thresholds": [],
+      "timeRegions": [],
+      "title": "$job：Overall total memory & average memory used%",
+      "tooltip": {
+        "shared": true,
+        "sort": 2,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "mode": "time",
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "$$hashKey": "object:8938",
+          "format": "bytes",
+          "label": "Total",
+          "logBase": 1,
+          "min": "0",
+          "show": true
+        },
+        {
+          "$$hashKey": "object:8939",
+          "format": "percent",
+          "label": "Overall Average Used%",
+          "logBase": 1,
+          "show": true
+        }
+      ],
+      "yaxis": {
+        "align": false
+      }
+    },
+    {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": {
+        "type": "prometheus",
+        "uid": "P0D6E4079E36703EB"
+      },
+      "decimals": 1,
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "links": []
+        },
+        "overrides": []
+      },
+      "fill": 0,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 7,
+        "w": 8,
+        "x": 16,
+        "y": 21
+      },
+      "hiddenSeries": false,
+      "id": 16,
+      "legend": {
+        "alignAsTable": false,
+        "avg": false,
+        "current": true,
+        "hideEmpty": false,
+        "hideZero": false,
+        "max": false,
+        "min": false,
+        "rightSide": false,
+        "show": true,
+        "sort": "current",
+        "sortDesc": true,
+        "total": false,
+        "values": true
+      },
+      "lines": true,
+      "linewidth": 2,
+      "links": [],
+      "nullPointMode": "null",
+      "options": {
+        "alertThreshold": true
+      },
+      "percentage": false,
+      "pluginVersion": "8.5.13",
+      "pointradius": 5,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [
+        {
+          "$$hashKey": "object:2617",
+          "alias": "Overall Average Used%",
+          "lines": false,
+          "pointradius": 1,
+          "points": true,
+          "yaxis": 2
+        },
+        {
+          "$$hashKey": "object:2618",
+          "alias": "Total",
+          "color": "#C4162A"
+        }
+      ],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P0D6E4079E36703EB"
+          },
+          "expr": "sum(avg(node_filesystem_size_bytes{job=~\"$job\",fstype=~\"xfs|ext.*\"})by(device,instance))",
+          "format": "time_series",
+          "instant": false,
+          "interval": "30m",
+          "intervalFactor": 1,
+          "legendFormat": "Total",
+          "refId": "E"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P0D6E4079E36703EB"
+          },
+          "expr": "sum(avg(node_filesystem_size_bytes{job=~\"$job\",fstype=~\"xfs|ext.*\"})by(device,instance)) - sum(avg(node_filesystem_free_bytes{job=~\"$job\",fstype=~\"xfs|ext.*\"})by(device,instance))",
+          "format": "time_series",
+          "instant": false,
+          "interval": "30m",
+          "intervalFactor": 1,
+          "legendFormat": "Total Used",
+          "refId": "C"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P0D6E4079E36703EB"
+          },
+          "expr": "(sum(avg(node_filesystem_size_bytes{job=~\"$job\",fstype=~\"xfs|ext.*\"})by(device,instance)) - sum(avg(node_filesystem_free_bytes{job=~\"$job\",fstype=~\"xfs|ext.*\"})by(device,instance))) *100/(sum(avg(node_filesystem_avail_bytes{job=~\"$job\",fstype=~\"xfs|ext.*\"})by(device,instance))+(sum(avg(node_filesystem_size_bytes{job=~\"$job\",fstype=~\"xfs|ext.*\"})by(device,instance)) - sum(avg(node_filesystem_free_bytes{job=~\"$job\",fstype=~\"xfs|ext.*\"})by(device,instance))))",
+          "format": "time_series",
+          "instant": false,
+          "interval": "30m",
+          "intervalFactor": 1,
+          "legendFormat": "Overall Average Used%",
+          "refId": "A"
+        }
+      ],
+      "thresholds": [],
+      "timeRegions": [],
+      "title": "$job：Overall total disk & average disk used%",
+      "tooltip": {
+        "shared": true,
+        "sort": 2,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "mode": "time",
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "$$hashKey": "object:8990",
+          "decimals": 1,
+          "format": "bytes",
+          "label": "Total",
+          "logBase": 1,
+          "min": "0",
+          "show": true
+        },
+        {
+          "$$hashKey": "object:8991",
+          "format": "percent",
+          "label": "Overall Average Used%",
+          "logBase": 1,
+          "show": true
+        }
+      ],
+      "yaxis": {
+        "align": false
+      }
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "P0D6E4079E36703EB"
+      },
+      "description": "Note that this table shows the average values for the entire period selected in the dashboard. Consequently, it may contain information about Pods or namespaces that were changed or deleted during the selected period.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "align": "auto",
+            "displayMode": "auto",
+            "filterable": false,
+            "inspect": false,
+            "minWidth": 70
+          },
+          "decimals": 2,
+          "displayName": "",
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "controller"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "short"
+              },
+              {
+                "id": "decimals",
+                "value": 2
+              },
+              {
+                "id": "custom.align",
+                "value": "auto"
+              },
+              {
+                "id": "displayName",
+                "value": "Controller"
+              },
+              {
+                "id": "custom.width"
+              },
+              {
+                "id": "links",
+                "value": [
+                  {
+                    "targetBlank": true,
+                    "title": "Controller Details",
+                    "url": "/d/IRPuf4ymk1/controller?var-ds_prometheus=${ds_prometheus}&var-namespace=${namespace}&var-controller=${__value.raw}&${__url_time_range}"
+                  }
+                ]
+              },
+              {
+                "id": "custom.minWidth",
+                "value": 70
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Value #B"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "VPA Mode"
+              },
+              {
+                "id": "unit",
+                "value": "short"
+              },
+              {
+                "id": "decimals",
+                "value": 2
+              },
+              {
+                "id": "custom.align"
+              },
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "options": {
+                      "0": {
+                        "text": "Off"
+                      },
+                      "1": {
+                        "text": "Initial"
+                      },
+                      "2": {
+                        "text": "Auto"
+                      },
+                      "3": {
+                        "text": "Recreate"
+                      },
+                      "5": {
+                        "text": "-"
+                      }
+                    },
+                    "type": "value"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Value #C"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "CPU"
+              },
+              {
+                "id": "unit",
+                "value": "short"
+              },
+              {
+                "id": "decimals",
+                "value": 3
+              },
+              {
+                "id": "custom.align"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Value #D"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Req CPU"
+              },
+              {
+                "id": "unit",
+                "value": "short"
+              },
+              {
+                "id": "decimals",
+                "value": 2
+              },
+              {
+                "id": "custom.align"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Value #E"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "VPA CPU"
+              },
+              {
+                "id": "unit",
+                "value": "short"
+              },
+              {
+                "id": "decimals",
+                "value": 2
+              },
+              {
+                "id": "custom.align"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Value #F"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Over-req CPU"
+              },
+              {
+                "id": "unit",
+                "value": "short"
+              },
+              {
+                "id": "decimals",
+                "value": 2
+              },
+              {
+                "id": "custom.align"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Value #G"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Under-req CPU"
+              },
+              {
+                "id": "unit",
+                "value": "short"
+              },
+              {
+                "id": "decimals",
+                "value": 2
+              },
+              {
+                "id": "custom.align"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Value #H"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Throttling cores"
+              },
+              {
+                "id": "unit",
+                "value": "short"
+              },
+              {
+                "id": "decimals",
+                "value": 2
+              },
+              {
+                "id": "custom.align"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Value #I"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Memory"
+              },
+              {
+                "id": "unit",
+                "value": "bytes"
+              },
+              {
+                "id": "decimals",
+                "value": 2
+              },
+              {
+                "id": "custom.align"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Value #J"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Req Memory"
+              },
+              {
+                "id": "unit",
+                "value": "bytes"
+              },
+              {
+                "id": "decimals",
+                "value": 2
+              },
+              {
+                "id": "custom.align"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Value #K"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "VPA Memory"
+              },
+              {
+                "id": "unit",
+                "value": "bytes"
+              },
+              {
+                "id": "decimals",
+                "value": 2
+              },
+              {
+                "id": "custom.align"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Value #L"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Over-req Memory"
+              },
+              {
+                "id": "unit",
+                "value": "bytes"
+              },
+              {
+                "id": "decimals",
+                "value": 2
+              },
+              {
+                "id": "custom.align"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Value #M"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Under-req Memory"
+              },
+              {
+                "id": "unit",
+                "value": "bytes"
+              },
+              {
+                "id": "decimals",
+                "value": 2
+              },
+              {
+                "id": "custom.align"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Value #N"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "RX Network"
+              },
+              {
+                "id": "unit",
+                "value": "Bps"
+              },
+              {
+                "id": "decimals",
+                "value": 2
+              },
+              {
+                "id": "custom.align"
+              },
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "options": {
+                      "-1": {
+                        "index": 0,
+                        "text": "hostNet"
+                      }
+                    },
+                    "type": "value"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Value #O"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "TX Network"
+              },
+              {
+                "id": "unit",
+                "value": "Bps"
+              },
+              {
+                "id": "decimals",
+                "value": 2
+              },
+              {
+                "id": "custom.align"
+              },
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "options": {
+                      "-1": {
+                        "index": 0,
+                        "text": "hostNet"
+                      }
+                    },
+                    "type": "value"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Value #P"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Read IOPS"
+              },
+              {
+                "id": "unit",
+                "value": "iops"
+              },
+              {
+                "id": "decimals",
+                "value": 2
+              },
+              {
+                "id": "custom.align"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Value #Q"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Write IOPS"
+              },
+              {
+                "id": "unit",
+                "value": "short"
+              },
+              {
+                "id": "decimals",
+                "value": 2
+              },
+              {
+                "id": "custom.align"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Value #R"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Total replicas count"
+              },
+              {
+                "id": "unit",
+                "value": "short"
+              },
+              {
+                "id": "custom.align"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Value #S"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Not ready replicas"
+              },
+              {
+                "id": "unit",
+                "value": "short"
+              },
+              {
+                "id": "custom.align"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Value #T"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Pod Restarts"
+              },
+              {
+                "id": "unit",
+                "value": "short"
+              },
+              {
+                "id": "custom.align"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Controller"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 230
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 24,
+        "x": 0,
+        "y": 28
+      },
+      "id": 10,
+      "links": [],
+      "maxPerRow": 6,
+      "options": {
+        "footer": {
+          "fields": "",
+          "reducer": [
+            "sum"
+          ],
+          "show": false
+        },
+        "showHeader": true,
+        "sortBy": []
+      },
+      "pluginVersion": "8.5.13",
+      "repeatDirection": "h",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P0D6E4079E36703EB"
+          },
+          "expr": "max by (job, namespace, controller, controller_name) (avg_over_time(kube_controller_pod{ namespace=\"$namespace\", controller_type=~\"$controller_type\", controller=~\"$controller\"}[$__range]))",
+          "format": "table",
+          "hide": false,
+          "instant": true,
+          "interval": "",
+          "intervalFactor": 1,
+          "legendFormat": "Controller",
+          "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P0D6E4079E36703EB"
+          },
+          "expr": "sum by (controller) (avg_over_time(kube_controller_pod{namespace=\"$namespace\", controller_type=~\"$controller_type\", controller=~\"$controller\"}[$__range]) * on (controller_type, controller_name) group_left() sum by (controller_type, controller_name) (avg_over_time(vpa_target_recommendation{namespace=\"$namespace\", update_mode=\"Off\"}[$__range]))) * 0\nor\nsum by (controller) (avg_over_time(kube_controller_pod{namespace=\"$namespace\", controller_type=~\"$controller_type\", controller=~\"$controller\"}[$__range]) * on (controller_type, controller_name) group_left() sum by (controller_type, controller_name) (avg_over_time(vpa_target_recommendation{namespace=\"$namespace\", update_mode=\"Initial\"}[$__range]))) * 0 + 1\nor\nsum by (controller) (avg_over_time(kube_controller_pod{ namespace=\"$namespace\", controller_type=~\"$controller_type\", controller=~\"$controller\"}[$__range]) * on (controller_type, controller_name) group_left() sum by (controller_type, controller_name) (avg_over_time(vpa_target_recommendation{namespace=\"$namespace\", update_mode=\"Auto\"}[$__range]))) * 0 + 2\nor\nsum by (controller) (avg_over_time(kube_controller_pod{namespace=\"$namespace\", controller_type=~\"$controller_type\", controller=~\"$controller\"}[$__range]) * on (controller_type, controller_name) group_left() sum by (controller_type, controller_name) (avg_over_time(vpa_target_recommendation{namespace=\"$namespace\", update_mode=\"Recreate\"}[$__range]))) * 0 + 3\nor\nsum by (controller) (avg_over_time(kube_controller_pod{namespace=\"$namespace\", controller_type=~\"$controller_type\", controller=~\"$controller\"}[$__range])) * 0 + 5",
+          "format": "table",
+          "hide": false,
+          "instant": true,
+          "intervalFactor": 1,
+          "legendFormat": "VPA Mode",
+          "refId": "B"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P0D6E4079E36703EB"
+          },
+          "expr": "sum by (controller) (avg_over_time(kube_controller_pod{namespace=\"$namespace\", controller_type=~\"$controller_type\", controller=~\"$controller\"}[$__range]) * on (pod) group_left() sum by (pod) (rate(container_cpu_usage_seconds_total{namespace=\"$namespace\", container!=\"POD\"}[$__range])))\nor\ncount (avg_over_time(kube_controller_pod{namespace=\"$namespace\", controller_type=~\"$controller_type\", controller=~\"$controller\"}[$__range])) by (controller) * 0",
+          "format": "table",
+          "instant": true,
+          "intervalFactor": 1,
+          "legendFormat": "CPU",
+          "refId": "C"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P0D6E4079E36703EB"
+          },
+          "expr": "sum by (controller)\n  (\n    avg_over_time(kube_controller_pod{namespace=\"$namespace\", controller_type=~\"$controller_type\", controller=~\"$controller\"}[$__range])\n    * on (pod) group_left()\n    sum by (pod) (avg_over_time(kube_pod_container_resource_requests{resource=\"cpu\",unit=\"core\",namespace=\"$namespace\"}[$__range]))\n  )\nor\ncount (avg_over_time(kube_controller_pod{namespace=\"$namespace\", controller_type=~\"$controller_type\", controller=~\"$controller\"}[$__range])) by (controller) * 0",
+          "format": "table",
+          "instant": true,
+          "intervalFactor": 1,
+          "legendFormat": "Req CPU",
+          "refId": "D"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P0D6E4079E36703EB"
+          },
+          "expr": "sum by (controller)\n  (\n    avg_over_time(kube_controller_pod{namespace=\"$namespace\", controller_type=~\"$controller_type\", controller=~\"$controller\"}[$__range])\n    * on (controller_type, controller_name) group_left()\n    sum by(controller_type, controller_name) (avg_over_time(vpa_target_recommendation{container!=\"POD\",namespace=\"$namespace\", resource=\"cpu\"}[$__range]))\n  ) \nor\ncount (avg_over_time(kube_controller_pod{namespace=\"$namespace\", controller_type=~\"$controller_type\", controller=~\"$controller\"}[$__range])) by (controller) * 0",
+          "format": "table",
+          "instant": true,
+          "intervalFactor": 1,
+          "legendFormat": "VPA CPU",
+          "refId": "E"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P0D6E4079E36703EB"
+          },
+          "expr": "sum by (controller)\n  (\n    avg_over_time(kube_controller_pod{namespace=\"$namespace\", controller_type=~\"$controller_type\", controller=~\"$controller\"}[$__range])\n    * on (namespace, pod) group_left()\n    sum by (namespace, pod)\n      (\n        (\n          sum by(namespace, pod, container) (avg_over_time(kube_pod_container_resource_requests{resource=\"cpu\",unit=\"core\",namespace=\"$namespace\"}[$__range]))\n          -\n          sum by(namespace, pod, container) (rate(container_cpu_usage_seconds_total{container!=\"POD\", namespace=\"$namespace\"}[$__range]))\n        ) > 0\n      )\n  )\nor\ncount (avg_over_time(kube_controller_pod{namespace=\"$namespace\", controller_type=~\"$controller_type\", controller=~\"$controller\"}[$__range])) by (controller) * 0",
+          "format": "table",
+          "instant": true,
+          "intervalFactor": 1,
+          "legendFormat": "Over-req CPU",
+          "refId": "F"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P0D6E4079E36703EB"
+          },
+          "expr": "sum by (controller)\n  (\n    avg_over_time(kube_controller_pod{namespace=\"$namespace\", controller_type=~\"$controller_type\", controller=~\"$controller\"}[$__range])\n    * on (namespace, pod) group_left()\n    sum by (namespace, pod)\n      (\n        (\n          (\n            sum by(namespace, pod, container) (rate(container_cpu_usage_seconds_total{namespace=\"$namespace\"}[$__range]))\n            -\n            sum by(namespace, pod, container) (avg_over_time(kube_pod_container_resource_requests{resource=\"cpu\",unit=\"core\",container!=\"POD\", namespace=\"$namespace\"}[$__range]))\n          ) or sum by(namespace, pod, container) (rate(container_cpu_usage_seconds_total{container!=\"POD\", namespace=\"$namespace\"}[$__range]))\n        ) > 0\n      )\n  )\nor\ncount (avg_over_time(kube_controller_pod{namespace=\"$namespace\", controller_type=~\"$controller_type\", controller=~\"$controller\"}[$__range])) by (controller) * 0",
+          "format": "table",
+          "instant": true,
+          "intervalFactor": 1,
+          "legendFormat": "Under-req CPU",
+          "refId": "G"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P0D6E4079E36703EB"
+          },
+          "expr": "sum by (controller) (avg_over_time(kube_controller_pod{namespace=\"$namespace\", controller_type=~\"$controller_type\", controller=~\"$controller\"}[$__range]) * on (pod) group_left() ((sum by (pod) (rate(container_cpu_cfs_throttled_periods_total{namespace=\"$namespace\"}[$__range])) / sum by (pod) (rate(container_cpu_cfs_periods_total{namespace=\"$namespace\"}[$__range]))) * sum by (pod) (rate(kube_pod_container_resource_limits{resource=\"cpu\",unit=\"core\",namespace=\"$namespace\"}[$__range]))))\nor\ncount (avg_over_time(kube_controller_pod{namespace=\"$namespace\", controller_type=~\"$controller_type\", controller=~\"$controller\"}[$__range])) by (controller) * 0",
+          "format": "table",
+          "instant": true,
+          "intervalFactor": 1,
+          "legendFormat": "Throttling cores",
+          "refId": "H"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P0D6E4079E36703EB"
+          },
+          "expr": "sum by (controller) (avg_over_time(kube_controller_pod{namespace=\"$namespace\", controller_type=~\"$controller_type\", controller=~\"$controller\"}[$__range]) * on (pod) group_left() sum by (pod) (avg_over_time(container_memory_working_set_bytes:without_kmem{namespace=\"$namespace\", container!=\"POD\"}[$__range])))\nor\ncount (avg_over_time(kube_controller_pod{namespace=\"$namespace\", controller_type=~\"$controller_type\", controller=~\"$controller\"}[$__range])) by (controller) * 0",
+          "format": "table",
+          "instant": true,
+          "intervalFactor": 1,
+          "legendFormat": "Memory",
+          "refId": "I"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P0D6E4079E36703EB"
+          },
+          "expr": "sum by (controller)\n  (\n    avg_over_time(kube_controller_pod{namespace=\"$namespace\", controller_type=~\"$controller_type\", controller=~\"$controller\"}[$__range])\n    * on (pod) group_left()\n    sum by (namespace, pod)\n      (\n        avg_over_time(kube_pod_container_resource_requests{resource=\"memory\",unit=\"byte\",namespace=\"$namespace\", container!=\"POD\"}[$__range])\n      )\n    )\n  or\n  count (avg_over_time(kube_controller_pod{namespace=\"$namespace\", controller_type=~\"$controller_type\", controller=~\"$controller\"}[$__range])) by (controller) * 0",
+          "format": "table",
+          "instant": true,
+          "intervalFactor": 1,
+          "legendFormat": "Req Memory",
+          "refId": "J"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P0D6E4079E36703EB"
+          },
+          "expr": "sum by (controller)\n  (\n    avg_over_time(kube_controller_pod{namespace=\"$namespace\", controller_type=~\"$controller_type\", controller=~\"$controller\"}[$__range])\n    * on (controller_type, controller_name) group_left()\n    sum by(controller_type, controller_name) (avg_over_time(vpa_target_recommendation{container!=\"POD\",namespace=\"$namespace\", resource=\"memory\"}[$__range]))\n  ) \n  or  \ncount (avg_over_time(kube_controller_pod{namespace=\"$namespace\", controller_type=~\"$controller_type\", controller=~\"$controller\"}[$__range])) by (controller) * 0",
+          "format": "table",
+          "instant": true,
+          "intervalFactor": 1,
+          "legendFormat": "VPA Memory",
+          "refId": "K"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P0D6E4079E36703EB"
+          },
+          "expr": "sum by (controller)\n  (\n    avg_over_time(kube_controller_pod{namespace=\"$namespace\", controller_type=~\"$controller_type\", controller=~\"$controller\"}[$__range])\n    * on (namespace, pod) group_left()\n    sum by (namespace, pod)\n      (\n        (\n          sum by(namespace, pod, container) (avg_over_time(kube_pod_container_resource_requests{resource=\"memory\",unit=\"byte\",namespace=\"$namespace\"}[$__range]))\n          -\n          sum by(namespace, pod, container) (avg_over_time(container_memory_working_set_bytes:without_kmem{container!=\"POD\", namespace=\"$namespace\"}[$__range]))\n        ) > 0\n      )\n  )\nor\ncount (avg_over_time(kube_controller_pod{namespace=\"$namespace\", controller_type=~\"$controller_type\", controller=~\"$controller\"}[$__range])) by (controller) * 0",
+          "format": "table",
+          "instant": true,
+          "intervalFactor": 1,
+          "legendFormat": "Over-req Memory",
+          "refId": "L"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P0D6E4079E36703EB"
+          },
+          "expr": "sum by (controller)\n  (\n    avg_over_time(kube_controller_pod{namespace=\"$namespace\", controller_type=~\"$controller_type\", controller=~\"$controller\"}[$__range])\n    * on (namespace, pod) group_left()\n    sum by (namespace, pod)\n      (\n        (\n          (\n            sum by(namespace, pod, container) (avg_over_time(container_memory_working_set_bytes:without_kmem{namespace=\"$namespace\"}[$__range]))\n            -\n            sum by(namespace, pod, container) (avg_over_time(kube_pod_container_resource_requests{resource=\"memory\",unit=\"byte\",container!=\"POD\", namespace=\"$namespace\"}[$__range]))\n          ) or sum by(namespace, pod, container) (avg_over_time(container_memory_working_set_bytes:without_kmem{container!=\"POD\", namespace=\"$namespace\"}[$__range]))\n        ) > 0\n      )\n  )\nor\ncount (avg_over_time(kube_controller_pod{namespace=\"$namespace\", controller_type=~\"$controller_type\", controller=~\"$controller\"}[$__range])) by (controller) * 0",
+          "format": "table",
+          "instant": true,
+          "intervalFactor": 1,
+          "legendFormat": "Under-req Memory",
+          "refId": "M"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P0D6E4079E36703EB"
+          },
+          "expr": "sum by(controller) (  # Data rate of the controller is a sum of data rates from its Pods.\n  kube_controller_pod{namespace=\"$namespace\", controller_type=~\"$controller_type\", controller=~\"$controller\"} \n  * on(pod)\n  group_left() # Do not drop controller label from kube_controller_pod.\n  sum by(pod)  # Use sum if there are multiple interaces in the Pod.\n  (\n    rate(container_network_receive_bytes_total{namespace=\"$namespace\"}[$__range])\n    *   # Select only Pods with 'hostNetwork: false', because receive_bytes values are meaningful only for Pods with hostNetwork: false.\n    on(pod)\n    kube_pod_info{host_network=\"false\", namespace=\"$namespace\"}\n  )\n)\nor # Return -1 value for Pods with 'hostNetwork: true' to rewrite by value mapping.\n# Use max to get one '-1' per controller\n(max by(controller) (\n  kube_controller_pod{namespace=\"$namespace\", controller_type=~\"$controller_type\", controller=~\"$controller\"}\n  * on(pod)\n  group_left() # Do not drop controller label from kube_controller_pod.\n  (kube_pod_info{host_network=\"true\", namespace=\"$namespace\"})\n) * -1)",
+          "format": "table",
+          "instant": true,
+          "intervalFactor": 1,
+          "legendFormat": "RX Network",
+          "refId": "N"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P0D6E4079E36703EB"
+          },
+          "expr": "sum by(controller) (  # Data rate of the controller is a sum of data rates from its Pods.\n  kube_controller_pod{namespace=\"$namespace\", controller_type=~\"$controller_type\", controller=~\"$controller\"} \n  * on(pod)\n  group_left() # Do not drop controller label from kube_controller_pod.\n  sum by(pod)  # Use sum if there are multiple interaces in the Pod.\n  (\n    rate(container_network_transmit_bytes_total{namespace=\"$namespace\"}[$__range])\n    *   # Select only Pods with 'hostNetwork: false', because receive_bytes values are meaningful only for Pods with hostNetwork: false.\n    on(pod)\n    kube_pod_info{host_network=\"false\", namespace=\"$namespace\"}\n  )\n)\nor # Return -1 value for Pods with 'hostNetwork: true' to rewrite by value mapping.\n# Use max to get one '-1' per controller\n(max by(controller) (\n  kube_controller_pod{namespace=\"$namespace\", controller_type=~\"$controller_type\", controller=~\"$controller\"}\n  * on(pod)\n  group_left() # Do not drop controller label from kube_controller_pod.\n  (kube_pod_info{host_network=\"true\", namespace=\"$namespace\"})\n) * -1)",
+          "format": "table",
+          "instant": true,
+          "intervalFactor": 1,
+          "legendFormat": "TX Network",
+          "refId": "O"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P0D6E4079E36703EB"
+          },
+          "expr": "sum by (controller) (avg_over_time(kube_controller_pod{namespace=\"$namespace\", controller_type=~\"$controller_type\", controller=~\"$controller\"}[$__range]) * on (pod) group_left() sum by (pod) (rate(container_fs_reads_total{container!=\"POD\", namespace=\"$namespace\"}[$__range])))\nor\ncount (avg_over_time(kube_controller_pod{namespace=\"$namespace\", controller_type=~\"$controller_type\", controller=~\"$controller\"}[$__range])) by (controller) * 0",
+          "format": "table",
+          "instant": true,
+          "intervalFactor": 1,
+          "legendFormat": "Read IOPS",
+          "refId": "P"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P0D6E4079E36703EB"
+          },
+          "expr": "sum by (controller) (avg_over_time(kube_controller_pod{namespace=\"$namespace\", controller_type=~\"$controller_type\", controller=~\"$controller\"}[$__range]) * on (pod) group_left() sum by (pod) (rate(container_fs_writes_total{container!=\"POD\", namespace=\"$namespace\"}[$__range])))\nor\ncount (avg_over_time(kube_controller_pod{namespace=\"$namespace\", controller_type=~\"$controller_type\", controller=~\"$controller\"}[$__range])) by (controller) * 0",
+          "format": "table",
+          "instant": true,
+          "intervalFactor": 1,
+          "legendFormat": "Write IOPS",
+          "refId": "Q"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P0D6E4079E36703EB"
+          },
+          "expr": "max by (controller) (max by (namespace, controller_type, controller_name, controller) (avg_over_time(kube_controller_pod{namespace=\"$namespace\", controller_type=~\"$controller_type\", controller=~\"$controller\"}[$__range])) * on (namespace, controller_type, controller_name) group_left() max by (namespace, controller_type, controller_name) (avg_over_time(kube_controller_replicas{namespace=\"$namespace\"}[$__range])))\nor\ncount (avg_over_time(kube_controller_pod{namespace=\"$namespace\", controller_type=~\"$controller_type\", controller=~\"$controller\"}[$__range])) by (controller) * 0",
+          "format": "table",
+          "hide": false,
+          "instant": true,
+          "intervalFactor": 1,
+          "legendFormat": "Total replicas count",
+          "refId": "R"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P0D6E4079E36703EB"
+          },
+          "expr": "max by (job, namespace, controller_type, controller_name, controller) ((max by (job, namespace, controller_type, controller_name, controller) (avg_over_time(kube_controller_pod{namespace=\"$namespace\", controller_type=~\"$controller_type\", controller=~\"$controller\"}[$__range]))) *  on (job, namespace, controller_type, controller_name) group_right(controller)\n(avg_over_time(kube_controller_replicas[$__range]) - avg_over_time(kube_controller_replicas_ready[$__range])))\nor\nmax by (job, namespace, controller_type, controller_name, controller) (avg_over_time(kube_controller_pod{namespace=\"$namespace\", controller_type=~\"$controller_type\", controller=~\"$controller\"}[$__range])) * 0",
+          "format": "table",
+          "hide": false,
+          "instant": true,
+          "intervalFactor": 1,
+          "legendFormat": "Not ready replicas",
+          "refId": "S"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P0D6E4079E36703EB"
+          },
+          "expr": "sum by (controller) \n  (\n    avg_over_time(kube_controller_pod{namespace=\"$namespace\", controller_type=~\"$controller_type\", controller=~\"$controller\"}[$__range])\n    * on (pod) group_left()\n    sum by (pod) (increase(kube_pod_container_status_restarts_total{namespace=\"$namespace\"}[$__range]))\n  )\nor\ncount (avg_over_time(kube_controller_pod{namespace=\"$namespace\", controller_type=~\"$controller_type\", controller=~\"$controller\"}[$__range])) by (controller) * 0",
+          "format": "table",
+          "hide": false,
+          "instant": true,
+          "intervalFactor": 1,
+          "legendFormat": "Pod restart count",
+          "refId": "T"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P0D6E4079E36703EB"
+          },
+          "expr": "sum by (controller) (avg_over_time(kube_controller_pod{namespace=\"$namespace\", controller_type=~\"$controller_type\", controller=~\"$controller\"}[$__range]) * on (pod) group_left() sum by (pod) (avg_over_time(container_memory:kmem{namespace=\"$namespace\", container!=\"POD\"}[$__range])))\nor\ncount (avg_over_time(kube_controller_pod{namespace=\"$namespace\", controller_type=~\"$controller_type\", controller=~\"$controller\"}[$__range])) by (controller) * 0",
+          "format": "table",
+          "instant": true,
+          "intervalFactor": 1,
+          "legendFormat": "Memory",
+          "refId": "U"
+        }
+      ],
+      "title": "Controllers",
+      "transformations": [
+        {
+          "id": "merge",
+          "options": {}
+        },
+        {
+          "id": "filterFieldsByName",
+          "options": {
+            "include": {
+              "names": [
+                "controller",
+                "Value #B",
+                "Value #C",
+                "Value #D",
+                "Value #E",
+                "Value #F",
+                "Value #G",
+                "Value #H",
+                "Value #I",
+                "Value #J",
+                "Value #K",
+                "Value #L",
+                "Value #M",
+                "Value #N",
+                "Value #O",
+                "Value #P",
+                "Value #Q",
+                "Value #R",
+                "Value #S",
+                "Value #T"
+              ]
+            }
+          }
+        },
+        {
+          "id": "sortBy",
+          "options": {
+            "fields": {},
+            "sort": [
+              {
+                "field": "controller"
+              }
+            ]
+          }
+        }
+      ],
+      "type": "table"
+    }
+  ],
+  "schemaVersion": 36,
+  "style": "dark",
+  "tags": [],
+  "templating": {
+    "list": [
+      {
+        "current": {
+          "selected": true,
+          "text": "test",
+          "value": "test"
+        },
+        "description": "for postgresql and kafka",
+        "hide": 0,
+        "includeAll": false,
+        "label": "Infra stand name",
+        "multi": false,
+        "name": "stand",
+        "options": [
+          {
+            "selected": true,
+            "text": "test",
+            "value": "test"
+          },
+          {
+            "selected": false,
+            "text": "preprod",
+            "value": "preprod"
+          }
+        ],
+        "query": "test, preprod",
+        "queryValue": "",
+        "skipUrlSync": false,
+        "type": "custom"
+      },
+      {
+        "current": {
+          "selected": false,
+          "text": "DOMPG",
+          "value": "DOMPG"
+        },
+        "hide": 2,
+        "includeAll": false,
+        "multi": false,
+        "name": "PostgresqlProject",
+        "options": [
+          {
+            "selected": true,
+            "text": "DOMPG",
+            "value": "DOMPG"
+          }
+        ],
+        "query": "DOMPG",
+        "skipUrlSync": false,
+        "type": "custom"
+      },
+      {
+        "current": {
+          "selected": false,
+          "text": "ip-nc-test",
+          "value": "ip-nc-test"
+        },
+        "datasource": {
+          "type": "prometheus",
+          "uid": "P0D6E4079E36703EB"
+        },
+        "definition": "label_values(jvm_classes_loaded_classes, namespace)",
+        "hide": 0,
+        "includeAll": false,
+        "label": "Namespace k8s",
+        "multi": false,
+        "name": "namespace",
+        "options": [],
+        "query": {
+          "query": "label_values(jvm_classes_loaded_classes, namespace)",
+          "refId": "StandardVariableQuery"
+        },
+        "refresh": 1,
+        "regex": "/ip-nc-.*/",
+        "skipUrlSync": false,
+        "sort": 0,
+        "type": "query"
+      },
+      {
+        "current": {
+          "selected": true,
+          "text": [
+            "All"
+          ],
+          "value": [
+            "$__all"
+          ]
+        },
+        "datasource": {
+          "type": "prometheus",
+          "uid": "P0D6E4079E36703EB"
+        },
+        "definition": "label_values(node_uname_info{namespace=\"${namespace}\"},job)",
+        "hide": 0,
+        "includeAll": true,
+        "label": "Infra Service",
+        "multi": true,
+        "name": "job",
+        "options": [],
+        "query": {
+          "query": "label_values(node_uname_info{namespace=\"${namespace}\"},job)",
+          "refId": "StandardVariableQuery"
+        },
+        "refresh": 1,
+        "regex": "/custom-.*-/",
+        "skipUrlSync": false,
+        "sort": 0,
+        "type": "query"
+      },
+      {
+        "current": {
+          "selected": false,
+          "text": "10.80.39.180",
+          "value": "10.80.39.180"
+        },
+        "datasource": {
+          "type": "prometheus",
+          "uid": "P0D6E4079E36703EB"
+        },
+        "definition": "label_values(node_uname_info{job=~\"$job\"}, instance)",
+        "hide": 2,
+        "includeAll": false,
+        "multi": false,
+        "name": "node",
+        "options": [],
+        "query": {
+          "query": "label_values(node_uname_info{job=~\"$job\"}, instance)",
+          "refId": "StandardVariableQuery"
+        },
+        "refresh": 1,
+        "regex": "/([^:]+):.*/",
+        "skipUrlSync": false,
+        "sort": 0,
+        "type": "query"
+      },
+      {
+        "current": {
+          "selected": false,
+          "text": "9",
+          "value": "9"
+        },
+        "datasource": {
+          "type": "prometheus",
+          "uid": "P0D6E4079E36703EB"
+        },
+        "definition": "query_result(count(node_uname_info{job=~\"$job\"}))",
+        "hide": 2,
+        "includeAll": false,
+        "label": "total_servers",
+        "multi": false,
+        "name": "total",
+        "options": [],
+        "query": {
+          "query": "query_result(count(node_uname_info{job=~\"$job\"}))",
+          "refId": "StandardVariableQuery"
+        },
+        "refresh": 1,
+        "regex": "/{} (.*) .*/",
+        "skipUrlSync": false,
+        "sort": 0,
+        "type": "query"
+      },
+      {
+        "allValue": ".*",
+        "current": {
+          "selected": false,
+          "text": "Deployment",
+          "value": "Deployment"
+        },
+        "datasource": {
+          "type": "prometheus",
+          "uid": "P0D6E4079E36703EB"
+        },
+        "definition": "label_values(kube_controller_pod{namespace=~\"$namespace\"}, controller_type)",
+        "hide": 2,
+        "includeAll": false,
+        "label": "Controller Type",
+        "multi": false,
+        "name": "controller_type",
+        "options": [],
+        "query": {
+          "query": "label_values(kube_controller_pod{namespace=~\"$namespace\"}, controller_type)",
+          "refId": "StandardVariableQuery"
+        },
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
+        "type": "query"
+      },
+      {
+        "current": {
+          "selected": false,
+          "text": "deploy/procurement-scheme",
+          "value": "deploy/procurement-scheme"
+        },
+        "datasource": {
+          "type": "prometheus",
+          "uid": "P0D6E4079E36703EB"
+        },
+        "definition": "label_values(kube_controller_pod{namespace=~\"$namespace\"}, controller)",
+        "hide": 0,
+        "includeAll": false,
+        "label": "Controller",
+        "multi": false,
+        "name": "controller",
+        "options": [],
+        "query": {
+          "query": "label_values(kube_controller_pod{namespace=~\"$namespace\"}, controller)",
+          "refId": "StandardVariableQuery"
+        },
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
+        "type": "query"
+      }
+    ]
+  },
+  "time": {
+    "from": "now-1h",
+    "to": "now"
+  },
+  "timepicker": {},
+  "timezone": "",
+  "title": "NetworkConfigurations",
+  "uid": "NetworkConfigurations",
+  "version": 4,
+  "weekStart": ""
+}

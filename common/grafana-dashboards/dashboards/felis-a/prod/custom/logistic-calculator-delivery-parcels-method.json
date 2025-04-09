@@ -1,0 +1,2343 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": {
+          "type": "datasource",
+          "uid": "grafana"
+        },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "target": {
+          "limit": 100,
+          "matchAny": false,
+          "tags": [],
+          "type": "dashboard"
+        },
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "iteration": 1689235780620,
+  "links": [],
+  "liveNow": false,
+  "panels": [
+    {
+      "collapsed": false,
+      "datasource": {
+        "type": "prometheus",
+        "uid": "P0D6E4079E36703EB"
+      },
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "id": 67,
+      "panels": [],
+      "title": "Requests",
+      "type": "row"
+    },
+    {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": {
+        "type": "prometheus",
+        "uid": "P0D6E4079E36703EB"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "links": []
+        },
+        "overrides": []
+      },
+      "fill": 1,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 9,
+        "w": 24,
+        "x": 0,
+        "y": 1
+      },
+      "hiddenSeries": false,
+      "id": 63,
+      "legend": {
+        "avg": false,
+        "current": false,
+        "max": false,
+        "min": false,
+        "show": false,
+        "total": false,
+        "values": false
+      },
+      "lines": true,
+      "linewidth": 1,
+      "nullPointMode": "null as zero",
+      "options": {
+        "alertThreshold": true
+      },
+      "percentage": false,
+      "pluginVersion": "8.5.13",
+      "pointradius": 2,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "expr": "histogram_quantile(0.99, \n  sum(rate(grpc_server_handling_seconds_bucket{grpc_type=\"unary\", grpc_service=\"mp.operations.logisticcalculator.v1.CalculationService\", grpc_method=\"DeliveryParcels\", namespace=~\"$namespace\"}[10m])) by (le)\n)",
+          "interval": "",
+          "legendFormat": "",
+          "refId": "A"
+        }
+      ],
+      "thresholds": [],
+      "timeRegions": [],
+      "title": "99% percentile of handling time with 10m window",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "mode": "time",
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "format": "short",
+          "logBase": 1,
+          "show": true
+        },
+        {
+          "format": "short",
+          "logBase": 1,
+          "show": true
+        }
+      ],
+      "yaxis": {
+        "align": false
+      }
+    },
+    {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": {
+        "type": "prometheus",
+        "uid": "P0D6E4079E36703EB"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "links": []
+        },
+        "overrides": []
+      },
+      "fill": 1,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 8,
+        "w": 24,
+        "x": 0,
+        "y": 10
+      },
+      "hiddenSeries": false,
+      "id": 61,
+      "legend": {
+        "alignAsTable": true,
+        "avg": true,
+        "current": false,
+        "hideEmpty": false,
+        "hideZero": false,
+        "max": true,
+        "min": true,
+        "rightSide": false,
+        "show": false,
+        "total": false,
+        "values": true
+      },
+      "lines": true,
+      "linewidth": 1,
+      "nullPointMode": "null as zero",
+      "options": {
+        "alertThreshold": true
+      },
+      "percentage": false,
+      "pluginVersion": "8.5.13",
+      "pointradius": 2,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "expr": "max(rate(grpc_server_handling_seconds_sum{grpc_type=\"unary\", grpc_method=\"DeliveryParcels\", grpc_service=\"mp.operations.logisticcalculator.v1.CalculationService\", namespace=~\"$namespace\"}[10m]) / rate(grpc_server_handling_seconds_count{grpc_type=\"unary\", grpc_method=\"DeliveryParcels\", grpc_service=\"mp.operations.logisticcalculator.v1.CalculationService\", namespace=~\"$namespace\"}[10m])) by (grpc_method) * 1000",
+          "hide": false,
+          "interval": "",
+          "legendFormat": "{{grpc_method}}",
+          "refId": "A"
+        }
+      ],
+      "thresholds": [],
+      "timeRegions": [],
+      "title": "Max average handling time with 10m window",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "mode": "time",
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "format": "ms",
+          "logBase": 1,
+          "show": true
+        },
+        {
+          "format": "short",
+          "logBase": 1,
+          "show": true
+        }
+      ],
+      "yaxis": {
+        "align": false
+      }
+    },
+    {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": {
+        "type": "prometheus",
+        "uid": "P0D6E4079E36703EB"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "links": []
+        },
+        "overrides": []
+      },
+      "fill": 1,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 8,
+        "w": 24,
+        "x": 0,
+        "y": 18
+      },
+      "hiddenSeries": false,
+      "id": 56,
+      "legend": {
+        "alignAsTable": false,
+        "avg": false,
+        "current": false,
+        "hideZero": true,
+        "max": false,
+        "min": false,
+        "rightSide": false,
+        "show": true,
+        "total": false,
+        "values": false
+      },
+      "lines": true,
+      "linewidth": 1,
+      "links": [],
+      "nullPointMode": "null as zero",
+      "options": {
+        "alertThreshold": true
+      },
+      "percentage": false,
+      "pluginVersion": "8.5.13",
+      "pointradius": 2,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": true,
+      "steppedLine": false,
+      "targets": [
+        {
+          "expr": "sum(rate(grpc_server_handled_total{grpc_type=\"unary\", grpc_service=\"mp.operations.logisticcalculator.v1.CalculationService\",grpc_method=\"DeliveryParcels\", namespace=~\"$namespace\"}[$interval])) by (grpc_code)",
+          "interval": "",
+          "legendFormat": "{{grpc_code}}",
+          "refId": "A"
+        }
+      ],
+      "thresholds": [],
+      "timeRegions": [],
+      "title": "gRPC responses rate by code",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "mode": "time",
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "format": "reqps",
+          "logBase": 1,
+          "show": true
+        },
+        {
+          "format": "short",
+          "logBase": 1,
+          "show": true
+        }
+      ],
+      "yaxis": {
+        "align": false
+      }
+    },
+    {
+      "collapsed": false,
+      "datasource": {
+        "type": "prometheus",
+        "uid": "P0D6E4079E36703EB"
+      },
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 26
+      },
+      "id": 71,
+      "panels": [],
+      "title": "Errors graphs",
+      "type": "row"
+    },
+    {
+      "aliasColors": {
+        "Deadline Exceeded": "orange"
+      },
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": {
+        "type": "prometheus",
+        "uid": "P0D6E4079E36703EB"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "links": []
+        },
+        "overrides": []
+      },
+      "fill": 1,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 8,
+        "w": 24,
+        "x": 0,
+        "y": 27
+      },
+      "hiddenSeries": false,
+      "id": 80,
+      "legend": {
+        "alignAsTable": false,
+        "avg": false,
+        "current": false,
+        "hideZero": false,
+        "max": false,
+        "min": false,
+        "rightSide": false,
+        "show": true,
+        "total": true,
+        "values": false
+      },
+      "lines": true,
+      "linewidth": 1,
+      "links": [],
+      "nullPointMode": "null as zero",
+      "options": {
+        "alertThreshold": true
+      },
+      "percentage": false,
+      "pluginVersion": "8.5.13",
+      "pointradius": 2,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": true,
+      "steppedLine": false,
+      "targets": [
+        {
+          "expr": "sum(rate(grpc_server_handled_total{grpc_type=\"unary\", grpc_service=\"mp.operations.logisticcalculator.v1.CalculationService\",grpc_method=\"DeliveryParcels\", grpc_code=\"DeadlineExceeded\", namespace=~\"$namespace\"}[10m])) / sum(rate(grpc_server_handled_total{grpc_type=\"unary\", grpc_service=\"mp.operations.logisticcalculator.v1.CalculationService\",grpc_method=\"DeliveryParcels\", grpc_code=\"OK\", namespace=~\"$namespace\"}[10m]))",
+          "hide": false,
+          "interval": "",
+          "legendFormat": "Deadline Exceeded",
+          "refId": "A"
+        },
+        {
+          "expr": "sum(rate(grpc_server_handled_total{grpc_type=\"unary\", grpc_service=\"mp.operations.logisticcalculator.v1.CalculationService\",grpc_method=\"DeliveryParcels\", grpc_code=\"Unavailable\", namespace=~\"$namespace\"}[10m])) / sum(rate(grpc_server_handled_total{grpc_type=\"unary\", grpc_service=\"mp.operations.logisticcalculator.v1.CalculationService\",grpc_method=\"DeliveryParcels\", namespace=~\"$namespace\", grpc_code=\"OK\"}[10m]))",
+          "hide": false,
+          "interval": "",
+          "legendFormat": "Unavailable",
+          "refId": "B"
+        }
+      ],
+      "thresholds": [],
+      "timeRegions": [],
+      "title": "gRPC errors percentage by code for last 10m",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "mode": "time",
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "format": "percentunit",
+          "logBase": 1,
+          "min": "0",
+          "show": true
+        },
+        {
+          "format": "short",
+          "logBase": 1,
+          "show": true
+        }
+      ],
+      "yaxis": {
+        "align": false
+      }
+    },
+    {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": {
+        "type": "prometheus",
+        "uid": "P0D6E4079E36703EB"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "links": []
+        },
+        "overrides": []
+      },
+      "fill": 1,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 8,
+        "w": 24,
+        "x": 0,
+        "y": 35
+      },
+      "hiddenSeries": false,
+      "id": 81,
+      "legend": {
+        "alignAsTable": false,
+        "avg": false,
+        "current": false,
+        "hideZero": false,
+        "max": false,
+        "min": false,
+        "rightSide": false,
+        "show": true,
+        "total": true,
+        "values": false
+      },
+      "lines": true,
+      "linewidth": 1,
+      "links": [],
+      "nullPointMode": "null as zero",
+      "options": {
+        "alertThreshold": true
+      },
+      "percentage": false,
+      "pluginVersion": "8.5.13",
+      "pointradius": 2,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [
+        {
+          "$$hashKey": "object:235",
+          "alias": "Parcel error percentage",
+          "color": "#E02F44",
+          "fill": 3,
+          "yaxis": 1,
+          "zindex": 3
+        },
+        {
+          "$$hashKey": "object:242",
+          "alias": "Handled parcels rate",
+          "color": "#96D98D",
+          "yaxis": 2
+        }
+      ],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "expr": "sum(rate(deliveryParcelsErrorsCounter{namespace=~\"$namespace\"}[10m])) / sum(rate(calculator_handled_delivery_parcels_total{namespace=~\"$namespace\"}[10m]))",
+          "interval": "",
+          "legendFormat": "Parcel error percentage",
+          "refId": "A"
+        },
+        {
+          "expr": "sum(rate(calculator_handled_delivery_parcels_total{namespace=~\"$namespace\"}[10m]))",
+          "interval": "",
+          "legendFormat": "Handled parcels rate",
+          "refId": "B"
+        }
+      ],
+      "thresholds": [],
+      "timeRegions": [],
+      "title": "Parcels error percentage for last 10m",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "mode": "time",
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "$$hashKey": "object:278",
+          "format": "percentunit",
+          "logBase": 1,
+          "min": "0",
+          "show": true
+        },
+        {
+          "$$hashKey": "object:279",
+          "format": "cps",
+          "logBase": 1,
+          "show": true
+        }
+      ],
+      "yaxis": {
+        "align": false
+      }
+    },
+    {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": {
+        "type": "prometheus",
+        "uid": "P0D6E4079E36703EB"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "links": []
+        },
+        "overrides": []
+      },
+      "fill": 1,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 8,
+        "w": 24,
+        "x": 0,
+        "y": 43
+      },
+      "hiddenSeries": false,
+      "id": 82,
+      "legend": {
+        "alignAsTable": false,
+        "avg": false,
+        "current": false,
+        "hideZero": false,
+        "max": false,
+        "min": false,
+        "rightSide": false,
+        "show": true,
+        "total": true,
+        "values": false
+      },
+      "lines": true,
+      "linewidth": 1,
+      "links": [],
+      "nullPointMode": "null as zero",
+      "options": {
+        "alertThreshold": true
+      },
+      "percentage": false,
+      "pluginVersion": "8.5.13",
+      "pointradius": 2,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [
+        {
+          "$$hashKey": "object:323",
+          "alias": "Handled parcels rate",
+          "color": "#96D98D",
+          "yaxis": 2
+        },
+        {
+          "$$hashKey": "object:324",
+          "alias": "Parcel default price percentage",
+          "color": "#FF9830",
+          "fill": 3,
+          "yaxis": 1,
+          "zindex": 3
+        }
+      ],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "expr": "sum(rate(deliveryParcelsDefaultPriceCounter{namespace=~\"$namespace\"}[10m])) / sum(rate(calculator_handled_delivery_parcels_total{namespace=~\"$namespace\"}[10m]))",
+          "interval": "",
+          "legendFormat": "Parcel default price percentage",
+          "refId": "A"
+        },
+        {
+          "expr": "sum(rate(calculator_handled_delivery_parcels_total{namespace=~\"$namespace\"}[10m]))",
+          "interval": "",
+          "legendFormat": "Handled parcels rate",
+          "refId": "B"
+        }
+      ],
+      "thresholds": [],
+      "timeRegions": [],
+      "title": "Parcels default price percentage for last 10m",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "mode": "time",
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "$$hashKey": "object:305",
+          "format": "percentunit",
+          "logBase": 1,
+          "min": "0",
+          "show": true
+        },
+        {
+          "$$hashKey": "object:306",
+          "format": "cps",
+          "logBase": 1,
+          "show": true
+        }
+      ],
+      "yaxis": {
+        "align": false
+      }
+    },
+    {
+      "aliasColors": {
+        "{errorCode=\"14\"}": "red",
+        "{errorCode=\"400\"}": "orange"
+      },
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": {
+        "type": "prometheus",
+        "uid": "P0D6E4079E36703EB"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "links": []
+        },
+        "overrides": []
+      },
+      "fill": 1,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 8,
+        "w": 24,
+        "x": 0,
+        "y": 51
+      },
+      "hiddenSeries": false,
+      "id": 35,
+      "legend": {
+        "alignAsTable": true,
+        "avg": false,
+        "current": false,
+        "hideEmpty": false,
+        "hideZero": false,
+        "max": false,
+        "min": false,
+        "rightSide": true,
+        "show": true,
+        "total": true,
+        "values": false
+      },
+      "lines": true,
+      "linewidth": 1,
+      "nullPointMode": "null as zero",
+      "options": {
+        "alertThreshold": true
+      },
+      "percentage": false,
+      "pluginVersion": "8.5.13",
+      "pointradius": 2,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": true,
+      "steppedLine": false,
+      "targets": [
+        {
+          "expr": "sum(deliveryParcelsErrorsCounter{namespace=~\"$namespace\"}) by(errorCode)",
+          "interval": "",
+          "legendFormat": "Code: {{errorCode}}",
+          "refId": "A"
+        }
+      ],
+      "thresholds": [],
+      "timeRegions": [],
+      "title": "Errors count by code",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "mode": "time",
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "format": "none",
+          "logBase": 1,
+          "show": true
+        },
+        {
+          "format": "cps",
+          "logBase": 1,
+          "show": false
+        }
+      ],
+      "yaxis": {
+        "align": false
+      }
+    },
+    {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": {
+        "type": "prometheus",
+        "uid": "P0D6E4079E36703EB"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "links": []
+        },
+        "overrides": []
+      },
+      "fill": 1,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 9,
+        "w": 24,
+        "x": 0,
+        "y": 59
+      },
+      "hiddenSeries": false,
+      "id": 77,
+      "legend": {
+        "alignAsTable": true,
+        "avg": false,
+        "current": false,
+        "hideEmpty": true,
+        "hideZero": true,
+        "max": false,
+        "min": false,
+        "rightSide": true,
+        "show": true,
+        "total": true,
+        "values": false
+      },
+      "lines": true,
+      "linewidth": 1,
+      "nullPointMode": "null as zero",
+      "options": {
+        "alertThreshold": true
+      },
+      "percentage": false,
+      "pluginVersion": "8.5.13",
+      "pointradius": 2,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": true,
+      "targets": [
+        {
+          "expr": "sum by(consumerGeoId, merchantId)(increase(deliveryParcelsDefaultPriceCounter{namespace=~\"$namespace\"}[$interval]))",
+          "interval": "",
+          "legendFormat": "Geo: {{consumerGeoId}} Merchant: {{merchantId}}",
+          "refId": "B"
+        }
+      ],
+      "thresholds": [],
+      "timeRegions": [],
+      "title": "default price increase counts by consumer geo",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "mode": "time",
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "format": "short",
+          "logBase": 1,
+          "show": true
+        },
+        {
+          "format": "short",
+          "logBase": 1,
+          "show": true
+        }
+      ],
+      "yaxis": {
+        "align": false
+      }
+    },
+    {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": {
+        "type": "prometheus",
+        "uid": "P0D6E4079E36703EB"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "links": []
+        },
+        "overrides": []
+      },
+      "fill": 1,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 68
+      },
+      "hiddenSeries": false,
+      "id": 72,
+      "legend": {
+        "alignAsTable": true,
+        "avg": false,
+        "current": false,
+        "hideEmpty": true,
+        "hideZero": true,
+        "max": false,
+        "min": false,
+        "rightSide": true,
+        "show": true,
+        "total": true,
+        "values": false
+      },
+      "lines": true,
+      "linewidth": 1,
+      "nullPointMode": "null as zero",
+      "options": {
+        "alertThreshold": true
+      },
+      "percentage": false,
+      "pluginVersion": "8.5.13",
+      "pointradius": 2,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "expr": "sum by(consumerGeoId, deliveryType)(increase(deliveryParcelsDefaultPriceCounter{namespace=~\"$namespace\"}[5m]))",
+          "interval": "",
+          "legendFormat": "Geo: {{consumerGeoId}} {{deliveryType}}",
+          "refId": "B"
+        }
+      ],
+      "thresholds": [],
+      "timeRegions": [],
+      "title": "default price increase counts by consumer geo and delivery type",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "mode": "time",
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "format": "short",
+          "logBase": 1,
+          "show": true
+        },
+        {
+          "format": "short",
+          "logBase": 1,
+          "show": true
+        }
+      ],
+      "yaxis": {
+        "align": false
+      }
+    },
+    {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": {
+        "type": "prometheus",
+        "uid": "P0D6E4079E36703EB"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "links": []
+        },
+        "overrides": []
+      },
+      "fill": 1,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 68
+      },
+      "hiddenSeries": false,
+      "id": 73,
+      "legend": {
+        "alignAsTable": true,
+        "avg": false,
+        "current": false,
+        "hideEmpty": true,
+        "hideZero": true,
+        "max": false,
+        "min": false,
+        "rightSide": true,
+        "show": true,
+        "total": true,
+        "values": false
+      },
+      "lines": true,
+      "linewidth": 1,
+      "nullPointMode": "null as zero",
+      "options": {
+        "alertThreshold": true
+      },
+      "percentage": false,
+      "pluginVersion": "8.5.13",
+      "pointradius": 2,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "expr": "sum by(merchantId)(increase(deliveryParcelsDefaultPriceCounter{namespace=~\"$namespace\"}[$interval]))",
+          "interval": "",
+          "legendFormat": "Merchant ID: {{merchantId}}",
+          "refId": "B"
+        }
+      ],
+      "thresholds": [],
+      "timeRegions": [],
+      "title": "default price increase counts by merchant Id",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "mode": "time",
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "format": "short",
+          "logBase": 1,
+          "show": true
+        },
+        {
+          "format": "short",
+          "logBase": 1,
+          "show": true
+        }
+      ],
+      "yaxis": {
+        "align": false
+      }
+    },
+    {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": {
+        "type": "prometheus",
+        "uid": "P0D6E4079E36703EB"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "links": []
+        },
+        "overrides": []
+      },
+      "fill": 1,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 9,
+        "w": 24,
+        "x": 0,
+        "y": 76
+      },
+      "hiddenSeries": false,
+      "id": 74,
+      "legend": {
+        "alignAsTable": true,
+        "avg": false,
+        "current": false,
+        "hideEmpty": true,
+        "hideZero": true,
+        "max": false,
+        "min": false,
+        "rightSide": true,
+        "show": true,
+        "total": true,
+        "values": false
+      },
+      "lines": true,
+      "linewidth": 1,
+      "nullPointMode": "null as zero",
+      "options": {
+        "alertThreshold": true
+      },
+      "percentage": false,
+      "pluginVersion": "8.5.13",
+      "pointradius": 2,
+      "points": false,
+      "renderer": "flot",
+      "repeatDirection": "h",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "expr": "sum by(merchantId, consumerGeoId)(increase(deliveryParcelsErrorsCounter{namespace=~\"$namespace\"}[$interval]))",
+          "interval": "",
+          "legendFormat": "Merchant: {{merchantId}} Geo: {{consumerGeoId}} ",
+          "refId": "A"
+        }
+      ],
+      "thresholds": [],
+      "timeRegions": [],
+      "title": "error counts increase by merchant and geo",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "mode": "time",
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "format": "short",
+          "logBase": 1,
+          "show": true
+        },
+        {
+          "format": "short",
+          "logBase": 1,
+          "show": true
+        }
+      ],
+      "yaxis": {
+        "align": false
+      }
+    },
+    {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": {
+        "type": "prometheus",
+        "uid": "P0D6E4079E36703EB"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "links": []
+        },
+        "overrides": []
+      },
+      "fill": 1,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 85
+      },
+      "hiddenSeries": false,
+      "id": 76,
+      "legend": {
+        "alignAsTable": true,
+        "avg": false,
+        "current": false,
+        "hideEmpty": true,
+        "hideZero": true,
+        "max": false,
+        "min": false,
+        "rightSide": true,
+        "show": true,
+        "total": false,
+        "values": false
+      },
+      "lines": true,
+      "linewidth": 1,
+      "nullPointMode": "null as zero",
+      "options": {
+        "alertThreshold": true
+      },
+      "percentage": false,
+      "pluginVersion": "8.5.13",
+      "pointradius": 2,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "expr": "sum by(merchantId)(increase(deliveryParcelsErrorsCounter{namespace=~\"$namespace\"}[$interval]))",
+          "interval": "",
+          "legendFormat": "Merchant ID: {{merchantId}}",
+          "refId": "B"
+        }
+      ],
+      "thresholds": [],
+      "timeRegions": [],
+      "title": "error counts increase by merchant Id",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "mode": "time",
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "format": "short",
+          "logBase": 1,
+          "show": true
+        },
+        {
+          "format": "short",
+          "logBase": 1,
+          "show": true
+        }
+      ],
+      "yaxis": {
+        "align": false
+      }
+    },
+    {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": {
+        "type": "prometheus",
+        "uid": "P0D6E4079E36703EB"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "links": []
+        },
+        "overrides": []
+      },
+      "fill": 1,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 85
+      },
+      "hiddenSeries": false,
+      "id": 75,
+      "legend": {
+        "alignAsTable": true,
+        "avg": false,
+        "current": false,
+        "hideEmpty": true,
+        "hideZero": true,
+        "max": false,
+        "min": false,
+        "rightSide": true,
+        "show": true,
+        "total": true,
+        "values": false
+      },
+      "lines": true,
+      "linewidth": 1,
+      "nullPointMode": "null as zero",
+      "options": {
+        "alertThreshold": true
+      },
+      "percentage": false,
+      "pluginVersion": "8.5.13",
+      "pointradius": 1,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "expr": "sum(increase(deliveryParcelsErrorsCounter{namespace=~\"$namespace\"}[$interval]))by(consumerGeoId)",
+          "interval": "",
+          "legendFormat": "Geo: {{consumerGeoId}}",
+          "refId": "B"
+        }
+      ],
+      "thresholds": [],
+      "timeRegions": [],
+      "title": "error counts increase by consumer geo",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "mode": "time",
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "format": "short",
+          "logBase": 1,
+          "show": true
+        },
+        {
+          "format": "short",
+          "logBase": 1,
+          "show": true
+        }
+      ],
+      "yaxis": {
+        "align": false
+      }
+    },
+    {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": {
+        "type": "prometheus",
+        "uid": "P0D6E4079E36703EB"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "links": []
+        },
+        "overrides": []
+      },
+      "fill": 1,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 93
+      },
+      "hiddenSeries": false,
+      "id": 65,
+      "legend": {
+        "alignAsTable": true,
+        "avg": false,
+        "current": false,
+        "hideEmpty": true,
+        "hideZero": true,
+        "max": false,
+        "min": false,
+        "rightSide": true,
+        "show": true,
+        "total": true,
+        "values": false
+      },
+      "lines": true,
+      "linewidth": 1,
+      "nullPointMode": "null as zero",
+      "options": {
+        "alertThreshold": true
+      },
+      "percentage": false,
+      "pluginVersion": "8.5.13",
+      "pointradius": 1,
+      "points": false,
+      "renderer": "flot",
+      "repeatDirection": "h",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "expr": "sum by(merchantId, consumerGeoId)(increase(deliveryParcelsErrorsCounter{errorMessage=\"Not supported delivery settings\", namespace=~\"$namespace\"}[$interval]))",
+          "interval": "",
+          "legendFormat": "Merchant: {{merchantId}} Geo: {{consumerGeoId}} ",
+          "refId": "A"
+        }
+      ],
+      "thresholds": [],
+      "timeRegions": [],
+      "title": " not supported delivery settings error counts by merchant and geo",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "mode": "time",
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "format": "short",
+          "logBase": 1,
+          "show": true
+        },
+        {
+          "format": "short",
+          "logBase": 1,
+          "show": true
+        }
+      ],
+      "yaxis": {
+        "align": false
+      }
+    },
+    {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": {
+        "type": "prometheus",
+        "uid": "P0D6E4079E36703EB"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "links": []
+        },
+        "overrides": []
+      },
+      "fill": 1,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 93
+      },
+      "hiddenSeries": false,
+      "id": 64,
+      "legend": {
+        "alignAsTable": true,
+        "avg": false,
+        "current": false,
+        "hideEmpty": true,
+        "hideZero": true,
+        "max": false,
+        "min": false,
+        "rightSide": true,
+        "show": true,
+        "total": true,
+        "values": true
+      },
+      "lines": true,
+      "linewidth": 1,
+      "nullPointMode": "null as zero",
+      "options": {
+        "alertThreshold": true
+      },
+      "percentage": false,
+      "pluginVersion": "8.5.13",
+      "pointradius": 2,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "expr": "sum by(errorMessage)(increase(deliveryParcelsErrorsCounter{namespace=~\"$namespace\"}[$interval]))",
+          "interval": "",
+          "legendFormat": "{{errorMessage}}",
+          "refId": "B"
+        }
+      ],
+      "thresholds": [],
+      "timeRegions": [],
+      "title": "error counts increase by error message",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "mode": "time",
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "format": "short",
+          "logBase": 1,
+          "show": true
+        },
+        {
+          "format": "short",
+          "logBase": 1,
+          "show": true
+        }
+      ],
+      "yaxis": {
+        "align": false
+      }
+    },
+    {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": {
+        "type": "prometheus",
+        "uid": "P0D6E4079E36703EB"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "links": []
+        },
+        "overrides": []
+      },
+      "fill": 1,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 101
+      },
+      "hiddenSeries": false,
+      "id": 78,
+      "legend": {
+        "alignAsTable": true,
+        "avg": false,
+        "current": false,
+        "hideEmpty": true,
+        "hideZero": true,
+        "max": false,
+        "min": false,
+        "rightSide": true,
+        "show": true,
+        "total": true,
+        "values": false
+      },
+      "lines": true,
+      "linewidth": 1,
+      "nullPointMode": "null as zero",
+      "options": {
+        "alertThreshold": true
+      },
+      "percentage": false,
+      "pluginVersion": "8.5.13",
+      "pointradius": 2,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "expr": "sum by(errorMessage)(increase(deliveryParcelsErrorsCounter{consumerGeoId=\"1252472\", namespace=~\"$namespace\"}[$interval]))",
+          "interval": "",
+          "legendFormat": "{{errorMessage}}",
+          "refId": "B"
+        }
+      ],
+      "thresholds": [],
+      "timeRegions": [],
+      "title": "Moscow error counts increase by error message",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "mode": "time",
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "format": "short",
+          "logBase": 1,
+          "show": true
+        },
+        {
+          "format": "short",
+          "logBase": 1,
+          "show": true
+        }
+      ],
+      "yaxis": {
+        "align": false
+      }
+    },
+    {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": {
+        "type": "prometheus",
+        "uid": "P0D6E4079E36703EB"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "links": []
+        },
+        "overrides": []
+      },
+      "fill": 1,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 101
+      },
+      "hiddenSeries": false,
+      "id": 79,
+      "legend": {
+        "alignAsTable": true,
+        "avg": false,
+        "current": false,
+        "hideEmpty": true,
+        "hideZero": true,
+        "max": false,
+        "min": false,
+        "rightSide": true,
+        "show": true,
+        "total": true,
+        "values": false
+      },
+      "lines": true,
+      "linewidth": 1,
+      "nullPointMode": "null as zero",
+      "options": {
+        "alertThreshold": true
+      },
+      "percentage": false,
+      "pluginVersion": "8.5.13",
+      "pointradius": 2,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "expr": "sum by(errorMessage)(increase(deliveryParcelsErrorsCounter{consumerGeoId=\"1263287\", namespace=~\"$namespace\"}[$interval]))",
+          "interval": "",
+          "legendFormat": "{{errorMessage}}",
+          "refId": "B"
+        }
+      ],
+      "thresholds": [],
+      "timeRegions": [],
+      "title": "Saint-Petersburg error counts increase by error message",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "mode": "time",
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "format": "short",
+          "logBase": 1,
+          "show": true
+        },
+        {
+          "format": "short",
+          "logBase": 1,
+          "show": true
+        }
+      ],
+      "yaxis": {
+        "align": false
+      }
+    },
+    {
+      "collapsed": true,
+      "datasource": {
+        "type": "prometheus",
+        "uid": "P0D6E4079E36703EB"
+      },
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 109
+      },
+      "id": 69,
+      "panels": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P0D6E4079E36703EB"
+          },
+          "gridPos": {
+            "h": 10,
+            "w": 10,
+            "x": 0,
+            "y": 28
+          },
+          "id": 43,
+          "links": [],
+          "maxPerRow": 2,
+          "options": {
+            "displayMode": "lcd",
+            "fieldOptions": {
+              "calcs": [
+                "delta"
+              ],
+              "defaults": {
+                "mappings": [],
+                "min": 10,
+                "thresholds": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "green"
+                    },
+                    {
+                      "color": "red",
+                      "value": 80
+                    }
+                  ]
+                },
+                "unit": "short"
+              },
+              "overrides": [],
+              "values": false
+            },
+            "orientation": "horizontal",
+            "showUnfilled": true
+          },
+          "pluginVersion": "6.6.1",
+          "repeatDirection": "h",
+          "targets": [
+            {
+              "expr": "topk(3, sum by(merchantId, consumerGeoId)(deliveryParcelsDefaultPriceCounter))",
+              "legendFormat": "Merchant: {{merchantId}} Geo: {{consumerGeoId}} ",
+              "refId": "A"
+            }
+          ],
+          "title": "Top of default price counts by merchant and geo",
+          "type": "bargauge"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P0D6E4079E36703EB"
+          },
+          "gridPos": {
+            "h": 10,
+            "w": 7,
+            "x": 10,
+            "y": 28
+          },
+          "id": 41,
+          "options": {
+            "displayMode": "lcd",
+            "fieldOptions": {
+              "calcs": [
+                "delta"
+              ],
+              "defaults": {
+                "decimals": 0,
+                "mappings": [],
+                "thresholds": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "green"
+                    },
+                    {
+                      "color": "#EAB839",
+                      "value": 100
+                    },
+                    {
+                      "color": "red",
+                      "value": 250
+                    }
+                  ]
+                },
+                "title": ""
+              },
+              "overrides": [],
+              "values": false
+            },
+            "orientation": "horizontal",
+            "showUnfilled": true
+          },
+          "pluginVersion": "6.6.1",
+          "targets": [
+            {
+              "expr": "topk(3, sum by(consumerGeoId, deliveryType)(deliveryParcelsDefaultPriceCounter))",
+              "legendFormat": "Geo: {{consumerGeoId}} {{deliveryType}}",
+              "refId": "B"
+            }
+          ],
+          "title": "Top of default price counts by consumer geo and delivery type",
+          "type": "bargauge"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P0D6E4079E36703EB"
+          },
+          "gridPos": {
+            "h": 10,
+            "w": 7,
+            "x": 17,
+            "y": 28
+          },
+          "id": 44,
+          "options": {
+            "displayMode": "lcd",
+            "fieldOptions": {
+              "calcs": [
+                "delta"
+              ],
+              "defaults": {
+                "decimals": 0,
+                "mappings": [],
+                "thresholds": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "green"
+                    },
+                    {
+                      "color": "#EAB839",
+                      "value": 100
+                    },
+                    {
+                      "color": "red",
+                      "value": 150
+                    }
+                  ]
+                },
+                "title": ""
+              },
+              "overrides": [],
+              "values": false
+            },
+            "orientation": "horizontal",
+            "showUnfilled": true
+          },
+          "pluginVersion": "6.6.1",
+          "targets": [
+            {
+              "expr": "topk(3, sum by(merchantId)(deliveryParcelsDefaultPriceCounter))",
+              "legendFormat": "Merchant ID: {{merchantId}}",
+              "refId": "B"
+            }
+          ],
+          "title": "Top of default price counts by merchant Id",
+          "type": "bargauge"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P0D6E4079E36703EB"
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 10,
+            "x": 0,
+            "y": 38
+          },
+          "id": 45,
+          "maxPerRow": 2,
+          "options": {
+            "displayMode": "lcd",
+            "fieldOptions": {
+              "calcs": [
+                "delta"
+              ],
+              "defaults": {
+                "mappings": [],
+                "thresholds": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "green"
+                    },
+                    {
+                      "color": "red",
+                      "value": 80
+                    }
+                  ]
+                }
+              },
+              "overrides": [],
+              "values": false
+            },
+            "orientation": "horizontal",
+            "showUnfilled": true
+          },
+          "pluginVersion": "6.6.1",
+          "repeatDirection": "h",
+          "targets": [
+            {
+              "expr": "topk(3, sum by(merchantId, consumerGeoId)(deliveryParcelsErrorsCounter))",
+              "legendFormat": "Merchant: {{merchantId}} Geo: {{consumerGeoId}} ",
+              "refId": "A"
+            }
+          ],
+          "title": "Top of error counts by merchant and geo",
+          "type": "bargauge"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P0D6E4079E36703EB"
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 7,
+            "x": 10,
+            "y": 38
+          },
+          "id": 46,
+          "options": {
+            "displayMode": "lcd",
+            "fieldOptions": {
+              "calcs": [
+                "delta"
+              ],
+              "defaults": {
+                "decimals": 0,
+                "mappings": [],
+                "thresholds": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "green"
+                    },
+                    {
+                      "color": "#EAB839",
+                      "value": 100
+                    },
+                    {
+                      "color": "red",
+                      "value": 150
+                    }
+                  ]
+                },
+                "title": ""
+              },
+              "overrides": [],
+              "values": false
+            },
+            "orientation": "horizontal",
+            "showUnfilled": true
+          },
+          "pluginVersion": "6.6.1",
+          "targets": [
+            {
+              "expr": "topk(3, sum by(consumerGeoId)(deliveryParcelsErrorsCounter))",
+              "legendFormat": "Geo: {{consumerGeoId}}",
+              "refId": "B"
+            }
+          ],
+          "title": "Top of error counts by consumer geo",
+          "type": "bargauge"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P0D6E4079E36703EB"
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 7,
+            "x": 17,
+            "y": 38
+          },
+          "id": 47,
+          "options": {
+            "displayMode": "lcd",
+            "fieldOptions": {
+              "calcs": [
+                "delta"
+              ],
+              "defaults": {
+                "decimals": 0,
+                "mappings": [],
+                "thresholds": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "green"
+                    },
+                    {
+                      "color": "#EAB839",
+                      "value": 100
+                    },
+                    {
+                      "color": "red",
+                      "value": 150
+                    }
+                  ]
+                },
+                "title": ""
+              },
+              "overrides": [],
+              "values": false
+            },
+            "orientation": "horizontal",
+            "showUnfilled": true
+          },
+          "pluginVersion": "6.6.1",
+          "targets": [
+            {
+              "expr": "topk(3, sum by(merchantId)(deliveryParcelsErrorsCounter))",
+              "legendFormat": "Merchant ID: {{merchantId}}",
+              "refId": "B"
+            }
+          ],
+          "title": "Top of error counts by merchant Id",
+          "type": "bargauge"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P0D6E4079E36703EB"
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 10,
+            "x": 0,
+            "y": 46
+          },
+          "id": 48,
+          "options": {
+            "displayMode": "lcd",
+            "fieldOptions": {
+              "calcs": [
+                "delta"
+              ],
+              "defaults": {
+                "decimals": 0,
+                "mappings": [],
+                "thresholds": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "green"
+                    },
+                    {
+                      "color": "#EAB839",
+                      "value": 100
+                    },
+                    {
+                      "color": "red",
+                      "value": 150
+                    }
+                  ]
+                },
+                "title": ""
+              },
+              "overrides": [],
+              "values": false
+            },
+            "orientation": "horizontal",
+            "showUnfilled": true
+          },
+          "pluginVersion": "6.6.1",
+          "targets": [
+            {
+              "expr": "topk(10, sum by(errorCode)(deliveryParcelsErrorsCounter))",
+              "legendFormat": "Error code: {{errorCode}}",
+              "refId": "B"
+            }
+          ],
+          "title": "Top 10 errors count by error code",
+          "type": "bargauge"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P0D6E4079E36703EB"
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 14,
+            "x": 10,
+            "y": 46
+          },
+          "id": 49,
+          "options": {
+            "displayMode": "lcd",
+            "fieldOptions": {
+              "calcs": [
+                "delta"
+              ],
+              "defaults": {
+                "decimals": 0,
+                "mappings": [],
+                "thresholds": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "green"
+                    },
+                    {
+                      "color": "#EAB839",
+                      "value": 100
+                    },
+                    {
+                      "color": "red",
+                      "value": 150
+                    }
+                  ]
+                },
+                "title": ""
+              },
+              "overrides": [],
+              "values": false
+            },
+            "orientation": "horizontal",
+            "showUnfilled": true
+          },
+          "pluginVersion": "6.6.1",
+          "targets": [
+            {
+              "expr": "topk(10, sum by(errorMessage)(deliveryParcelsErrorsCounter))",
+              "legendFormat": "{{errorMessage}}",
+              "refId": "B"
+            }
+          ],
+          "title": "Top 10 error counts by error message",
+          "type": "bargauge"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P0D6E4079E36703EB"
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 13,
+            "x": 0,
+            "y": 54
+          },
+          "id": 52,
+          "maxPerRow": 2,
+          "options": {
+            "displayMode": "lcd",
+            "fieldOptions": {
+              "calcs": [
+                "changeCount"
+              ],
+              "defaults": {
+                "mappings": [],
+                "thresholds": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "green"
+                    },
+                    {
+                      "color": "red",
+                      "value": 80
+                    }
+                  ]
+                }
+              },
+              "overrides": [],
+              "values": false
+            },
+            "orientation": "horizontal",
+            "showUnfilled": true
+          },
+          "pluginVersion": "6.6.1",
+          "repeatDirection": "h",
+          "targets": [
+            {
+              "expr": "topk(3, sum by(merchantId, consumerGeoId)(deliveryParcelsErrorsCounter{errorMessage=\"Not supported delivery settings\"}))",
+              "legendFormat": "Merchant: {{merchantId}} Geo: {{consumerGeoId}} ",
+              "refId": "A"
+            }
+          ],
+          "title": "Top of not supported delivery settings error counts by merchant and geo",
+          "type": "bargauge"
+        }
+      ],
+      "title": "Errors bars",
+      "type": "row"
+    }
+  ],
+  "refresh": false,
+  "schemaVersion": 36,
+  "style": "dark",
+  "tags": [
+    "calculator"
+  ],
+  "templating": {
+    "list": [
+      {
+        "auto": false,
+        "auto_count": 30,
+        "auto_min": "10s",
+        "current": {
+          "selected": false,
+          "text": "30m",
+          "value": "30m"
+        },
+        "hide": 0,
+        "name": "interval",
+        "options": [
+          {
+            "selected": false,
+            "text": "1m",
+            "value": "1m"
+          },
+          {
+            "selected": false,
+            "text": "5m",
+            "value": "5m"
+          },
+          {
+            "selected": false,
+            "text": "10m",
+            "value": "10m"
+          },
+          {
+            "selected": true,
+            "text": "30m",
+            "value": "30m"
+          },
+          {
+            "selected": false,
+            "text": "1h",
+            "value": "1h"
+          },
+          {
+            "selected": false,
+            "text": "3h",
+            "value": "3h"
+          },
+          {
+            "selected": false,
+            "text": "6h",
+            "value": "6h"
+          },
+          {
+            "selected": false,
+            "text": "12h",
+            "value": "12h"
+          },
+          {
+            "selected": false,
+            "text": "1d",
+            "value": "1d"
+          },
+          {
+            "selected": false,
+            "text": "7d",
+            "value": "7d"
+          },
+          {
+            "selected": false,
+            "text": "14d",
+            "value": "14d"
+          },
+          {
+            "selected": false,
+            "text": "30d",
+            "value": "30d"
+          }
+        ],
+        "query": "1m,5m,10m,30m,1h,3h,6h,12h,1d,7d,14d,30d",
+        "queryValue": "",
+        "refresh": 2,
+        "skipUrlSync": false,
+        "type": "interval"
+      },
+      {
+        "current": {
+          "selected": true,
+          "text": [
+            "All"
+          ],
+          "value": [
+            "$__all"
+          ]
+        },
+        "datasource": {
+          "type": "prometheus",
+          "uid": "P0D6E4079E36703EB"
+        },
+        "definition": "label_values(grpc_server_handled_total{grpc_service=\"mp.operations.logisticcalculator.v1.CalculationService\"}, namespace)",
+        "hide": 0,
+        "includeAll": true,
+        "multi": true,
+        "name": "namespace",
+        "options": [],
+        "query": {
+          "query": "label_values(grpc_server_handled_total{grpc_service=\"mp.operations.logisticcalculator.v1.CalculationService\"}, namespace)",
+          "refId": "main-namespace-Variable-Query"
+        },
+        "refresh": 1,
+        "regex": ".*",
+        "skipUrlSync": false,
+        "sort": 0,
+        "tagValuesQuery": "",
+        "tagsQuery": "",
+        "type": "query",
+        "useTags": false
+      }
+    ]
+  },
+  "time": {
+    "from": "now-6h",
+    "to": "now-1m"
+  },
+  "timepicker": {
+    "nowDelay": "1m",
+    "refresh_intervals": [
+      "10s",
+      "30s",
+      "1m",
+      "5m",
+      "15m",
+      "30m",
+      "1h",
+      "2h",
+      "1d"
+    ],
+    "time_options": [
+      "5m",
+      "15m",
+      "1h",
+      "6h",
+      "12h",
+      "24h",
+      "2d",
+      "7d",
+      "30d"
+    ]
+  },
+  "timezone": "",
+  "title": "Logistic Calculator - Delivery Parcels Method",
+  "uid": "9f461c21433c",
+  "version": 1,
+  "weekStart": ""
+}

@@ -1,0 +1,73 @@
+---
+cluster_authorization:
+  defaults:
+    default_sa_permissions: &default
+      accessLevel: User
+      limitNamespaces:
+        - default
+      allowScale: true
+      allowAccessToSystemNamespaces: false
+      portForwarding: true
+  crowd:
+    groups:
+      # airflow
+      crowd-corp-scheduler-admin:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - airflow-.*
+          - airflow
+          - csi-s3-provider
+      crowd-corp-scheduler-ro:
+        <<: *default
+        accessLevel: User
+        limitNamespaces:
+          - airflow-.*
+          - airflow
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+      crowd-corp-scheduler-rw:
+        <<: *default
+        accessLevel: Editor
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - airflow-.*
+          - airflow
+      crowd-sa-corp-scheduler:
+        <<: *default
+        accessLevel: Admin
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - airflow-.*
+          - airflow
+      # data-governance
+      crowd-dg-admin:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - ^dg-.*
+      crowd-dg-ro:
+        <<: *default
+        accessLevel: User
+        limitNamespaces:
+          - ^dg-.*
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+      crowd-dg-rw:
+        <<: *default
+        accessLevel: Editor
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - ^dg-.*
+      crowd-sa-dg:
+        <<: *default
+        accessLevel: Admin
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - ^dg-.*
+
+DexProvider:
+  clientID: k8s-argocd
+  clientSecret: crowd_app_k8s-argocd

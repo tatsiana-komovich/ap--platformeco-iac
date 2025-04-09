@@ -1,0 +1,33 @@
+{{- if hasKey .Values "alerts" }}
+{{- if hasKey .Values.alerts "steal_high" }}
+{{- if .Values.alerts.steal_high.enabled }}
+---
+apiVersion: deckhouse.io/v1
+kind: CustomPrometheusRules
+metadata:
+  labels:
+    component: rules
+    prometheus: main
+  name: steal-high-nodes
+spec:
+  groups:
+    - name: steal-high-nodes
+      rules:
+      - alert: CPUStealHighOpenstackX2
+        annotations:
+          description: |-
+            The CPU steal is too high on the {{`{{ $labels.node }}`}} Node in the last 30 minutes.
+
+            Please delete the node so that it starts on another hypervisor.
+          plk_protocol_version: "1"
+          plk_markup_format: markdown
+          summary: CPU Steal on the {{`{{ $labels.node }}`}} Node is too high.
+        expr: max by (node) (irate(node_cpu_seconds_total{mode="steal"}[30m]) * 100) >
+          40
+        for: 30m
+        labels:
+          severity_level: "4"
+          tier: cluster
+{{- end }}
+{{- end }}
+{{- end }}

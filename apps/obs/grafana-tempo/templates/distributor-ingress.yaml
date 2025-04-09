@@ -1,0 +1,34 @@
+{{- if .Values.distributorIngress.enabled -}}
+apiVersion: {{ include "tempo.ingress.apiVersion" . }}
+kind: Ingress
+metadata:
+  name: {{ .Chart.Name}}-distributor
+  labels:
+    app: {{ .Chart.Name}}-distributor
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}"
+    release: "{{ .Release.Name }}"
+    heritage: "{{ .Release.Service }}"
+  annotations:
+    {{- range $key, $value := .Values.distributorIngress.annotations }}
+      {{ $key }}: {{ $value | quote }}
+    {{- end }}
+spec:
+  ingressClassName: {{ .Values.distributorIngress.ingressClassName }}
+  rules:
+    {{- with .Values.distributorIngress.host }}
+    - host: {{ .name }}
+      http:
+        paths:
+          - path: /v1/traces
+            pathType: Exact
+            backend:
+              service:
+                name: {{ .service.name }}
+                port:
+                  number: {{ .service.port }}
+    {{- end }}
+  {{- if .Values.distributorIngress.tls }}
+  tls:
+{{ toYaml .Values.distributorIngress.tls | indent 4 }}
+  {{- end -}}
+{{- end -}}

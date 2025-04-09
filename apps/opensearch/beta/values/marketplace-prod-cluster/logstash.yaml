@@ -1,0 +1,125 @@
+---
+opendistro:
+  logstash:
+    enabled: true
+    filter: |-
+      filter {
+        grok {
+          id => "grok_multi"
+          match => {
+            "message" => [
+              "(((?<brick>[a-zA-Z\-0-9]+)_(?<application>[a-zA-Z\-0-9]+)\s)|((?<application>[a-zA-Z\-0-9]+)\s)|(.{0}))(?<timestamp>%{YEAR}-%{MONTHNUM}-%{MONTHDAY} %{TIME}) \[(?<transaction>[A-Za-z0-9\-_\.]*),{0,1}(?<traceId>[A-Za-z0-9\-_\.]*),(?<spanId>[A-Za-z0-9\-_\.]*)\]\[%{GREEDYDATA:thread}\] %{LOGLEVEL:level}[ ]+%{NOTSPACE:class} - %{GREEDYDATA:text}",
+              "(((?<brick>[a-zA-Z\-0-9]+)_(?<application>[a-zA-Z\-0-9]+)\s)|((?<application>[a-zA-Z\-0-9]+)\s)|(.{0}))(?<timestamp>%{YEAR}-%{MONTHNUM}-%{MONTHDAY} %{TIME}) %{LOGLEVEL:level} \[(?<transaction>[A-Za-z0-9\-_\.]*),{0,1}(?<traceId>[A-Za-z0-9\-_\.]*),(?<spanId>[A-Za-z0-9\-_\.]*),([A-Za-z0-9\-_\.]*)\] ([0-9]*) --- \[%{GREEDYDATA:thread}\] %{NOTSPACE:class}[ ]+: %{GREEDYDATA:text}",
+              "(((?<brick>[a-zA-Z\-0-9]+)_(?<application>[a-zA-Z\-0-9]+)\s)|((?<application>[a-zA-Z\-0-9]+)\s)|(.{0}))(?<timestamp>%{YEAR}-%{MONTHNUM}-%{MONTHDAY} %{TIME}) \[(?<processId>[A-Za-z\-0-9]*),(?<solutionId>[A-Za-z0-9\-_\.]*),{0,1}(?<traceId>[A-Za-z0-9\-_\.]*),(?<spanId>[A-Za-z0-9\-_\.]*)\]\[%{GREEDYDATA:thread}\] %{LOGLEVEL:level}[ ]+%{NOTSPACE:class} - %{GREEDYDATA:text}",
+              "(((?<brick>[a-zA-Z\-0-9]+)_(?<application>[a-zA-Z\-0-9]+)\s)|((?<application>[a-zA-Z\-0-9]+)\s)|(.{0}))(?<timestamp>%{YEAR}-%{MONTHNUM}-%{MONTHDAY} %{TIME}) \[((?<transaction>[A-Za-z0-9\-_\.]*),{0,1})(?<traceId>[A-Za-z0-9\-_\.]*),(?<spanId>[A-Za-z0-9\-_\.]*)\]\[%{GREEDYDATA:thread}\] %{LOGLEVEL:level}[ ]+%{NOTSPACE:class} - %{GREEDYDATA:text}",
+              "(?<event>([A-Z][0-9]{0,4})) %{TIME:time}%{SPACE}%{NUMBER:n} (?<appsrc>%{WORD}\.%{WORD}:\d{1,})\] %{GREEDYDATA:msg}"
+            ]
+          }
+        }
+        mutate {
+          id => "mutate_removefield_time"
+          remove_field => ["time"]
+        }
+        if [kubernetes][labels][component] !~ "merchants-.+" {
+          json {
+            id => "json_msg"
+            source => "message"
+            skip_on_invalid_json => true
+            target => "jsonLog"
+          }
+          if [jsonLog][uri] {
+            mutate {
+              id => "mutate_uri"
+              add_field => { "uri" => "%{[jsonLog][uri]}" }
+            }
+          }
+          if [jsonLog][renderedMessage] {
+            mutate {
+              id => "mutate_renderedmsg"
+              add_field => { "renderedMessage" => "%{[jsonLog][renderedMessage]}" }
+            }
+          }
+          if [jsonLog][serviceName] {
+            mutate {
+              id => "mutate_svcname"
+              add_field => { "serviceName" => "%{[jsonLog][serviceName]}" }
+            }
+          }
+          if [jsonLog][serviceVersion] {
+            mutate {
+              id => "mutate_svcvrs"
+              add_field => { "serviceVersion" => "%{[jsonLog][serviceVersion]}" }
+            }
+          }
+          if [jsonLog][stack] {
+            mutate {
+              id => "mutate_stack"
+              add_field => { "stack" => "%{[jsonLog][stack]}" }
+            }
+          }
+          if [jsonLog][request] {
+            mutate {
+              id => "mutate_request"
+              add_field => { "request" => "%{[jsonLog][request]}" }
+            }
+          }
+          if [kubernetes][labels][component] {
+            if [jsonLog][ts] {
+                 mutate {
+                   id => "mutate_removefield_ts"
+                   remove_field => [ "[jsonLog][ts]" ]
+                 }
+             }
+          }
+             if [jsonLog][level] {
+                 mutate {
+                   id => "mutate_removefield_lvl"
+                   remove_field => [ "[jsonLog][level]" ]
+                 }
+             }
+             if [jsonLog][value][data] {
+                 mutate {
+                   id => "mutate_removefield_data"
+                   remove_field => [ "[jsonLog][value][data]" ]
+                 }
+             }
+        }
+        if ![kubernetes][namespace] {
+          mutate {
+            id => "filebeat_index"
+            add_field => { "[@metadata][target_index]" => "filebeat" }
+          }
+        } else if [kubernetes][labels][component] == "market-radar--crawler-content-downloader" or [kubernetes][labels][component] == "market-radar--crawler-extractor"  or [kubernetes][labels][component] == "market-radar--crawler-customer" or [kubernetes][labels][component] == "market-radar--crawler-task-scheduler" or [kubernetes][labels][component] == "market-radar--crawler-crawler-proxy" {
+          json {
+            id => "json_msg2"
+            source => "message"
+            skip_on_invalid_json => true
+          }
+          mutate {
+            id => "mutate_mr_crawler"
+            add_field => { "[@metadata][target_index]" => "mr-crawler" }
+          }
+        } else if [kubernetes][labels][opendistro_index] {
+          mutate {
+            id => "mutate_opendist_idx"
+            add_field => { "[@metadata][target_index]" => "%{[kubernetes][labels][opendistro_index]}" }
+          }
+          if [kubernetes][labels][component] == "operations-asd-integration-worker" and [jsonLog][asdResponse][response][deliveryPoint][workTime] {
+            mutate {
+              id => "mutate_worktime"
+              remove_field => [ "[jsonLog][asdResponse][response][deliveryPoint][workTime]" ]
+            }
+          }
+        } else {
+          grok {
+            id => "grok_targetindex"
+            match => { "[kubernetes][namespace]" => "(?<[@metadata][target_index]>^[^-]+)" }
+          }
+        }
+        if [ingress][upstream_response_time] {
+          mutate {
+            id => "ingress_nginx_float"
+            convert => { "[ingress][upstream_response_time]" => "float" }
+          }
+        }
+      }

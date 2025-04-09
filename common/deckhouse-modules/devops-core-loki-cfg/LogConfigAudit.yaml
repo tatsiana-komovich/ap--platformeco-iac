@@ -1,0 +1,21 @@
+---
+apiVersion: deckhouse.io/v1alpha1
+kind: ClusterLoggingConfig
+metadata:
+  name: loki-devops-core-audit
+spec:
+  type: File
+  file:
+    include:
+      - /var/log/kube-audit/audit.log
+  destinationRefs:
+    - loki-devops-core-storage-audit
+  logFilter:
+    - field: user.username
+      operator: NotRegex
+      values:
+        - "^system.+$"
+    - field: verb
+      operator: Regex
+      values:
+        - (create|delete|update|patch)

@@ -1,0 +1,68 @@
+# https://github.com/deckhouse/deckhouse/pull/4494
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  annotations:
+    user-authz.deckhouse.io/access-level: Admin
+  name: namespaces-admin
+rules:
+- apiGroups:
+  - ""
+  resources:
+    - namespaces
+  verbs:
+    - "*"
+- apiGroups:
+    - rbac.authorization.k8s.io
+  resources:
+    - roles
+    - rolebindings
+  verbs:
+    - get
+    - list
+    - watch
+    - create
+    - delete
+    - deletecollection
+    - patch
+    - update
+- apiGroups:
+    - ""
+  resources:
+    - serviceaccounts
+  verbs:
+    - "*"
+- apiGroups:
+    - networking.k8s.io
+  resources:
+    - networkpolicies
+  verbs:
+    - "*"
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  annotations:
+    user-authz.deckhouse.io/access-level: Editor
+  name: namespaces-editor
+rules:
+- apiGroups:
+    - ""
+  resources:
+    - namespaces
+  verbs:
+    - "*"
+- apiGroups:
+    - rbac.authorization.k8s.io
+  resources:
+    - roles
+    - rolebindings
+  verbs:
+    - list
+    - watch
+    - create
+    - delete
+    - deletecollection
+    - patch
+    - update

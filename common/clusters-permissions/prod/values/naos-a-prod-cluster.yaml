@@ -1,0 +1,85 @@
+---
+cluster_authorization:
+  defaults:
+    default_sa_permissions: &default
+      accessLevel: User
+      limitNamespaces:
+        - default
+      allowScale: true
+      allowAccessToSystemNamespaces: true
+      portForwarding: true
+  crowd:
+    groups:
+      crowd-lego-front-admin:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - magfront-.*
+          - magfront
+          - lmlegoconstructors-.*
+      crowd-lego-front-ro:
+        <<: *default
+        accessLevel: User
+        limitNamespaces:
+          - magfront-.*
+          - magfront
+          - lmlegoconstructors-.*
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+      crowd-lego-front-rw:
+        <<: *default
+        accessLevel: Editor
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - magfront-.*
+          - magfront
+          - lmlegoconstructors-.*
+      crowd-sa-lego-front:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - magfront-.*
+          - magfront
+          - lmlegoconstructors-.*
+      crowd-plp-admin:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - plp-.*
+      crowd-plp-ro:
+        <<: *default
+        accessLevel: User
+        limitNamespaces:
+          - plp-.*
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+      crowd-plp-rw:
+        <<: *default
+        accessLevel: Editor
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - plp-.*
+      crowd-sa-plp:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - plp-.*
+      crowd-obs-ro:
+        <<: *default
+        accessLevel: User
+        limitNamespaces:
+          - .*
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+      crowd-cp-admin:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - lmru--lmtube
+
+DexProvider:
+  clientID: k8s-argocd
+  clientSecret: crowd_app_k8s-argocd

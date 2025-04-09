@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: etcd-backup-script
+data:
+  restic_init.sh: |
+    #!/bin/sh
+    aws
+    restic init
+    exit 0
+  restic_backup.sh: |
+    #!/bin/sh
+    set -e
+    for script in /scripts/*
+    do
+      $script
+    done
+    restic unlock
+    restic backup -H master --files-from /tmp/files_to_backup.txt
+    sleep 10
+    restic forget --keep-within-daily 7d --keep-within-weekly 1m --keep-within-monthly 3m

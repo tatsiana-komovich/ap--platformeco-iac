@@ -1,0 +1,1043 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": {
+          "type": "datasource",
+          "uid": "grafana"
+        },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "target": {
+          "limit": 100,
+          "matchAny": false,
+          "tags": [],
+          "type": "dashboard"
+        },
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "id": 59,
+  "iteration": 1700475332562,
+  "links": [],
+  "liveNow": false,
+  "panels": [
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "id": 12,
+      "panels": [],
+      "title": "SLI/SLO",
+      "type": "row"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "P99D6B799F5C439F2"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "decimals": 6,
+          "mappings": [],
+          "max": 1,
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "#d44a3a",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 0.95
+              },
+              {
+                "color": "yellow",
+                "value": 0.98
+              },
+              {
+                "color": "#299c46",
+                "value": 0.99
+              }
+            ]
+          },
+          "unit": "percentunit"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 4,
+        "x": 0,
+        "y": 1
+      },
+      "id": 8,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": [
+            "mean"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "text": {},
+        "textMode": "auto"
+      },
+      "pluginVersion": "8.5.13",
+      "targets": [
+        {
+          "$$hashKey": "object:1725",
+          "aggregation": "Last",
+          "alias": "Status is",
+          "crit": 0,
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P99D6B799F5C439F2"
+          },
+          "decimals": 2,
+          "displayAliasType": "Warning / Critical",
+          "displayType": "Regular",
+          "displayValueWithAlias": "Never",
+          "exemplar": false,
+          "expr": "sum(rate(http_server_requests_seconds_count{namespace=\"$namespace\", service=\"$app\", uri=~\"$uri\", outcome!=\"SERVER_ERROR\"}[$rate]))/sum(rate(http_server_requests_seconds_count{namespace=\"$namespace\", service=\"$app\", uri=~\"$uri\"}[$rate]))",
+          "format": "time_series",
+          "instant": false,
+          "interval": "",
+          "legendFormat": "",
+          "refId": "A",
+          "units": "none",
+          "valueHandler": "Number Threshold"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P99D6B799F5C439F2"
+          },
+          "expr": "sum(rate(http_requests_count{namespace=\"$namespace\", service=\"$app\", path=~\"$uri\", status!=\"5XX\"}[$rate]))/sum(rate(http_requests_count{namespace=\"$namespace\", service=\"$app\", path=~\"$uri\"}[$rate]))",
+          "hide": false,
+          "refId": "B"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P99D6B799F5C439F2"
+          },
+          "hide": false,
+          "refId": "C"
+        }
+      ],
+      "title": "$app",
+      "type": "stat"
+    },
+    {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": {
+        "type": "prometheus",
+        "uid": "P99D6B799F5C439F2"
+      },
+      "decimals": 6,
+      "fill": 1,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 11,
+        "w": 19,
+        "x": 4,
+        "y": 1
+      },
+      "hiddenSeries": false,
+      "id": 6,
+      "legend": {
+        "alignAsTable": true,
+        "avg": true,
+        "current": true,
+        "max": true,
+        "min": true,
+        "show": true,
+        "sort": "current",
+        "sortDesc": true,
+        "total": false,
+        "values": true
+      },
+      "lines": true,
+      "linewidth": 1,
+      "nullPointMode": "null",
+      "options": {
+        "alertThreshold": true
+      },
+      "percentage": false,
+      "pluginVersion": "8.5.13",
+      "pointradius": 2,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P99D6B799F5C439F2"
+          },
+          "expr": "sum(rate(http_server_requests_seconds_count{namespace=\"$namespace\", service=\"$app\", uri=~\"$uri\", outcome!=\"SERVER_ERROR\"}[$rate]))/sum(rate(http_server_requests_seconds_count{namespace=\"$namespace\", service=\"$app\", uri=~\"$uri\"}[$rate]))",
+          "hide": false,
+          "interval": "",
+          "legendFormat": "",
+          "refId": "B"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P99D6B799F5C439F2"
+          },
+          "expr": "sum(rate(http_requests_count{namespace=\"$namespace\", service=\"$app\", path=~\"$uri\", status!=\"5XX\"}[$rate]))/sum(rate(http_requests_count{namespace=\"$namespace\", service=\"$app\", path=~\"$uri\"}[$rate]))",
+          "hide": false,
+          "refId": "A"
+        }
+      ],
+      "thresholds": [],
+      "timeRegions": [],
+      "title": "SLI",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "mode": "time",
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "$$hashKey": "object:260",
+          "decimals": 6,
+          "format": "percentunit",
+          "label": "",
+          "logBase": 1,
+          "show": true
+        },
+        {
+          "$$hashKey": "object:261",
+          "format": "reqps",
+          "logBase": 1,
+          "show": true
+        }
+      ],
+      "yaxis": {
+        "align": false
+      }
+    },
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 12
+      },
+      "id": 10,
+      "panels": [],
+      "repeat": "namespace",
+      "title": "Latency",
+      "type": "row"
+    },
+    {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": {
+        "type": "prometheus",
+        "uid": "P99D6B799F5C439F2"
+      },
+      "fill": 1,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 14,
+        "w": 12,
+        "x": 0,
+        "y": 13
+      },
+      "hiddenSeries": false,
+      "id": 2,
+      "legend": {
+        "alignAsTable": true,
+        "avg": true,
+        "current": true,
+        "max": true,
+        "min": true,
+        "show": true,
+        "sort": "max",
+        "sortDesc": true,
+        "total": false,
+        "values": true
+      },
+      "lines": true,
+      "linewidth": 1,
+      "nullPointMode": "null",
+      "options": {
+        "alertThreshold": true
+      },
+      "percentage": false,
+      "pluginVersion": "8.5.13",
+      "pointradius": 2,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P99D6B799F5C439F2"
+          },
+          "expr": "sum by (method, uri) (rate(http_server_requests_seconds_sum{exception=\"None\",namespace=\"$namespace\",service=\"$app\",uri=~\"$uri\"}[$rate])) / sum by (method, uri) (rate(http_server_requests_seconds_count{exception=\"None\",namespace=\"$namespace\",service=\"$app\",uri=~\"$uri\"}[$rate]))",
+          "hide": false,
+          "refId": "B"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P99D6B799F5C439F2"
+          },
+          "expr": "sum by (method, path) (rate(http_requests_sum{namespace=\"$namespace\",service=\"$app\",path=~\"$uri\"}[$rate])) / sum by (method, path) (rate(http_requests_count{namespace=\"$namespace\",service=\"$app\",path=~\"$uri\"}[$rate]))",
+          "hide": false,
+          "refId": "A"
+        }
+      ],
+      "thresholds": [],
+      "timeRegions": [],
+      "title": "Latency",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "mode": "time",
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "$$hashKey": "object:260",
+          "format": "s",
+          "logBase": 1,
+          "show": true
+        },
+        {
+          "$$hashKey": "object:261",
+          "format": "ms",
+          "logBase": 1,
+          "show": true
+        }
+      ],
+      "yaxis": {
+        "align": false
+      }
+    },
+    {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": {
+        "type": "prometheus",
+        "uid": "P99D6B799F5C439F2"
+      },
+      "fill": 1,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 7,
+        "w": 12,
+        "x": 12,
+        "y": 13
+      },
+      "hiddenSeries": false,
+      "id": 15,
+      "legend": {
+        "alignAsTable": true,
+        "avg": true,
+        "current": true,
+        "max": true,
+        "min": true,
+        "show": true,
+        "total": false,
+        "values": true
+      },
+      "lines": true,
+      "linewidth": 1,
+      "nullPointMode": "null",
+      "options": {
+        "alertThreshold": true
+      },
+      "percentage": false,
+      "pluginVersion": "8.5.13",
+      "pointradius": 2,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P99D6B799F5C439F2"
+          },
+          "expr": "histogram_quantile (\r\n          0.99,\r\n          sum by (uri,le,method)(\r\n            rate(http_server_requests_seconds_bucket{exception=\"None\",namespace=\"$namespace\",service=\"$app\",uri=~\"$uri\"}[$rate])\r\n          )\r\n        )",
+          "hide": false,
+          "refId": "B"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P99D6B799F5C439F2"
+          },
+          "expr": "histogram_quantile (\r\n          0.99,\r\n          sum by (path,le,method)(\r\n             rate(http_requests_bucket{namespace=\"$namespace\",service=\"$app\",path=~\"$uri\"}[$rate])\r\n          )\r\n        )",
+          "hide": false,
+          "refId": "A"
+        }
+      ],
+      "thresholds": [],
+      "timeRegions": [],
+      "title": "Latency p99",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "mode": "time",
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "$$hashKey": "object:260",
+          "format": "s",
+          "logBase": 1,
+          "show": true
+        },
+        {
+          "$$hashKey": "object:261",
+          "format": "ms",
+          "logBase": 1,
+          "show": true
+        }
+      ],
+      "yaxis": {
+        "align": false
+      }
+    },
+    {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": {
+        "type": "prometheus",
+        "uid": "P99D6B799F5C439F2"
+      },
+      "fill": 1,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 7,
+        "w": 12,
+        "x": 12,
+        "y": 20
+      },
+      "hiddenSeries": false,
+      "id": 16,
+      "legend": {
+        "alignAsTable": true,
+        "avg": true,
+        "current": true,
+        "max": true,
+        "min": true,
+        "show": true,
+        "total": false,
+        "values": true
+      },
+      "lines": true,
+      "linewidth": 1,
+      "nullPointMode": "null",
+      "options": {
+        "alertThreshold": true
+      },
+      "percentage": false,
+      "pluginVersion": "8.5.13",
+      "pointradius": 2,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P99D6B799F5C439F2"
+          },
+          "expr": "histogram_quantile (\r\n          0.50,\r\n          sum by (uri,le,method)(\r\n            rate(http_server_requests_seconds_bucket{exception=\"None\",namespace=\"$namespace\",service=\"$app\",uri=~\"$uri\"}[$rate])\r\n          )\r\n        )",
+          "hide": false,
+          "refId": "B"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P99D6B799F5C439F2"
+          },
+          "expr": "histogram_quantile (\r\n          0.50,\r\n          sum by (path,le,method)(\r\n             rate(http_requests_bucket{namespace=\"$namespace\",service=\"$app\",path=~\"$uri\"}[$rate])\r\n          )\r\n        )",
+          "hide": false,
+          "refId": "A"
+        }
+      ],
+      "thresholds": [],
+      "timeRegions": [],
+      "title": "Latency p50",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "mode": "time",
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "$$hashKey": "object:260",
+          "format": "s",
+          "logBase": 1,
+          "show": true
+        },
+        {
+          "$$hashKey": "object:261",
+          "format": "ms",
+          "logBase": 1,
+          "show": true
+        }
+      ],
+      "yaxis": {
+        "align": false
+      }
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "P99D6B799F5C439F2"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "fillOpacity": 80,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineWidth": 1
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 24,
+        "x": 0,
+        "y": 27
+      },
+      "id": 18,
+      "options": {
+        "bucketOffset": 0,
+        "combine": false,
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P99D6B799F5C439F2"
+          },
+          "editorMode": "code",
+          "expr": " sum by (uri,method)(\r\n            rate(http_server_requests_seconds_bucket{exception=\"None\",namespace=\"$namespace\",service=\"$app\",uri=~\"$uri\"}[$rate])\r\n          )",
+          "legendFormat": "",
+          "range": true,
+          "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P99D6B799F5C439F2"
+          },
+          "editorMode": "code",
+          "exemplar": false,
+          "expr": "sum by (path,method)(\r\n             rate(http_requests_bucket{namespace=\"$namespace\",service=\"$app\",path=~\"$uri\"}[$rate])\r\n          )",
+          "hide": false,
+          "legendFormat": "",
+          "range": true,
+          "refId": "B"
+        }
+      ],
+      "title": "Histogram",
+      "type": "histogram"
+    },
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 35
+      },
+      "id": 14,
+      "panels": [],
+      "title": "RPS",
+      "type": "row"
+    },
+    {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": {
+        "type": "prometheus",
+        "uid": "P99D6B799F5C439F2"
+      },
+      "fill": 1,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 11,
+        "w": 10,
+        "x": 0,
+        "y": 36
+      },
+      "hiddenSeries": false,
+      "id": 4,
+      "legend": {
+        "alignAsTable": true,
+        "avg": true,
+        "current": true,
+        "max": true,
+        "min": true,
+        "show": true,
+        "total": false,
+        "values": true
+      },
+      "lines": true,
+      "linewidth": 1,
+      "nullPointMode": "null",
+      "options": {
+        "alertThreshold": true
+      },
+      "percentage": false,
+      "pluginVersion": "8.5.13",
+      "pointradius": 2,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P99D6B799F5C439F2"
+          },
+          "expr": "sum by (uri,method) (rate(http_server_requests_seconds_count{exception=\"None\",namespace=\"$namespace\",service=\"$app\",uri=~\"$uri\"}[$rate]))",
+          "hide": false,
+          "interval": "",
+          "legendFormat": "{{uri}}",
+          "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P99D6B799F5C439F2"
+          },
+          "expr": "sum by (path,method) (rate(http_requests_count{namespace=\"$namespace\",service=\"$app\",path=~\"$uri\"}[$rate]))",
+          "hide": false,
+          "refId": "B"
+        }
+      ],
+      "thresholds": [],
+      "timeRegions": [],
+      "title": "RPS",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "mode": "time",
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "$$hashKey": "object:260",
+          "format": "reqps",
+          "logBase": 1,
+          "show": true
+        },
+        {
+          "$$hashKey": "object:261",
+          "format": "reqps",
+          "logBase": 1,
+          "show": true
+        }
+      ],
+      "yaxis": {
+        "align": false
+      }
+    },
+    {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": {
+        "type": "prometheus",
+        "uid": "P99D6B799F5C439F2"
+      },
+      "fill": 1,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 11,
+        "w": 14,
+        "x": 10,
+        "y": 36
+      },
+      "hiddenSeries": false,
+      "id": 19,
+      "legend": {
+        "alignAsTable": true,
+        "avg": true,
+        "current": true,
+        "hideEmpty": false,
+        "max": true,
+        "min": true,
+        "rightSide": false,
+        "show": true,
+        "total": false,
+        "values": true
+      },
+      "lines": true,
+      "linewidth": 1,
+      "nullPointMode": "null",
+      "options": {
+        "alertThreshold": true
+      },
+      "percentage": false,
+      "pluginVersion": "8.5.13",
+      "pointradius": 2,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P99D6B799F5C439F2"
+          },
+          "expr": "sum by (outcome) (rate(http_server_requests_seconds_count{namespace=\"$namespace\",service=\"$app\",uri=~\"$uri\",outcome!=\"SUCCESS\"}[$rate]))",
+          "hide": false,
+          "interval": "",
+          "legendFormat": "{{uri}}",
+          "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P99D6B799F5C439F2"
+          },
+          "expr": "sum by (status) (rate(http_requests_count{namespace=\"$namespace\",service=\"$app\",path=~\"$uri\",status!=\"2XX\"}[$rate]))",
+          "hide": false,
+          "refId": "B"
+        }
+      ],
+      "thresholds": [],
+      "timeRegions": [],
+      "title": "ERRORS",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "mode": "time",
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "$$hashKey": "object:260",
+          "format": "reqps",
+          "logBase": 1,
+          "show": true
+        },
+        {
+          "$$hashKey": "object:261",
+          "format": "reqps",
+          "logBase": 1,
+          "show": true
+        }
+      ],
+      "yaxis": {
+        "align": false
+      }
+    }
+  ],
+  "refresh": false,
+  "schemaVersion": 36,
+  "style": "dark",
+  "tags": [],
+  "templating": {
+    "list": [
+      {
+        "hide": 2,
+        "name": "excluded_urls",
+        "query": "/actuator.*|.*api-docs.*|.*swagger.*|/metrics|.*webjars.*|/_healthz|/_readiness",
+        "skipUrlSync": false,
+        "type": "constant"
+      },
+      {
+        "current": {
+          "selected": true,
+          "text": "scdp-whs-picking-prod",
+          "value": "scdp-whs-picking-prod"
+        },
+        "datasource": {
+          "type": "prometheus",
+          "uid": "P0D6E4079E36703EB"
+        },
+        "definition": "query_result((group by (namespace) (jvm_classes_loaded_classes) OR group by (namespace) (nodejs_version_info)))",
+        "hide": 0,
+        "includeAll": false,
+        "label": "Namespace",
+        "multi": false,
+        "name": "namespace",
+        "options": [],
+        "query": {
+          "query": "query_result((group by (namespace) (jvm_classes_loaded_classes) OR group by (namespace) (nodejs_version_info)))",
+          "refId": "StandardVariableQuery"
+        },
+        "refresh": 1,
+        "regex": "/.*namespace=\"([^\"]*).*/",
+        "skipUrlSync": false,
+        "sort": 1,
+        "tagValuesQuery": "",
+        "tagsQuery": "",
+        "type": "query",
+        "useTags": false
+      },
+      {
+        "current": {
+          "selected": true,
+          "text": "task-customer-order",
+          "value": "task-customer-order"
+        },
+        "datasource": {
+          "type": "prometheus",
+          "uid": "P0D6E4079E36703EB"
+        },
+        "definition": "query_result((group by (service) (jvm_classes_loaded_classes{namespace=\"$namespace\"}) OR group by (service) (nodejs_version_info{namespace=\"$namespace\"})))",
+        "hide": 0,
+        "includeAll": false,
+        "label": "Application",
+        "multi": false,
+        "name": "app",
+        "options": [],
+        "query": {
+          "query": "query_result((group by (service) (jvm_classes_loaded_classes{namespace=\"$namespace\"}) OR group by (service) (nodejs_version_info{namespace=\"$namespace\"})))",
+          "refId": "StandardVariableQuery"
+        },
+        "refresh": 1,
+        "regex": "/.*service=\"([^\"]*).*/",
+        "skipUrlSync": false,
+        "sort": 1,
+        "tagValuesQuery": "",
+        "tagsQuery": "",
+        "type": "query",
+        "useTags": false
+      },
+      {
+        "current": {
+          "selected": false,
+          "text": "All",
+          "value": "$__all"
+        },
+        "datasource": {
+          "type": "prometheus",
+          "uid": "P0D6E4079E36703EB"
+        },
+        "definition": "query_result(group by (uri) (http_server_requests_seconds_sum{namespace=\"$namespace\",service=\"$app\",uri!~\"$excluded_urls\"}) OR group by (path) (http_requests_sum{namespace=\"$namespace\",service=\"$app\",path!~\"$excluded_urls\"}))",
+        "hide": 0,
+        "includeAll": true,
+        "label": "Uri",
+        "multi": true,
+        "name": "uri",
+        "options": [],
+        "query": {
+          "query": "query_result(group by (uri) (http_server_requests_seconds_sum{namespace=\"$namespace\",service=\"$app\",uri!~\"$excluded_urls\"}) OR group by (path) (http_requests_sum{namespace=\"$namespace\",service=\"$app\",path!~\"$excluded_urls\"}))",
+          "refId": "StandardVariableQuery"
+        },
+        "refresh": 2,
+        "regex": "/.*=\"([^\"]*).*/",
+        "skipUrlSync": false,
+        "sort": 0,
+        "tagValuesQuery": "",
+        "tagsQuery": "",
+        "type": "query",
+        "useTags": false
+      },
+      {
+        "auto": false,
+        "auto_count": 30,
+        "auto_min": "10s",
+        "current": {
+          "selected": true,
+          "text": "6h",
+          "value": "6h"
+        },
+        "hide": 0,
+        "label": "Span",
+        "name": "rate",
+        "options": [
+          {
+            "selected": false,
+            "text": "10m",
+            "value": "10m"
+          },
+          {
+            "selected": false,
+            "text": "30m",
+            "value": "30m"
+          },
+          {
+            "selected": false,
+            "text": "1h",
+            "value": "1h"
+          },
+          {
+            "selected": true,
+            "text": "6h",
+            "value": "6h"
+          },
+          {
+            "selected": false,
+            "text": "12h",
+            "value": "12h"
+          },
+          {
+            "selected": false,
+            "text": "1d",
+            "value": "1d"
+          },
+          {
+            "selected": false,
+            "text": "7d",
+            "value": "7d"
+          },
+          {
+            "selected": false,
+            "text": "14d",
+            "value": "14d"
+          },
+          {
+            "selected": false,
+            "text": "30d",
+            "value": "30d"
+          },
+          {
+            "selected": false,
+            "text": "60d",
+            "value": "60d"
+          },
+          {
+            "selected": false,
+            "text": "90d",
+            "value": "90d"
+          }
+        ],
+        "query": "10m,30m,1h,6h,12h,1d,7d,14d,30d,60d,90d",
+        "queryValue": "",
+        "refresh": 2,
+        "skipUrlSync": false,
+        "type": "interval"
+      }
+    ]
+  },
+  "time": {
+    "from": "now-7d",
+    "to": "now"
+  },
+  "timepicker": {},
+  "timezone": "",
+  "title": "APM - SLI",
+  "uid": "1uwE50i7n4n",
+  "version": 33,
+  "weekStart": ""
+}

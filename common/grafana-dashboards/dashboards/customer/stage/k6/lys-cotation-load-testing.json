@@ -1,0 +1,5917 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": {
+          "type": "grafana",
+          "uid": "-- Grafana --"
+        },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "target": {
+          "limit": 100,
+          "matchAny": false,
+          "tags": [],
+          "type": "dashboard"
+        },
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "id": 80,
+  "links": [],
+  "liveNow": false,
+  "panels": [
+    {
+      "datasource": "lys-cotation--load-tests",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisGridShow": true,
+            "axisLabel": "",
+            "axisPlacement": "left",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 14,
+            "gradientMode": "opacity",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "stepBefore",
+            "lineStyle": {
+              "fill": "solid"
+            },
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "spanNulls": true,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Create Account"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "#eab839",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Get By Card Number"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "#1f78c1",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Get By Customer Number"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "#f9934e",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Get By Customer Number 404"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "#dedaf7",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Get History By Card Number"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "#bf1b00",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Order Validation Commit"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "dark-purple",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 10,
+        "w": 12,
+        "x": 0,
+        "y": 0
+      },
+      "id": 29,
+      "links": [],
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "table",
+          "placement": "right"
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "8.2.6",
+      "targets": [
+        {
+          "alias": "All RPS",
+          "datasource": "lys-cotation--load-tests",
+          "groupBy": [
+            {
+              "params": [
+                "1s"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "null"
+              ],
+              "type": "fill"
+            }
+          ],
+          "hide": false,
+          "measurement": "http_reqs",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "refId": "A",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "count"
+              }
+            ]
+          ],
+          "tags": []
+        },
+        {
+          "alias": " Sale With All Product Types Simulation",
+          "datasource": "lys-cotation--load-tests",
+          "groupBy": [
+            {
+              "params": [
+                "1s"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "null"
+              ],
+              "type": "fill"
+            }
+          ],
+          "hide": false,
+          "measurement": "successSaleWithAllProductTypesSimulation",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "refId": "B",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "count"
+              }
+            ]
+          ],
+          "tags": []
+        },
+        {
+          "alias": "Sale With All Product Types Commit",
+          "datasource": "lys-cotation--load-tests",
+          "groupBy": [
+            {
+              "params": [
+                "1s"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "null"
+              ],
+              "type": "fill"
+            }
+          ],
+          "hide": false,
+          "measurement": "successSaleWithAllProductTypesCommit",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "refId": "H",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "count"
+              }
+            ]
+          ],
+          "tags": []
+        },
+        {
+          "alias": "Order Validation Simulation",
+          "datasource": "lys-cotation--load-tests",
+          "groupBy": [
+            {
+              "params": [
+                "1s"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "null"
+              ],
+              "type": "fill"
+            }
+          ],
+          "hide": false,
+          "measurement": "successOrderValidationSimulation",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "refId": "E",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "count"
+              }
+            ]
+          ],
+          "tags": []
+        },
+        {
+          "alias": "Order Validation Commit",
+          "datasource": "lys-cotation--load-tests",
+          "groupBy": [
+            {
+              "params": [
+                "1s"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "null"
+              ],
+              "type": "fill"
+            }
+          ],
+          "hide": false,
+          "measurement": "successOrderValidationCommit",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "refId": "C",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "count"
+              }
+            ]
+          ],
+          "tags": []
+        },
+        {
+          "alias": "Order Validation Simulation Partial Tak Away",
+          "datasource": "lys-cotation--load-tests",
+          "groupBy": [
+            {
+              "params": [
+                "1s"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "null"
+              ],
+              "type": "fill"
+            }
+          ],
+          "hide": false,
+          "measurement": "successOrderValidationSimulationPartialTakeAway",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "refId": "D",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "count"
+              }
+            ]
+          ],
+          "tags": []
+        },
+        {
+          "alias": "Order Validation Commit Partial Take Away",
+          "datasource": "lys-cotation--load-tests",
+          "groupBy": [
+            {
+              "params": [
+                "1s"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "null"
+              ],
+              "type": "fill"
+            }
+          ],
+          "hide": false,
+          "measurement": "successOrderValidationCommitPartialTakeAway",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "refId": "F",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "count"
+              }
+            ]
+          ],
+          "tags": []
+        },
+        {
+          "alias": "Order Validation Simulation Full Take Away",
+          "datasource": "lys-cotation--load-tests",
+          "groupBy": [
+            {
+              "params": [
+                "1s"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "null"
+              ],
+              "type": "fill"
+            }
+          ],
+          "hide": false,
+          "measurement": "successOrderValidationSimulationFullTakeAway",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "refId": "G",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "count"
+              }
+            ]
+          ],
+          "tags": []
+        },
+        {
+          "alias": "Order Validation Commit Full Take Away",
+          "datasource": "lys-cotation--load-tests",
+          "groupBy": [
+            {
+              "params": [
+                "1s"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "null"
+              ],
+              "type": "fill"
+            }
+          ],
+          "hide": false,
+          "measurement": "successOrderValidationCommitFullTakeAway",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "refId": "I",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "count"
+              }
+            ]
+          ],
+          "tags": []
+        },
+        {
+          "alias": "Partial Return Products",
+          "datasource": "lys-cotation--load-tests",
+          "groupBy": [
+            {
+              "params": [
+                "1s"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "null"
+              ],
+              "type": "fill"
+            }
+          ],
+          "hide": false,
+          "measurement": "successPartialReturnProducts",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "refId": "J",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "count"
+              }
+            ]
+          ],
+          "tags": []
+        },
+        {
+          "alias": "Full Return Products",
+          "datasource": "lys-cotation--load-tests",
+          "groupBy": [
+            {
+              "params": [
+                "1s"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "null"
+              ],
+              "type": "fill"
+            }
+          ],
+          "hide": false,
+          "measurement": "successFullReturnProducts",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "refId": "K",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "count"
+              }
+            ]
+          ],
+          "tags": []
+        },
+        {
+          "alias": "Partial Return Burn Products",
+          "datasource": "lys-cotation--load-tests",
+          "groupBy": [
+            {
+              "params": [
+                "1s"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "null"
+              ],
+              "type": "fill"
+            }
+          ],
+          "hide": false,
+          "measurement": "successPartialReturnBurnProducts",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "refId": "L",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "count"
+              }
+            ]
+          ],
+          "tags": []
+        },
+        {
+          "alias": "Partial Return Earn Products",
+          "datasource": "lys-cotation--load-tests",
+          "groupBy": [
+            {
+              "params": [
+                "1s"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "null"
+              ],
+              "type": "fill"
+            }
+          ],
+          "hide": false,
+          "measurement": "successPartialReturnEarnProducts",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "refId": "M",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "count"
+              }
+            ]
+          ],
+          "tags": []
+        },
+        {
+          "alias": "Full Return Burn Products",
+          "datasource": "lys-cotation--load-tests",
+          "groupBy": [
+            {
+              "params": [
+                "1s"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "null"
+              ],
+              "type": "fill"
+            }
+          ],
+          "hide": false,
+          "measurement": "successFullReturnBurnProducts",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "refId": "N",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "count"
+              }
+            ]
+          ],
+          "tags": []
+        },
+        {
+          "alias": "Full Return Earn Products",
+          "datasource": "lys-cotation--load-tests",
+          "groupBy": [
+            {
+              "params": [
+                "1s"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "null"
+              ],
+              "type": "fill"
+            }
+          ],
+          "hide": false,
+          "measurement": "successFullReturnEarnProducts",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "refId": "O",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "count"
+              }
+            ]
+          ],
+          "tags": []
+        }
+      ],
+      "title": "RPS (Request per Seconds)",
+      "type": "timeseries"
+    },
+    {
+      "datasource": "lys-cotation--load-tests",
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "ms"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 3,
+        "x": 12,
+        "y": 0
+      },
+      "id": 5,
+      "interval": ">1s",
+      "links": [],
+      "options": {
+        "colorMode": "background",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "vertical",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": true
+        },
+        "text": {
+          "titleSize": 45
+        },
+        "textMode": "value_and_name"
+      },
+      "pluginVersion": "8.5.13",
+      "targets": [
+        {
+          "alias": "P(95)",
+          "datasource": "lys-cotation--load-tests",
+          "dsType": "influxdb",
+          "groupBy": [],
+          "hide": false,
+          "measurement": "http_req_duration",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT percentile(\"value\", 95) FROM \"http_req_duration\" WHERE $timeFilter",
+          "rawQuery": false,
+          "refId": "D",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [
+                  "95"
+                ],
+                "type": "percentile"
+              }
+            ]
+          ],
+          "tags": []
+        }
+      ],
+      "title": "Percentile 95",
+      "type": "stat"
+    },
+    {
+      "datasource": "lys-cotation--load-tests",
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "semi-dark-yellow",
+            "mode": "fixed"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "ms"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 3,
+        "x": 15,
+        "y": 0
+      },
+      "id": 33,
+      "interval": ">1s",
+      "links": [],
+      "options": {
+        "colorMode": "background",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "vertical",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": true
+        },
+        "text": {
+          "titleSize": 45
+        },
+        "textMode": "value_and_name"
+      },
+      "pluginVersion": "8.5.13",
+      "targets": [
+        {
+          "alias": "P(90)",
+          "datasource": "lys-cotation--load-tests",
+          "dsType": "influxdb",
+          "groupBy": [],
+          "hide": false,
+          "measurement": "http_req_duration",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT percentile(\"value\", 90) FROM \"http_req_duration\" WHERE $timeFilter",
+          "rawQuery": false,
+          "refId": "C",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [
+                  "90"
+                ],
+                "type": "percentile"
+              }
+            ]
+          ],
+          "tags": []
+        }
+      ],
+      "title": "Percentile 90",
+      "type": "stat"
+    },
+    {
+      "datasource": "lys-cotation--load-tests",
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "light-blue",
+            "mode": "fixed"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "ms"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 3,
+        "x": 18,
+        "y": 0
+      },
+      "id": 32,
+      "interval": ">1s",
+      "links": [],
+      "options": {
+        "colorMode": "background",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "vertical",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": true
+        },
+        "text": {
+          "titleSize": 45
+        },
+        "textMode": "value_and_name"
+      },
+      "pluginVersion": "8.5.13",
+      "targets": [
+        {
+          "alias": "P(80)",
+          "datasource": "lys-cotation--load-tests",
+          "dsType": "influxdb",
+          "groupBy": [],
+          "hide": false,
+          "measurement": "http_req_duration",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT percentile(\"value\", 80) FROM \"http_req_duration\" WHERE $timeFilter",
+          "rawQuery": false,
+          "refId": "A",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [
+                  "80"
+                ],
+                "type": "percentile"
+              }
+            ]
+          ],
+          "tags": []
+        }
+      ],
+      "title": "Percentile 80",
+      "type": "stat"
+    },
+    {
+      "datasource": "lys-cotation--load-tests",
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "orange",
+            "mode": "fixed"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "ms"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 3,
+        "x": 21,
+        "y": 0
+      },
+      "id": 31,
+      "interval": ">1s",
+      "links": [],
+      "options": {
+        "colorMode": "background",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "vertical",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": true
+        },
+        "text": {
+          "titleSize": 45
+        },
+        "textMode": "value_and_name"
+      },
+      "pluginVersion": "8.5.13",
+      "targets": [
+        {
+          "alias": "P(50)",
+          "datasource": "lys-cotation--load-tests",
+          "dsType": "influxdb",
+          "groupBy": [],
+          "hide": false,
+          "measurement": "http_req_duration",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT percentile(\"value\", 50) FROM \"http_req_duration\" WHERE $timeFilter",
+          "rawQuery": false,
+          "refId": "B",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [
+                  "50"
+                ],
+                "type": "percentile"
+              }
+            ]
+          ],
+          "tags": []
+        }
+      ],
+      "title": "Percentile 50",
+      "type": "stat"
+    },
+    {
+      "datasource": "lys-cotation--load-tests",
+      "description": "Sale With All Product Types Simulation",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "ms"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 3,
+        "w": 3,
+        "x": 12,
+        "y": 6
+      },
+      "id": 16,
+      "interval": ">1s",
+      "links": [],
+      "options": {
+        "colorMode": "background",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": true
+        },
+        "text": {
+          "titleSize": 20
+        },
+        "textMode": "value_and_name"
+      },
+      "pluginVersion": "8.5.13",
+      "targets": [
+        {
+          "alias": "P(95)",
+          "datasource": "lys-cotation--load-tests",
+          "groupBy": [],
+          "measurement": "saleWithAllProductTypesSimulationDuration",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "refId": "A",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [
+                  95
+                ],
+                "type": "percentile"
+              }
+            ]
+          ],
+          "tags": []
+        }
+      ],
+      "title": "Sale With All Product Types Simulation",
+      "type": "stat"
+    },
+    {
+      "datasource": "lys-cotation--load-tests",
+      "description": "Sale With All Product Types Commit",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "semi-dark-yellow",
+            "mode": "fixed"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "dark-orange",
+                "value": null
+              }
+            ]
+          },
+          "unit": "ms"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 3,
+        "w": 3,
+        "x": 15,
+        "y": 6
+      },
+      "id": 36,
+      "interval": ">1s",
+      "links": [],
+      "options": {
+        "colorMode": "background",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": true
+        },
+        "text": {
+          "titleSize": 20
+        },
+        "textMode": "value_and_name"
+      },
+      "pluginVersion": "8.5.13",
+      "targets": [
+        {
+          "alias": "P(90)",
+          "datasource": "lys-cotation--load-tests",
+          "groupBy": [],
+          "measurement": "saleWithAllProductTypesSimulationDuration",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "refId": "A",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [
+                  "90"
+                ],
+                "type": "percentile"
+              }
+            ]
+          ],
+          "tags": []
+        }
+      ],
+      "title": "Sale With All Product Types Simulation",
+      "type": "stat"
+    },
+    {
+      "datasource": "lys-cotation--load-tests",
+      "description": "Sale With All Product Types Simulation",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "light-blue",
+            "mode": "fixed"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "ms"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 3,
+        "w": 3,
+        "x": 18,
+        "y": 6
+      },
+      "id": 37,
+      "interval": ">1s",
+      "links": [],
+      "options": {
+        "colorMode": "background",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": true
+        },
+        "text": {
+          "titleSize": 20
+        },
+        "textMode": "value_and_name"
+      },
+      "pluginVersion": "8.5.13",
+      "targets": [
+        {
+          "alias": "P(80)",
+          "datasource": "lys-cotation--load-tests",
+          "groupBy": [],
+          "measurement": "saleWithAllProductTypesCommitDuration",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "refId": "A",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [
+                  "80"
+                ],
+                "type": "percentile"
+              }
+            ]
+          ],
+          "tags": []
+        }
+      ],
+      "title": "Sale With All Product Types Simulation",
+      "type": "stat"
+    },
+    {
+      "datasource": "lys-cotation--load-tests",
+      "description": "Sale With All Product Types Simulation",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "orange",
+            "mode": "fixed"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "ms"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 3,
+        "w": 3,
+        "x": 21,
+        "y": 6
+      },
+      "id": 38,
+      "interval": ">1s",
+      "links": [],
+      "options": {
+        "colorMode": "background",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": true
+        },
+        "text": {
+          "titleSize": 20
+        },
+        "textMode": "value_and_name"
+      },
+      "pluginVersion": "8.5.13",
+      "targets": [
+        {
+          "alias": "P(50)",
+          "datasource": "lys-cotation--load-tests",
+          "groupBy": [],
+          "measurement": "saleWithAllProductTypesSimulationDuration",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "refId": "A",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [
+                  "50"
+                ],
+                "type": "percentile"
+              }
+            ]
+          ],
+          "tags": []
+        }
+      ],
+      "title": "Sale With All Product Types Simulation",
+      "type": "stat"
+    },
+    {
+      "datasource": "lys-cotation--load-tests",
+      "description": "Sale With All Product Types Commit",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "ms"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 3,
+        "w": 3,
+        "x": 12,
+        "y": 9
+      },
+      "id": 14,
+      "interval": ">1s",
+      "links": [],
+      "options": {
+        "colorMode": "background",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "vertical",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "text": {
+          "titleSize": 20,
+          "valueSize": 50
+        },
+        "textMode": "value_and_name"
+      },
+      "pluginVersion": "8.5.13",
+      "targets": [
+        {
+          "alias": "P(95)",
+          "datasource": "lys-cotation--load-tests",
+          "dsType": "influxdb",
+          "groupBy": [],
+          "measurement": "saleWithAllProductTypesCommitDuration",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT percentile(\"value\", 95) FROM \"getByCustomerNumber404Duration\" WHERE $timeFilter",
+          "rawQuery": false,
+          "refId": "D",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [
+                  95
+                ],
+                "type": "percentile"
+              }
+            ]
+          ],
+          "tags": []
+        }
+      ],
+      "title": "Sale With All Product Types Commit",
+      "type": "stat"
+    },
+    {
+      "datasource": "lys-cotation--load-tests",
+      "description": "Sale With All Product Types Commit",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "semi-dark-yellow",
+            "mode": "fixed"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "ms"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 3,
+        "w": 3,
+        "x": 15,
+        "y": 9
+      },
+      "id": 42,
+      "interval": ">1s",
+      "links": [],
+      "options": {
+        "colorMode": "background",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "vertical",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "text": {
+          "titleSize": 20,
+          "valueSize": 50
+        },
+        "textMode": "value_and_name"
+      },
+      "pluginVersion": "8.5.13",
+      "targets": [
+        {
+          "alias": "P(90)",
+          "datasource": "lys-cotation--load-tests",
+          "dsType": "influxdb",
+          "groupBy": [],
+          "measurement": "saleWithAllProductTypesCommitDuration",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT percentile(\"value\", 95) FROM \"getByCustomerNumber404Duration\" WHERE $timeFilter",
+          "rawQuery": false,
+          "refId": "C",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [
+                  "90"
+                ],
+                "type": "percentile"
+              }
+            ]
+          ],
+          "tags": []
+        }
+      ],
+      "title": "Sale With All Product Types Commit",
+      "type": "stat"
+    },
+    {
+      "datasource": "lys-cotation--load-tests",
+      "description": "Sale With All Product Types Commit",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "light-blue",
+            "mode": "fixed"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "ms"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 3,
+        "w": 3,
+        "x": 18,
+        "y": 9
+      },
+      "id": 41,
+      "interval": ">1s",
+      "links": [],
+      "options": {
+        "colorMode": "background",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "vertical",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "text": {
+          "titleSize": 20,
+          "valueSize": 50
+        },
+        "textMode": "value_and_name"
+      },
+      "pluginVersion": "8.5.13",
+      "targets": [
+        {
+          "alias": "P(80)",
+          "datasource": "lys-cotation--load-tests",
+          "dsType": "influxdb",
+          "groupBy": [],
+          "measurement": "saleWithAllProductTypesCommitDuration",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT percentile(\"value\", 80) FROM \"getByCustomerNumber404Duration\" WHERE $timeFilter",
+          "rawQuery": false,
+          "refId": "A",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [
+                  "80"
+                ],
+                "type": "percentile"
+              }
+            ]
+          ],
+          "tags": []
+        }
+      ],
+      "title": "Sale With All Product Types Commit",
+      "type": "stat"
+    },
+    {
+      "datasource": "lys-cotation--load-tests",
+      "description": "Sale With All Product Types Commit",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "semi-dark-orange",
+            "mode": "fixed"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "ms"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 3,
+        "w": 3,
+        "x": 21,
+        "y": 9
+      },
+      "id": 40,
+      "interval": ">1s",
+      "links": [],
+      "options": {
+        "colorMode": "background",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "vertical",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "text": {
+          "titleSize": 20,
+          "valueSize": 50
+        },
+        "textMode": "value_and_name"
+      },
+      "pluginVersion": "8.5.13",
+      "targets": [
+        {
+          "alias": "P(50)",
+          "datasource": "lys-cotation--load-tests",
+          "dsType": "influxdb",
+          "groupBy": [],
+          "measurement": "saleWithAllProductTypesCommitDuration",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT percentile(\"value\", 50) FROM \"getByCustomerNumber404Duration\" WHERE $timeFilter",
+          "rawQuery": false,
+          "refId": "B",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [
+                  "50"
+                ],
+                "type": "percentile"
+              }
+            ]
+          ],
+          "tags": []
+        }
+      ],
+      "title": "Sale With All Product Types Commit",
+      "type": "stat"
+    },
+    {
+      "datasource": "lys-cotation--load-tests",
+      "description": "Partial Return Products",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "ms"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 3,
+        "w": 6,
+        "x": 0,
+        "y": 10
+      },
+      "id": 44,
+      "interval": ">1s",
+      "links": [],
+      "options": {
+        "colorMode": "background",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": true
+        },
+        "text": {
+          "titleSize": 20
+        },
+        "textMode": "auto"
+      },
+      "pluginVersion": "8.5.13",
+      "targets": [
+        {
+          "alias": "P(95)",
+          "dsType": "influxdb",
+          "groupBy": [],
+          "measurement": "partialReturnProductsDuration",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT percentile(\"value\", 95) FROM \"getByCardNumberDuration\" WHERE $timeFilter",
+          "rawQuery": false,
+          "refId": "D",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [
+                  95
+                ],
+                "type": "percentile"
+              }
+            ]
+          ],
+          "tags": []
+        },
+        {
+          "alias": "P(90)",
+          "dsType": "influxdb",
+          "groupBy": [],
+          "measurement": "partialReturnProductsDuration",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT percentile(\"value\", 50) FROM \"getByCardNumberDuration\" WHERE $timeFilter",
+          "rawQuery": false,
+          "refId": "C",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [
+                  "90"
+                ],
+                "type": "percentile"
+              }
+            ]
+          ],
+          "tags": []
+        },
+        {
+          "alias": "P(80)",
+          "dsType": "influxdb",
+          "groupBy": [],
+          "measurement": "partialReturnProductsDuration",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT percentile(\"value\", 80) FROM \"getByCardNumberDuration\" WHERE $timeFilter",
+          "rawQuery": false,
+          "refId": "A",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [
+                  "80"
+                ],
+                "type": "percentile"
+              }
+            ]
+          ],
+          "tags": []
+        },
+        {
+          "alias": "P(50)",
+          "dsType": "influxdb",
+          "groupBy": [],
+          "measurement": "partialReturnProductsDuration",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT percentile(\"value\", 50) FROM \"getByCardNumberDuration\" WHERE $timeFilter",
+          "rawQuery": false,
+          "refId": "B",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [
+                  "50"
+                ],
+                "type": "percentile"
+              }
+            ]
+          ],
+          "tags": []
+        }
+      ],
+      "title": "Partial Return Products",
+      "type": "stat"
+    },
+    {
+      "datasource": "lys-cotation--load-tests",
+      "description": "Full Return Products",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "ms"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 3,
+        "w": 6,
+        "x": 6,
+        "y": 10
+      },
+      "id": 45,
+      "interval": ">1s",
+      "links": [],
+      "options": {
+        "colorMode": "background",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": true
+        },
+        "text": {
+          "titleSize": 20
+        },
+        "textMode": "auto"
+      },
+      "pluginVersion": "8.5.13",
+      "targets": [
+        {
+          "alias": "P(95)",
+          "dsType": "influxdb",
+          "groupBy": [],
+          "measurement": "fullReturnProductsDuration",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT percentile(\"value\", 95) FROM \"getByCardNumberDuration\" WHERE $timeFilter",
+          "rawQuery": false,
+          "refId": "D",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [
+                  95
+                ],
+                "type": "percentile"
+              }
+            ]
+          ],
+          "tags": []
+        },
+        {
+          "alias": "P(90)",
+          "dsType": "influxdb",
+          "groupBy": [],
+          "measurement": "fullReturnProductsDuration",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT percentile(\"value\", 50) FROM \"getByCardNumberDuration\" WHERE $timeFilter",
+          "rawQuery": false,
+          "refId": "C",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [
+                  "90"
+                ],
+                "type": "percentile"
+              }
+            ]
+          ],
+          "tags": []
+        },
+        {
+          "alias": "P(80)",
+          "dsType": "influxdb",
+          "groupBy": [],
+          "measurement": "fullReturnProductsDuration",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT percentile(\"value\", 80) FROM \"getByCardNumberDuration\" WHERE $timeFilter",
+          "rawQuery": false,
+          "refId": "A",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [
+                  "80"
+                ],
+                "type": "percentile"
+              }
+            ]
+          ],
+          "tags": []
+        },
+        {
+          "alias": "P(50)",
+          "dsType": "influxdb",
+          "groupBy": [],
+          "measurement": "fullReturnProductsDuration",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT percentile(\"value\", 50) FROM \"getByCardNumberDuration\" WHERE $timeFilter",
+          "rawQuery": false,
+          "refId": "B",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [
+                  "50"
+                ],
+                "type": "percentile"
+              }
+            ]
+          ],
+          "tags": []
+        }
+      ],
+      "title": "Full Return Products",
+      "type": "stat"
+    },
+    {
+      "datasource": "lys-cotation--load-tests",
+      "description": "Order Validation Simulation",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "ms"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 3,
+        "w": 6,
+        "x": 12,
+        "y": 12
+      },
+      "id": 11,
+      "interval": ">1s",
+      "links": [],
+      "options": {
+        "colorMode": "background",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": true
+        },
+        "text": {
+          "titleSize": 20
+        },
+        "textMode": "auto"
+      },
+      "pluginVersion": "8.5.13",
+      "targets": [
+        {
+          "alias": "P(95)",
+          "dsType": "influxdb",
+          "groupBy": [],
+          "measurement": "orderValidationSimulationDuration",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT percentile(\"value\", 95) FROM \"getByCardNumberDuration\" WHERE $timeFilter",
+          "rawQuery": false,
+          "refId": "D",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [
+                  95
+                ],
+                "type": "percentile"
+              }
+            ]
+          ],
+          "tags": []
+        },
+        {
+          "alias": "P(90)",
+          "dsType": "influxdb",
+          "groupBy": [],
+          "measurement": "orderValidationSimulationDuration",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT percentile(\"value\", 50) FROM \"getByCardNumberDuration\" WHERE $timeFilter",
+          "rawQuery": false,
+          "refId": "C",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [
+                  "90"
+                ],
+                "type": "percentile"
+              }
+            ]
+          ],
+          "tags": []
+        },
+        {
+          "alias": "P(80)",
+          "dsType": "influxdb",
+          "groupBy": [],
+          "measurement": "orderValidationSimulationDuration",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT percentile(\"value\", 80) FROM \"getByCardNumberDuration\" WHERE $timeFilter",
+          "rawQuery": false,
+          "refId": "A",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [
+                  "80"
+                ],
+                "type": "percentile"
+              }
+            ]
+          ],
+          "tags": []
+        },
+        {
+          "alias": "P(50)",
+          "dsType": "influxdb",
+          "groupBy": [],
+          "measurement": "orderValidationSimulationDuration",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT percentile(\"value\", 50) FROM \"getByCardNumberDuration\" WHERE $timeFilter",
+          "rawQuery": false,
+          "refId": "B",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [
+                  "50"
+                ],
+                "type": "percentile"
+              }
+            ]
+          ],
+          "tags": []
+        }
+      ],
+      "title": "Order Validation Simulation",
+      "type": "stat"
+    },
+    {
+      "datasource": "lys-cotation--load-tests",
+      "description": "Order Validation Commit",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 95
+              }
+            ]
+          },
+          "unit": "ms"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 3,
+        "w": 6,
+        "x": 18,
+        "y": 12
+      },
+      "id": 12,
+      "interval": ">1s",
+      "links": [],
+      "options": {
+        "colorMode": "background",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "vertical",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": true
+        },
+        "text": {
+          "titleSize": 20
+        },
+        "textMode": "value_and_name"
+      },
+      "pluginVersion": "8.5.13",
+      "targets": [
+        {
+          "alias": "P(95)",
+          "dsType": "influxdb",
+          "groupBy": [],
+          "measurement": "orderValidationCommitDuration",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT percentile(\"value\", 95) FROM \"getByCardNumber404Duration\" WHERE $timeFilter",
+          "rawQuery": false,
+          "refId": "D",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [
+                  95
+                ],
+                "type": "percentile"
+              }
+            ]
+          ],
+          "tags": []
+        },
+        {
+          "alias": "P(90)",
+          "dsType": "influxdb",
+          "groupBy": [],
+          "measurement": "orderValidationCommitDuration",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT percentile(\"value\", 50) FROM \"getByCardNumber404Duration\" WHERE $timeFilter",
+          "rawQuery": false,
+          "refId": "C",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [
+                  "90"
+                ],
+                "type": "percentile"
+              }
+            ]
+          ],
+          "tags": []
+        },
+        {
+          "alias": "P(80)",
+          "dsType": "influxdb",
+          "groupBy": [],
+          "measurement": "orderValidationCommitDuration",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT percentile(\"value\", 80) FROM \"getByCardNumber404Duration\" WHERE $timeFilter",
+          "rawQuery": false,
+          "refId": "A",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [
+                  "80"
+                ],
+                "type": "percentile"
+              }
+            ]
+          ],
+          "tags": []
+        },
+        {
+          "alias": "P(50)",
+          "dsType": "influxdb",
+          "groupBy": [],
+          "measurement": "orderValidationCommitDuration",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT percentile(\"value\", 50) FROM \"getByCardNumber404Duration\" WHERE $timeFilter",
+          "rawQuery": false,
+          "refId": "B",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [
+                  "50"
+                ],
+                "type": "percentile"
+              }
+            ]
+          ],
+          "tags": []
+        }
+      ],
+      "title": "Order Validation Commit",
+      "type": "stat"
+    },
+    {
+      "datasource": "lys-cotation--load-tests",
+      "description": "Partial Return Burn Products",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "ms"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 3,
+        "w": 6,
+        "x": 0,
+        "y": 13
+      },
+      "id": 47,
+      "interval": ">1s",
+      "links": [],
+      "options": {
+        "colorMode": "background",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": true
+        },
+        "text": {
+          "titleSize": 20
+        },
+        "textMode": "auto"
+      },
+      "pluginVersion": "8.5.13",
+      "targets": [
+        {
+          "alias": "P(95)",
+          "dsType": "influxdb",
+          "groupBy": [],
+          "measurement": "partialReturnBurnProductsDuration",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT percentile(\"value\", 95) FROM \"getByCardNumberDuration\" WHERE $timeFilter",
+          "rawQuery": false,
+          "refId": "D",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [
+                  95
+                ],
+                "type": "percentile"
+              }
+            ]
+          ],
+          "tags": []
+        },
+        {
+          "alias": "P(90)",
+          "dsType": "influxdb",
+          "groupBy": [],
+          "measurement": "partialReturnBurnProductsDuration",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT percentile(\"value\", 50) FROM \"getByCardNumberDuration\" WHERE $timeFilter",
+          "rawQuery": false,
+          "refId": "C",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [
+                  "90"
+                ],
+                "type": "percentile"
+              }
+            ]
+          ],
+          "tags": []
+        },
+        {
+          "alias": "P(80)",
+          "dsType": "influxdb",
+          "groupBy": [],
+          "measurement": "partialReturnBurnProductsDuration",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT percentile(\"value\", 80) FROM \"getByCardNumberDuration\" WHERE $timeFilter",
+          "rawQuery": false,
+          "refId": "A",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [
+                  "80"
+                ],
+                "type": "percentile"
+              }
+            ]
+          ],
+          "tags": []
+        },
+        {
+          "alias": "P(50)",
+          "dsType": "influxdb",
+          "groupBy": [],
+          "measurement": "partialReturnBurnProductsDuration",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT percentile(\"value\", 50) FROM \"getByCardNumberDuration\" WHERE $timeFilter",
+          "rawQuery": false,
+          "refId": "B",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [
+                  "50"
+                ],
+                "type": "percentile"
+              }
+            ]
+          ],
+          "tags": []
+        }
+      ],
+      "title": "Partial Return Burn Products",
+      "type": "stat"
+    },
+    {
+      "datasource": "lys-cotation--load-tests",
+      "description": "Partial Return Earn Products",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "ms"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 3,
+        "w": 6,
+        "x": 6,
+        "y": 13
+      },
+      "id": 48,
+      "interval": ">1s",
+      "links": [],
+      "options": {
+        "colorMode": "background",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": true
+        },
+        "text": {
+          "titleSize": 20
+        },
+        "textMode": "auto"
+      },
+      "pluginVersion": "8.5.13",
+      "targets": [
+        {
+          "alias": "P(95)",
+          "dsType": "influxdb",
+          "groupBy": [],
+          "measurement": "partialReturnEarnProductsDuration",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT percentile(\"value\", 95) FROM \"getByCardNumberDuration\" WHERE $timeFilter",
+          "rawQuery": false,
+          "refId": "D",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [
+                  95
+                ],
+                "type": "percentile"
+              }
+            ]
+          ],
+          "tags": []
+        },
+        {
+          "alias": "P(90)",
+          "dsType": "influxdb",
+          "groupBy": [],
+          "measurement": "partialReturnEarnProductsDuration",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT percentile(\"value\", 50) FROM \"getByCardNumberDuration\" WHERE $timeFilter",
+          "rawQuery": false,
+          "refId": "C",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [
+                  "90"
+                ],
+                "type": "percentile"
+              }
+            ]
+          ],
+          "tags": []
+        },
+        {
+          "alias": "P(80)",
+          "dsType": "influxdb",
+          "groupBy": [],
+          "measurement": "partialReturnEarnProductsDuration",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT percentile(\"value\", 80) FROM \"getByCardNumberDuration\" WHERE $timeFilter",
+          "rawQuery": false,
+          "refId": "A",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [
+                  "80"
+                ],
+                "type": "percentile"
+              }
+            ]
+          ],
+          "tags": []
+        },
+        {
+          "alias": "P(50)",
+          "dsType": "influxdb",
+          "groupBy": [],
+          "measurement": "partialReturnEarnProductsDuration",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT percentile(\"value\", 50) FROM \"getByCardNumberDuration\" WHERE $timeFilter",
+          "rawQuery": false,
+          "refId": "B",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [
+                  "50"
+                ],
+                "type": "percentile"
+              }
+            ]
+          ],
+          "tags": []
+        }
+      ],
+      "title": "Partial Return Earn Products",
+      "type": "stat"
+    },
+    {
+      "datasource": "lys-cotation--load-tests",
+      "description": "Order Validation Simulation Partial Take Away",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "ms"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 3,
+        "w": 6,
+        "x": 12,
+        "y": 15
+      },
+      "id": 15,
+      "interval": ">1s",
+      "links": [],
+      "options": {
+        "colorMode": "background",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "vertical",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": true
+        },
+        "text": {
+          "titleSize": 20
+        },
+        "textMode": "auto"
+      },
+      "pluginVersion": "8.5.13",
+      "targets": [
+        {
+          "alias": "P(95)",
+          "dsType": "influxdb",
+          "groupBy": [],
+          "measurement": "orderValidationSimulationPartialTakeAwayDuration",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT percentile(\"value\", 95) FROM \"getHistoryByCardNumberDuration\" WHERE $timeFilter",
+          "rawQuery": false,
+          "refId": "D",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [
+                  95
+                ],
+                "type": "percentile"
+              }
+            ]
+          ],
+          "tags": []
+        },
+        {
+          "alias": "P(90)",
+          "dsType": "influxdb",
+          "groupBy": [],
+          "measurement": "orderValidationSimulationPartialTakeAwayDuration",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT percentile(\"value\", 50) FROM \"getHistoryByCardNumberDuration\" WHERE $timeFilter",
+          "rawQuery": false,
+          "refId": "C",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [
+                  "90"
+                ],
+                "type": "percentile"
+              }
+            ]
+          ],
+          "tags": []
+        },
+        {
+          "alias": "P(80)",
+          "dsType": "influxdb",
+          "groupBy": [],
+          "measurement": "orderValidationSimulationPartialTakeAwayDuration",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT percentile(\"value\", 80) FROM \"getHistoryByCardNumberDuration\" WHERE $timeFilter",
+          "rawQuery": false,
+          "refId": "A",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [
+                  "80"
+                ],
+                "type": "percentile"
+              }
+            ]
+          ],
+          "tags": []
+        },
+        {
+          "alias": "P(50)",
+          "dsType": "influxdb",
+          "groupBy": [],
+          "measurement": "orderValidationSimulationPartialTakeAwayDuration",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT percentile(\"value\", 50) FROM \"getHistoryByCardNumberDuration\" WHERE $timeFilter",
+          "rawQuery": false,
+          "refId": "B",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [
+                  "50"
+                ],
+                "type": "percentile"
+              }
+            ]
+          ],
+          "tags": []
+        }
+      ],
+      "title": "Order Validation Simulation Partial Take Away",
+      "type": "stat"
+    },
+    {
+      "datasource": "lys-cotation--load-tests",
+      "description": "Order Validation Commit Partial Take Away",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "ms"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 3,
+        "w": 6,
+        "x": 18,
+        "y": 15
+      },
+      "id": 17,
+      "interval": ">1s",
+      "links": [],
+      "options": {
+        "colorMode": "background",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "vertical",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": true
+        },
+        "text": {
+          "titleSize": 20
+        },
+        "textMode": "auto"
+      },
+      "pluginVersion": "8.5.13",
+      "targets": [
+        {
+          "alias": "P(95)",
+          "dsType": "influxdb",
+          "groupBy": [],
+          "measurement": "orderValidationCommitPartialTakeAwayDuration",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT percentile(\"value\", 95) FROM \"getHistoryByCardNumber404Duration\" WHERE $timeFilter",
+          "rawQuery": false,
+          "refId": "D",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [
+                  95
+                ],
+                "type": "percentile"
+              }
+            ]
+          ],
+          "tags": []
+        },
+        {
+          "alias": "P(90)",
+          "dsType": "influxdb",
+          "groupBy": [],
+          "measurement": "orderValidationCommitPartialTakeAwayDuration",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT percentile(\"value\", 50) FROM \"getHistoryByCardNumber404Duration\" WHERE $timeFilter",
+          "rawQuery": false,
+          "refId": "C",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [
+                  "90"
+                ],
+                "type": "percentile"
+              }
+            ]
+          ],
+          "tags": []
+        },
+        {
+          "alias": "P(80)",
+          "dsType": "influxdb",
+          "groupBy": [],
+          "measurement": "orderValidationCommitPartialTakeAwayDuration",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT percentile(\"value\", 80) FROM \"getHistoryByCardNumber404Duration\" WHERE $timeFilter",
+          "rawQuery": false,
+          "refId": "A",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [
+                  "80"
+                ],
+                "type": "percentile"
+              }
+            ]
+          ],
+          "tags": []
+        },
+        {
+          "alias": "P(50)",
+          "dsType": "influxdb",
+          "groupBy": [],
+          "measurement": "orderValidationCommitPartialTakeAwayDuration",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT percentile(\"value\", 50) FROM \"getHistoryByCardNumber404Duration\" WHERE $timeFilter",
+          "rawQuery": false,
+          "refId": "B",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [
+                  "50"
+                ],
+                "type": "percentile"
+              }
+            ]
+          ],
+          "tags": []
+        }
+      ],
+      "title": "Order Validation Commit Partial Take Away",
+      "type": "stat"
+    },
+    {
+      "datasource": "lys-cotation--load-tests",
+      "description": "Partial Return Products",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "ms"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 3,
+        "w": 6,
+        "x": 0,
+        "y": 16
+      },
+      "id": 46,
+      "interval": ">1s",
+      "links": [],
+      "options": {
+        "colorMode": "background",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": true
+        },
+        "text": {
+          "titleSize": 20
+        },
+        "textMode": "auto"
+      },
+      "pluginVersion": "8.5.13",
+      "targets": [
+        {
+          "alias": "P(95)",
+          "dsType": "influxdb",
+          "groupBy": [],
+          "measurement": "fullReturnBurnProductsDuration",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT percentile(\"value\", 95) FROM \"getByCardNumberDuration\" WHERE $timeFilter",
+          "rawQuery": false,
+          "refId": "D",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [
+                  95
+                ],
+                "type": "percentile"
+              }
+            ]
+          ],
+          "tags": []
+        },
+        {
+          "alias": "P(90)",
+          "dsType": "influxdb",
+          "groupBy": [],
+          "measurement": "fullReturnBurnProductsDuration",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT percentile(\"value\", 50) FROM \"getByCardNumberDuration\" WHERE $timeFilter",
+          "rawQuery": false,
+          "refId": "C",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [
+                  "90"
+                ],
+                "type": "percentile"
+              }
+            ]
+          ],
+          "tags": []
+        },
+        {
+          "alias": "P(80)",
+          "dsType": "influxdb",
+          "groupBy": [],
+          "measurement": "fullReturnBurnProductsDuration",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT percentile(\"value\", 80) FROM \"getByCardNumberDuration\" WHERE $timeFilter",
+          "rawQuery": false,
+          "refId": "A",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [
+                  "80"
+                ],
+                "type": "percentile"
+              }
+            ]
+          ],
+          "tags": []
+        },
+        {
+          "alias": "P(50)",
+          "dsType": "influxdb",
+          "groupBy": [],
+          "measurement": "fullReturnBurnProductsDuration",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT percentile(\"value\", 50) FROM \"getByCardNumberDuration\" WHERE $timeFilter",
+          "rawQuery": false,
+          "refId": "B",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [
+                  "50"
+                ],
+                "type": "percentile"
+              }
+            ]
+          ],
+          "tags": []
+        }
+      ],
+      "title": "Full Return Burn Products",
+      "type": "stat"
+    },
+    {
+      "datasource": "lys-cotation--load-tests",
+      "description": "Full Return Earn Products",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "ms"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 3,
+        "w": 6,
+        "x": 6,
+        "y": 16
+      },
+      "id": 49,
+      "interval": ">1s",
+      "links": [],
+      "options": {
+        "colorMode": "background",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": true
+        },
+        "text": {
+          "titleSize": 20
+        },
+        "textMode": "auto"
+      },
+      "pluginVersion": "8.5.13",
+      "targets": [
+        {
+          "alias": "P(95)",
+          "dsType": "influxdb",
+          "groupBy": [],
+          "measurement": "fullReturnEarnProductsDuration",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT percentile(\"value\", 95) FROM \"getByCardNumberDuration\" WHERE $timeFilter",
+          "rawQuery": false,
+          "refId": "D",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [
+                  95
+                ],
+                "type": "percentile"
+              }
+            ]
+          ],
+          "tags": []
+        },
+        {
+          "alias": "P(90)",
+          "dsType": "influxdb",
+          "groupBy": [],
+          "measurement": "fullReturnEarnProductsDuration",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT percentile(\"value\", 50) FROM \"getByCardNumberDuration\" WHERE $timeFilter",
+          "rawQuery": false,
+          "refId": "C",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [
+                  "90"
+                ],
+                "type": "percentile"
+              }
+            ]
+          ],
+          "tags": []
+        },
+        {
+          "alias": "P(80)",
+          "dsType": "influxdb",
+          "groupBy": [],
+          "measurement": "fullReturnEarnProductsDuration",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT percentile(\"value\", 80) FROM \"getByCardNumberDuration\" WHERE $timeFilter",
+          "rawQuery": false,
+          "refId": "A",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [
+                  "80"
+                ],
+                "type": "percentile"
+              }
+            ]
+          ],
+          "tags": []
+        },
+        {
+          "alias": "P(50)",
+          "dsType": "influxdb",
+          "groupBy": [],
+          "measurement": "fullReturnEarnProductsDuration",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT percentile(\"value\", 50) FROM \"getByCardNumberDuration\" WHERE $timeFilter",
+          "rawQuery": false,
+          "refId": "B",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [
+                  "50"
+                ],
+                "type": "percentile"
+              }
+            ]
+          ],
+          "tags": []
+        }
+      ],
+      "title": "Full Return Earn Products",
+      "type": "stat"
+    },
+    {
+      "datasource": "lys-cotation--load-tests",
+      "description": "Order Validation Simulation Full Take Away",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "ms"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 3,
+        "w": 6,
+        "x": 12,
+        "y": 18
+      },
+      "id": 13,
+      "interval": ">1s",
+      "links": [],
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "vertical",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": true
+        },
+        "text": {
+          "titleSize": 20
+        },
+        "textMode": "value_and_name"
+      },
+      "pluginVersion": "8.5.13",
+      "targets": [
+        {
+          "alias": "P(95)",
+          "dsType": "influxdb",
+          "groupBy": [],
+          "measurement": "orderValidationSimulationFullTakeAwayDuration",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT percentile(\"value\", 95) FROM \"createAccountDuration\" WHERE $timeFilter",
+          "rawQuery": false,
+          "refId": "D",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [
+                  95
+                ],
+                "type": "percentile"
+              }
+            ]
+          ],
+          "tags": []
+        },
+        {
+          "alias": "P(90)",
+          "dsType": "influxdb",
+          "groupBy": [],
+          "measurement": "orderValidationSimulationFullTakeAwayDuration",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT percentile(\"value\", 50) FROM \"createAccountDuration\" WHERE $timeFilter",
+          "rawQuery": false,
+          "refId": "C",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [
+                  "90"
+                ],
+                "type": "percentile"
+              }
+            ]
+          ],
+          "tags": []
+        },
+        {
+          "alias": "P(80)",
+          "dsType": "influxdb",
+          "groupBy": [],
+          "measurement": "orderValidationSimulationFullTakeAwayDuration",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT percentile(\"value\", 80) FROM \"createAccountDuration\" WHERE $timeFilter",
+          "rawQuery": false,
+          "refId": "A",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [
+                  "80"
+                ],
+                "type": "percentile"
+              }
+            ]
+          ],
+          "tags": []
+        },
+        {
+          "alias": "P(50)",
+          "dsType": "influxdb",
+          "groupBy": [],
+          "measurement": "orderValidationSimulationFullTakeAwayDuration",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT percentile(\"value\", 50) FROM \"createAccountDuration\" WHERE $timeFilter",
+          "rawQuery": false,
+          "refId": "B",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [
+                  "50"
+                ],
+                "type": "percentile"
+              }
+            ]
+          ],
+          "tags": []
+        }
+      ],
+      "title": "Order Validation Simulation Full Take Away",
+      "type": "stat"
+    },
+    {
+      "datasource": "lys-cotation--load-tests",
+      "description": "Order Validation Commit Full Take Away",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "ms"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 3,
+        "w": 6,
+        "x": 18,
+        "y": 18
+      },
+      "id": 43,
+      "interval": ">1s",
+      "links": [],
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "vertical",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": true
+        },
+        "text": {
+          "titleSize": 20
+        },
+        "textMode": "value_and_name"
+      },
+      "pluginVersion": "8.5.13",
+      "targets": [
+        {
+          "alias": "P(95)",
+          "dsType": "influxdb",
+          "groupBy": [],
+          "measurement": "orderValidationSimulationFullTakeAwayDuration",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT percentile(\"value\", 95) FROM \"createAccountDuration\" WHERE $timeFilter",
+          "rawQuery": false,
+          "refId": "D",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [
+                  95
+                ],
+                "type": "percentile"
+              }
+            ]
+          ],
+          "tags": []
+        },
+        {
+          "alias": "P(90)",
+          "dsType": "influxdb",
+          "groupBy": [],
+          "measurement": "orderValidationSimulationFullTakeAwayDuration",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT percentile(\"value\", 50) FROM \"createAccountDuration\" WHERE $timeFilter",
+          "rawQuery": false,
+          "refId": "C",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [
+                  "90"
+                ],
+                "type": "percentile"
+              }
+            ]
+          ],
+          "tags": []
+        },
+        {
+          "alias": "P(80)",
+          "dsType": "influxdb",
+          "groupBy": [],
+          "measurement": "orderValidationSimulationFullTakeAwayDuration",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT percentile(\"value\", 80) FROM \"createAccountDuration\" WHERE $timeFilter",
+          "rawQuery": false,
+          "refId": "A",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [
+                  "80"
+                ],
+                "type": "percentile"
+              }
+            ]
+          ],
+          "tags": []
+        },
+        {
+          "alias": "P(50)",
+          "dsType": "influxdb",
+          "groupBy": [],
+          "measurement": "orderValidationSimulationFullTakeAwayDuration",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT percentile(\"value\", 50) FROM \"createAccountDuration\" WHERE $timeFilter",
+          "rawQuery": false,
+          "refId": "B",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [
+                  "50"
+                ],
+                "type": "percentile"
+              }
+            ]
+          ],
+          "tags": []
+        }
+      ],
+      "title": "Order Validation Commit Full Take Away",
+      "type": "stat"
+    },
+    {
+      "cards": {},
+      "color": {
+        "cardColor": "rgb(0, 234, 255)",
+        "colorScale": "sqrt",
+        "colorScheme": "interpolateSpectral",
+        "exponent": 0.5,
+        "mode": "opacity"
+      },
+      "dataFormat": "timeseries",
+      "datasource": "lys-cotation--load-tests",
+      "gridPos": {
+        "h": 11,
+        "w": 12,
+        "x": 0,
+        "y": 19
+      },
+      "heatmap": {},
+      "hideZeroBuckets": false,
+      "highlightCards": true,
+      "id": 8,
+      "interval": ">1s",
+      "legend": {
+        "show": false
+      },
+      "links": [],
+      "reverseYBuckets": false,
+      "targets": [
+        {
+          "dsType": "influxdb",
+          "groupBy": [
+            {
+              "params": [
+                "$__interval"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "null"
+              ],
+              "type": "fill"
+            }
+          ],
+          "measurement": "http_req_duration",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT mean(\"value\") FROM \"http_req_duration\" WHERE $timeFilter GROUP BY time($__interval) fill(null)",
+          "rawQuery": true,
+          "refId": "A",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "mean"
+              }
+            ]
+          ],
+          "tags": []
+        }
+      ],
+      "title": "Request Duration Capacity",
+      "tooltip": {
+        "show": true,
+        "showHistogram": false
+      },
+      "type": "heatmap",
+      "xAxis": {
+        "show": true
+      },
+      "yAxis": {
+        "format": "ms",
+        "logBase": 2,
+        "show": true
+      },
+      "yBucketBound": "auto"
+    },
+    {
+      "datasource": "lys-cotation--load-tests",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 10,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "stepBefore",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "spanNulls": true,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Active VUs"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "dark-green",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 7,
+        "w": 12,
+        "x": 12,
+        "y": 21
+      },
+      "id": 1,
+      "interval": ">1s",
+      "links": [],
+      "options": {
+        "legend": {
+          "calcs": [
+            "lastNotNull",
+            "max",
+            "min"
+          ],
+          "displayMode": "table",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "8.2.6",
+      "targets": [
+        {
+          "alias": "Active VUs",
+          "dsType": "influxdb",
+          "groupBy": [
+            {
+              "params": [
+                "$__interval"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "none"
+              ],
+              "type": "fill"
+            }
+          ],
+          "measurement": "vus",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "refId": "A",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "mean"
+              }
+            ]
+          ],
+          "tags": []
+        }
+      ],
+      "title": "Virtual Users",
+      "type": "timeseries"
+    },
+    {
+      "datasource": "lys-cotation--load-tests",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            }
+          },
+          "mappings": [],
+          "unit": "none"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Sale With All Product Types Simulation - Success"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "red",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Sale With All Product Types Commit -Success"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "orange",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Order Validation Simulation - Successs"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "yellow",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Order Validation Commit - Success"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "green",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Order Validation Simulation Partial Take Away - Success"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "blue",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Order Validation Commit Partial Take Away - Success"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "purple",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Order Validation Simulation Full Take Away - Success "
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "super-light-red",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Order Validation Commit Full Take Away - Success"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "super-light-orange",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Partial Return Products - Success"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "super-light-yellow",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Full Return Products - Success"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "dark-orange",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Partial Return Burn Products - Success"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "super-light-blue",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Partial Return Earn Products - Success"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "super-light-purple",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Full Return Burn Products - Success"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "dark-purple",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 12,
+        "x": 12,
+        "y": 28
+      },
+      "id": 39,
+      "links": [],
+      "options": {
+        "legend": {
+          "displayMode": "table",
+          "placement": "right",
+          "values": [
+            "percent",
+            "value"
+          ]
+        },
+        "pieType": "pie",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": true
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "8.5.2",
+      "targets": [
+        {
+          "alias": "Requests",
+          "datasource": "lys-cotation--load-tests",
+          "groupBy": [],
+          "hide": true,
+          "measurement": "http_reqs",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "refId": "A",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "count"
+              }
+            ]
+          ],
+          "tags": []
+        },
+        {
+          "alias": "Sale With All Product Types Simulation - Success",
+          "datasource": "lys-cotation--load-tests",
+          "groupBy": [],
+          "hide": false,
+          "measurement": "successSaleWithAllProductTypesSimulation",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "refId": "B",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "count"
+              }
+            ]
+          ],
+          "tags": []
+        },
+        {
+          "alias": "Sale With All Product Types Commit -Success",
+          "datasource": "lys-cotation--load-tests",
+          "groupBy": [],
+          "hide": false,
+          "measurement": "successSaleWithAllProductTypesCommit",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "refId": "C",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "count"
+              }
+            ]
+          ],
+          "tags": []
+        },
+        {
+          "alias": "Order Validation Simulation - Successs",
+          "datasource": "lys-cotation--load-tests",
+          "groupBy": [],
+          "hide": false,
+          "measurement": "successOrderValidationSimulation",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "refId": "D",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "count"
+              }
+            ]
+          ],
+          "tags": []
+        },
+        {
+          "alias": "Order Validation Commit - Success",
+          "datasource": "lys-cotation--load-tests",
+          "groupBy": [],
+          "hide": false,
+          "measurement": "successOrderValidationCommit",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "refId": "E",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "count"
+              }
+            ]
+          ],
+          "tags": []
+        },
+        {
+          "alias": "Order Validation Simulation Partial Take Away - Success",
+          "datasource": "lys-cotation--load-tests",
+          "groupBy": [],
+          "hide": false,
+          "measurement": "successOrderValidationSimulationPartialTakeAway",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "refId": "F",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "count"
+              }
+            ]
+          ],
+          "tags": []
+        },
+        {
+          "alias": "Order Validation Commit Partial Take Away - Success",
+          "datasource": "lys-cotation--load-tests",
+          "groupBy": [],
+          "hide": false,
+          "measurement": "successOrderValidationCommitPartialTakeAway",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "refId": "G",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "count"
+              }
+            ]
+          ],
+          "tags": []
+        },
+        {
+          "alias": "Order Validation Simulation Full Take Away - Success ",
+          "datasource": "lys-cotation--load-tests",
+          "groupBy": [],
+          "hide": false,
+          "measurement": "successOrderValidationSimulationFullTakeAway",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "refId": "H",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "count"
+              }
+            ]
+          ],
+          "tags": []
+        },
+        {
+          "alias": "Order Validation Commit Full Take Away - Success",
+          "datasource": "lys-cotation--load-tests",
+          "groupBy": [],
+          "hide": false,
+          "measurement": "successOrderValidationCommitFullTakeAway",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "refId": "I",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "count"
+              }
+            ]
+          ],
+          "tags": []
+        },
+        {
+          "alias": "Partial Return Products - Success",
+          "datasource": "lys-cotation--load-tests",
+          "groupBy": [],
+          "hide": false,
+          "measurement": "successPartialReturnProducts",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "refId": "J",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "count"
+              }
+            ]
+          ],
+          "tags": []
+        },
+        {
+          "alias": "Full Return Products - Success",
+          "datasource": "lys-cotation--load-tests",
+          "groupBy": [],
+          "hide": false,
+          "measurement": "successFullReturnProducts",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "refId": "K",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "count"
+              }
+            ]
+          ],
+          "tags": []
+        },
+        {
+          "alias": "Partial Return Burn Products - Success",
+          "datasource": "lys-cotation--load-tests",
+          "groupBy": [],
+          "hide": false,
+          "measurement": "successPartialReturnBurnProducts",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "refId": "L",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "count"
+              }
+            ]
+          ],
+          "tags": []
+        },
+        {
+          "alias": "Partial Return Earn Products - Success",
+          "datasource": "lys-cotation--load-tests",
+          "groupBy": [],
+          "hide": false,
+          "measurement": "successPartialReturnEarnProducts",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "refId": "M",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "count"
+              }
+            ]
+          ],
+          "tags": []
+        },
+        {
+          "alias": "Full Return Burn Products - Success",
+          "datasource": "lys-cotation--load-tests",
+          "groupBy": [],
+          "hide": false,
+          "measurement": "successFullReturnBurnProducts",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "refId": "N",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "count"
+              }
+            ]
+          ],
+          "tags": []
+        },
+        {
+          "alias": "Full Return Earn Products - Success",
+          "datasource": "lys-cotation--load-tests",
+          "groupBy": [],
+          "hide": false,
+          "measurement": "successFullReturnEarnProducts",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "refId": "O",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "count"
+              }
+            ]
+          ],
+          "tags": []
+        }
+      ],
+      "title": "Propotion",
+      "transformations": [
+        {
+          "id": "reduce",
+          "options": {
+            "includeTimeField": false,
+            "reducers": [
+              "sum"
+            ]
+          }
+        }
+      ],
+      "type": "piechart"
+    },
+    {
+      "datasource": "lys-cotation--load-tests",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "fixed"
+          },
+          "custom": {
+            "align": "auto",
+            "displayMode": "auto",
+            "inspect": false
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Time"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Time"
+              },
+              {
+                "id": "unit",
+                "value": "time: YYYY-MM-DD HH:mm:ss"
+              },
+              {
+                "id": "custom.align"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": ""
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "short"
+              },
+              {
+                "id": "decimals",
+                "value": 2
+              },
+              {
+                "id": "custom.align"
+              },
+              {
+                "id": "custom.align"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Field"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 582
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 12,
+        "x": 0,
+        "y": 30
+      },
+      "id": 27,
+      "links": [],
+      "options": {
+        "footer": {
+          "fields": "",
+          "reducer": [
+            "sum"
+          ],
+          "show": false
+        },
+        "showHeader": true,
+        "sortBy": []
+      },
+      "pluginVersion": "8.5.13",
+      "targets": [
+        {
+          "alias": "Requests",
+          "datasource": "lys-cotation--load-tests",
+          "groupBy": [],
+          "measurement": "http_reqs",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "refId": "A",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "count"
+              }
+            ]
+          ],
+          "tags": []
+        },
+        {
+          "alias": "Sale With All Product Types Simulation - Success",
+          "datasource": "lys-cotation--load-tests",
+          "groupBy": [],
+          "hide": false,
+          "measurement": "successSaleWithAllProductTypesSimulation",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "refId": "B",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "count"
+              }
+            ]
+          ],
+          "tags": []
+        },
+        {
+          "alias": "Sale With All Product Types Commit -Success",
+          "datasource": "lys-cotation--load-tests",
+          "groupBy": [],
+          "hide": false,
+          "measurement": "successSaleWithAllProductTypesCommit",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "refId": "C",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "count"
+              }
+            ]
+          ],
+          "tags": []
+        },
+        {
+          "alias": "Order Validation Simulation - Successs",
+          "datasource": "lys-cotation--load-tests",
+          "groupBy": [],
+          "hide": false,
+          "measurement": "successOrderValidationSimulation",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "refId": "D",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "count"
+              }
+            ]
+          ],
+          "tags": []
+        },
+        {
+          "alias": "Order Validation Commit - Success",
+          "datasource": "lys-cotation--load-tests",
+          "groupBy": [],
+          "hide": false,
+          "measurement": "successOrderValidationCommit",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "refId": "E",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "count"
+              }
+            ]
+          ],
+          "tags": []
+        },
+        {
+          "alias": "Order Validation Simulation Partial Take Away - Success",
+          "datasource": "lys-cotation--load-tests",
+          "groupBy": [],
+          "hide": false,
+          "measurement": "successOrderValidationSimulationPartialTakeAway",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "refId": "G",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "count"
+              }
+            ]
+          ],
+          "tags": []
+        },
+        {
+          "alias": "Order Validation Commit Partial Take Away - Success ",
+          "datasource": "lys-cotation--load-tests",
+          "groupBy": [],
+          "hide": false,
+          "measurement": "successOrderValidationCommitPartialTakeAway",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "refId": "H",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "count"
+              }
+            ]
+          ],
+          "tags": []
+        },
+        {
+          "alias": "Order Validation Simulation Full Take Away - Success",
+          "datasource": "lys-cotation--load-tests",
+          "groupBy": [],
+          "hide": false,
+          "measurement": "successOrderValidationSimulationFullTakeAway",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "refId": "F",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "count"
+              }
+            ]
+          ],
+          "tags": []
+        },
+        {
+          "alias": "Order Validation Commit Full Take Away - Success",
+          "datasource": "lys-cotation--load-tests",
+          "groupBy": [],
+          "hide": false,
+          "measurement": "successOrderValidationCommitFullTakeAway",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "refId": "N",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "count"
+              }
+            ]
+          ],
+          "tags": []
+        },
+        {
+          "alias": "Partial Return Products - Success ",
+          "datasource": "lys-cotation--load-tests",
+          "groupBy": [],
+          "hide": false,
+          "measurement": "successPartialReturnProducts",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "refId": "M",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "count"
+              }
+            ]
+          ],
+          "tags": []
+        },
+        {
+          "alias": "Full Return Products - Success",
+          "datasource": "lys-cotation--load-tests",
+          "groupBy": [],
+          "hide": false,
+          "measurement": "successFullReturnProducts",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "refId": "O",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "count"
+              }
+            ]
+          ],
+          "tags": []
+        },
+        {
+          "alias": "Partial Return Burn Products - Success",
+          "datasource": "lys-cotation--load-tests",
+          "groupBy": [],
+          "hide": false,
+          "measurement": "successPartialReturnBurnProducts",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "refId": "P",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "count"
+              }
+            ]
+          ],
+          "tags": []
+        },
+        {
+          "alias": "Partial Return Earn Products - Success",
+          "datasource": "lys-cotation--load-tests",
+          "groupBy": [],
+          "hide": false,
+          "measurement": "successPartialReturnEarnProducts",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "refId": "Q",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "count"
+              }
+            ]
+          ],
+          "tags": []
+        },
+        {
+          "alias": "Full Return Burn Products - Success",
+          "datasource": "lys-cotation--load-tests",
+          "groupBy": [],
+          "hide": false,
+          "measurement": "successFullReturnBurnProducts",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "refId": "R",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "count"
+              }
+            ]
+          ],
+          "tags": []
+        },
+        {
+          "alias": "Full Return Earn Products - Success",
+          "datasource": "lys-cotation--load-tests",
+          "groupBy": [],
+          "hide": false,
+          "measurement": "successFullReturnEarnProducts",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "refId": "S",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "count"
+              }
+            ]
+          ],
+          "tags": []
+        },
+        {
+          "alias": "Sale With All Product Types Simulation - Failure",
+          "datasource": "lys-cotation--load-tests",
+          "groupBy": [],
+          "hide": false,
+          "measurement": "failureSaleWithAllProductTypesSimulation",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "refId": "I",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "count"
+              }
+            ]
+          ],
+          "tags": []
+        },
+        {
+          "alias": "Sale With All Product Types Commit - Failure",
+          "datasource": "lys-cotation--load-tests",
+          "groupBy": [],
+          "hide": false,
+          "measurement": "failureSaleWithAllProductTypesCommit",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "refId": "J",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "count"
+              }
+            ]
+          ],
+          "tags": []
+        },
+        {
+          "alias": "Order Validation Simulation - Failure",
+          "datasource": "lys-cotation--load-tests",
+          "groupBy": [],
+          "hide": false,
+          "measurement": "failureOrderValidationSimulation",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "refId": "K",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "count"
+              }
+            ]
+          ],
+          "tags": []
+        },
+        {
+          "alias": "Order Validation Commit - Failure",
+          "datasource": "lys-cotation--load-tests",
+          "groupBy": [],
+          "hide": false,
+          "measurement": "failureOrderValidationCommit",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "refId": "L",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "count"
+              }
+            ]
+          ],
+          "tags": []
+        },
+        {
+          "alias": "Order Validation Simulation Partial Take Away - Failure",
+          "datasource": "lys-cotation--load-tests",
+          "groupBy": [],
+          "hide": false,
+          "measurement": "failureOrderValidationSimulationPartialTakeAway",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "refId": "T",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "count"
+              }
+            ]
+          ],
+          "tags": []
+        },
+        {
+          "alias": "Order Validation Commit Partial Take Away - Failure",
+          "datasource": "lys-cotation--load-tests",
+          "groupBy": [],
+          "hide": false,
+          "measurement": "failureOrderValidationCommitPartialTakeAway",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "refId": "U",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "count"
+              }
+            ]
+          ],
+          "tags": []
+        },
+        {
+          "alias": "Order Validation Simulation Full Take Away - Failure",
+          "datasource": "lys-cotation--load-tests",
+          "groupBy": [],
+          "hide": false,
+          "measurement": "failureOrderValidationSimulationFullTakeAway",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "refId": "V",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "count"
+              }
+            ]
+          ],
+          "tags": []
+        },
+        {
+          "alias": "Order Validation Commit Full Take Away - Failure",
+          "datasource": "lys-cotation--load-tests",
+          "groupBy": [],
+          "hide": false,
+          "measurement": "failureOrderValidationCommitFullTakeAway",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "refId": "W",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "count"
+              }
+            ]
+          ],
+          "tags": []
+        },
+        {
+          "alias": "Partial Return Products - Failure",
+          "datasource": "lys-cotation--load-tests",
+          "groupBy": [],
+          "hide": false,
+          "measurement": "failurePartialReturnProducts",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "refId": "Y",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "count"
+              }
+            ]
+          ],
+          "tags": []
+        },
+        {
+          "alias": "Full Return Products - Failure",
+          "datasource": "lys-cotation--load-tests",
+          "groupBy": [],
+          "hide": false,
+          "measurement": "failureFullReturnProducts",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "refId": "Z",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "count"
+              }
+            ]
+          ],
+          "tags": []
+        },
+        {
+          "alias": "Partial Return Burn Products - Failure",
+          "datasource": "lys-cotation--load-tests",
+          "groupBy": [],
+          "hide": false,
+          "measurement": "failurePartialReturnBurnProducts",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "refId": "AA",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "count"
+              }
+            ]
+          ],
+          "tags": []
+        },
+        {
+          "alias": "Partial Return Earn Products - Failure",
+          "datasource": "lys-cotation--load-tests",
+          "groupBy": [],
+          "hide": false,
+          "measurement": "failurePartialReturnEarnProducts",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "refId": "AB",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "count"
+              }
+            ]
+          ],
+          "tags": []
+        },
+        {
+          "alias": "Full Return Burn Products - Failure",
+          "datasource": "lys-cotation--load-tests",
+          "groupBy": [],
+          "hide": false,
+          "measurement": "failureFullReturnBurnProducts",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "refId": "AC",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "count"
+              }
+            ]
+          ],
+          "tags": []
+        },
+        {
+          "alias": "Full Return Earn Products - Failure",
+          "datasource": "lys-cotation--load-tests",
+          "groupBy": [],
+          "hide": false,
+          "measurement": "failureFullReturnEarnProducts",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "refId": "AD",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "count"
+              }
+            ]
+          ],
+          "tags": []
+        }
+      ],
+      "title": "Number of Iterations",
+      "transformations": [
+        {
+          "id": "reduce",
+          "options": {
+            "includeTimeField": false,
+            "reducers": [
+              "sum"
+            ]
+          }
+        }
+      ],
+      "type": "table"
+    },
+    {
+      "aliasColors": {
+        "http_req_blocked.percentile": "#bf1b00"
+      },
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": "lys-cotation--load-tests",
+      "description": "Time spent blocked (waiting for a free TCP connection slot) before initiating the request",
+      "fill": 1,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 7,
+        "w": 12,
+        "x": 12,
+        "y": 37
+      },
+      "hiddenSeries": false,
+      "id": 9,
+      "interval": ">1s",
+      "legend": {
+        "alignAsTable": true,
+        "avg": true,
+        "current": false,
+        "max": true,
+        "min": true,
+        "show": true,
+        "total": false,
+        "values": true
+      },
+      "lines": true,
+      "linewidth": 1,
+      "links": [],
+      "nullPointMode": "null",
+      "options": {
+        "alertThreshold": true
+      },
+      "percentage": false,
+      "pluginVersion": "8.5.13",
+      "pointradius": 5,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "dsType": "influxdb",
+          "groupBy": [
+            {
+              "params": [
+                "$__interval"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "none"
+              ],
+              "type": "fill"
+            }
+          ],
+          "measurement": "http_req_blocked",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT percentile(\"value\", 95) FROM \"http_req_blocked\" WHERE $timeFilter GROUP BY time($__interval) fill(none)",
+          "rawQuery": true,
+          "refId": "C",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [
+                  95
+                ],
+                "type": "percentile"
+              }
+            ]
+          ],
+          "tags": []
+        }
+      ],
+      "thresholds": [],
+      "timeRegions": [],
+      "title": "Request blocked time (95%ile)",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "mode": "time",
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "format": "ms",
+          "logBase": 1,
+          "show": true
+        },
+        {
+          "format": "short",
+          "logBase": 1,
+          "show": true
+        }
+      ],
+      "yaxis": {
+        "align": false
+      }
+    },
+    {
+      "datasource": "lys-cotation--load-tests",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": ""
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 7,
+        "w": 12,
+        "x": 0,
+        "y": 39
+      },
+      "id": 35,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "center",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "text": {},
+        "textMode": "value_and_name"
+      },
+      "pluginVersion": "8.5.13",
+      "targets": [
+        {
+          "datasource": "lys-cotation--load-tests",
+          "groupBy": [],
+          "measurement": "errors400th",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "refId": "A",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "count"
+              }
+            ]
+          ],
+          "tags": []
+        },
+        {
+          "datasource": "lys-cotation--load-tests",
+          "groupBy": [],
+          "hide": false,
+          "measurement": "errors500th",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "refId": "B",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "count"
+              }
+            ]
+          ],
+          "tags": []
+        }
+      ],
+      "title": "Errors",
+      "type": "stat"
+    }
+  ],
+  "schemaVersion": 36,
+  "style": "dark",
+  "tags": [],
+  "templating": {
+    "list": []
+  },
+  "time": {
+    "from": "now-5m",
+    "to": "now"
+  },
+  "timepicker": {},
+  "timezone": "",
+  "title": "lys-cotation--load-tests",
+  "uid": "7xc3H2v4k",
+  "version": 2,
+  "weekStart": ""
+}

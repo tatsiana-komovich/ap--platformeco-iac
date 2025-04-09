@@ -1,0 +1,18 @@
+---
+k8s_prometheus_remote_write:
+  vminsert-devops-lmru-tech-custom-remote-write:
+    url:
+      _default: https://vminsert.devops.lmru.tech/insert/0/prometheus/
+    writeRelabelConfigs: {}
+  mimir-remote-write:
+    url:
+      _default: http://nginx-service.scdp-whs-common-prod.svc.cluster.local:443/api/v1/push
+    basicAuth:
+      _default:
+        username: '<path:services/data/prometheus-remote-write#WEZEN_B_CREDS_USER>'
+        password: '<path:services/data/prometheus-remote-write#WEZEN_B_CREDS_PASS>'
+    writeRelabelConfigs:
+      _default:
+        - action: keep
+          sourceLabels: [__name__]
+          regex: "(http_server_requests_seconds_count|http_requests_count|kafka_burrow_partition_lag|camunda_active_incidents|camunda_active_process_instances|http_server_requests_seconds_sum|http_requests_sum)"

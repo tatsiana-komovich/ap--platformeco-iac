@@ -1,0 +1,61 @@
+---
+apiVersion: operator.victoriametrics.com/v1beta1
+kind: VMAlertmanager
+metadata:
+  name: victoria-alerts-vmalertmanager
+spec:
+  replicaCount: 2
+  image:
+      repository: docker-remote-docker-io.art.lmru.tech/prom/alertmanager
+      tag: v0.25.0
+      pullPolicy: IfNotPresent
+  serviceSpec:
+    metadata:
+      name: victoria-alerts-cluster-alertmanager
+      annotations:
+        yandex.cpi.flant.com/listener-subnet-id: e2l6nn0el6dm1e5p73ki
+        yandex.cpi.flant.com/listener-address-ipv4: 10.203.19.202
+    spec:
+      type: LoadBalancer
+  affinity:
+    podAntiAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        - labelSelector:
+            matchExpressions:
+              - key: "app.kubernetes.io/name"
+                operator: In
+                values:
+                  - "alertmananger"
+          topologyKey: "kubernetes.io/hostname"
+  tolerations:
+    - effect: NoExecute
+      key: dedicated
+      value: victoria-alerts
+  nodeSelector:
+    node-role/victoria-alerts: ""
+  resources:
+    requests:
+      memory: "64Mi"
+      cpu: "250m"
+    limits:
+      memory: "128Mi"
+      cpu: "500m"
+  configRawYaml: |
+    global:
+      resolve_timeout: 5m
+    route:
+      group_wait: 30s
+      group_interval: 1m
+      group_by: [...]
+      repeat_interval: 1480h
+      receiver: 'default-receiver'
+      routes:
+      - receiver: 'KubernetesStagePlatformOncallIntegration'
+        matchers:
+          - job!="custom-argocd-app-controller"
+    receivers:
+    - name: 'default-receiver'
+    - name: 'KubernetesStagePlatformOncallIntegration'
+      webhook_configs:
+        - url: 'https://obs-grafana-oncall-yc-techno.apps.lmru.tech/14/integrations/v1/alertmanager/W9Xeu0mXk9Njn5CXBhG2EpgjQ/'
+          send_resolved: true

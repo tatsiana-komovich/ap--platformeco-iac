@@ -1,0 +1,48 @@
+---
+apiVersion: deckhouse.io/v1
+kind: OpenStackInstanceClass
+metadata:
+  name: application-nodes
+spec:
+  flavorName: p-c6m8d40
+  imageName: ubuntu-22-04-cloud-amd64
+  mainNetwork: p-kong-x1-prod-ks
+---
+apiVersion: deckhouse.io/v1
+kind: OpenStackInstanceClass
+metadata:
+  name: loadbalancer
+spec:
+  imageName: ubuntu-22-04-cloud-amd64
+  additionalNetworks:
+    - BGP-VLAN-28-PROD
+  flavorName: p-c4m4d40
+  mainNetwork: p-kong-x1-prod-ks
+---
+apiVersion: deckhouse.io/v1
+kind: OpenStackInstanceClass
+metadata:
+  name: system
+spec:
+  flavorName: p-c8m16
+  rootDiskSize: 80
+  imageName: ubuntu-22-04-cloud-amd64
+---
+apiVersion: deckhouse.io/v1
+kind: OpenStackInstanceClass
+metadata:
+  name: otel-collector
+spec:
+  flavorName: p-c4m8d40
+  imageName: ubuntu-22-04-cloud-amd64
+  mainNetwork: p-kong-x1-prod-ks
+---
+apiVersion: deckhouse.io/v1
+kind: OpenStackInstanceClass
+metadata:
+  name: otel-system
+spec:
+  flavorName: p-c8m16
+  imageName: ubuntu-22-04-cloud-amd64
+  mainNetwork: p-kong-x1-prod-ks
+  rootDiskSize: 50

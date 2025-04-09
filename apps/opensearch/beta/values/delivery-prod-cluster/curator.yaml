@@ -1,0 +1,101 @@
+---
+opendistro:
+  curator:
+    enabled: true
+    s3_snapshots:
+      unit_count:
+        all: 60
+        unknown: 7
+    cron:
+      restore: 10 7 * * *
+      snapshot: 30 0 * * *
+    unknown:
+      days_count: 7
+      snapshot: true
+      schedule: 30 5 * * *
+    indices:
+      - kind: prefix
+        value: filebeat
+        system: false
+        days_count: 14
+        snapshot: true
+        schedule: 50 4 * * *
+      - kind: prefix
+        value: infra-elklogs
+        system: false
+        days_count: 30
+        snapshot: false
+        schedule: 55 4 * * *
+      - kind: prefix
+        value: d8-ingress
+        system: false
+        days_count: 7
+        snapshot: true
+        snapshot_count_s3: 7
+        schedule: 0 5 * * *
+      - kind: prefix
+        value: eventrouter
+        system: false
+        days_count: 7
+        snapshot: false
+        schedule: 5 5 * * *
+      - kind: prefix
+        value: cds-prod
+        system: false
+        monitoring: false
+        days_count: 30
+        snapshot: true
+        schedule: 10 6 * * *
+      - kind: prefix
+        value: cdsng-prod
+        system: false
+        days_count: 30
+        snapshot: true
+        schedule: 15 6 * * *
+      - kind: prefix
+        value: cfp-virtual
+        system: false
+        days_count: 14
+        snapshot: true
+        schedule: 20 6 * * *
+        monitoring: false
+      - kind: prefix
+        value: asd2-prod
+        system: false
+        monitoring: false
+        days_count: 30
+        snapshot: true
+        schedule: 25 6 * * *
+      - kind: prefix
+        value: appointment-prod
+        system: false
+        monitoring: false
+        days_count: 30
+        snapshot: true
+        schedule: 30 6 * * *
+      - kind: prefix
+        value: gagarin-prod
+        system: false
+        monitoring: false
+        days_count: 30
+        snapshot: true
+        schedule: 35 7 * * *
+      - kind: prefix
+        value: repo-prod
+        system: false
+        monitoring: false
+        days_count: 30
+        snapshot: true
+        schedule: 40 6 * * *
+      - kind: prefix
+        value: .kibana
+        system: true
+        days_count: 30
+        snapshot: true
+        schedule: 45 7 * * *
+      - kind: prefix
+        value: delivery-page
+        system: false
+        days_count: 7
+        snapshot: true
+        schedule: 50 7 * * *

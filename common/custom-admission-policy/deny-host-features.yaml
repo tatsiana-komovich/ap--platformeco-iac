@@ -1,0 +1,110 @@
+---
+apiVersion: templates.gatekeeper.sh/v1
+kind: ConstraintTemplate
+metadata:
+  name: denyhostfeatures
+  annotations:
+    description: Enforces security policies to restrict usage of HostIPC, HostNetwork, and HostPID.
+    metadata.gatekeeper.sh/title: Host Features Security Policy Constraint
+    metadata.gatekeeper.sh/version: 1.0.0
+    argocd.argoproj.io/hook: PreSync
+spec:
+  crd:
+    spec:
+      names:
+        kind: DenyHostFeatures
+      validation:
+        openAPIV3Schema:
+          type: object
+          properties:
+            allowHostIPC:
+              type: boolean
+              description: "Allow or deny usage of HostIPC."
+            allowHostNetwork:
+              type: boolean
+              description: "Allow or deny usage of HostNetwork."
+            allowHostPID:
+              type: boolean
+              description: "Allow or deny usage of HostPID."
+  targets:
+    - target: admission.k8s.gatekeeper.sh
+      rego: |
+        package d8.host_features
+
+        # Проверка на использование HostIPC
+        violation[{"msg": msg}] {
+          input.review.object.spec.hostIPC
+          not input.parameters.allowHostIPC
+          msg := "Pod uses HostIPC, which is restricted by security policy."
+        }
+
+        # Проверка на использование HostNetwork
+        violation[{"msg": msg}] {
+          input.review.object.spec.hostNetwork
+          not input.parameters.allowHostNetwork
+          msg := "Pod uses HostNetwork, which is restricted by security policy."
+        }
+
+        # Проверка на использование HostPID
+        violation[{"msg": msg}] {
+          input.review.object.spec.hostPID
+          not input.parameters.allowHostPID
+          msg := "Pod uses HostPID, which is restricted by security policy."
+        }
+---
+apiVersion: constraints.gatekeeper.sh/v1beta1
+kind: DenyHostFeatures
+metadata:
+  name: deny-host-features
+  annotations:
+    argocd.argoproj.io/sync-options: "SkipDryRunOnMissingResource=true, Replace=true"
+spec:
+  enforcementAction: deny
+  parameters:
+    allowHostIPC: false
+    allowHostNetwork: false
+    allowHostPID: false
+  match:
+    kinds:
+      - apiGroups: [""]
+        kinds: ["Pod"]
+      - apiGroups: ["apps"]
+        kinds: ["Deployment", "ReplicaSet", "StatefulSet", "DaemonSet"]
+    excludedNamespaces:
+      - kube-*
+      - d8-*
+      - aqua*
+      - lmru-*
+      - devops-core-*
+      - syn-github-actions-runner-controller # synoptic runners gha p0602
+      - vspspr-*
+      - clickhouse-*
+      - coroot
+      - alfor-*
+      - asm-dev
+      - billing-preprod
+      - intraru-prod
+      - wecare-prod
+      - wecare-test
+      - fudzi
+      - carrier-portal-*
+      - pickup-point-*
+      - del-sell-*
+      - gts-tms-*
+      - pnr--alfa
+      - del-repo-*
+      - infra-elklogs*
+      - osaas-opensearch*
+      - osaas-logs-b-obs*
+      - jaeger*
+      - pim-*
+      - search-*
+      - mf
+      - chaos-mesh
+      - intraru-stage
+      - intraru-preprod
+      - default # services-prod, hassaleh-a-prod, marketplace, obs-logs-a, shared, yc-techno
+      - lens-metrics #x1-presale
+      - flant-auto-scale-sts # x2-techno
+      - techgate-outline # x2-techno
+      - trivy-operator

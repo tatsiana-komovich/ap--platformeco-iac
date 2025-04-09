@@ -1,0 +1,167 @@
+---
+opendistro:
+  tariff: basic
+
+  alerts:
+    check_record:
+      enabled: false
+    check_status:
+      enabled: false
+    fields_limit:
+      enabled: false
+    big_index:
+      enabled: false
+    ro_index:
+      enabled: false
+
+  settings:
+    persistent: |-
+      "cluster.routing.allocation.disk.threshold_enabled" : "true",
+      "cluster.routing.allocation.disk.watermark.low" : "75%",
+      "cluster.routing.allocation.disk.watermark.high" : "80%",
+      "cluster.routing.allocation.disk.watermark.flood_stage" : "93%"
+    transient: |-
+      "cluster.routing.allocation.disk.threshold_enabled" : "true",
+      "cluster.routing.allocation.disk.watermark.low" : "75%",
+      "cluster.routing.allocation.disk.watermark.high" : "80%",
+      "cluster.routing.allocation.disk.watermark.flood_stage" : "93%"
+
+  project: yc-techno
+
+  platform: yandex
+
+  node_pref: s
+
+  userlist:
+    services: ["admin", "kibana", "read_only_filebeat", "apiuser"]
+
+  cluster: default
+  cluster_env: stage
+
+  common:
+    nodegroup: opendistro-common-t
+
+  opendistro:
+    pv_storageclass: network-ssd
+    nodegroup: opendistro-t
+    pv_size: 5Gi
+    replicas: "3"
+    localstorage: false
+    limits:
+      memory: 4Gi
+    requests:
+      cpu: 1
+      memory: 4Gi
+    s3_backup:
+      enabled: false
+      repos: []
+    keystore: []
+    wait_cluster_green: false
+
+  exporter:
+    enabled: true
+    samplelimit: "130000"
+
+  snapshot_exporter:
+    enabled: true
+
+  oneday_exporter:
+    enabled: true
+
+  apiuser:
+    elasticsearch:
+      password: '<path:services/data/opensearch#apiuser.elasticsearch.password.stage>'
+      username: apiuser
+      roles: []
+
+  admin:
+    elasticsearch:
+      password: '<path:services/data/opensearch#admin.elasticsearch.password.stage>'
+      username: admin
+      roles:
+        - admin
+
+  read_only_filebeat:
+    elasticsearch:
+      username: read_only_filebeat
+      password: '<path:services/data/opensearch#read_only_filebeat.elasticsearch.password.stage>'
+      roles:
+        - readall
+        - kibanauser
+
+  csi:
+    enabled: false
+
+  vector:
+    enabled: false
+
+  recoverer:
+    enabled: false
+
+  filebeat:
+    enabled: false
+
+  logstash:
+    enabled: false
+
+  kibana:
+    enabled: true
+    host: tkibana-yc-techno-stage.apps.lmru.tech
+    connecturl: dex-yc-techno-stage.apps.lmru.tech
+    auth: '<path:services/data/opensearch#kibana.auth.stage>'
+    elasticsearch:
+      username: kibanaserver
+      password: '<path:services/data/opensearch#kibana.elasticsearch.password.stage>'
+      roles: [""]
+
+  pv_retain_operator:
+    enabled: true
+
+  cerebro:
+    enabled: false
+
+  xtractor:
+    enabled: false
+
+  xkibana:
+    enabled: false
+
+  retention:
+    enabled: false
+
+  dereplicator:
+    enabled: false
+
+  node_updater:
+    enabled: true
+
+  osecurity_extend:
+    permission: |-
+      - "cluster_composite_ops"
+      - "cluster_monitor"
+      - "data_access"
+      - "indices_monitor"
+      - "cluster:admin/opendistro/ad/*"
+      - "indices:admin/*/get"
+      - "indices:data/write/index"
+      - "cluster:admin/opendistro/alerting/*"
+      - "indices:admin/resolve/index"
+      - "cluster:admin/opendistro/reports/definition/*"
+      - "cluster:admin/opendistro/reports/instance/*"
+      - "cluster:admin/opendistro/reports/menu/*"
+      - "cluster:admin/opensearch/notifications/configs/*"
+      - "cluster:admin/opensearch/notifications/test_notification"
+    groups: |-
+      - crowd-sa-obs
+
+
+  internal_ro_users_list: ["flant-test"]
+  internal_ro_users:
+    flant-test:
+      password: '<path:services/data/opensearch#yctechno.internal_ro_users.flant-test.password.stage>'
+      indices:
+        - v3-d8-ingress-*
+        - v3-finops-test-*
+
+billing-resource:
+  resourceName: opendistro

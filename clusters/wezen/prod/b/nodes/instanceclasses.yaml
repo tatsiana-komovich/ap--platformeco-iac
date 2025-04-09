@@ -1,0 +1,72 @@
+---
+apiVersion: deckhouse.io/v1
+kind: OpenStackInstanceClass
+metadata:
+  name: d8-loadbalancer-wms
+spec:
+  additionalNetworks:
+    - BGP-VLAN-28-PROD
+  flavorName: p-wms-c2m4
+  mainNetwork: p-wezen-b-ks
+  rootDiskSize: 30
+---
+apiVersion: deckhouse.io/v1
+kind: OpenStackInstanceClass
+metadata:
+  name: loadbalancer-wms
+spec:
+  additionalNetworks:
+    - BGP-VLAN-28-PROD
+  flavorName: p-wms-c4m4
+  mainNetwork: p-wezen-b-ks
+  rootDiskSize: 30
+---
+apiVersion: deckhouse.io/v1
+kind: OpenStackInstanceClass
+metadata:
+  name: system-wms
+spec:
+  flavorName: p-wms-c8m48
+  imageName: ubuntu-22-04-cloud-amd64
+  mainNetwork: p-wezen-b-ks
+  rootDiskSize: 30
+---
+apiVersion: deckhouse.io/v1
+kind: OpenStackInstanceClass
+metadata:
+  name: application-nodes-wms
+spec:
+  flavorName: p-wms-c8m16
+  imageName: ubuntu-22-04-cloud-amd64
+  mainNetwork: p-wezen-b-ks
+  rootDiskSize: 50
+---
+apiVersion: deckhouse.io/v1
+kind: OpenStackInstanceClass
+metadata:
+  name: opensearch-wms
+spec:
+  flavorName: p-wms-c4m12
+  mainNetwork: p-wezen-b-ks
+  imageName: ubuntu-22-04-cloud-amd64
+  rootDiskSize: 30
+---
+apiVersion: deckhouse.io/v1
+kind: OpenStackInstanceClass
+metadata:
+  name: odfe-common-wms
+spec:
+  flavorName: p-wms-c8m16
+  mainNetwork: p-wezen-b-ks
+  imageName: ubuntu-22-04-cloud-amd64
+  rootDiskSize: 30
+---
+apiVersion: deckhouse.io/v1
+kind: OpenStackInstanceClass
+metadata:
+  name: otel-system
+spec:
+  flavorName: p-wms-c4m8
+  mainNetwork: p-wezen-b-ks
+  imageName: ubuntu-22-04-cloud-amd64
+  rootDiskSize: 30

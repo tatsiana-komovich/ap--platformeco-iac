@@ -1,0 +1,306 @@
+---
+opendistro:
+  tariff: basic
+
+  project: yc-customer
+
+  cluster: staging
+
+  node_pref: s
+
+  clusterSettings:
+    persistent:
+      "cluster.routing.allocation.disk.threshold_enabled": true
+      "cluster.routing.allocation.disk.watermark.low": 90%
+      "cluster.routing.allocation.disk.watermark.high": 92%
+      "cluster.routing.allocation.disk.watermark.flood_stage": 94%
+      "cluster.routing.allocation.node_concurrent_incoming_recoveries": 10
+      "cluster.routing.allocation.node_concurrent_outgoing_recoveries": 10
+      "cluster.routing.allocation.cluster_concurrent_rebalance": 20
+      "cluster.routing.allocation.node_concurrent_recoveries": 20
+      "indices.recovery.max_bytes_per_sec": 50mb
+    transient:
+      "cluster.routing.allocation.disk.threshold_enabled": true
+      "cluster.routing.allocation.disk.watermark.low": 90%
+      "cluster.routing.allocation.disk.watermark.high": 92%
+      "cluster.routing.allocation.disk.watermark.flood_stage": 94%
+      "cluster.routing.allocation.node_concurrent_incoming_recoveries": 10
+      "cluster.routing.allocation.node_concurrent_outgoing_recoveries": 10
+      "cluster.routing.allocation.cluster_concurrent_rebalance": 20
+      "cluster.routing.allocation.node_concurrent_recoveries": 20
+      "indices.recovery.max_bytes_per_sec": 50mb
+
+  userlist:
+    services: ["admin", "filebeat", "logstash", "kibana", "read_only_filebeat", "apiuser"]
+
+  common:
+    nodegroup: opendistro-common
+
+  init:
+    image:
+      repo: "docker-flant.art.lmru.tech/lmru/devops/opensearch--"
+      name: "init-image"
+      tag: "0.0.2"
+
+  opendistro:
+    image:
+      repo: "docker-flant.art.lmru.tech/lmru/devops/opensearch--"
+      name: "opensearch"
+      tag: "2.16.0"
+    # custom - самодельные сертификаты только для старых серверов
+    # cluster - выписываются при помощи k8s
+    certificates: "custom"
+    disk_threshold_critical: 92
+    disk_threshold_warning: 90
+    nodegroup: opendistro
+    external:
+      enabled: false
+    pv_storageclass: network-ssd-nonreplicated
+    pv_size: 1023Gi
+    replicas: "3"
+    limits:
+      memory: 10Gi
+    requests:
+      cpu: "3"
+      memory: 10Gi
+    s3_backup:
+      enabled: true
+      repos:
+        - repository: s3-backup-new
+          client: default
+          access_key: '<path:services/data/opensearch#yc-customer.s3_backup_new.access_key.stage>'
+          secret_key: '<path:services/data/opensearch#yc-customer.s3_backup_new.secret_key.stage>'
+          scheme: https
+          endpoint: "https://storage.yandexcloud.net"
+          region: ru-central1
+          max_snapshot_bytes_per_sec: "40m" # 40MB/s
+          max_restore_bytes_per_sec: "40m"
+          bucket: flant-yc-customer-stage-opendistro-new
+    keystore:
+      - secretName: opendistro-s3-backup-new
+        items:
+          - key: s3.access_key
+            path: s3.client.default.access_key
+          - key: s3.secret_key
+            path: s3.client.default.secret_key
+    wait_cluster_green: true
+
+  exporter:
+    enabled: true
+    samplelimit: "100000"
+    image:
+      repo: "docker-flant.art.lmru.tech/lmru/devops/opensearch--"
+      name: "os-exporter"
+      tag: "0.0.2"
+
+  snapshot_exporter:
+    enabled: true
+    image:
+      repo: "docker-flant.art.lmru.tech/lmru/devops/opensearch--"
+      name: "os-snapshot-exporter"
+      tag: "0.0.1"
+
+  oneday_exporter:
+    enabled: true
+    image:
+      repo: "docker-flant.art.lmru.tech/lmru/devops/opensearch--"
+      name: "os-oneday-exporter"
+      tag: "0.0.2"
+
+  apiuser:
+    elasticsearch:
+      password: '<path:services/data/opensearch#apiuser.elasticsearch.password.stage>'
+      username: apiuser
+      roles: []
+
+  admin:
+    elasticsearch:
+      password: '<path:services/data/opensearch#admin.elasticsearch.password.stage>'
+      username: admin
+      roles:
+        - admin
+    madison_key: 6ba3858cdbfc6cccd11cd970cdfd68b0ff33b9d2592d7aa6eaa2df5374309d02
+    restore_madison_key: 358bf6e72477896cc1a00cfb009c924d4f5c12ba1312917c2d0697a6af524ece
+
+  read_only_filebeat:
+    elasticsearch:
+      username: read_only_filebeat
+      password: '<path:services/data/opensearch#read_only_filebeat.elasticsearch.password.stage>'
+      roles:
+        - readall
+        - kibanauser
+
+  csi:
+    enabled: true
+    attacher:
+      image:
+        repo: "docker-flant.art.lmru.tech/lmru/devops/opensearch--"
+        name: "csi-attacher"
+        tag: "0.0.1"
+    driver_registrar:
+      image:
+        repo: "docker-flant.art.lmru.tech/lmru/devops/opensearch--"
+        name: "csi-node-driver-registrar"
+        tag: "0.0.1"
+    provisioner:
+      image:
+        repo: "docker-flant.art.lmru.tech/lmru/devops/opensearch--"
+        name: "csi-provisioner"
+        tag: "0.0.1"
+    s3:
+      image:
+        repo: "docker-flant.art.lmru.tech/lmru/devops/opensearch--"
+        name: "csi-s3"
+        tag: "0.0.1"
+
+  vector:
+    enabled: false
+
+  recoverer:
+    enabled: true
+    memory: 8Gi
+    image:
+      repo: "docker-flant.art.lmru.tech/lmru/devops/opensearch--"
+      name: "opensearch"
+      tag: "2.16.0"
+    sc_system_name: network-ssd
+
+  filebeat:
+    enabled: true
+    image:
+      repo: "docker-flant.art.lmru.tech/lmru/devops/opensearch--"
+      name: "filebeat"
+      tag: "0.0.2"
+    resources:
+      limits:
+        memory: 512Mi
+      requests:
+        cpu: 30m
+        memory: 512Mi
+
+  logshipper:
+    enabled: false
+
+  logstash:
+    enabled: true
+    image:
+      repo: "docker-flant.art.lmru.tech/lmru/devops/opensearch--"
+      name: "logstash"
+      tag: "0.0.1"
+    replicas: 5
+    workers: 4
+    queuesize: 9728mb
+    tcpPort: 9045
+    resources:
+      limits:
+        memory: 4Gi
+      requests:
+        cpu: 1
+        memory: 4Gi
+    pv:
+      size: 10Gi
+      storageclass: network-ssd
+    elasticsearch:
+      username: logstash
+      password: '<path:services/data/opensearch#yc-customer.logstash.password.stage>'
+      roles:
+        - filebeat
+        - logstash
+    exporter:
+      enabled: true
+      image:
+        repo: "docker-flant.art.lmru.tech/lmru/devops/opensearch--"
+        name: "logstash-exporter"
+        tag: "0.0.1"
+
+  kibana:
+    enabled: true
+    image:
+      repo: "docker-flant.art.lmru.tech/lmru/devops/opensearch--"
+      name: "opensearch-dashboards"
+      tag: "2.16.0"
+    resources:
+      limits:
+        memory: 2Gi
+      requests:
+        cpu: 500m
+        memory: 2Gi
+    maxoldspacesize: 1000
+    host: kibana-yc-customer-stage.apps.lmru.tech
+    connecturl: dex-yc-customer-stage.apps.lmru.tech
+    auth: '<path:services/data/opensearch#yc-customer.kibana.auth.stage>'
+    elasticsearch:
+      username: kibanaserver
+      password: '<path:services/data/opensearch#yc-customer.kibana.password.stage>'
+      roles: [""]
+
+  shell_operator:
+    image:
+      repo: "docker-flant.art.lmru.tech/lmru/devops/opensearch--"
+      name: "shell-operator"
+      tag: "0.0.1"
+
+  pv_retain_operator:
+    enabled: true
+
+  cerebro:
+    enabled: true
+    image:
+      repo: "docker-flant.art.lmru.tech/lmru/devops/opensearch--"
+      name: "cerebro"
+      tag: "0.0.1"
+    host: cerebro-yc-customer-stage.apps.lmru.tech
+    secret: '<path:services/data/opensearch#yc-customer.cerebro.secret.stage>'
+    auth: '<path:services/data/opensearch#yc-customer.cerebro.auth.stage>'
+
+  xtractor:
+    enabled: true
+    image:
+      repo: "docker-flant.art.lmru.tech/lmru/devops/opensearch--"
+      name: "xtractor"
+      tag: "0.2.21"
+    host: xtractor-yc-customer-stage.apps.lmru.tech
+    kibana: "kibana-yc-customer-stage.apps.lmru.tech"
+
+  xkibana:
+    enabled: false
+
+  curator:
+    image:
+      repo: "docker-flant.art.lmru.tech/lmru/devops/opensearch--"
+      name: "os-curator"
+      tag: "0.0.1"
+
+  retention:
+    enabled: true
+    threshold: 80
+
+  dereplicator:
+    enabled: true
+
+  danglingChecker:
+    enabled: true
+    schedule: "0 10 * * *"
+
+  madison:
+    key: 280ea36804f79a6d10943c7af3042a9d7fd63f8dee5f2b94fa9d63b5dcb40bab
+    project: lm-elk
+
+  node_updater:
+    enabled: true
+    image:
+      repo: "docker-flant.art.lmru.tech/lmru/devops/opensearch--"
+      name: "node-updater"
+      tag: "0.0.1"
+
+  sheet_reporter:
+    enabled: true
+    image:
+      repo: "docker-flant.art.lmru.tech/lmru/devops/opensearch--"
+      name: "sheet-reporter"
+      tag: "0.2.0"
+    job:
+      schedule: "30 22 * * *"
+
+billing-resource:
+  resourceName: opendistro

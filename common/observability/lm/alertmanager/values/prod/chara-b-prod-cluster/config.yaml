@@ -1,0 +1,64 @@
+---
+alertmanager:
+  templates:
+    alertmanager.tmpl: |-
+      ''
+
+  config:
+    global:
+      smtp_from: 'alertmanager@leroy-merlin.ru'
+      smtp_smarthost: 'massmail.hq.ru.corp.leroymerlin.com:25'
+      smtp_require_tls: false
+
+    templates:
+      - '/etc/alertmanager/*.tmpl'
+
+    route:
+      group_by: ['alertname', 'job']
+      receiver: 'void'
+      repeat_interval: 4h
+
+  ## Add your Alertmanager configuration below
+
+      routes:
+        - matchers:
+            - product_id="P0767"
+          receiver: 'repl-grafana-oncall-almaz'
+          group_by: ['alertname', 'job', 'namespace', 'datacenter']
+
+        - matchers:
+            - product_id="P0188"
+          receiver: 'strp-grafana-oncall-stockrepository'
+          group_by: ['alertname', 'job', 'namespace', 'datacenter']
+
+        - matchers:
+            - product_id="P0955"
+          receiver: 'lnc-grafana-oncall-networkconfiguration'
+          group_by: ['alertname', 'job', 'namespace', 'datacenter']
+
+        - matchers:
+            - product_id="P0177"
+          receiver: 'repl-grafana-oncall-quota'
+          group_by: ['alertname', 'job', 'namespace']
+
+    receivers:
+      - name: 'void'
+      - name: 'repl-grafana-oncall-almaz'
+        webhook_configs:
+          - url: 'https://obs-grafana-oncall-yc-techno.apps.lmru.tech/17/integrations/v1/alertmanager/432O6XcULn78v7eeDXGdxDQen/'
+            send_resolved: true
+
+      - name: 'strp-grafana-oncall-stockrepository'
+        webhook_configs:
+          - url: 'https://obs-grafana-oncall-yc-techno.apps.lmru.tech/22/integrations/v1/alertmanager/8SYegor3RvaDu1wB8wE9tEsWw/'
+            send_resolved: true
+
+      - name: 'lnc-grafana-oncall-networkconfiguration'
+        webhook_configs:
+          - url: 'https://obs-grafana-oncall-yc-techno.apps.lmru.tech/124/integrations/v1/alertmanager/rtW4EdIfCq56BJlRfQ4BZBbjX/'
+            send_resolved: true
+
+      - name: 'repl-grafana-oncall-quota'
+        webhook_configs:
+          - url: 'https://obs-grafana-oncall-yc-techno.apps.lmru.tech/17/integrations/v1/alertmanager/pNBck7fVYSnXhNwriJ6EZ2cTE/'
+            send_resolved: true

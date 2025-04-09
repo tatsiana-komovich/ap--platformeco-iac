@@ -1,0 +1,209 @@
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  name: application-nodes
+spec:
+  nodeType: CloudEphemeral
+  cloudInstances:
+    minPerZone: 0
+    maxPerZone: 0
+    zones:
+      - ru-central1-a
+    classReference:
+      kind: YandexInstanceClass
+      name: application-nodes
+  disruptions:
+    approvalMode: Automatic
+  chaos:
+    mode: Disabled
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  name: application-nodes-d
+spec:
+  nodeType: CloudEphemeral
+  cloudInstances:
+    minPerZone: 1
+    maxPerZone: 3
+    zones:
+      - ru-central1-d
+    classReference:
+      kind: YandexInstanceClass
+      name: application-nodes
+  disruptions:
+    approvalMode: Automatic
+  chaos:
+    mode: Disabled
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  name: odfe-common
+spec:
+  chaos:
+    mode: Disabled
+  cloudInstances:
+    classReference:
+      kind: YandexInstanceClass
+      name: odfe-common
+    maxPerZone: 4
+    minPerZone: 1
+    zones:
+      - ru-central1-a
+      - ru-central1-b
+  disruptions:
+    approvalMode: Automatic
+  nodeTemplate:
+    labels:
+      node-role/opendistro-common: ""
+    taints:
+      - effect: NoSchedule
+        key: dedicated
+        value: opendistro-common
+  nodeType: CloudEphemeral
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  name: odfe-apiplatform
+spec:
+  chaos:
+    mode: Disabled
+  cloudInstances:
+    classReference:
+      kind: YandexInstanceClass
+      name: odfe-common
+    maxPerZone: 4
+    minPerZone: 1
+    zones:
+      - ru-central1-a
+      - ru-central1-b
+  disruptions:
+    approvalMode: Automatic
+  nodeTemplate:
+    labels:
+      node-role/opendistro-apiplatform: ""
+    taints:
+      - effect: NoSchedule
+        key: dedicated
+        value: opendistro-apiplatform
+  nodeType: CloudEphemeral
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  name: system
+spec:
+  chaos:
+    mode: Disabled
+  cloudInstances:
+    classReference:
+      kind: YandexInstanceClass
+      name: system
+    maxPerZone: 3
+    minPerZone: 3
+    zones:
+      - ru-central1-d
+  disruptions:
+    approvalMode: Automatic
+  kubelet:
+    containerLogMaxFiles: 4
+    containerLogMaxSize: 50Mi
+    resourceReservation:
+      mode: "Off"
+  nodeTemplate:
+    labels:
+      node-role.deckhouse.io/system: ""
+    taints:
+      - effect: NoExecute
+        key: dedicated.deckhouse.io
+        value: system
+  nodeType: CloudEphemeral
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  name: vm-storage-n-a
+spec:
+  chaos:
+    mode: Disabled
+  cloudInstances:
+    classReference:
+      kind: YandexInstanceClass
+      name: vm-nodes-new
+    maxPerZone: 16
+    minPerZone: 5
+    zones:
+      - ru-central1-a
+  disruptions:
+    approvalMode: Manual
+  nodeTemplate:
+    labels:
+      node-role/vmstorage-a: ""
+      node-role.kubernetes.io/vm-storage-a: ""
+    taints:
+      - effect: NoSchedule
+        key: dedicated
+        value: vmstorage-a
+  nodeType: CloudEphemeral
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  name: vm-select-n-a
+spec:
+  chaos:
+    mode: Disabled
+  cloudInstances:
+    classReference:
+      kind: YandexInstanceClass
+      name: vm-nodes-new
+    maxPerZone: 0
+    minPerZone: 0
+    zones:
+      - ru-central1-a
+  disruptions:
+    approvalMode: Manual
+  nodeTemplate:
+    labels:
+      node-role/vmselect-a: ""
+      node-role.kubernetes.io/vm-select-a: ""
+    taints:
+      - effect: NoSchedule
+        key: dedicated
+        value: vmselect-a
+  nodeType: CloudEphemeral
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  name: vm-select-n-d
+spec:
+  chaos:
+    mode: Disabled
+  cloudInstances:
+    classReference:
+      kind: YandexInstanceClass
+      name: vm-nodes-new
+    maxPerZone: 10
+    minPerZone: 2
+    standby: 1
+    standbyHolder:
+      notHeldResources:
+        cpu: 200m
+        memory: 2Gi
+    zones:
+      - ru-central1-d
+  disruptions:
+    approvalMode: Manual
+  nodeTemplate:
+    labels:
+      node-role/vmselect-a: ""
+      node-role.kubernetes.io/vm-select-a: ""
+    taints:
+      - effect: NoSchedule
+        key: dedicated
+        value: vmselect-a
+  nodeType: CloudEphemeral

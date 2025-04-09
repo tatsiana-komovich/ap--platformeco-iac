@@ -1,0 +1,62 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ first (pluck .Values.global.env .Values.kube_blender_exporter) | default .Values.kube_blender_exporter._default }}-deployment
+  namespace: {{ .Values.globals.namespace }}
+  labels:
+    app: {{ first (pluck .Values.global.env .Values.kube_blender_exporter) | default .Values.kube_blender_exporter._default }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ first (pluck .Values.global.env .Values.kube_blender_exporter) | default .Values.kube_blender_exporter._default }}
+  template:
+    metadata:
+      labels:
+        app: {{ first (pluck .Values.global.env .Values.kube_blender_exporter) | default .Values.kube_blender_exporter._default }}
+    spec:
+      containers:
+        - name: app
+          imagePullPolicy: Always
+          image: {{ include "image.name" . }}
+          ports:
+            - containerPort: {{ .Values.port }}
+          resources:
+            limits:
+              cpu: {{ .Values.resources.app.limits.cpu }}
+              memory: {{ .Values.resources.app.limits.mem }}
+            requests:
+              cpu: {{ .Values.resources.app.requests.cpu }}
+              memory: {{ .Values.resources.app.requests.mem }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ first (pluck .Values.global.env .Values.kube_blender_exporter) | default .Values.kube_blender_exporter._default }}-service
+  namespace: {{ .Values.globals.namespace }}
+  labels:
+    prometheus.deckhouse.io/custom-target: {{ first (pluck .Values.global.env .Values.kube_blender_exporter) | default .Values.kube_blender_exporter._default }}
+  annotations:
+    prometheus.deckhouse.io/port: {{ $.Values.port | quote }}
+    prometheus.deckhouse.io/path: "/metrics"
+    prometheus.deckhouse.io/allow-unready-pod: "true"
+    prometheus.deckhouse.io/sample-limit: {{ $.Values.limit | default 10000 | quote }}
+spec:
+  selector:
+    app: {{ first (pluck .Values.global.env .Values.kube_blender_exporter) | default .Values.kube_blender_exporter._default }}
+  ports:
+    - protocol: TCP
+      port: {{ .Values.port }}
+---
+apiVersion: rbac.authorization.k8s.io/{{ .Values.apiVersion | default "v1" }}
+kind: ClusterRoleBinding
+metadata:
+  name: rbac-for-default-token-{{ .Release.Name }}
+subjects:
+  - kind: ServiceAccount
+    name: default
+    namespace: {{ .Values.globals.namespace }}
+roleRef:
+  kind: ClusterRole
+  name: user-authz:super-admin
+  apiGroup: rbac.authorization.k8s.io

@@ -1,0 +1,18 @@
+---
+apiVersion: operator.victoriametrics.com/v1beta1
+kind: VMRule
+metadata:
+  name: vm-rule-argocd-applications
+  namespace: devops-core-victoria-alerts
+spec:
+  groups:
+    - name: argocd.applications
+      concurrency: 1
+      rules:
+        - alert: ApplicationIsNotSynced
+          expr: argocd_app_info{sync_status!="Synced"}
+          for: 5m
+          labels:
+            severity: warning
+          annotations:
+            summary: "The application {{ $labels.name }} has sync status {{ $labels.sync_status }}"

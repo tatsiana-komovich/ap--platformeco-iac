@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nscleaner
+  namespace: devops-core-nscleaner-oper
+  annotations:
+    avp.kubernetes.io/path: "services/data/k8s-nscleaner"
+spec:
+  selector:
+    matchLabels:
+      app: nscleaner
+  template:
+    metadata:
+      labels:
+        app: nscleaner
+        checksum/values: {{ .Values | toYaml | sha256sum | trunc 63 }}
+    spec:
+      serviceAccountName: nscleaner
+      containers:
+        - image: docker-devops.art.lmru.tech/k8s-nscleaner:e562cff
+          name: nscleaner
+          imagePullPolicy: Always
+          env:
+            - name: LOOP_WEBHOOK
+              value: '<LOOP_WEBHOOK>'
+            - name: CLUSTER_NAME
+              value: {{ .Values.clusterName }}'

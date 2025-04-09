@@ -1,0 +1,29 @@
+---
+# Default values for IngressNginxController.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+IngressNginxController:
+  main:
+    name: main
+    blacklist: false # blacklist ip disable
+    spec:
+      chaosMonkey: false
+      disableHTTP2: false
+      hsts: false
+      ingressClass: nginx
+      inlet: HostPort
+      maxReplicas: 1
+      minReplicas: 1
+      underscoresInHeaders: false
+      validationEnabled: true
+      waitLoadBalancerOnTerminating: 60
+    hostPort:
+      behindL7Proxy: true
+      httpPort: 30080
+      httpsPort: 30443
+      realIPHeader: X-Forwarded-For
+    config:
+      setRealIPFrom:
+        - 0.0.0.0/0
+    nodeSelector:
+      node-role.kubernetes.io/control-plane: ""

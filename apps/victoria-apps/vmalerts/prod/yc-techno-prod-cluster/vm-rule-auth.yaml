@@ -1,0 +1,18 @@
+---
+apiVersion: operator.victoriametrics.com/v1beta1
+kind: VMRule
+metadata:
+  name: vm-rule-auth
+  namespace: devops-core-victoria-alerts
+spec:
+  groups:
+    - name: d8.dex.availability
+      concurrency: 1
+      rules:
+        - alert: D8DexAllTargetsDown
+          expr: sum(up{job="dex", namespace="d8-user-authn"}) == 0
+          for: 5m
+          labels:
+            severity: warning
+          annotations:
+            summary: "Prometheus is unable to scrape Dex metrics."

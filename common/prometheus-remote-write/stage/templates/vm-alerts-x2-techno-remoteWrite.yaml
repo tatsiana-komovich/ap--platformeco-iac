@@ -1,0 +1,13 @@
+---
+{{ if not .Values.vm_alert_skip }}
+apiVersion: deckhouse.io/v1
+kind: PrometheusRemoteWrite
+metadata:
+  name: vminsert-01-devops-lmru-tech-vm-alert-remote-write
+spec:
+  url: http://vmalertsinsert-01.devops.lmru.tech:8480/insert/0/prometheus
+  writeRelabelConfigs:
+    - sourceLabels: [__name__, alertname, alertstate]
+      regex: "ALERTS;DeadMansSwitch;firing"
+      action: keep
+{{end}}

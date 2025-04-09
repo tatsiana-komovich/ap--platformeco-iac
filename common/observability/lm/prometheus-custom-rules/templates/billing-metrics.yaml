@@ -1,0 +1,22 @@
+apiVersion: deckhouse.io/v1
+kind: CustomPrometheusRules
+metadata:
+  name: lmru-devops-billing-metrics
+spec:
+  groups:
+    - name: lmru-devops.billing.namespace.cpu
+      rules:
+        - expr: namespace:container_cpu_usage:sum * on (namespace) group_left(label_product_id) kube_namespace_labels{label_product_id=~".+"}
+          record: billing:namespace:container_cpu_usage:sum
+    - name: lmru-devops.billing.namespace.memory
+      rules:
+        - expr: namespace:container_memory_usage_bytes:sum * on (namespace) group_left(label_product_id) kube_namespace_labels{label_product_id=~".+"}
+          record: billing:namespace:container_memory_usage_bytes:sum
+    - name: lmru-devops.billing.namespace.pvc
+      rules:
+        - expr: sum by (namespace) (kube_persistentvolumeclaim_resource_requests_storage_bytes) * on (namespace) group_left(label_product_id) kube_namespace_labels{label_product_id=~".+"}
+          record: billing:namespace:kube_persistentvolumeclaim_resource_requests_storage_bytes:sum
+    - name: lmru-devops.billing.namespace.product-id
+      rules:
+        - expr: sum by (namespace, label_product_id) (kube_namespace_labels{namespace!~"upmeter-probe-namespace-.+"})
+          record: billing:namespace:labels:product_id

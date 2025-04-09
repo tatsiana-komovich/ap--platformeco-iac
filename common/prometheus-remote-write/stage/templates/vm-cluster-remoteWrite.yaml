@@ -1,0 +1,38 @@
+---
+apiVersion: deckhouse.io/v1
+kind: PrometheusRemoteWrite
+metadata:
+  name: vminsert-devops-lmru-tech-capacity-planning-remote-write
+spec:
+  url: https://vm-insert.devops.lmru.tech/api/v1/write
+  writeRelabelConfigs:
+    - action: keep
+      regex: "capacity_planning:.*|kube_node_status_(allocatable|capacity)"
+      sourceLabels: [__name__]
+    # keep metrics only with memory and cpu resources
+    - action: drop
+      regex: "ephemeral_storage|hugepages_1Gi|hugepages_2Mi|pods"
+      sourceLabels: [resource]
+    - action: labeldrop
+      regex: "job|instance|scrape_endpoint|tier|prometheus"
+    # merge job's controller name into cronjob's one
+    - sourceLabels: [controller_name, controller_type]
+      regex: '(.*)(-\d+);Job'
+      replacement: "${1}"
+      targetLabel: "controller_name"
+    # rename metrics like 'capacity_planning:controller:requests' to 'capacity_planning:controller:memory_requests'
+    - sourceLabels: [__name__, resource]
+      regex: "(.*):(.*requests.*);(.*)"
+      replacement: "${1}:${2}_${3}"
+      targetLabel: "__name__"
+    - sourceLabels: [__name__, resource]
+      regex: "(kube_node_status_(allocatable|capacity));(.*)"
+      replacement: "${1}_${3}"
+      targetLabel: "__name__"
+    - sourceLabels: [__name__, resource]
+      regex: "(capacity_planning:(nodes_application|nodes_system):capacity_by_label:sum);(.*)"
+      replacement: "${1}_${3}"
+      targetLabel: "__name__"
+    # drop label 'resource' from requests and limits metrics
+    - regex: "resource|unit"
+      action: labeldrop

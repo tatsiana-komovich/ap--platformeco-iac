@@ -1,0 +1,21 @@
+---
+apiVersion: deckhouse.io/v1alpha1
+kind: NodeGroupConfiguration
+metadata:
+  name: remove-ansible-user.sh
+spec:
+  weight: 110
+  bundles: ["*"]
+  nodeGroups: ["*"]
+  content: |
+    if id "ansible" &>/dev/null; then
+      uid=$(id -u ansible)
+      if [ "$uid" -ne 100099 ]; then
+        userdel -r ansible
+        echo "User ansible with UID $uid has been deleted."
+      else
+        echo "Ansible UID is 100099. Nothing to do."
+      fi
+    else
+      echo "Ansible user not found. Nothing to do."
+    fi

@@ -1,0 +1,30 @@
+---
+opendistro:
+  vector:
+    mainpipetoml: |-
+      [transforms.grok_parser]
+        drop_on_abort = true
+        type = "remap"
+        inputs = [ "json_parser" ]
+        source = '''
+          if .namespace == "d8-ingress-nginx" && !exists(.json) {
+            abort
+          }
+          structured,err = parse_common_log(.message) ??
+                  parse_regex(.message, r'^(((?P<brick>[a-zA-Z\-0-9]+)_(?P<application>[a-zA-Z\-0-9]+)\s)|((?P<appname>[a-zA-Z\-0-9]+)\s)|(.{0}))(?P<datetime>\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\.\d{2,}) \[(?P<transaction>[A-Za-z0-9\-_\.]*),{0,1}(?P<traceId>[A-Za-z0-9\-_\.]*),(?P<spanId>[A-Za-z0-9\-_\.]*)\]\[(?P<thread>[A-Za-z0-9\-_\.#]*)\] (?P<level>[a-zA-Z0-9]+)\s+(?P<class>[A-Za-z0-9\-_\.]+) - (?P<lmsg>.*)') ??
+                  parse_regex(.message, r'^(((?P<brick>[a-zA-Z\-0-9]+)_(?P<application>[a-zA-Z\-0-9]+)\s)|((?P<appname>[a-zA-Z\-0-9]+)\s)|(.{0}))(?P<datetime>\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\.\d{2,}) (?P<level>[a-zA-Z0-9]+) \[(?P<transaction>[A-Za-z0-9\-_\.]*),{0,1}(?P<traceId>[A-Za-z0-9\-_\.]*),(?P<spanId>[A-Za-z0-9\-_\.]*),[A-Za-z0-9\-_\.]*\] (?P<X>[0-9]*) --- \[(?P<thread>[A-Za-z0-9\-_\.#]*)\] (?P<class>[A-Za-z0-9\-_\.]*) (?P<lmsg>.*)') ??
+                  parse_regex(.message, r'^(((?P<brick>[a-zA-Z\-0-9]+)_(?P<application>[a-zA-Z\-0-9]+)\s)|((?P<appname>[a-zA-Z\-0-9]+)\s)|(.{0}))(?P<datetime>\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\.\d{2,}) \[(?P<processId>[A-Za-z\-0-9]*),(?P<solutionId>[A-Za-z0-9\-_\.]*),{0,1}(?P<traceId>[A-Za-z0-9\-_\.]*),(?P<spanId>[A-Za-z0-9\-_\.]*)\]\[(?P<thread>[A-Za-z0-9\-_\.#]*)\] (?P<level>[a-zA-Z0-9]+)\s+(?P<class>[A-Za-z0-9\-_\.]+) - (?P<lmsg>.*)') ??
+                  parse_regex(.message, r'^(?P<event>[A-Z][0-9]{0,4}) (?P<time>\d{2}:\d{2}:\d{2}\.\d{2,})\s+(?P<n>\d+) (?P<appsrc>[\w]*\.[\w]*:\d{1,})\] (?P<lmsg>.*)') ??
+                  parse_regex(.message, r'^(?P<dtime>\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}:) (?P<pm>\w{2}\d) log: (?P<pm2>\[\w{2}\d\]) (?P<lmsg>.*)')
+          . = merge(., structured)
+          lstr, err = parse_json(.lmsg, max_depth:2)
+          if err == null {
+           .ljson = lstr
+          }
+          if exists(.ljson.lmsg) {
+            .msg = .ljson.lmsg
+            del(.ljson.lmsg)
+          }
+          temp,err = parse_regex(.namespace, r'^(?P<ns>\w+-\w+|\w+)')
+          .target_index = temp.ns
+        '''

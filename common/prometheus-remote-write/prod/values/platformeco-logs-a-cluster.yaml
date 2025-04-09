@@ -1,0 +1,19 @@
+---
+vm_alert_skip: true
+k8s_prometheus_remote_write:
+  vminsert-devops-lmru-tech-custom-remote-write:
+    url:
+      _default: https://vminsert.devops.lmru.tech/insert/0/prometheus/
+    writeRelabelConfigs: {}
+  vminsert-victoriametrics-platformeco-tech-remote-write:
+    url:
+      _default: https://victoriametrics.platformeco.lmru.tech/insert/0/prometheus/
+    writeRelabelConfigs:
+      _default:
+        - action: replace
+          replacement: logs-a-platformeco.lmru.tech
+          sourceLabels: [__name__]
+          targetLabel: kubernetes
+        - action: keep
+          sourceLabels: [job]
+          regex: "kubelet|kube-state-metrics|node-exporter|nginx-ingress-controller|custom-elasticsearch|custom-opendistro|image-availability-exporter|custom-vm-.*|custom-es-oneday-exporter"

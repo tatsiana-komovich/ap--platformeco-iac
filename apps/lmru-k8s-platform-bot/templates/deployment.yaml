@@ -1,0 +1,27 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: "{{ .Values.app.name }}-deployment"
+  namespace: {{ .Values.namespace }}
+  labels:
+    app: {{ .Values.app.name }}
+spec:
+  replicas: {{ .Values.app.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ .Values.app.name }}
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.app.name }}
+    spec:
+      containers:
+      - name: {{ .Values.app.name }}
+        image: "{{ .Values.app.image.repository }}:{{ default .Chart.AppVersion .Values.app.image.tag }}"
+        imagePullPolicy: {{ .Values.app.image.pullPolicy }}
+        envFrom:
+        - secretRef:
+            name: {{ .Values.app.name }}-env 

@@ -1,0 +1,74 @@
+---
+extended_monitoring_enable_on_all_ns: {}
+infra-elklogs:
+  - security.deckhouse.io/pod-policy: privileged
+    namespace_pattern:
+      - ^infra-elklogs$
+products:
+  - product-id: P0471
+    namespace_pattern:
+      - ^devops-core-vector$
+
+  - product-id: P0860 # QCMS
+    namespace_pattern:
+      - ^qcms-.*
+  - product-id: P0112 # DAM
+    namespace_pattern:
+      - ^dam-.*
+  - product-id: P0692 # Assortment Planning
+    namespace_pattern:
+      - ^ap-.*
+  - product-id: P1030 # After Sales Management
+    namespace_pattern:
+      - ^asm-.*
+  - product-id: P1148 # Offer Repository
+    log-shipping: enabled
+    namespace_pattern:
+      - ^offer-repository-.*
+  - product-id: P0802 # Intenzo
+    log-shipping: enabled
+    namespace_pattern:
+      - ^intenzo-.*
+  - product-id: P1149 # Customer Project Repository
+    log-shipping: enabled
+    namespace_pattern:
+      - ^cmprj-.*
+  - product-id: P1047 # Assortment Optimization
+    log-shipping: enabled
+    namespace_pattern:
+      - ^aopt-.*
+  - product-id: P0602 # Syndication Platform
+    log-shipping: enabled
+    namespace_pattern:
+      - ^syn-.*
+  - product-id: p0466 # pimento
+    log-shipping: enabled
+    namespace_pattern:
+      - ^pim-.*
+  - product-id: P1155 # Nomenclature Model Service (nms)
+    namespace_pattern:
+      - nms-p1155-.*
+  - product-id: P0116 # Lopus
+    namespace_pattern:
+      - ^opp-.*
+      - ^jenkins-slaves
+    exclusions:
+      - ^opp-feed-.*
+  - product-id: P0847 # Local Collaborator Portal
+    log-shipping: enabled
+    namespace_pattern:
+      - ^lpcp-.*
+  - product-id: P1182 # Assortment Planning
+    log-shipping: enabled
+    namespace_pattern:
+      - ^aplan-.*
+
+istio:
+  - istio-injection: enabled
+    namespace_pattern:
+      - ^opp-prod
+
+devops-core-vector:
+  - security.deckhouse.io/pod-policy-action: warn
+    namespace_pattern:
+      - ^devops-core-vector$

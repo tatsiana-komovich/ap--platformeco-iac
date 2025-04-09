@@ -1,0 +1,45 @@
+{{- range $prefix, $context := .Values.prefixes }}
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: {{ $prefix }}-airflow-cts-dags
+spec:
+  storageClassName: csi-s3-{{ $prefix }}-airflow-cts
+  capacity:
+    storage: 10Gi
+  accessModes:
+    - ReadWriteMany
+  claimRef:
+    namespace: {{ dig "claim" "namespace" "airflow-cts" $context }}
+    name: {{ $prefix }}-airflow-cts-dags
+  csi:
+    driver: ru.yandex.s3.csi
+    volumeHandle: {{ $prefix }}-cts-airflow2-dags
+    controllerPublishSecretRef:
+      name: csi-s3-secret-{{ $prefix }}-airflow-cts
+      namespace: {{ $.Values.argocd.app.namespace }}
+    nodePublishSecretRef:
+      name: csi-s3-secret-{{ $prefix }}-airflow-cts
+      namespace: {{ $.Values.argocd.app.namespace }}
+    nodeStageSecretRef:
+      name: csi-s3-secret-{{ $prefix }}-airflow-cts
+      namespace: {{ $.Values.argocd.app.namespace }}
+    volumeAttributes:
+      capacity: 10Gi
+      mounter: geesefs
+      options: "--memory-limit=1000 --dir-mode=0777 --file-mode=0666 --uid=1001"
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ $prefix }}-airflow-cts-dags
+  namespace: {{ dig "claim" "namespace" "airflow-cts" $context }}
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 10Gi
+  storageClassName: ""
+{{- end }}

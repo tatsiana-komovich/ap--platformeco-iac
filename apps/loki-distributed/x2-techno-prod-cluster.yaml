@@ -1,0 +1,208 @@
+---
+loki-distributed:
+  global:
+    clusterDomain: "techno.p.mesh"
+  loki:
+    schemaConfig:
+      configs:
+        - from: "2025-03-13"
+          store: tsdb
+          object_store: s3
+          schema: v12
+          index:
+            prefix: loki_index_
+            period: 24h
+    # -- Check https://grafana.com/docs/loki/latest/configuration/#storage_config for more info on how to configure storages
+    storageConfig:
+      # boltdb_shipper:
+      #   shared_store: s3
+      #   active_index_directory: /var/loki/index
+      #   cache_location: /var/loki/cache
+      #   cache_ttl: 168h
+      filesystem:
+        directory: /var/loki/chunks
+      aws:
+        s3: "http://x2-loki-tenant-hl.devops-core-minio-operator.svc.techno.p.mesh:9000"
+        s3forcepathstyle: true
+        access_key_id: '<path:services/data/devops-core-loki#x2_access_key_id>'
+        secret_access_key: '<path:services/data/devops-core-loki#x2_secret_access_key>'
+        bucketnames: devops-core-loki-x2
+      tsdb_shipper:
+        shared_store: s3
+        active_index_directory: /var/loki/index
+        cache_location: /var/loki/cache
+        cache_ttl: 168h
+    structuredConfig:
+      ingester:
+        # Disable chunk transfer which is not possible with statefulsets
+        # and unnecessary for boltdb-shipper
+        max_transfer_retries: 0
+        chunk_idle_period: 2h
+        chunk_target_size: 2536000
+        max_chunk_age: 2h
+      compactor:
+        working_directory: /var/loki/compactor
+        retention_enabled: true
+        shared_store: s3
+        compaction_interval: 10m
+        retention_delete_delay: 3m
+        retention_delete_worker_count: 300
+        delete_request_cancel_period: 30m #(default = 24h)
+        deletion_mode: filter-and-delete
+      limits_config:
+        retention_period: 21d
+        max_global_streams_per_user: 78000
+        max_query_lookback: 168h
+        max_entries_limit_per_query: 1000000
+        max_label_value_length: 20480
+        max_label_name_length: 10240
+        max_label_names_per_series: 300
+        ingestion_rate_mb: 1024
+        ingestion_burst_size_mb: 1024
+        per_stream_rate_limit: "6MB"
+      chunk_store_config:
+        max_look_back_period: 168h
+      table_manager:
+        retention_deletes_enabled: true
+        retention_period: 21d
+  compactor:
+    persistence:
+      # -- Enable creating PVCs for the compactor
+      enabled: true
+      # -- Size of persistent disk
+      size: 10Gi
+      # -- Storage class to be used.
+      # If defined, storageClassName: <storageClass>.
+      # If set to "-", storageClassName: "", which disables dynamic provisioning.
+      # If empty or set to null, no storageClassName spec is
+      # set, choosing the default provisioner (gp2 on AWS, standard on GKE, AWS, and OpenStack).
+      storageClass: default
+      # -- Annotations for compactor PVCs
+      annotations: {}
+      # -- List of the compactor PVCs
+      # @notationType -- list
+      claims:
+        - name: data
+          size: 10Gi
+          #   -- Storage class to be used.
+          #   If defined, storageClassName: <storageClass>.
+          #   If set to "-", storageClassName: "", which disables dynamic provisioning.
+          #   If empty or set to null, no storageClassName spec is
+          #   set, choosing the default provisioner (gp2 on AWS, standard on GKE, AWS, and OpenStack).
+          storageClass: default
+        # - name: wal
+        #   size: 150Gi
+      # -- Enable StatefulSetAutoDeletePVC feature
+      enableStatefulSetAutoDeletePVC: false
+      whenDeleted: Retain
+      whenScaled: Retain
+  ingester:
+    replicas: 3
+    persistence:
+      # -- Enable creating PVCs which is required when using boltdb-shipper
+      enabled: true
+      # -- Use emptyDir with ramdisk for storage. **Please note that all data in ingester will be lost on pod restart**
+      inMemory: false
+      # -- List of the ingester PVCs
+      # @notationType -- list
+      claims:
+        - name: data
+          size: 150Gi
+          #   -- Storage class to be used.
+          #   If defined, storageClassName: <storageClass>.
+          #   If set to "-", storageClassName: "", which disables dynamic provisioning.
+          #   If empty or set to null, no storageClassName spec is
+          #   set, choosing the default provisioner (gp2 on AWS, standard on GKE, AWS, and OpenStack).
+          storageClass: null
+        # - name: wal
+        #   size: 150Gi
+      # -- Enable StatefulSetAutoDeletePVC feature
+      enableStatefulSetAutoDeletePVC: false
+      whenDeleted: Retain
+      whenScaled: Retain
+  ingress:
+    enabled: true
+  #  ingressClassName: nginx
+    ingressClassName: 'devops-loki'
+    annotations:
+      nginx.ingress.kubernetes.io/auth-type: basic
+      nginx.ingress.kubernetes.io/auth-secret: loki-distributed-basic-auth
+      nginx.ingress.kubernetes.io/auth-realm: 'Authentication Required'
+  #    nginx.ingress.kubernetes.io/configuration-snippet: |
+  #      proxy_set_header X-Scope-OrgID $remote_user;
+    paths:
+      distributor:
+        - /api/prom/push
+        - /loki/api/v1/push
+      querier:
+        - /api/prom/tail
+        - /loki/api/v1/tail
+      query-frontend:
+        - /loki/api
+      ruler:
+        - /api/prom/rules
+        - /loki/api/v1/rules
+        - /prometheus/api/v1/rules
+        - /prometheus/api/v1/alerts
+    hosts:
+      - loki-x2.devops.lmru.tech
+  distributor:
+    # -- Number of replicas for the distributor
+    replicas: 3
+  memcachedChunks:
+    replicas: 2
+    persistence:
+      # -- Enable creating PVCs which will persist cached data through restarts
+      enabled: true
+      # -- Size of persistent or memory disk
+      size: 10Gi
+      # -- Storage class to be used.
+      # If defined, storageClassName: <storageClass>.
+      # If set to "-", storageClassName: "", which disables dynamic provisioning.
+      # If empty or set to null, no storageClassName spec is
+      # set, choosing the default provisioner (gp2 on AWS, standard on GKE, AWS, and OpenStack).
+      storageClass: default
+    # -- List of additional PVCs to be created for the memcached-chunks statefulset
+    volumeClaimTemplates: []
+    # -- List of additional volumes to be mounted for the memcached-chunks statefulset
+    extraVolumeMounts: []
+  memcachedFrontend:
+    replicas: 2
+    persistence:
+      # -- Enable creating PVCs which will persist cached data through restarts
+      enabled: true
+      # -- Size of persistent or memory disk
+      size: 10Gi
+      # -- Storage class to be used.
+      # If defined, storageClassName: <storageClass>.
+      # If set to "-", storageClassName: "", which disables dynamic provisioning.
+      # If empty or set to null, no storageClassName spec is
+      # set, choosing the default provisioner (gp2 on AWS, standard on GKE, AWS, and OpenStack).
+      storageClass: default
+    # -- List of additional PVCs to be created for the memcached-chunks statefulset
+    volumeClaimTemplates: []
+    # -- List of additional volumes to be mounted for the memcached-chunks statefulset
+    extraVolumeMounts: []
+  memcachedIndexQueries:
+    replicas: 2
+    persistence:
+      # -- Enable creating PVCs which will persist cached data through restarts
+      enabled: true
+      # -- Size of persistent or memory disk
+      size: 10Gi
+      # -- Storage class to be used.
+      # If defined, storageClassName: <storageClass>.
+      # If set to "-", storageClassName: "", which disables dynamic provisioning.
+      # If empty or set to null, no storageClassName spec is
+      # set, choosing the default provisioner (gp2 on AWS, standard on GKE, AWS, and OpenStack).
+      storageClass: default
+    # -- List of additional PVCs to be created for the memcached-chunks statefulset
+    volumeClaimTemplates: []
+    # -- List of additional volumes to be mounted for the memcached-chunks statefulset
+    extraVolumeMounts: []
+  querier:
+    # -- Number of replicas for the querier
+    replicas: 2
+  queryFrontend:
+    # -- Number of replicas for the query-frontend
+    replicas: 2

@@ -1,0 +1,24 @@
+{{- if gt (.Values.envoy.replicaCount | default "1" | int) 1 }}
+{{- if .Values.envoy.pdb.apiVersion -}}
+apiVersion: {{ .Values.envoy.pdb.apiVersion }}
+{{- else -}}
+{{- if .Capabilities.APIVersions.Has "policy/v1/PodDisruptionBudget" }}
+apiVersion: policy/v1
+{{- else }}
+apiVersion: policy/v1beta1
+{{- end }}
+{{- end }}
+kind: PodDisruptionBudget
+metadata:
+  name: {{ .Release.Name }}-envoy
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: {{ .Release.Name }}-envoy
+    aqua.component: envoy
+{{ include "aqua.labels" . | indent 4 }}
+spec:
+  minAvailable: {{ .Values.envoy.pdb.minAvailable }}
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-envoy
+{{- end }}

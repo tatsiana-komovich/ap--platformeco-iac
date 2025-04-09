@@ -1,0 +1,19 @@
+---
+apiVersion: operator.victoriametrics.com/v1beta1
+kind: VMRule
+metadata:
+  name: vm-rule-k8s-controllermanager
+  namespace: devops-core-victoria-alerts
+spec:
+  groups:
+    - name: kubernetes.controllermanager
+      rules:
+        - alert: KubeControllerManagerDown
+          expr: |
+                (sum by (job, pod, k8s_cluster) (up{job="kube-controller-manager", k8s_cluster=~".*"} == 1 default 0)) == 0
+          for: 5m
+          labels:
+            severity: critical
+          annotations:
+            summary: "kube-controllermanager in {{ $labels.k8s_cluster }} cluster is down"
+            description: https://runbooks.prometheus-operator.dev/runbooks/kubernetes/kubecontrollermanagerdown

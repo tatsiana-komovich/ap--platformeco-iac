@@ -1,0 +1,44 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: collectd
+spec:
+  type: LoadBalancer
+  selector:
+    app: collectd-lb
+  ports:
+    - protocol: UDP
+      port: 25826
+      targetPort: 25826
+      name: collectd
+  loadBalancerIP: 10.220.214.245
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: collectd-metrics-lb
+spec:
+  type: LoadBalancer
+  selector:
+    app: collectd
+  ports:
+    - protocol: TCP
+      port: 9103
+      targetPort: 9103
+      name: metrics
+  loadBalancerIP: 10.220.214.243
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: collectd-metrics
+spec:
+  ports:
+    - name: prom
+      port: 9103
+      protocol: TCP
+      targetPort: metrics
+  selector:
+    app: collectd
+  type: ClusterIP

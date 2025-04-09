@@ -1,0 +1,110 @@
+---
+admission-policy-engine:
+  spec:
+    version: 1
+    enabled: true
+  artifactory-repos:
+    enforcementAction: deny
+
+prometheus:
+  enabled: true
+  settings:
+    externalLabels:
+      k8s_cluster: marketplace
+      project_name: marketplace
+      datacenter: x1
+      environment: prod
+      platform: vsphere
+  version: 2
+
+user-authn:
+  enabled: true
+  settings:
+    publishAPI:
+      enabled: true
+      https:
+        global:
+          kubeconfigGeneratorMasterCA: ""
+        mode: Global
+  version: 2
+
+control-plane-manager:
+  enabled: true
+  settings:
+    apiserver:
+      auditPolicyEnabled: true
+      certSANs:
+        - kubernetes.default.svc.cluster.local
+        - kubernetes.default.svc.marketplace.p.mesh
+  version: 1
+
+monitoring-ping:
+  enabled: true
+  settings:
+    externalTargets:
+      - host: p-pg-camunda-db-01.p-ordertracking.x1-a.cloud.lmru.tech
+        name: p-pg-camunda-db-01
+      - host: p-pg-camunda-db-02.p-ordertracking-x2.x2.cloud.lmru.tech
+        name: p-pg-camunda-db-02
+      - host: p-pg-camunda-db-03.ru-central1.internal
+        name: p-pg-camunda-db-03
+      - host: download.geofabrik.de
+        name: osm-geofabrik
+  version: 1
+
+logShipper:
+  enabled: false
+  version: 1
+
+cert-manager:
+  enabled: true
+  settings:
+    enableCAInjector: true
+  version: 1
+
+extended-monitoring:
+  enabled: true
+  settings:
+    events:
+      exporterEnabled: true
+      severityLevel: All
+  version: 2
+
+upmeter:
+  settings:
+    https:
+      certManager:
+        clusterIssuerName: selfsigned
+      customCertificate:
+        secretName: "false"
+      mode: CertManager
+  version: 3
+
+istio:
+  enabled: true
+  settings:
+    sidecar:
+      resourcesManagement:
+        mode: Static
+        static:
+          limits:
+            cpu: "10"
+            memory: 10Gi
+          requests:
+            cpu: 100m
+            memory: 128Mi
+    globalVersion: "1.21"
+    alliance:
+      ingressGateway:
+        inlet: LoadBalancer
+        nodeSelector:
+          node-role/loadbalancer: ""
+        tolerations:
+          - operator: Exists
+    federation:
+      enabled: true
+    dataPlane:
+      trafficRedirectionSetupMode: CNIPlugin
+    multicluster:
+      enabled: false
+  version: 2

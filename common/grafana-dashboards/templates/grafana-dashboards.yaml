@@ -1,0 +1,18 @@
+{{- range $key, $vol := $.Values.dashboards }}
+{{- $files := $.Files.Glob (printf "dashboards/%s/*.json" $vol.path) }}
+{{- if $files }}
+{{- range $path, $fileContents := $files }}
+# {{- $dashboardName := (printf "%s-%s" $vol.name $vol.folder ) }}
+{{- $dashboardName := regexReplaceAll "(^.*/)(.*)\\.json$" $path "${2}" }}
+---
+apiVersion: deckhouse.io/v1
+kind: GrafanaDashboardDefinition
+metadata:
+  name: {{ $dashboardName | trunc 63 | trimSuffix "-" }}
+spec:
+  folder: {{ $vol.folder }}
+  definition: |
+    {{ $.Files.Get $path | nindent 4 }}
+{{- end }}
+{{- end }}
+{{- end }}

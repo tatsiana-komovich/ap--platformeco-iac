@@ -1,0 +1,14 @@
+---
+k8s_prometheus_remote_write:
+  vminsert-devops-lmru-tech-custom-remote-write:
+    url:
+      _default: https://vminsert.devops.lmru.tech/insert/0/prometheus/
+    writeRelabelConfigs: {}
+  mimir-insert-keycloak-remote-write:
+    url:
+      _default: https://keycloak-mimir-yc-techno-stage.apps.lmru.tech/api/v1/push
+    writeRelabelConfigs:
+      _default:
+        - action: keep
+          sourceLabels: [namespace, __name__]
+          regex: "(keycloak-.*|legoauth-.*);(ingress_nginx_detail_.*|keycloak_.*)"

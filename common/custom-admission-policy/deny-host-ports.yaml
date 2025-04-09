@@ -1,0 +1,95 @@
+---
+apiVersion: templates.gatekeeper.sh/v1
+kind: ConstraintTemplate
+metadata:
+  name: denyhostports
+  annotations:
+    description: Enforces security policy to restrict containers from using any host ports.
+    metadata.gatekeeper.sh/title: Host Port Security Policy Constraint
+    metadata.gatekeeper.sh/version: 1.0.0
+    argocd.argoproj.io/hook: PreSync
+spec:
+  crd:
+    spec:
+      names:
+        kind: DenyHostPorts
+      validation:
+        openAPIV3Schema:
+          type: object
+  targets:
+    - target: admission.k8s.gatekeeper.sh
+      rego: |
+        package d8.host_ports
+
+        # Проверка на использование hostPort у контейнеров
+        violation[{"msg": msg}] {
+          container := input_containers[c]
+          container_has_ports(container)        # Контейнер должен иметь явно указанные порты
+          port := container.ports[_].hostPort   # Сохраняем значение hostPort для сообщения
+          msg := sprintf("Container <%v> is using a disallowed host port <%v>.", [container.name, port])
+        }
+
+        # Проверка, есть ли у контейнера порты
+        container_has_ports(container) {
+          count(container.ports) > 0
+        }
+
+        # Функция для получения всех контейнеров (включая init- и ephemeral- контейнеры)
+        input_containers[c] {
+          c := input.review.object.spec.containers[_]
+        }
+        input_containers[c] {
+          c := input.review.object.spec.initContainers[_]
+        }
+        input_containers[c] {
+          c := input.review.object.spec.ephemeralContainers[_]
+        }
+---
+apiVersion: constraints.gatekeeper.sh/v1beta1
+kind: DenyHostPorts
+metadata:
+  name: deny-host-ports
+  annotations:
+    argocd.argoproj.io/sync-options: "SkipDryRunOnMissingResource=true, Replace=true"
+spec:
+  enforcementAction: deny
+  match:
+    kinds:
+      - apiGroups: [""]
+        kinds: ["Pod"]
+      - apiGroups: ["apps"]
+        kinds: ["Deployment", "ReplicaSet", "StatefulSet", "DaemonSet"]
+    excludedNamespaces:
+      - kube-*
+      - d8-*
+      - aqua*
+      - lmru-*
+      - devops-core-*
+      - syn-github-actions-runner-controller # synoptic runners gha p0602
+      - vspspr-*
+      - clickhouse-*
+      - coroot
+      - alfor-*
+      - asm-dev
+      - billing-preprod
+      - intraru-prod
+      - wecare-prod
+      - wecare-test
+      - fudzi
+      - carrier-portal-*
+      - pickup-point-*
+      - del-sell-*
+      - gts-tms-*
+      - pnr--alfa
+      - del-repo-*
+      - infra-elklogs*
+      - osaas-opensearch*
+      - osaas-logs-b-obs*
+      - jaeger*
+      - pim-*
+      - search-*
+      - mf
+      - chaos-mesh
+      - intraru-stage
+      - intraru-preprod
+      - trivy-operator

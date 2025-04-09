@@ -1,0 +1,16 @@
+---
+apiVersion: deckhouse.io/v1alpha1
+kind: ClusterLoggingConfig
+metadata:
+  name: loki-devops-core-event
+spec:
+  destinationRefs:
+    - loki-devops-core-storage
+  type: KubernetesPods
+  kubernetesPods:
+    labelSelector:
+      matchLabels:
+        app: events-exporter
+    namespaceSelector:
+      matchNames:
+        - d8-monitoring

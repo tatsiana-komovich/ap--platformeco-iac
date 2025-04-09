@@ -1,0 +1,493 @@
+---
+alertmanager:
+  templates:
+    alertmanager.tmpl: |-
+      '{{ define "generator.url" }} {{ (index .Alerts 0).GeneratorURL | reReplaceAll "&g0.tab=1$" "&g0.tab=0" }} {{ end }}'
+
+  config:
+    global:
+      smtp_from: 'alertmanager@leroy-merlin.ru'
+      smtp_smarthost: 'massmail.hq.ru.corp.leroymerlin.com:25'
+      smtp_require_tls: false
+
+    templates:
+      - '/etc/alertmanager/*.tmpl'
+
+    route:
+      group_by: ['alertname', 'job']
+      receiver: 'void'
+      repeat_interval: 4h
+
+  ## Add your Alertmanager configuration below
+
+      routes:
+        # payment
+        - matchers:
+            - site=~"orchestrator-(edicsupbff|asd1in|asd2in|asd3out|asspsupbff|deltask2bil|accrep2dp)(.platformeco.lmru.tech|-apim.apps.lmru.tech)"
+          receiver: 'blg-grafana-oncall-external'
+          continue: true
+        - matchers:
+            - site=~"orchestrator-(tpnet|posorchestr|pofreceipt|poswebviews|cashoffice|kzposorch)(.platformeco.lmru.tech|-apim.apps.lmru.tech)"
+          receiver: 'ps-grafana-oncall'
+          continue: true
+        - matchers:
+            - site="orchestrator-pdmbff.platformeco.lmru.tech"
+          receiver: 'pdm-grafana-oncall'
+          continue: true
+        - matchers:
+            - site="orchestrator-ptm-apim.apps.lmru.tech"
+          receiver: 'ptm-grafana-oncall'
+          continue: true
+
+        # devops-core (cicd)
+        - matchers:
+            - project="devops-core"
+            - stream="cicd"
+          receiver: 'gogo-devops-core-cicd'
+
+        # devops-core (k8s)
+        - matchers:
+            - project="devops-core"
+            - stream="k8s"
+          receiver: 'gogo-devops-core-k8s'
+        - matchers:
+            - product_id="P0471"
+          receiver: 'gogo-devops-core-k8s'
+
+        - matchers:
+            - product_id="P0567"
+          receiver: 'wecare'
+
+        - matchers:
+            - project="aao"
+            - site=~"orchestrator-puz2.*|orchestrator-aao.*"
+          receiver: 'aao-puz2'
+
+        - matchers:
+            - project="aao"
+          receiver: 'aao-solution'
+
+        - matchers:
+            - monitor="gogomonia"
+            - project=~"itopsw|itopsupport"
+          receiver: 'itopsw-gogomonia-oncall'
+          continue: true
+
+        - matchers:
+            - project="payment_in_store"
+          receiver: 'ps-grafana-oncall'
+
+        - matchers:
+            - project="pon"
+          receiver: 'payment_online'
+
+        - matchers:
+            - project="myproc"
+            - site=~"moizakupki.lmru.tech|orchestrator-iproc.platformeco.lmru.tech"
+          receiver: 'myproc'
+
+        - matchers:
+            - project="fin-sre"
+          receiver: 'fin-sre'
+
+        - matchers:
+            - project="fin-fac"
+          receiver: 'fin-fac'
+
+        - matchers:
+            - project="generix_services"
+            - site=~"idesign-lmru.generixgroup.ru|netixview.generixgroup.ru|swp-lmru.generixgroup.ru"
+          receiver: 'generix-gogomonia-oncall'
+
+        # working-time-efficiency
+        - matchers:
+            - site=~"orchestrator-wfm-apim.apps.lmru.tech|orchestrator-integrationbkwfm.platformeco.lmru.tech"
+          receiver: 'working-time-efficiency'
+          continue: true
+
+        - matchers:
+            - project="wfm"
+          receiver: 'working-time-efficiency'
+
+        - matchers:
+            - project="generix_services"
+            - site=~"preprod-idesign-lmru.generixgroup.ru|preprod-swp-lmru.generixgroup.ru|preprod-tms-lmru.generixgroup.ru|preprod-yms-lmru.generixgroup.ru"
+          receiver: 'generix-preprod-gogomonia-oncall'
+
+        - matchers:
+            - project="lm-marketplace"
+            - product_id="P0555"
+          receiver: 'logistic_calculator_marketplace_oncall'
+
+        # warehousing
+        - matchers:
+            - product_id = "P0486"
+          receiver: 'acpt-grafana-oncall-receivit'
+
+        - matchers:
+            - product_id = "P0487"
+          receiver: 'adst-grafana-oncall-stockiteasy'
+
+        - matchers:
+            - product_id = "P0075"
+          receiver: 'orp-grafana-oncall-picking'
+
+        - matchers:
+            - product_id = "P0585"
+          receiver: 'shis-grafana-oncall-handover'
+
+        # dom team
+        - matchers:
+            - product_id = "P0525"
+          receiver: 'doo-grafana-oncall-procurement'
+
+        - matchers:
+            - project="hroper"
+          receiver: 'hprt-grafana-oncall-webhook'
+
+        # Elma
+        - matchers:
+            - project="elma"
+          receiver: 'psedev-grafana-oncall-elma'
+
+        # hr-eja
+        - matchers:
+            - product_id ="P0674"
+          receiver: 'eja-grafana-oncall-mydev'
+
+        - matchers:
+            - product_id ="P0937"
+          receiver: 'eja-grafana-oncall-jas'
+
+        - matchers:
+            - product_id ="P0610"
+          receiver: 'eja-grafana-oncall-learn'
+          continue: true
+
+        # hr api
+        - matchers:
+            - product_id="P0854"
+          receiver: 'ednlt-grafana-oncall-hrapi'
+
+        #Communication
+        - matchers:
+            - project="hroper"
+          receiver: 'csa-grafana-oncall-webhook'
+
+        # hr-sltl
+        - matchers:
+            - product_id="P0503"
+          receiver: 'sltl-grafana-oncall-mycareer'
+          continue: true
+
+        - matchers:
+            - product_id="P0091"
+          receiver: 'sltl-grafana-oncall-rabotalm'
+          continue: true
+
+        # Market Development DAM
+        - matchers:
+            - product_id="P0112"
+          receiver: 'pocmn-grafana-oncall-dam'
+
+        # ITAM Keycloak
+        - matchers:
+            - project="keycloak-prod"
+          receiver: 'itam-grafana-oncall-keycloak'
+
+        # Partner Portal
+        - matchers:
+            - project="partner-portal"
+          receiver: 'rao-grafana-oncall-partner-portal'
+
+        # Triffle
+        - matchers:
+            - project="triffle-static-alerting"
+          receiver: 'ctfrnt-grafana-oncall-triffle-static'
+
+        # Sales Price Repository
+        - matchers:
+            - product_id="P0728"
+          receiver: 'sppa-grafana-oncall-spr'
+
+        # Transversal Payment
+        - matchers:
+            - project="tpmn"
+          receiver: 'tpmn-grafana-oncall'
+
+        # Prepare Customer Project
+        - matchers:
+            - team_id="Prepare-Customer-Project-Team"
+          receiver: 'pcprj-grafana-oncall-gogomonia'
+
+        # Customer Master Data
+        - matchers:
+            - product_id="P0621"
+          receiver: 'cmd-grafana-oncall'
+
+        # Services Platform
+        - matchers:
+            - site=~"services.leroymerlin.ru|sp.lemanapro.ru|uslugi.lemanapro.ru"
+          receiver: 'trlsv-grafana-oncall'
+
+        # GRC
+        - matchers:
+            - product_id="P0929"
+          receiver: 'acmp-grafana-oncall-gogomonia'
+
+# --- Gogomonia --- #
+    inhibit_rules:
+      - source_matchers:
+          - alertname = "GogomoniaCheckFailed"
+          - check = "ping"
+        target_matchers:
+          - alertname = "GogomoniaCheckFailed"
+          - check =~ "response_time|ssl|status"
+        equal: [alertname, project, site, zone]
+      - source_matchers:
+          - alertname = "GogomoniaCheckFailed"
+          - check = "ssl"
+        target_matchers:
+          - alertname = "GogomoniaCheckFailed"
+          - check =~ "response_time|status"
+        equal: [alertname, project, site, zone]
+      - source_matchers:
+          - alertname = "GogomoniaCheckFailed"
+          - check = "response_time"
+        target_matchers:
+          - alertname = "GogomoniaCheckFailed"
+          - check =~ "status"
+        equal: [alertname, project, site, zone]
+    # --- Gogomonia --- #
+
+    receivers:
+      - name: 'void'
+
+      # devops-core (cicd)
+      - name: 'gogo-devops-core-cicd'
+        webhook_configs:
+          - url: 'https://obs-grafana-oncall-yc-techno.apps.lmru.tech/14/integrations/v1/alertmanager/jTcfxKKJtZ9rCxapayfQV4xkT/'
+            send_resolved: true
+
+      # devops-core (k8s)
+      - name: 'gogo-devops-core-k8s'
+        webhook_configs:
+          - url: 'https://obs-grafana-oncall-yc-techno.apps.lmru.tech/14/integrations/v1/alertmanager/OM88ULFZYe82xXYw8nI46Kzh0/'
+            send_resolved: true
+
+      - name: 'wecare'
+        webhook_configs:
+          - url: 'https://obs-grafana-oncall-yc-techno.apps.lmru.tech/63/integrations/v1/alertmanager/YYYVnYE6ER23Ec70MKaidTLpZ/'
+            send_resolved: true
+
+      - name: 'aao-puz2'
+        webhook_configs:
+          - url: 'https://obs-grafana-oncall-yc-techno.apps.lmru.tech/56/integrations/v1/alertmanager/r7u8itkoAyjjLg1DyLfAkB10K/'
+            send_resolved: true
+
+      - name: 'aao-solution'
+        webhook_configs:
+          - url: 'https://obs-grafana-oncall-yc-techno.apps.lmru.tech/56/integrations/v1/alertmanager/l5mhOzARf9WJ3SBCfRfl7m0sy/'
+            send_resolved: true
+
+      - name: 'itopsw-gogomonia-oncall'
+        webhook_configs:
+          - url: 'https://obs-grafana-oncall-yc-techno.apps.lmru.tech/38/integrations/v1/alertmanager/wbjVXzQenuiWWy0VHVoDPkurL/'
+            send_resolved: true
+
+      #Payment
+      - name: 'blg-grafana-oncall-external'
+        webhook_configs:
+          - url: 'https://obs-grafana-oncall-yc-techno.apps.lmru.tech/43/integrations/v1/alertmanager/rBMb6TxTxKTNgmBD8ezMcQoGJ/'
+            send_resolved: true
+
+      - name: 'ps-grafana-oncall'
+        webhook_configs:
+          - url: 'https://obs-grafana-oncall-yc-techno.apps.lmru.tech/40/integrations/v1/alertmanager/QhJ6vr9UDz6znBzlEPCcUnu9k/'
+            send_resolved: true
+
+      - name: 'payment_online'
+        webhook_configs:
+          - url: 'https://obs-grafana-oncall-yc-techno.apps.lmru.tech/42/integrations/v1/alertmanager/Lcb5cyAbKQwMFEyX0U7Mcx4lF/'
+            send_resolved: true
+
+      - name: 'pdm-grafana-oncall'
+        webhook_configs:
+          - url: 'https://obs-grafana-oncall-yc-techno.apps.lmru.tech/115/integrations/v1/alertmanager/mvaGL7hU8lEgb2NywIyW59dzt/'
+            send_resolved: true
+
+      - name: 'ptm-grafana-oncall'
+        webhook_configs:
+          - url: 'https://obs-grafana-oncall-yc-techno.apps.lmru.tech/42/integrations/v1/alertmanager/O74nEkMb2lh4cFYNQBKTxMpb4/'
+            send_resolved: true
+
+      - name: 'myproc'
+        webhook_configs:
+          - url: 'https://obs-grafana-oncall-yc-techno.apps.lmru.tech/74/integrations/v1/alertmanager/u08AMjFsGo2dkjVtPiFgY2O1U/'
+            send_resolved: true
+
+      - name: 'fin-sre'
+        webhook_configs:
+          - url: 'https://obs-grafana-oncall-yc-techno.apps.lmru.tech/60/integrations/v1/alertmanager/tqHniRumDjTrScrbY4w6T4W6c/'
+            send_resolved: true
+
+      - name: 'fin-fac'
+        webhook_configs:
+          - url: 'https://obs-grafana-oncall-yc-techno.apps.lmru.tech/73/integrations/v1/alertmanager/CMD3R36pdyAdLZu11YZ6gsXf4/'
+            send_resolved: true
+
+      - name: 'generix-gogomonia-oncall'
+        webhook_configs:
+          - url: "https://obs-grafana-oncall-yc-techno.apps.lmru.tech/50/integrations/v1/alertmanager/mB8pbHCziQl80ndC3AUj5LYOk/"
+            send_resolved: true
+
+      - name: 'working-time-efficiency'
+        webhook_configs:
+          - url: "https://obs-grafana-oncall-yc-techno.apps.lmru.tech/41/integrations/v1/alertmanager/PfOoxVIrNyrPKArwtjrZ9IA3m/"
+            send_resolved: true
+
+      - name: 'generix-preprod-gogomonia-oncall'
+        webhook_configs:
+          - url: "https://obs-grafana-oncall-yc-techno.apps.lmru.tech/50/integrations/v1/alertmanager/oClrW0o5D4gor7NLQZdLVCoLf/"
+            send_resolved: true
+
+      - name: 'logistic_calculator_marketplace_oncall'
+        webhook_configs:
+          - url: "https://obs-grafana-oncall-yc-techno.apps.lmru.tech/94/integrations/v1/alertmanager/GmoCjgN0UBzmpR4EML89lbp4U/"
+            send_resolved: true
+
+      # warehousing
+      - name: 'acpt-grafana-oncall-receivit'
+        webhook_configs:
+          - url: 'https://obs-grafana-oncall-yc-techno.apps.lmru.tech/44/integrations/v1/alertmanager/tk5GRZP35Jh8SEuOmYvO1GTsw/'
+            send_resolved: true
+
+      - name: 'adst-grafana-oncall-stockiteasy'
+        webhook_configs:
+          - url: 'https://obs-grafana-oncall-yc-techno.apps.lmru.tech/46/integrations/v1/alertmanager/rdQdo53KOLGYom4rMBY3rawXc/'
+            send_resolved: true
+
+      - name: 'orp-grafana-oncall-picking'
+        webhook_configs:
+          - url: 'https://obs-grafana-oncall-yc-techno.apps.lmru.tech/45/integrations/v1/alertmanager/Fk79AY6A6crkxE0jXjT940lKO/'
+            send_resolved: true
+
+      - name: 'shis-grafana-oncall-handover'
+        webhook_configs:
+          - url: 'https://obs-grafana-oncall-yc-techno.apps.lmru.tech/47/integrations/v1/alertmanager/7AeInyfn9FIWT53N5Xg8GmRpo/'
+            send_resolved: true
+
+      # dom team
+      - name: 'doo-grafana-oncall-procurement'
+        webhook_configs:
+          - url: 'https://obs-grafana-oncall-yc-techno.apps.lmru.tech/53/integrations/v1/alertmanager/SQ6OS5Ct6Yu0Bnle42mxcchAw/'
+            send_resolved: true
+
+      - name: 'hprt-grafana-oncall-webhook'
+        webhook_configs:
+          - url: "https://obs-grafana-oncall-yc-techno.apps.lmru.tech/96/integrations/v1/alertmanager/zA6LwqT6v9BVBc3of1ZpLvFou/"
+            send_resolved: true
+
+      # Elma
+      - name: 'psedev-grafana-oncall-elma'
+        webhook_configs:
+          - url: 'https://obs-grafana-oncall-yc-techno.apps.lmru.tech/24/integrations/v1/alertmanager/u8KQLcgOM34trx1GtmA5pWDVZ/'
+            send_resolved: true
+
+       # hr-eja
+      - name: 'eja-grafana-oncall-mydev'
+        webhook_configs:
+          - url: 'https://obs-grafana-oncall-yc-techno.apps.lmru.tech/108/integrations/v1/alertmanager/ucUSgwZes5L2smSeD6BQoZimj/'
+            send_resolved: true
+
+      - name: 'eja-grafana-oncall-jas'
+        webhook_configs:
+          - url: 'https://obs-grafana-oncall-yc-techno.apps.lmru.tech/108/integrations/v1/alertmanager/TZQa4W20MT3trANucrzJstxlX/'
+            send_resolved: true
+
+      - name: 'eja-grafana-oncall-learn'
+        webhook_configs:
+          - url: 'https://obs-grafana-oncall-yc-techno.apps.lmru.tech/108/integrations/v1/alertmanager/18PajrZnOaoftgHikqNbEczO7/'
+            send_resolved: true
+
+      # hr api
+      - name: 'ednlt-grafana-oncall-hrapi'
+        webhook_configs:
+          - url: 'https://obs-grafana-oncall-yc-techno.apps.lmru.tech/111/integrations/v1/alertmanager/JEDv6pZheBMdMhouv5hCoPfmt/'
+            send_resolved: true
+
+      #Communications
+      - name: 'csa-grafana-oncall-webhook'
+        webhook_configs:
+          - url: 'https://obs-grafana-oncall-yc-techno.apps.lmru.tech/64/integrations/v1/formatted_webhook/4qsl601tPpSVjw0ZL1YtMhzwi/'
+            send_resolved: true
+
+      # hr sltl
+      - name: 'sltl-grafana-oncall-mycareer'
+        webhook_configs:
+          - url: 'https://obs-grafana-oncall-yc-techno.apps.lmru.tech/112/integrations/v1/alertmanager/Fsh2W3A11PLbrbqOAPLMpVsYS/'
+            send_resolved: true
+
+      - name: 'sltl-grafana-oncall-rabotalm'
+        webhook_configs:
+          - url: 'https://obs-grafana-oncall-yc-techno.apps.lmru.tech/112/integrations/v1/alertmanager/laI74IWtDGLxQab8dSWDyzW2H/'
+            send_resolved: true
+
+      # Market Development DAM
+      - name: 'pocmn-grafana-oncall-dam'
+        webhook_configs:
+          - url: 'https://obs-grafana-oncall-yc-techno.apps.lmru.tech/79/integrations/v1/alertmanager/8ISRwZLVueJrfpDOQOrCxMpbZ/'
+            send_resolved: true
+
+      # ITAM Keycloak
+      - name: 'itam-grafana-oncall-keycloak'
+        webhook_configs:
+          - url: 'https://obs-grafana-oncall-yc-techno.apps.lmru.tech/37/integrations/v1/alertmanager/u7ZJyUE8WUCyoxv2HwiMLKg5B/'
+            send_resolved: true
+
+      # Partner Portal
+      - name: 'rao-grafana-oncall-partner-portal'
+        webhook_configs:
+          - url: 'https://obs-grafana-oncall-yc-techno.apps.lmru.tech/107/integrations/v1/alertmanager/mxnQyt2yOwNz6Thw79sgOyiVW/'
+            send_resolved: true
+
+      # Triffle
+      - name: 'ctfrnt-grafana-oncall-triffle-static'
+        webhook_configs:
+          - url: 'https://obs-grafana-oncall-yc-techno.apps.lmru.tech/20/integrations/v1/alertmanager/fn1oIp404GcDB6noTPBzJRIUO/'
+            send_resolved: true
+
+      # Sales Price Repository
+      - name: 'sppa-grafana-oncall-spr'
+        webhook_configs:
+          - url: 'https://obs-grafana-oncall-yc-techno.apps.lmru.tech/123/integrations/v1/alertmanager/L5qV5XntUCuLr8p2dB6ZqInl0/'
+            send_resolved: true
+
+      # Transversal Payment
+      - name: 'tpmn-grafana-oncall'
+        webhook_configs:
+          - url: 'https://obs-grafana-oncall-yc-techno.apps.lmru.tech/15/integrations/v1/alertmanager/YfGNJbEKqnqf1ZeQnCQDlrEvk/'
+
+      # Prepare Customer Project
+      - name: 'pcprj-grafana-oncall-gogomonia'
+        webhook_configs:
+          - url: 'https://obs-grafana-oncall-yc-techno.apps.lmru.tech/28/integrations/v1/alertmanager/sY5iySol0El7kyZ3tdfW7d3Xq/'
+            send_resolved: true
+
+      # Customer Master Data
+      - name: 'cmd-grafana-oncall'
+        webhook_configs:
+          - url: 'https://obs-grafana-oncall-yc-techno.apps.lmru.tech/70/integrations/v1/alertmanager/NZABFpKUsJuULotVfcF9jqNhg/'
+            send_resolved: true
+
+      # Services Platform
+      - name: 'trlsv-grafana-oncall'
+        webhook_configs:
+          - url: 'https://obs-grafana-oncall-yc-techno.apps.lmru.tech/18/integrations/v1/alertmanager/okBhh3aMET0MRXM9N4C6WvuyQ/'
+            send_resolved: true
+
+      # GRC
+      - name: 'acmp-grafana-oncall-gogomonia'
+        webhook_configs:
+          - url: 'https://obs-grafana-oncall-yc-techno.apps.lmru.tech/136/integrations/v1/alertmanager/9ieZerrM3oC4X21HQB6fleHNd/'
+            send_resolved: true

@@ -1,0 +1,156 @@
+---
+opendistro:
+  curator:
+    enabled: true
+    s3_snapshots:
+      unit_count:
+        all: 60
+        unknown: 7
+    cron:
+      restore: 10 4 * * *
+      snapshot: 30 0 * * *
+    unknown:
+      days_count: 7
+      snapshot: true
+      schedule: 30 0 * * *
+    indices:
+      - kind: prefix
+        value: flant-auto-add-annotations
+        system: false
+        days_count: 14
+        snapshot: true
+        schedule: 55 0 * * *
+      - kind: prefix
+        value: commonlog
+        system: false
+        monitoring: false
+        days_count: 2
+        snapshot: true
+        schedule: 20 1 * * *
+      - kind: prefix
+        value: infra-elklogs
+        system: false
+        days_count: 30
+        snapshot: false
+        schedule: 25 1 * * *
+      - kind: prefix
+        value: d8-ingress-nginx
+        system: false
+        days_count: 7
+        snapshot: true
+        snapshot_count_s3: 7
+        schedule: 30 1 * * *
+      - kind: prefix
+        value: eventrouter
+        system: false
+        days_count: 7
+        snapshot: false
+        schedule: 35 1 * * *
+      - kind: prefix
+        value: .kibana
+        system: true
+        days_count: 30
+        snapshot: true
+        schedule: 40 1 * * *
+      - kind: prefix
+        value: scdp-whs-lmdb-prod
+        system: false
+        days_count: 21
+        snapshot: true
+        schedule: 55 0 * * *
+      - kind: prefix
+        value: scdp-whs-ls-address-prod
+        system: false
+        days_count: 30
+        snapshot: true
+        schedule: 55 2 * * *
+      - kind: prefix
+        value: scdp-whs-ruptures-prod
+        system: false
+        days_count: 30
+        snapshot: true
+        schedule: 05 3 * * *
+      - kind: prefix
+        value: v3-scdp-whs-ruptures-prod
+        system: false
+        days_count: 30
+        snapshot: true
+        schedule: 15 3 * * *
+      - kind: prefix
+        value: v3-scdp-whs-stockcounting-prod
+        system: false
+        days_count: 7
+        snapshot: true
+        schedule: 30 3 * * *
+      - kind: prefix
+        value: v3-scdp-whs-receiveit-prod
+        system: false
+        days_count: 7
+        snapshot: true
+        schedule: 40 3 * * *
+      - kind: prefix
+        value: v3-scdp-whs-packman-prod
+        system: false
+        days_count: 7
+        snapshot: true
+        schedule: 50 3 * * *
+      - kind: prefix
+        value: v3-scdp-whs-lmdb-prod
+        system: false
+        days_count: 7
+        snapshot: true
+        schedule: 05 4 * * *
+      - kind: prefix
+        value: v3-scdp-whs-dostovernost-prod
+        system: false
+        days_count: 7
+        snapshot: true
+        schedule: 15 4 * * *
+      - kind: prefix
+        value: v3-scdp-whs-common-prod
+        system: false
+        days_count: 7
+        snapshot: true
+        schedule: 25 4 * * *
+      - kind: prefix
+        value: v3-scdp-whs-carrier-appointment
+        system: false
+        days_count: 7
+        snapshot: true
+        schedule: 35 4 * * *
+      - kind: prefix
+        value: scdp-whs-stockcounting-prod
+        system: false
+        days_count: 7
+        snapshot: true
+        schedule: 45 4 * * *
+      - kind: prefix
+        value: scdp-whs-receiveit-prod
+        system: false
+        days_count: 7
+        snapshot: true
+        schedule: 55 4 * * *
+      - kind: prefix
+        value: scdp-whs-packman-prod
+        system: false
+        days_count: 7
+        snapshot: true
+        schedule: 10 5 * * *
+      - kind: prefix
+        value: scdp-whs-dostovernost-prod
+        system: false
+        days_count: 7
+        snapshot: true
+        schedule: 35 5 * * *
+      - kind: prefix
+        value: scdp-whs-common-prod
+        system: false
+        days_count: 7
+        snapshot: true
+        schedule: 50 5 * * *
+      - kind: prefix
+        value: scdp-whs-carrier-appointment-prod
+        system: false
+        days_count: 7
+        snapshot: true
+        schedule: 05 6 * * *

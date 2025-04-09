@@ -1,0 +1,250 @@
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  name: application-nodes
+spec:
+  nodeType: CloudEphemeral
+  cloudInstances:
+    minPerZone: 3
+    maxPerZone: 18
+    zones:
+      - ru-central1-a
+    classReference:
+      kind: YandexInstanceClass
+      name: application-nodes
+  disruptions:
+    approvalMode: Automatic
+  chaos:
+    mode: Disabled
+  nodeTemplate:
+    labels:
+      node-role.k8s.lmru.tech/application: ''
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  name: opendistro
+spec:
+  nodeType: CloudEphemeral
+  cloudInstances:
+    minPerZone: 5
+    maxPerZone: 8
+    zones:
+      - ru-central1-a
+    classReference:
+      kind: YandexInstanceClass
+      name: opendistro
+  disruptions:
+    approvalMode: Automatic
+  chaos:
+    mode: Disabled
+  nodeTemplate:
+    labels:
+      node-role/opendistro: ""
+    taints:
+      - effect: NoSchedule
+        key: dedicated
+        value: opendistro
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  name: odfe-common
+spec:
+  nodeType: CloudEphemeral
+  cloudInstances:
+    minPerZone: 4
+    maxPerZone: 8
+    zones:
+      - ru-central1-a
+    classReference:
+      kind: YandexInstanceClass
+      name: odfe-common
+  disruptions:
+    approvalMode: Automatic
+  chaos:
+    mode: Disabled
+  nodeTemplate:
+    labels:
+      node-role/opendistro-common: ""
+    taints:
+      - effect: NoSchedule
+        key: dedicated
+        value: opendistro-common
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  name: system
+spec:
+  chaos:
+    mode: Disabled
+  cloudInstances:
+    classReference:
+      kind: YandexInstanceClass
+      name: system
+    maxPerZone: 2
+    minPerZone: 1
+    zones:
+      - ru-central1-a
+  disruptions:
+    approvalMode: Automatic
+  nodeTemplate:
+    labels:
+      node-role.deckhouse.io/system: ""
+    taints:
+      - effect: NoExecute
+        key: dedicated.deckhouse.io
+        value: system
+  nodeType: CloudEphemeral
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  name: commplatform
+spec:
+  chaos:
+    mode: Disabled
+  cloudInstances:
+    classReference:
+      kind: YandexInstanceClass
+      name: commplatform
+    maxPerZone: 10
+    minPerZone: 7
+    standby: 1
+    zones:
+      - ru-central1-a
+  disruptions:
+    approvalMode: Automatic
+  nodeTemplate:
+    labels:
+      node-role/commplatform: ""
+      node-role.k8s.lmru.tech/application: ''
+    taints:
+      - effect: NoExecute
+        key: dedicated
+        value: commplatform
+  nodeType: CloudEphemeral
+  cri:
+    type: Containerd
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  name: loyalty
+spec:
+  chaos:
+    mode: Disabled
+  cloudInstances:
+    classReference:
+      kind: YandexInstanceClass
+      name: loyalty
+    maxPerZone: 10
+    minPerZone: 7
+    standby: 1
+    zones:
+      - ru-central1-a
+  disruptions:
+    approvalMode: Automatic
+  nodeTemplate:
+    labels:
+      node-role/loyalty: ""
+      node-role.k8s.lmru.tech/application: ''
+    taints:
+      - effect: NoExecute
+        key: dedicated
+        value: loyalty
+  nodeType: CloudEphemeral
+  cri:
+    type: Containerd
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  name: complat-rubbles
+spec:
+  chaos:
+    mode: Disabled
+  cloudInstances:
+    classReference:
+      kind: YandexInstanceClass
+      name: complat-rubbles
+    maxPerZone: 10
+    minPerZone: 7
+    standby: 1
+    zones:
+      - ru-central1-a
+  disruptions:
+    approvalMode: Automatic
+  nodeTemplate:
+    labels:
+      node-role/complat-rubbles: ""
+      node-role.k8s.lmru.tech/application: ''
+    taints:
+      - effect: NoExecute
+        key: dedicated
+        value: complat-rubbles
+  nodeType: CloudEphemeral
+  cri:
+    type: Containerd
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  name: cusac
+spec:
+  chaos:
+    mode: Disabled
+  cloudInstances:
+    classReference:
+      kind: YandexInstanceClass
+      name: cusac
+    maxPerZone: 10
+    minPerZone: 7
+    standby: 1
+    zones:
+      - ru-central1-a
+  disruptions:
+    approvalMode: Automatic
+  nodeTemplate:
+    labels:
+      node-role/cusac: ""
+      node-role.k8s.lmru.tech/application: ''
+    taints:
+      - effect: NoExecute
+        key: dedicated
+        value: cusac
+  nodeType: CloudEphemeral
+  cri:
+    type: Containerd
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  name: customerknowledge
+spec:
+  chaos:
+    mode: Disabled
+  cloudInstances:
+    classReference:
+      kind: YandexInstanceClass
+      name: customerknowledge
+    maxPerZone: 10
+    minPerZone: 7
+    standby: 1
+    zones:
+      - ru-central1-a
+  disruptions:
+    approvalMode: Automatic
+  nodeTemplate:
+    labels:
+      node-role/customerknowledge: ""
+      node-role.k8s.lmru.tech/application: ''
+    taints:
+      - effect: NoExecute
+        key: dedicated
+        value: customerknowledge
+  nodeType: CloudEphemeral
+  cri:
+    type: Containerd

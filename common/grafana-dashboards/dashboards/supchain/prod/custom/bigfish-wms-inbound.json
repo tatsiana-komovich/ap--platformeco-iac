@@ -1,0 +1,425 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": "-- Grafana --",
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "target": {
+          "limit": 100,
+          "matchAny": false,
+          "tags": [],
+          "type": "dashboard"
+        },
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "gnetId": null,
+  "graphTooltip": 0,
+  "id": 29,
+  "iteration": 1643871099169,
+  "links": [],
+  "liveNow": false,
+  "panels": [
+    {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": "${DB}",
+      "fill": 1,
+      "fillGradient": 3,
+      "gridPos": {
+        "h": 8,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "hiddenSeries": false,
+      "id": 9,
+      "legend": {
+        "alignAsTable": true,
+        "avg": false,
+        "current": false,
+        "max": false,
+        "min": false,
+        "rightSide": true,
+        "show": true,
+        "sort": "total",
+        "sortDesc": true,
+        "total": true,
+        "values": true
+      },
+      "lines": true,
+      "linewidth": 1,
+      "nullPointMode": "null",
+      "options": {
+        "alertThreshold": true
+      },
+      "percentage": false,
+      "pluginVersion": "8.2.6",
+      "pointradius": 2,
+      "points": true,
+      "renderer": "flot",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "exemplar": true,
+          "expr": "sum(idelta(bigfishwms_inbound_reception_documents_by_status{status=~\"$RECEPTION_DOCUMENT_STATUS\"}[$__interval])) by (locationId, status)",
+          "interval": "",
+          "intervalFactor": 2,
+          "legendFormat": "{{status}}",
+          "refId": "A"
+        }
+      ],
+      "thresholds": [],
+      "timeFrom": null,
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "Reception Documents",
+      "tooltip": {
+        "shared": true,
+        "sort": 2,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        },
+        {
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    },
+    {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": "${DB}",
+      "fill": 1,
+      "fillGradient": 3,
+      "gridPos": {
+        "h": 8,
+        "w": 24,
+        "x": 0,
+        "y": 8
+      },
+      "hiddenSeries": false,
+      "id": 10,
+      "legend": {
+        "alignAsTable": true,
+        "avg": false,
+        "current": false,
+        "max": false,
+        "min": false,
+        "rightSide": true,
+        "show": true,
+        "sort": "total",
+        "sortDesc": true,
+        "total": true,
+        "values": true
+      },
+      "lines": true,
+      "linewidth": 1,
+      "nullPointMode": "null",
+      "options": {
+        "alertThreshold": true
+      },
+      "percentage": false,
+      "pluginVersion": "8.2.6",
+      "pointradius": 2,
+      "points": true,
+      "renderer": "flot",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "exemplar": true,
+          "expr": "sum(idelta(bigfishwms_inbound_supply_tasks_by_status{locationId=~\"$LOCATION_ID\", status=~\"$SUPPLY_TASK_STATUS\"}[$__interval])) by (locationId, status)",
+          "interval": "",
+          "intervalFactor": 2,
+          "legendFormat": "{{locationId}} - {{status}}",
+          "refId": "A"
+        }
+      ],
+      "thresholds": [],
+      "timeFrom": null,
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "Supply Tasks",
+      "tooltip": {
+        "shared": true,
+        "sort": 2,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        },
+        {
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    }
+  ],
+  "refresh": false,
+  "schemaVersion": 32,
+  "style": "dark",
+  "tags": [],
+  "templating": {
+    "list": [
+      {
+        "current": {
+          "selected": false,
+          "text": "main",
+          "value": "main"
+        },
+        "description": null,
+        "error": null,
+        "hide": 0,
+        "includeAll": false,
+        "label": "Datasource",
+        "multi": false,
+        "name": "DB",
+        "options": [],
+        "query": "prometheus",
+        "queryValue": "",
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "type": "datasource"
+      },
+      {
+        "allValue": ".*",
+        "current": {
+          "selected": true,
+          "text": [
+            "All"
+          ],
+          "value": [
+            "$__all"
+          ]
+        },
+        "datasource": "${DB}",
+        "definition": "label_values(locationId)",
+        "description": null,
+        "error": null,
+        "hide": 0,
+        "includeAll": true,
+        "label": "Location ID",
+        "multi": true,
+        "name": "LOCATION_ID",
+        "options": [],
+        "query": {
+          "query": "label_values(locationId)",
+          "refId": "StandardVariableQuery"
+        },
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 3,
+        "tagValuesQuery": "",
+        "tagsQuery": "",
+        "type": "query",
+        "useTags": false
+      },
+      {
+        "allValue": ".*",
+        "current": {
+          "selected": true,
+          "tags": [],
+          "text": [
+            "All"
+          ],
+          "value": [
+            "$__all"
+          ]
+        },
+        "description": null,
+        "error": null,
+        "hide": 0,
+        "includeAll": true,
+        "label": "Reception Document Status",
+        "multi": true,
+        "name": "RECEPTION_DOCUMENT_STATUS",
+        "options": [
+          {
+            "selected": true,
+            "text": "All",
+            "value": "$__all"
+          },
+          {
+            "selected": false,
+            "text": "CREATED",
+            "value": "CREATED"
+          },
+          {
+            "selected": false,
+            "text": "ALLOWED_FOR_RECEPTION",
+            "value": "ALLOWED_FOR_RECEPTION"
+          },
+          {
+            "selected": false,
+            "text": "1ST_IN_PROGRESS",
+            "value": "1ST_IN_PROGRESS"
+          },
+          {
+            "selected": false,
+            "text": "1ST_RECEPTION_COMPLETED",
+            "value": "1ST_RECEPTION_COMPLETED"
+          },
+          {
+            "selected": false,
+            "text": "2ND_IN_PROGRESS",
+            "value": "2ND_IN_PROGRESS"
+          },
+          {
+            "selected": false,
+            "text": "2ND_RECEPTION_COMPLETED",
+            "value": "2ND_RECEPTION_COMPLETED"
+          },
+          {
+            "selected": false,
+            "text": "CANCELLED",
+            "value": "CANCELLED"
+          }
+        ],
+        "query": "CREATED,ALLOWED_FOR_RECEPTION,1ST_IN_PROGRESS,1ST_RECEPTION_COMPLETED,2ND_IN_PROGRESS,2ND_RECEPTION_COMPLETED,CANCELLED",
+        "queryValue": "",
+        "skipUrlSync": false,
+        "type": "custom"
+      },
+      {
+        "allValue": ".*",
+        "current": {
+          "selected": true,
+          "tags": [],
+          "text": [
+            "All"
+          ],
+          "value": [
+            "$__all"
+          ]
+        },
+        "description": null,
+        "error": null,
+        "hide": 0,
+        "includeAll": true,
+        "label": "Supply Task Status",
+        "multi": true,
+        "name": "SUPPLY_TASK_STATUS",
+        "options": [
+          {
+            "selected": true,
+            "text": "All",
+            "value": "$__all"
+          },
+          {
+            "selected": false,
+            "text": "CREATED",
+            "value": "CREATED"
+          },
+          {
+            "selected": false,
+            "text": "ALLOWED_FOR_RECEPTION",
+            "value": "ALLOWED_FOR_RECEPTION"
+          },
+          {
+            "selected": false,
+            "text": "IN_PROGRESS",
+            "value": "IN_PROGRESS"
+          },
+          {
+            "selected": false,
+            "text": "CONFIRMED_BY_EXECUTOR",
+            "value": "CONFIRMED_BY_EXECUTOR"
+          },
+          {
+            "selected": false,
+            "text": "READY_TO_REVIEW",
+            "value": "READY_TO_REVIEW"
+          },
+          {
+            "selected": false,
+            "text": "COMPLETED",
+            "value": "COMPLETED"
+          },
+          {
+            "selected": false,
+            "text": "CANCELLED",
+            "value": "CANCELLED"
+          }
+        ],
+        "query": "CREATED,ALLOWED_FOR_RECEPTION,IN_PROGRESS,CONFIRMED_BY_EXECUTOR,READY_TO_REVIEW,COMPLETED,CANCELLED",
+        "queryValue": "",
+        "skipUrlSync": false,
+        "type": "custom"
+      }
+    ]
+  },
+  "time": {
+    "from": "now-15m",
+    "to": "now"
+  },
+  "timepicker": {},
+  "timezone": "",
+  "title": "BigFish WMS Inbound",
+  "uid": "kfC28aZ7k",
+  "version": 1
+}

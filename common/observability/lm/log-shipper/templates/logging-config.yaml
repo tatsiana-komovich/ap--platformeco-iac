@@ -1,0 +1,13 @@
+{{- if .Values.loggingConfig.enabled }}
+{{- if hasKey .Values.loggingConfig "custom" }}
+{{- range $config := .Values.loggingConfig.custom }}
+---
+apiVersion: deckhouse.io/v1alpha1
+kind: ClusterLoggingConfig
+metadata:
+  name: {{ $config.name }}
+spec:
+{{- toYaml $config.spec | nindent 2 }}
+{{- end }}
+{{- end }}
+{{- end }}

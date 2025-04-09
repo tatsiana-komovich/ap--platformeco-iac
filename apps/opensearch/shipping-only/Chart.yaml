@@ -1,0 +1,15 @@
+---
+apiVersion: v2
+name: opendistro
+version: 0.0.3
+dependencies:
+  - name: opendistro
+    version: 0.336.14
+    repository: "https://art.lmru.tech/artifactory/helm"
+    export-values:
+      - parent: opendistro
+        child: opendistro
+  - name: billing-resource
+    version: ">=1.0.0"
+    repository: https://art.lmru.tech/artifactory/helm
+    condition: billing-resource.enabled

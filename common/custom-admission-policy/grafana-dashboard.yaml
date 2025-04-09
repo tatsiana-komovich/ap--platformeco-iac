@@ -1,0 +1,380 @@
+---
+apiVersion: deckhouse.io/v1
+kind: GrafanaDashboardDefinition
+metadata:
+  name: opa-violations-dashboard
+spec:
+  folder: Security
+  definition: |
+    {
+      "annotations": {
+        "list": [
+          {
+            "builtIn": 1,
+            "datasource": {
+              "type": "grafana",
+              "uid": "-- Grafana --"
+            },
+            "enable": true,
+            "hide": true,
+            "iconColor": "rgba(0, 211, 255, 1)",
+            "name": "Annotations & Alerts",
+            "type": "dashboard"
+          }
+        ]
+      },
+      "editable": false,
+      "fiscalYearStartMonth": 0,
+      "graphTooltip": 0,
+      "id": 83,
+      "links": [],
+      "panels": [
+        {
+          "datasource": {
+            "uid": "main"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "custom": {
+                "align": "left",
+                "cellOptions": {
+                  "type": "auto"
+                },
+                "filterable": false,
+                "inspect": false
+              },
+              "mappings": [
+                {
+                  "options": {
+                    "PSS": {
+                      "index": 0,
+                      "text": "PodSecurityStandard"
+                    }
+                  },
+                  "type": "value"
+                },
+                {
+                  "options": {
+                    "pattern": "^d8-pod-security-([a-zA-Z]+)-.*",
+                    "result": {
+                      "index": 1,
+                      "text": "$1"
+                    }
+                  },
+                  "type": "regex"
+                }
+              ],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  },
+                  {
+                    "color": "red",
+                    "value": 80
+                  }
+                ]
+              }
+            },
+            "overrides": [
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "violating_name"
+                },
+                "properties": [
+                  {
+                    "id": "custom.width",
+                    "value": 170
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "violating_kind"
+                },
+                "properties": [
+                  {
+                    "id": "custom.width",
+                    "value": 50
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "Enforcement"
+                },
+                "properties": [
+                  {
+                    "id": "custom.width",
+                    "value": 107
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "Time"
+                },
+                "properties": [
+                  {
+                    "id": "custom.width",
+                    "value": 155
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "Policy"
+                },
+                "properties": [
+                  {
+                    "id": "custom.width",
+                    "value": 140
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "Kind"
+                },
+                "properties": [
+                  {
+                    "id": "custom.width",
+                    "value": 108
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "Pod name"
+                },
+                "properties": [
+                  {
+                    "id": "custom.width",
+                    "value": 400
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "Namespace"
+                },
+                "properties": [
+                  {
+                    "id": "custom.width",
+                    "value": 99
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "Name"
+                },
+                "properties": [
+                  {
+                    "id": "custom.width",
+                    "value": 205
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "Policy Name"
+                },
+                "properties": [
+                  {
+                    "id": "custom.width",
+                    "value": 140
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "Policy Type"
+                },
+                "properties": [
+                  {
+                    "id": "custom.width",
+                    "value": 170
+                  }
+                ]
+              }
+            ]
+          },
+          "gridPos": {
+            "h": 20,
+            "w": 24,
+            "x": 0,
+            "y": 0
+          },
+          "id": 1,
+          "options": {
+            "cellHeight": "sm",
+            "footer": {
+              "countRows": false,
+              "fields": "",
+              "reducer": [
+                "sum"
+              ],
+              "show": false
+            },
+            "frameIndex": 10,
+            "showHeader": true,
+            "sortBy": []
+          },
+          "pluginVersion": "10.4.5",
+          "targets": [
+            {
+              "datasource": {
+                "uid": "main"
+              },
+              "editorMode": "code",
+              "exemplar": false,
+              "expr": "group(d8_gatekeeper_exporter_constraint_violations{violating_namespace=~\"$namespace\",kind=~\"$policy_type\"}) by (violating_kind, violating_namespace, violating_name, kind, violation_enforcement, violation_msg, source_type, name)",
+              "format": "table",
+              "hide": false,
+              "instant": true,
+              "interval": "",
+              "intervalFactor": 1,
+              "legendFormat": "",
+              "refId": "A"
+            }
+          ],
+          "title": "OPA Violations",
+          "transformations": [
+            {
+              "id": "filterFieldsByName",
+              "options": {
+                "include": {
+                  "names": [
+                    "Time",
+                    "kind",
+                    "violating_kind",
+                    "violating_name",
+                    "violation_enforcement",
+                    "violation_msg",
+                    "violating_namespace",
+                    "source_type",
+                    "name"
+                  ]
+                }
+              }
+            },
+            {
+              "id": "organize",
+              "options": {
+                "excludeByName": {
+                  "Time": true
+                },
+                "indexByName": {
+                  "Time": 0,
+                  "kind": 3,
+                  "name": 2,
+                  "source_type": 1,
+                  "violating_kind": 5,
+                  "violating_name": 6,
+                  "violating_namespace": 4,
+                  "violation_enforcement": 7,
+                  "violation_msg": 8
+                },
+                "renameByName": {
+                  "Time": "",
+                  "kind": "Policy",
+                  "name": "Policy Name",
+                  "source_type": "Policy Type",
+                  "violating_kind": "Kind",
+                  "violating_name": "Name",
+                  "violating_namespace": "Namespace",
+                  "violation_enforcement": "Enforcement",
+                  "violation_msg": "Message"
+                }
+              }
+            }
+          ],
+          "type": "table"
+        }
+      ],
+      "schemaVersion": 39,
+      "tags": [],
+      "templating": {
+        "list": [
+          {
+            "allValue": "",
+            "current": {
+              "selected": true,
+              "text": "All",
+              "value": "$__all"
+            },
+            "datasource": {
+              "uid": "main"
+            },
+            "definition": "label_values(kube_pod_info,namespace)",
+            "hide": 0,
+            "includeAll": true,
+            "label": "Namespace",
+            "multi": false,
+            "name": "namespace",
+            "options": [],
+            "query": {
+              "qryType": 1,
+              "query": "label_values(kube_pod_info,namespace)",
+              "refId": "PrometheusVariableQueryEditor-VariableQuery"
+            },
+            "refresh": 1,
+            "regex": "^(?!d8-.+)(?!kube-system)(\\S+)",
+            "skipUrlSync": false,
+            "sort": 1,
+            "type": "query"
+          },
+          {
+            "current": {
+              "selected": true,
+              "text": "All",
+              "value": "$__all"
+            },
+            "definition": "label_values(d8_gatekeeper_exporter_constraint_violations,kind)",
+            "hide": 0,
+            "includeAll": true,
+            "label": "Policy Type",
+            "multi": false,
+            "name": "policy_type",
+            "options": [],
+            "query": {
+              "qryType": 1,
+              "query": "label_values(d8_gatekeeper_exporter_constraint_violations,kind)",
+              "refId": "PrometheusVariableQueryEditor-VariableQuery"
+            },
+            "refresh": 1,
+            "regex": "",
+            "skipUrlSync": false,
+            "sort": 0,
+            "type": "query"
+          }
+        ]
+      },
+      "time": {
+        "from": "now-1h",
+        "to": "now"
+      },
+      "timepicker": {},
+      "timezone": "browser",
+      "title": "OPA Violations",
+      "uid": "be3to4e1kqakgb",
+      "version": 1,
+      "weekStart": ""
+    }

@@ -1,0 +1,349 @@
+---
+cluster_authorization:
+  defaults:
+    default_sa_permissions: &default
+      accessLevel: User
+      limitNamespaces:
+        - default
+      allowScale: true
+      allowAccessToSystemNamespaces: true
+      portForwarding: true
+  crowd:
+    groups:
+      crowd-sa-orderflows:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - orderflows-.*
+      crowd-orderflows-admin:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - orderflows-.*
+      crowd-orderflows-ro:
+        <<: *default
+        accessLevel: User
+        limitNamespaces:
+          - orderflows-.*
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+      crowd-orderflows-rw:
+        <<: *default
+        accessLevel: Editor
+        limitNamespaces:
+          - orderflows-.*
+      # dom team
+      crowd-dom-admin:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - dom-.*
+          - scdp-ofl-ffp-.*
+          - scdp-ofl-procurement-.*
+      crowd-dom-ro:
+        <<: *default
+        accessLevel: User
+        limitNamespaces:
+          - dom-.*
+          - scdp-ofl-ffp-.*
+          - scdp-ofl-procurement-.*
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+      crowd-dom-rw:
+        <<: *default
+        accessLevel: Editor
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - dom-.*
+          - scdp-ofl-ffp-.*
+          - scdp-ofl-procurement-.*
+      crowd-sa-dom:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - dom-.*
+          - scdp-ofl-ffp-.*
+          - scdp-ofl-procurement-.*
+      # ots team
+      crowd-ots-ro:
+        <<: *default
+        accessLevel: User
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - scdp-ofl-ots-.*
+      crowd-ots-admin:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - scdp-ofl-ots-.*
+      crowd-ots-rw:
+        <<: *default
+        accessLevel: Editor
+        limitNamespaces:
+          - scdp-ofl-ots-.*
+      crowd-sa-ots:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - scdp-ofl-ots-.*
+      # bpms-ved ries team
+      crowd-bpms-ved-admin:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - scdp-ofl-ries-.*
+      crowd-bpms-ved-ro:
+        <<: *default
+        accessLevel: User
+        limitNamespaces:
+          - scdp-ofl-ries-.*
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+      crowd-bpms-ved-rw:
+        <<: *default
+        accessLevel: Editor
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - scdp-ofl-ries-.*
+      crowd-sa-bpms-ved:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - scdp-ofl-ries-.*
+      # rom team
+      crowd-rom-admin:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - scdp-ofl-rom-.*
+      crowd-rom-ro:
+        <<: *default
+        accessLevel: User
+        limitNamespaces:
+          - scdp-ofl-rom-.*
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+      crowd-rom-rw:
+        <<: *default
+        accessLevel: Editor
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - scdp-ofl-rom-.*
+      crowd-sa-rom:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - scdp-ofl-rom-.*
+      # returns team
+      crowd-returns-ro:
+        <<: *default
+        accessLevel: User
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - scdp-ofl-rtn-.*
+          - prod
+      crowd-returns-admin:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - scdp-ofl-rtn-.*
+          - prod
+      crowd-returns-rw:
+        <<: *default
+        accessLevel: Editor
+        limitNamespaces:
+          - scdp-ofl-rtn-.*
+          - prod
+      crowd-sa-returns:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - scdp-ofl-rtn-.*
+          - prod
+      # pcm team
+      crowd-pcm-ro:
+        <<: *default
+        accessLevel: User
+        limitNamespaces:
+          - scdp-ofl-pcm-.*
+          - prod
+      crowd-pcm-admin:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - scdp-ofl-pcm-.*
+          - prod
+      crowd-pcm-rw:
+        <<: *default
+        accessLevel: Editor
+        limitNamespaces:
+          - scdp-ofl-pcm-.*
+          - prod
+      crowd-sa-pcm:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - scdp-ofl-pcm-.*
+          - prod
+      # ff-management team
+      crowd-ff-ro:
+        <<: *default
+        accessLevel: User
+        limitNamespaces:
+          - scdp-ofl-ffman-prod.*
+          - scdp-ofl-booking-.*
+      crowd-ff-admin:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - scdp-ofl-ffman-prod.*
+          - scdp-ofl-booking-.*
+      crowd-ff-rw:
+        <<: *default
+        accessLevel: Editor
+        limitNamespaces:
+          - scdp-ofl-ffman-prod.*
+          - scdp-ofl-booking-.*
+      crowd-sa-ff:
+        <<: *default
+        accessLevel: Admin
+        limitNamespaces:
+          - scdp-ofl-ffman-prod.*
+          - scdp-ofl-booking-.*
+      # MPOrderTrackingTeam
+      crowd-sa-mpordertracking:
+        <<: *default
+        accessLevel: Admin
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - scdp-ofl-ot-.*
+          - prod
+      crowd-mpordertracking-ro:
+        <<: *default
+        accessLevel: User
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - scdp-ofl-ot-.*
+          - prod
+        allowScale: false
+        portForwarding: true
+      crowd-mpordertracking-rw:
+        <<: *default
+        accessLevel: Editor
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - scdp-ofl-ot-.*
+          - prod
+        allowScale: true
+        portForwarding: true
+      crowd-mpordertracking-admin:
+        <<: *default
+        accessLevel: Admin
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - scdp-ofl-ot-.*
+          - prod
+        allowScale: true
+        portForwarding: true
+      # Logcalc Team
+      crowd-sa-mp-logcalc:
+        <<: *default
+        accessLevel: Admin
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - scdp-ofl-lc-.*
+          - prod
+      crowd-mp-logcalc-ro:
+        <<: *default
+        accessLevel: User
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - scdp-ofl-lc-.*
+          - prod
+        allowScale: true
+        portForwarding: true
+      crowd-mp-logcalc-rw:
+        <<: *default
+        accessLevel: Editor
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - scdp-ofl-lc-.*
+          - prod
+        allowScale: true
+        portForwarding: true
+      crowd-mp-logcalc-admin:
+        <<: *default
+        accessLevel: Admin
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - scdp-ofl-lc-.*
+          - prod
+        allowScale: true
+        portForwarding: true
+      # Merchant Order Team
+      crowd-sa-merchants-order:
+        <<: *default
+        accessLevel: Admin
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - scdp-ofl-mo-.*
+          - prod
+      crowd-merchants-order-ro:
+        <<: *default
+        accessLevel: User
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - scdp-ofl-mo-.*
+          - prod
+        allowScale: true
+        portForwarding: true
+      crowd-merchants-order-rw:
+        <<: *default
+        accessLevel: Editor
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - scdp-ofl-mo-.*
+          - prod
+        allowScale: true
+        portForwarding: true
+      crowd-merchants-order-admin:
+        <<: *default
+        accessLevel: Admin
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - scdp-ofl-mo-.*
+          - prod
+        allowScale: true
+        portForwarding: true
+      # otel for tracing
+      crowd-otel-ro:
+        <<: *default
+        accessLevel: User
+        allowScale: false
+        allowAccessToSystemNamespaces: false
+        portForwarding: false
+      crowd-otel-rw:
+        <<: *default
+        accessLevel: Editor
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - otel-.*
+      crowd-otel-admin:
+        <<: *default
+        accessLevel: Admin
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - otel-.*
+      crowd-sa-otel:
+        <<: *default
+        accessLevel: SuperAdmin
+        allowAccessToSystemNamespaces: false
+        limitNamespaces:
+          - otel-.*
+DexProvider:
+  clientID: k8s-argocd
+  clientSecret: crowd_app_k8s-argocd

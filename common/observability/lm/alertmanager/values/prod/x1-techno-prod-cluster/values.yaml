@@ -1,0 +1,75 @@
+---
+# Configuration for `prometheus-community/alertmanager` helm chart
+#
+# Chart repository: https://github.com/prometheus-community/helm-charts/tree/main/charts/alertmanager
+#
+# This config contains only options with non-default values
+# See the rest in the original config file: https://github.com/prometheus-community/helm-charts/blob/main/charts/alertmanager/values.yaml
+
+alertmanager:
+
+  ## Parametrize your deployment below
+
+  replicaCount: 2
+
+  resources:
+    limits:
+      memory: 512Mi
+    requests:
+      cpu: 500m
+      memory: 512Mi
+
+  image:
+    repository: docker.art.lmru.tech/prometheus/alertmanager
+    pullPolicy: IfNotPresent
+    # Overrides the image tag whose default is the chart appVersion.
+    tag: 'v0.26.0'
+
+  ingress:
+    enabled: true
+    className: 'nginx'
+    hosts:
+      - host: alertmanager-x1-techno.apps.lmru.tech
+        paths:
+          - path: /
+            pathType: ImplementationSpecific
+    tls:
+      - hosts:
+          - alertmanager-x1-techno.apps.lmru.tech
+
+  ## Common configs
+
+  fullnameOverride: 'obs-alertmanager'
+
+  serviceAccount:
+    create: true
+    name: 'obs-alertmanager'
+
+  priorityClassName: 'production-high'
+
+  service:
+    type: ClusterIP
+    port: 9093
+    clusterPort: 9094
+
+  podAntiAffinity: 'hard'
+
+  podAntiAffinityTopologyKey: kubernetes.io/hostname
+
+  podDisruptionBudget:
+    maxUnavailable: 1
+
+  persistence:
+    enabled: true
+    storageClass: 'default'
+    accessModes:
+      - ReadWriteOnce
+    size: 1Gi
+
+  configmapReload:
+    enabled: true
+
+    image:
+      repository: docker.art.lmru.tech/jimmidyson/configmap-reload
+      tag: v0.14.0
+      pullPolicy: IfNotPresent

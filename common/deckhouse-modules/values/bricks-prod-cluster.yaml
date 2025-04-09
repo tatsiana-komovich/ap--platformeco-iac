@@ -1,0 +1,118 @@
+---
+clusterName: bricks
+clusterDomain: bricks.p.mesh
+
+admission-policy-engine:
+  spec:
+    version: 1
+    enabled: true
+  artifactory-repos:
+    enforcementAction: deny
+
+global:
+  settings:
+    modules:
+      ingressClass: nginx-d8s
+
+prometheus:
+  enabled: true
+  settings:
+    externalLabels:
+      k8s_cluster: bricks
+      project_name: bricks
+      datacenter: x2
+      environment: prod
+      platform: vsphere
+  version: 2
+
+user-authn:
+  enabled: true
+  settings:
+    publishAPI:
+      enable: true
+      https:
+        global:
+          kubeconfigGeneratorMasterCA: ""
+        mode: Global
+  version: 1
+
+okmeter:
+  enabled: true
+  settings:
+    apiKey: f31f6a6d-6f1e-4c9b-9333-e72dd597ccde
+    nodeSelector:
+      node-role.kubernetes.io/control-plane: ""
+    tolerations:
+      - key: node-role.kubernetes.io/control-plane
+        operator: Exists
+      - key: node-role.kubernetes.io/master
+        operator: Exists
+      - key: dedicated
+        operator: Equal
+        value: router
+  version: 1
+
+control-plane-manager:
+  enabled: true
+  settings:
+    apiserver:
+      auditPolicyEnabled: true
+      certSANs:
+        - kubernetes.default.svc.cluster.local
+        - kubernetes.default.svc.bricks.p.mesh
+  version: 1
+
+istio:
+  enabled: true
+  settings:
+    sidecar:
+      resourcesManagement:
+        mode: Static
+        static:
+          limits:
+            cpu: "10"
+            memory: 10Gi
+          requests:
+            cpu: 100m
+            memory: 128Mi
+    globalVersion: "1.19"
+    alliance:
+      ingressGateway:
+        inlet: LoadBalancer
+        nodeSelector:
+          node-role/loadbalancer: ""
+        tolerations:
+          - operator: Exists
+    federation:
+      enabled: true
+    dataPlane:
+      trafficRedirectionSetupMode: CNIPlugin
+    multicluster:
+      enabled: true
+  version: 2
+
+logShipper:
+  enabled: false
+  version: 1
+
+cert-manager:
+  enabled: true
+  settings:
+    enableCAInjector: true
+  version: 1
+
+extended-monitoring:
+  enabled: true
+  settings:
+    events:
+      exporterEnabled: true
+      severityLevel: All
+  version: 1
+
+deckhouse:
+  updateMode: Auto
+  windows:
+    - from: "20:00"
+      to: "21:00"
+      days:
+        - Wed

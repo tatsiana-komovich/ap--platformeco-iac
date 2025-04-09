@@ -1,0 +1,77 @@
+---
+opendistro:
+  curator:
+    enabled: true
+    s3_snapshots:
+      unit_count:
+        all: 60
+        unknown: 14
+    cron:
+      restore: 10 3 * * *
+      snapshot: 30 0 * * *
+    unknown:
+      days_count: 7
+      snapshot: true
+      schedule: 30 0 * * *
+    indices:
+      - kind: prefix
+        value: filebeat
+        system: false
+        days_count: 30
+        snapshot: true
+        schedule: 50 0 * * *
+      - kind: prefix
+        value: infra
+        system: false
+        days_count: 30
+        snapshot: false
+        schedule: 55 0 * * *
+      - kind: prefix
+        value: d8
+        system: false
+        days_count: 7
+        snapshot: true
+        snapshot_count_s3: 7
+        schedule: 0 1 * * *
+      - kind: prefix
+        value: .kibana
+        system: true
+        days_count: 30
+        snapshot: true
+        schedule: 5 1 * * *
+      - kind: prefix
+        value: kong-fluentd
+        system: false
+        days_count: 60
+        snapshot: true
+        schedule: 10 1 * * *
+      - kind: prefix
+        value: kong-x1-fluentd
+        system: false
+        days_count: 60
+        snapshot: true
+        schedule: 15 1 * * *
+      - kind: prefix
+        value: kong-x1-stage-fluentd
+        system: false
+        days_count: 60
+        snapshot: true
+        schedule: 20 1 * * *
+      - kind: prefix
+        value: kong-x2-fluentd
+        system: false
+        days_count: 60
+        snapshot: true
+        schedule: 25 1 * * *
+      - kind: prefix
+        value: kong-yc-fluentd
+        system: false
+        days_count: 60
+        snapshot: true
+        schedule: 30 1 * * *
+      - kind: prefix
+        value: lmru
+        system: false
+        days_count: 7
+        snapshot: true
+        schedule: 30 1 * * *

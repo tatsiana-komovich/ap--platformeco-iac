@@ -1,0 +1,71 @@
+---
+cni-simple-bridge:
+  enabled: true
+  version: 1
+
+admission-policy-engine:
+  spec:
+    version: 1
+    enabled: true
+  internal-lb-policy: true
+
+user-authn:
+  enabled: true
+  settings:
+    publishAPI:
+      enabled: true
+      https:
+        global:
+          kubeconfigGeneratorMasterCA: ""
+        mode: Global
+  version: 2
+
+prometheus:
+  enabled: true
+  settings:
+    externalLabels:
+      k8s_cluster: platformeco-infra-a
+      project_name: api-manager
+      environment: prod
+      datacenter: yc
+      platform: yandex
+  version: 2
+
+cert-manager:
+  enabled: true
+  settings:
+    enableCAInjector: true
+  version: 1
+
+extended-monitoring:
+  enabled: true
+  settings:
+    events:
+      exporterEnabled: true
+      severityLevel: All
+  version: 2
+
+okmeter:
+  enabled: true
+  settings:
+    apiKey: 3302a310-b64a-4aa1-9d69-18df9a77128f
+    disableAutoDiscovery: true
+    nodeSelector:
+      okmeter.io/enabled: ""
+    tolerations:
+      - operator: Exists
+  version: 1
+
+istio:
+  enabled: false
+
+global:
+  enabled: true
+  settings:
+    modules:
+      https:
+        certManager:
+          clusterIssuerName: selfsigned
+        mode: CertManager
+      publicDomainTemplate: '%s-platformeco-infra-a.platformeco.lmru.tech'
+  version: 2

@@ -1,0 +1,54 @@
+---
+kind: NodeGroupConfiguration
+apiVersion: deckhouse.io/v1alpha1
+metadata:
+  name: lb-routes-fix.sh
+spec:
+  bundles:
+    - 'ubuntu-lts'
+  nodeGroups:
+    - 'loadbalancer'
+    - 'd8-loadbalancer'
+    - 'cloud-print-loadbalancer'
+  weight: 100
+  content: |
+    if [ -f "/etc/netplan/50-cloud-init.yaml" ]; then
+      if ! grep -Fxq "route-metric" "/etc/netplan/50-cloud-init.yaml"; then
+      node_ip=""
+    {{- if ne .nodeGroup.nodeType "Static" }}
+    {{-   if eq .runType "ClusterBootstrap" }}
+    {{-     if and .clusterBootstrap.cloud .clusterBootstrap.cloud.nodeIP }}
+        node_ip={{ .clusterBootstrap.cloud.nodeIP }}
+    {{-     end }}
+    {{-   else }}
+        if [ -f /etc/kubernetes/kubelet.conf ] ; then
+          if node="$(bb-kubectl --kubeconfig=/etc/kubernetes/kubelet.conf get node $HOSTNAME -o json 2> /dev/null)" ; then
+            node_ip=$(echo "$node" | jq -r '([.status.addresses[] | select(.type == "InternalIP") | .address])[0]')
+          else
+            bb-log-error "Unable to discover node IP for node object: No access to API server"
+            exit 1
+          fi
+        fi
+    {{-   end }}
+    {{- end }}
+        if [[ "$node_ip" != "" ]]; then
+          ifname=$(ip -json addr show | jq -r '.[] | select(.addr_info[].local == "'${node_ip}'") | .ifname')
+
+          current_conf_checksum="$(find /etc/netplan -type f -name '*.yaml' | sort | xargs cat | md5sum - | awk '{print $1}')"
+          cat > /etc/netplan/60-route-"$ifname".yaml <<BOOTSTRAP_NETWORK_EOF
+    network:
+      version: 2
+      ethernets:
+        $ifname:
+          dhcp4-overrides:
+            route-metric: 200
+    BOOTSTRAP_NETWORK_EOF
+
+          new_conf_checksum="$(find /etc/netplan -type f -name '*.yaml' | sort | xargs cat | md5sum - | awk '{print $1}')"
+          if [[ "$current_conf_checksum" != "$new_conf_checksum" ]]; then
+            netplan generate
+            netplan apply
+          fi
+        fi
+      fi
+    fi

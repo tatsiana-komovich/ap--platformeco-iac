@@ -1,0 +1,20 @@
+---
+apiVersion: operator.victoriametrics.com/v1beta1
+kind: VMRule
+metadata:
+  name: vm-rule-k8s-services
+  namespace: devops-core-victoria-alerts
+spec:
+  groups:
+    - name: kubernetes.services
+      concurrency: 1
+      rules:
+        - alert: LBServiceHasExternalIP
+          expr: kube_service_status_load_balancer_ingress{ip!~"10\\..*"}
+          for: 5m
+          labels:
+            severity: warning
+          annotations:
+            summary: |
+              The service {{ $labels.service }} in the cluster {{ $labels.k8s_cluster }}  
+              of namespace {{ $labels.namespace }} has an external IP {{ $labels.ip }}

@@ -1,0 +1,28 @@
+---
+extended_monitoring_enable_on_all_ns: {}
+products:
+  - product-id: P0890
+    namespace_pattern:
+      - ^baget-ab-platform-.*
+
+  - product-id: P0471
+    namespace_pattern:
+      - ^devops-core-vector$
+
+  - product-id: P0356
+    namespace_pattern:
+      - ^search-.*
+
+  - product-id: P0488
+    namespace_pattern:
+      - ^mobile-app-.*
+
+istio:
+  - istio-injection: enabled
+    namespace_pattern:
+      - ^search-prod$
+
+devops-core-vector:
+  - security.deckhouse.io/pod-policy-action: warn
+    namespace_pattern:
+      - ^devops-core-vector$

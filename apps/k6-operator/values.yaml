@@ -1,0 +1,56 @@
+---
+k6-operator:
+  namespace: payment-devops-k6
+
+tolerations:
+  - key: "dedicated"
+    operator: "Equal"
+    value: "k6-node"
+    effect: "NoSchedule"
+
+installCRDs: true
+
+prometheus:
+  enabled: false
+
+manager:
+  image:
+    name: docker.art.lmru.tech/grafana/k6-operator
+    tag: latest
+    pullPolicy: IfNotPresent
+  resources:
+    limits:
+      memory: 128Mi
+      cpu: 100m
+    requests:
+      cpu: 100m
+      memory: 128Mi
+  readinessProbe:
+    failureThreshold: 3
+    httpGet:
+      path: /readyz
+      port: 8081
+      scheme: HTTP
+    initialDelaySeconds: 20
+    periodSeconds: 5
+    successThreshold: 1
+    timeoutSeconds: 10
+  livenessProbe:
+    failureThreshold: 3
+    httpGet:
+      path: /healthz
+      port: 8081
+      scheme: HTTP
+    initialDelaySeconds: 20
+    periodSeconds: 5
+    successThreshold: 1
+    timeoutSeconds: 10
+  containerSecurityContext:
+    allowPrivilegeEscalation: false
+    privileged: false
+    capabilities:
+      drop:
+        - ALL
+    runAsNonRoot: true
+    runAsUser: 1001
+    readOnlyRootFilesystem: true

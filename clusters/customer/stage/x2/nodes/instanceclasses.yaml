@@ -1,0 +1,62 @@
+---
+apiVersion: deckhouse.io/v1
+kind: VsphereInstanceClass
+metadata:
+  name: cr-load-testing-nodes
+spec:
+  memory: 65536
+  numCPUs: 8
+  datastore: 3par_4_Lun102
+  mainNetwork: DEVOPS_43
+  rootDiskSize: 30
+  template: Templates/ubuntu-focal-20.04-packer
+---
+apiVersion: deckhouse.io/v1
+kind: VsphereInstanceClass
+metadata:
+  name: application-nodes
+spec:
+  memory: 16384
+  numCPUs: 8
+  rootDiskSize: 50
+  template: Templates/ubuntu-jammy-22.04-packer
+  datastore: 3par_4_Lun103
+  mainNetwork: DEVOPS_43
+---
+apiVersion: deckhouse.io/v1
+kind: VsphereInstanceClass
+metadata:
+  name: sentry
+spec:
+  memory: 16384
+  numCPUs: 4
+  datastore: 3par_4_Lun103
+  mainNetwork: DEVOPS_43
+  rootDiskSize: 30
+  template: Templates/ubuntu-jammy-22.04-packer
+---
+apiVersion: deckhouse.io/v1
+kind: VsphereInstanceClass
+metadata:
+  name: system
+spec:
+  memory: 16384
+  numCPUs: 4
+  template: Templates/ubuntu-jammy-22.04-packer
+  datastore: 3par_4_Lun103
+  mainNetwork: DEVOPS_43
+  rootDiskSize: 30
+---
+apiVersion: deckhouse.io/v1
+kind: VsphereInstanceClass
+metadata:
+  name: loadbalancer
+spec:
+  additionalNetworks:
+    - DEVOPS_43
+  datastore: 3par_4_Lun102
+  mainNetwork: devops_3893
+  memory: 6144
+  numCPUs: 8
+  rootDiskSize: 50
+  template: Templates/ubuntu-jammy-22.04-packer

@@ -1,0 +1,71 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    nginx.ingress.kubernetes.io/proxy-connect-timeout: "108000"
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "108000"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "108000"
+    nginx.ingress.kubernetes.io/proxy-body-size: "128m"
+  name: moon2-dors
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: moon2-dors-a.apps.lmru.tech
+    http:
+      paths:
+      - backend:
+          service:
+            name: moon
+            port:
+              number: 8080
+        path: /
+        pathType: Prefix
+      - backend:
+          service:
+            name: moon
+            port:
+              number: 4444
+        path: /wd/hub
+        pathType: Prefix
+      - backend:
+          service:
+            name: moon
+            port:
+              number: 4444
+        path: /cypress
+        pathType: Prefix
+      - backend:
+          service:
+            name: moon
+            port:
+              number: 4444
+        path: /playwright
+        pathType: Prefix
+      - backend:
+          service:
+            name: moon
+            port:
+              number: 4444
+        path: /devtools
+        pathType: Prefix
+      - backend:
+          service:
+            name: moon
+            port:
+              number: 4444
+        path: /metrics
+        pathType: Prefix
+      - backend:
+          service:
+            name: moon
+            port:
+              number: 9090
+        path: /api
+        pathType: Prefix
+      - backend:
+          service:
+            name: moon
+            port:
+              number: 9090
+        path: /ui
+        pathType: Prefix

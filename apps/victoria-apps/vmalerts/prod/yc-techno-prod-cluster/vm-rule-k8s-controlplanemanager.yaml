@@ -1,0 +1,36 @@
+---
+apiVersion: operator.victoriametrics.com/v1beta1
+kind: VMRule
+metadata:
+  name: vm-rule-k8s-controlplanemanager
+  namespace: devops-core-victoria-alerts
+spec:
+  groups:
+    - name: kubernetes.controlplanemanager
+      rules:
+        - alert: D8ControlPlaneManagerPodNotRunning
+          for: 10m
+          expr: |
+            max by (k8s_cluster, node) (
+                    kube_node_role{role="master"}
+                    unless
+                    kube_node_role{role="master"}
+                    * on(k8s_cluster, node) group_left() (
+                      (kube_pod_status_ready{condition="true"} == 1)
+                      * on (k8s_cluster, pod, namespace) group_right()
+                      kube_controller_pod{
+                        controller_type="DaemonSet",
+                        namespace="kube-system",
+                        controller_name="d8-control-plane-manager"
+                      }
+                    )
+                  )
+          labels:
+            severity: "warning"
+          annotations:
+            summary: Controller Pod not running on Node {{ $labels.node }}
+            description: |-
+              Pod `d8-control-plane-manager` fails or not scheduled on Node {{ $labels.node }}
+      
+              Consider checking state of the `kube-system/d8-control-plane-manager` DaemonSet and its Pods:
+              `kubectl -n kube-system get daemonset,pod --selector=app=d8-control-plane-manager`

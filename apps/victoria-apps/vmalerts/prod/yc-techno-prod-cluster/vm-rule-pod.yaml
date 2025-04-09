@@ -1,0 +1,32 @@
+---
+apiVersion: operator.victoriametrics.com/v1beta1
+kind: VMRule
+metadata:
+  name: vm-rule-pod
+  namespace: devops-core-victoria-alerts
+spec:
+  groups:
+    - name: kubernetes.pod_status_incorrect
+      concurrency: 1
+      rules:
+        - alert: PodStatusIsIncorrect
+          expr: |
+            (count by (node, namespace, pod) (kube_pod_status_ready{condition="true"} == 0) * on (namespace, pod) group_left(node) (max by (namespace, node, pod) (kube_pod_info))) and (
+              (count by (namespace, pod) (kube_pod_container_status_ready==1) * on (namespace, pod) group_left(node) (max by (namespace, node, pod) (kube_pod_info)))
+              unless
+              (count by (namespace, pod) (kube_pod_container_status_ready==0) * on (namespace, pod) group_left(node) (max by (namespace, node, pod) (kube_pod_info)))
+            )
+          for: 5m
+          labels:
+            severity: warning
+          annotations:
+            summary: "The state of the {{ $labels.namespace }}/{{ $labels.pod }} Pod running on the {{ $labels.node }} Node is incorrect. You need to restart `kubelet`."
+            description: |
+              There is a {{ $labels.namespace }}/{{ $labels.pod }} Pod in the cluster that runs on the {{ $labels.node }} and listed as NotReady while all the Pod's containers are Ready.
+
+              This could be due to the [Kubernetes bug](https://github.com/kubernetes/kubernetes/issues/80968).
+
+              The recommended course of action:
+              1. Find all the Pods having this state: `kubectl get pod -o json --all-namespaces | jq '.items[] | select(.status.phase == "Running") | select(.status.conditions[] | select(.type == "ContainersReady" and .status == "True")) | select(.status.conditions[] | select(.type == "Ready" and .status == "False")) | "\(.spec.nodeName)/\(.metadata.namespace)/\(.metadata.name)"'`;
+              2. Find all the Nodes affected: `kubectl get pod -o json --all-namespaces | jq '.items[] | select(.status.phase == "Running") | select(.status.conditions[] | select(.type == "ContainersReady" and .status == "True")) | select(.status.conditions[] | select(.type == "Ready" and .status == "False")) | .spec.nodeName' -r | sort | uniq -c`;
+              3. Restart `kubelet` on each Node: `systemctl restart kubelet`.

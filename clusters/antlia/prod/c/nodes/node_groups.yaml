@@ -1,0 +1,263 @@
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  name: front-x1
+spec:
+  disruptions:
+    approvalMode: Automatic
+  kubelet:
+    containerLogMaxFiles: 4
+    containerLogMaxSize: 50Mi
+    resourceReservation:
+      mode: Auto
+  nodeTemplate:
+    labels:
+      node-role.deckhouse.io/frontend: ""
+      topology.kubernetes.io/region: x1
+      zone: x1
+    taints:
+      - effect: NoExecute
+        key: dedicated.deckhouse.io
+        value: frontend
+  nodeType: Static
+  staticInstances:
+    count: 1
+    labelSelector:
+      matchLabels:
+        role: front-x1
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  name: front-x2
+spec:
+  disruptions:
+    approvalMode: Automatic
+  kubelet:
+    containerLogMaxFiles: 4
+    containerLogMaxSize: 50Mi
+    resourceReservation:
+      mode: Auto
+  nodeTemplate:
+    labels:
+      node-role.deckhouse.io/frontend: ""
+      topology.kubernetes.io/region: x2
+      zone: x2
+    taints:
+      - effect: NoExecute
+        key: dedicated.deckhouse.io
+        value: frontend
+  nodeType: Static
+  staticInstances:
+    count: 1
+    labelSelector:
+      matchLabels:
+        role: front-x2
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  name: front-yc
+spec:
+  disruptions:
+    approvalMode: Automatic
+  kubelet:
+    containerLogMaxFiles: 4
+    containerLogMaxSize: 50Mi
+    resourceReservation:
+      mode: Auto
+  nodeTemplate:
+    labels:
+      node-role.deckhouse.io/frontend: ""
+      topology.kubernetes.io/region: yc
+      zone: yca
+    taints:
+      - effect: NoExecute
+        key: dedicated.deckhouse.io
+        value: frontend
+  nodeType: Static
+  staticInstances:
+    count: 1
+    labelSelector:
+      matchLabels:
+        role: front-yc
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  name: master
+spec:
+  disruptions:
+    approvalMode: Manual
+  kubelet:
+    containerLogMaxFiles: 4
+    containerLogMaxSize: 50Mi
+    resourceReservation:
+      mode: Auto
+  nodeTemplate:
+    labels:
+      node-role.kubernetes.io/control-plane: ""
+      node-role.kubernetes.io/master: ""
+    taints:
+      - effect: NoSchedule
+        key: node-role.kubernetes.io/control-plane
+  nodeType: Static
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  name: node-x1
+spec:
+  disruptions:
+    approvalMode: Automatic
+  kubelet:
+    containerLogMaxFiles: 4
+    containerLogMaxSize: 50Mi
+    resourceReservation:
+      mode: Auto
+  nodeTemplate:
+    labels:
+      node-role.k8s.lmru.tech/application: ''
+      topology.kubernetes.io/region: x1
+      zone: x1
+  nodeType: Static
+  staticInstances:
+    count: 2
+    labelSelector:
+      matchLabels:
+        role: node-x1
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  name: node-x2
+spec:
+  disruptions:
+    approvalMode: Automatic
+  kubelet:
+    containerLogMaxFiles: 4
+    containerLogMaxSize: 50Mi
+    resourceReservation:
+      mode: Auto
+  nodeTemplate:
+    labels:
+      node-role.k8s.lmru.tech/application: ''
+      topology.kubernetes.io/region: x2
+      zone: x2
+  nodeType: Static
+  staticInstances:
+    count: 2
+    labelSelector:
+      matchLabels:
+        role: node-x2
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  name: node-yc
+spec:
+  disruptions:
+    approvalMode: Automatic
+  kubelet:
+    containerLogMaxFiles: 4
+    containerLogMaxSize: 50Mi
+    resourceReservation:
+      mode: Auto
+  nodeTemplate:
+    labels:
+      node-role.k8s.lmru.tech/application: ''
+      topology.kubernetes.io/region: yc
+      zone: yca
+  nodeType: Static
+  staticInstances:
+    count: 2
+    labelSelector:
+      matchLabels:
+        role: node-yc
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  name: system-x1
+spec:
+  disruptions:
+    approvalMode: Automatic
+  kubelet:
+    containerLogMaxFiles: 4
+    containerLogMaxSize: 50Mi
+    resourceReservation:
+      mode: Auto
+  nodeTemplate:
+    labels:
+      node-role.deckhouse.io/system: ""
+      topology.kubernetes.io/region: x1
+      zone: x1
+    taints:
+      - effect: NoExecute
+        key: dedicated.deckhouse.io
+        value: system
+  nodeType: Static
+  staticInstances:
+    count: 1
+    labelSelector:
+      matchLabels:
+        role: system-x1
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  labels:
+    app.kubernetes.io/managed-by: Helm
+  name: system-x2
+spec:
+  disruptions:
+    approvalMode: Automatic
+  kubelet:
+    containerLogMaxFiles: 4
+    containerLogMaxSize: 50Mi
+    resourceReservation:
+      mode: Auto
+  nodeTemplate:
+    labels:
+      node-role.deckhouse.io/system: ""
+      topology.kubernetes.io/region: x2
+      zone: x2
+    taints:
+      - effect: NoExecute
+        key: dedicated.deckhouse.io
+        value: system
+  nodeType: Static
+  staticInstances:
+    count: 0
+    labelSelector:
+      matchLabels:
+        role: system-x2
+---
+apiVersion: deckhouse.io/v1
+kind: NodeGroup
+metadata:
+  name: system-yc
+spec:
+  disruptions:
+    approvalMode: Automatic
+  kubelet:
+    containerLogMaxFiles: 4
+    containerLogMaxSize: 50Mi
+    resourceReservation:
+      mode: Auto
+  nodeTemplate:
+    labels:
+      node-role.deckhouse.io/system: ""
+      topology.kubernetes.io/region: yc
+      zone: yc
+    taints:
+      - effect: NoExecute
+        key: dedicated.deckhouse.io
+        value: system
+  nodeType: Static
+  staticInstances:
+    count: 1
+    labelSelector:
+      matchLabels:
+        role: system-yc
