@@ -1,71 +1,91 @@
+
 # Configuration owners
-**                                                          @tatsiana-komovich
+**                                                          @adeo/lmru-devops-core-team
 # Technologies - Observability
-apps/obs/**                                                 @tatsiana-komovich
-common/monitoring/**                                        @tatsiana-komovich
-common/observability/lm/**                                  @tatsiana-komovich
-clusters/obs/**                                             @tatsiana-komovich
-apps/opensearch/obs-logs/values/obs-logs-a-prod-cluster/**  @tatsiana-komovich
+apps/obs/**                                                 @adeo/lmru-observability-sre
+common/monitoring/**                                        @adeo/lmru-observability-sre
+common/observability/lm/**                                  @adeo/lmru-observability-sre
+clusters/obs/**                                             @adeo/lmru-observability-sre
+apps/opensearch/obs-logs/values/obs-logs-a-prod-cluster/**  @adeo/lmru-observability-sre @adeo/lmru-flantgolf
 
 # Technologies - Observability - Alertmanager
-common/observability/lm/alertmanager/values/prod/magfront-prod-cluster/config.yaml    @tatsiana-komovich
-common/observability/lm/alertmanager/values/stage/magfront-stage-cluster/config.yaml  @tatsiana-komovich
-common/observability/lm/alertmanager/values/prod/payment-prod-cluster/config.yaml     @tatsiana-komovich
-common/observability/lm/alertmanager/values/prod/sirius-a-prod-cluster/config.yaml    @tatsiana-komovich
+common/observability/lm/alertmanager/values/prod/magfront-prod-cluster/config.yaml    @adeo/lmru-magfront
+common/observability/lm/alertmanager/values/stage/magfront-stage-cluster/config.yaml  @adeo/lmru-magfront
+common/observability/lm/alertmanager/values/prod/payment-prod-cluster/config.yaml     @adeo/lmru-payment-sre
+common/observability/lm/alertmanager/values/prod/sirius-a-prod-cluster/config.yaml    @adeo/lmru-payment-sre
 
 # remote-write-apim
-common/prometheus-remote-write/**/apim-*.yaml                             @tatsiana-komovich
-common/prometheus-remote-write/**/platformeco-*.yaml                      @tatsiana-komovich
-common/prometheus-remote-write/**/yc-cloud-studio-cluster.yaml            @tatsiana-komovich
-common/prometheus-remote-write/**/yc-platformeco-metrics-cluster.yaml     @tatsiana-komovich
+common/prometheus-remote-write/**/apim-*.yaml                             @adeo/lmru-api-platform-devops
+common/prometheus-remote-write/**/platformeco-*.yaml                      @adeo/lmru-api-platform-devops
+common/prometheus-remote-write/**/yc-cloud-studio-cluster.yaml            @adeo/lmru-api-platform-devops
+common/prometheus-remote-write/**/yc-platformeco-metrics-cluster.yaml     @adeo/lmru-api-platform-devops
 
 # Flant teams
-clusters/**                              @tatsiana-komovich
-common/deckhouse-modules/**              @tatsiana-komovich
-common/observability/flant/**            @tatsiana-komovich
-apps/opensearch/**                       @tatsiana-komovich
-observability/lm/log-shipper/**          @tatsiana-komovich
-clusters/kong/**                         @tatsiana-komovich
+clusters/**                              @adeo/lmru-flantbravo @adeo/lmru-flantgolf @adeo/lmru-flantrnd @adeo/lmru-devops-core-team
+common/deckhouse-modules/**              @adeo/lmru-flantbravo @adeo/lmru-flantgolf @adeo/lmru-flantrnd @adeo/lmru-devops-core-team
+common/observability/flant/**            @adeo/lmru-flantbravo @adeo/lmru-flantgolf @adeo/lmru-flantrnd
+apps/opensearch/**                       @adeo/lmru-flantgolf
+observability/lm/log-shipper/**          @adeo/lmru-flantgolf
+clusters/kong/**                         @adeo/lmru-flantalfa 
 
 # LMRU - Information Security
-common/deckhouse-modules/namespace-configurator/exclusion/*   @tatsiana-komovich
+common/deckhouse-modules/namespace-configurator/exclusion/*   @adeo/lmru-information-security
 
 # Kong - Api-platform
-clusters/kong/**                                                                                           @tatsiana-komovich
-common/**/x*-kong-prod-cluster.yaml                                                                        @tatsiana-komovich
-common/observability/lm/opentelemetry-collector/values/prod/x*-kong-prod-cluster/**                        @tatsiana-komovich
-common/**/yc-*-kong-{prod,stage}-cluster.yaml                                                              @tatsiana-komovich
-common/observability/lm/{alertmanager,opentelemetry-collector}/values/{prod,stage}/yc-*-kong-*-cluster/**  @tatsiana-komovich
-common/grafana-dashboards/dashboards/yc-elk-kong/**                                                        @tatsiana-komovich
-apps/opensearch/{rock.solid,apiplatform,alpha}/values/yc-*-kong-*-cluster/**                               @tatsiana-komovich
+clusters/kong/**                                                                                           @adeo/lmru-api-platform-devops @adeo/lmru-flantgolf
+common/**/x*-kong-prod-cluster.yaml                                                                        @adeo/lmru-api-platform-devops @adeo/lmru-flantgolf
+common/observability/lm/opentelemetry-collector/values/prod/x*-kong-prod-cluster/**                        @adeo/lmru-api-platform-devops @adeo/lmru-flantgolf
+
+common/**/yc-elk-kong-*-cluster.yaml                                                                       @adeo/lmru-api-platform-devops @adeo/lmru-flantgolf
+common/grafana-dashboards/dashboards/yc-elk-kong/**                                                        @adeo/lmru-api-platform-devops @adeo/lmru-flantgolf
+apps/opensearch/**/values/yc-elk-kong-prod-cluster/**                                                      @adeo/lmru-api-platform-devops @adeo/lmru-flantgolf
+apps/opensearch/alpha/values/yc-elk-kong-stage-cluster/**                                                  @adeo/lmru-api-platform-devops @adeo/lmru-flantgolf
+
+common/**/yc-kong-prod-cluster.yaml                                                                        @adeo/lmru-api-platform-devops @adeo/lmru-flantgolf
+common/observability/lm/opentelemetry-collector/values/prod/yc-kong-prod-cluster/**                        @adeo/lmru-api-platform-devops @adeo/lmru-flantgolf
+common/**/yc-kong-a-stage-cluster.yaml                                                                     @adeo/lmru-api-platform-devops @adeo/lmru-flantgolf
+ommon/observability/lm/alertmanager/values/stage/yc-kong-a-stage-cluster/**                                @adeo/lmru-api-platform-devops @adeo/lmru-flantgolf
+common/observability/lm/opentelemetry-collector/values/stage/yc-kong-a-stage-cluster/***                   @adeo/lmru-api-platform-devops @adeo/lmru-flantgolf
 
 # Kafka - Api-platform
-clusters/antila/**                                                                          @tatsiana-komovich
-common/observability/lm/alertmanager/values/{stage,prod}/antlia-{cluster}-*/**              @tatsiana-komovich
-common/**/antlia-*-cluster.yaml                                                             @tatsiana-komovich
+clusters/antila/**                                                                                         @adeo/lmru-api-platform-devops @adeo/lmru-flantgolf 
+common/observability/lm/alertmanager/values/prod/antlia-*-prod-cluster/**                                  @adeo/lmru-api-platform-devops @adeo/lmru-flantgolf 
+common/observability/lm/alertmanager/values/stage/antlia-*-stage-cluster/**                                @adeo/lmru-api-platform-devops @adeo/lmru-flantgolf 
+common/**/antlia-*-stage-cluster.yaml                                                                      @adeo/lmru-api-platform-devops @adeo/lmru-flantgolf 
+common/**/antlia-*-prod-cluster.yaml                                                                       @adeo/lmru-api-platform-devops @adeo/lmru-flantgolf 
 
 # Platformeco - Api-platform
 
 #apim-stage, apim 
-common/grafana-dashboards/dashboards/apim/**                                                @tatsiana-komovich
-common/grafana-dashboards/dashboards/apim/stage/**                                          @tatsiana-komovich
-common/**/apim-{stage,prod}-cluster.yaml                                                    @tatsiana-komovich
+common/grafana-dashboards/dashboards/apim/**                                                               @adeo/lmru-api-platform-devops @adeo/lmru-flantalfa
+common/grafana-dashboards/dashboards/apim/stage/**                                                         @adeo/lmru-api-platform-devops @adeo/lmru-flantalfa
+common/**/apim-stage-cluster.yaml                                                                          @adeo/lmru-api-platform-devops @adeo/lmru-flantalfa
+common/**/apim-prod-cluster.yaml                                                                           @adeo/lmru-api-platform-devops @adeo/lmru-flantalfa
 
 #yc-cloud, hamal-a-stage
-common/observability/lm/alertmanager/values/stage/hamal-a-stage-cluster/**                  @tatsiana-komovich
-common/**/hamal-a-stage-cluster.yaml                                                        @tatsiana-komovich
-common/**/yc-cloud-studio-cluster.yaml                                                      @tatsiana-komovich
+common/observability/lm/alertmanager/values/stage/hamal-a-stage-cluster/**                                 @adeo/lmru-api-platform-devops @adeo/lmru-flantalfa
+common/**/hamal-a-stage-cluster.yaml                                                                       @adeo/lmru-api-platform-devops @adeo/lmru-flantalfa
+common/**/yc-cloud-studio-cluster.yaml                                                                     @adeo/lmru-api-platform-devops @adeo/lmru-flantalfa
 
 #platformeco-stage, platformeco-logs-a, platformeco, platformeco-infra-a
-common/**/platformeco-{stage,prod,logs-*,infra-*}-cluster.yaml                               @tatsiana-komovich
-common/observability/lm/alertmanager/values/prod/platformeco-infra-a-prod-cluster/**         @tatsiana-komovich
-clusters/platformeco{,-infra}/**                                                             @tatsiana-komovich
+common/**/platformeco-stage-cluster.yaml                                                    @adeo/lmru-api-platform-devops @adeo/lmru-flantalfa
+common/**/platformeco-prod-cluster.yaml                                                     @adeo/lmru-api-platform-devops @adeo/lmru-flantalfa
+common/**/platformeco-logs-a-cluster.yaml                                                   @adeo/lmru-api-platform-devops @adeo/lmru-flantalfa
+common/**/platformeco-infra-a-cluster.yaml                                                  @adeo/lmru-api-platform-devops @adeo/lmru-flantalfa
+common/observability/lm/alertmanager/values/prod/platformeco-infra-a-prod-cluster/**        @adeo/lmru-api-platform-devops @adeo/lmru-flantalfa
+clusters/platformeco/**                                                                     @adeo/lmru-api-platform-devops @adeo/lmru-flantalfa
+clusters/platformeco-infra/**                                                               @adeo/lmru-api-platform-devops @adeo/lmru-flantalfa
 
 #x1-platformeco, x1-platformeco-stage,yc-platformeco, yc-platformeco-metrics
-common/**/{x1,yc}-platformeco-*-cluster.yaml                                                           @tatsiana-komovich
-common/observability/lm/opentelemetry-collector/values/{stage,prod}/{x1,yc}-platformeco-*-cluster/**   @tatsiana-komovich
+common/**/yc-platformeco-*-cluster.yaml                                                         @adeo/lmru-api-platform-devops @adeo/lmru-flantalfa
+common/**/x1-platformeco-*-cluster.yaml                                                         @adeo/lmru-api-platform-devops @adeo/lmru-flantalfa
+common/observability/lm/opentelemetry-collector/values/prod/x1-platformeco-prod-cluster/**      @adeo/lmru-api-platform-devops @adeo/lmru-flantalfa
+common/observability/lm/opentelemetry-collector/values/prod/yc-platformeco-prod-cluster/**      @adeo/lmru-api-platform-devops @adeo/lmru-flantalfa
+common/observability/lm/opentelemetry-collector/values/stage/x1-platformeco-stage-cluster/**    @adeo/lmru-api-platform-devops @adeo/lmru-flantalfa
 
 #common heze-a-stage, heze-a, heze-b-stage, heze-b, heze-d-stage, heze-d
-common/observability/lm/alertmanager/values/{stage,prod}/heze-*-{stage,prod}-cluster/*                 @tatsiana-komovich
-common/**/heze-*-{stage,prod}-cluster.yaml                                                             @tatsiana-komovich
-clusters/heze/prod/{a,b}/nodes/remove-ansible-user.yaml                                                @tatsiana-komovich
+common/observability/lm/alertmanager/values/stage/heze-*-stage-cluster/**                    @adeo/lmru-api-platform-devops @adeo/lmru-flantalfa
+common/observability/lm/alertmanager/values/prod/heze-*-prod-cluster/**                      @adeo/lmru-api-platform-devops @adeo/lmru-flantalfa
+common/**/heze-*-prod-cluster.yaml                                                           @adeo/lmru-api-platform-devops @adeo/lmru-flantalfa
+common/**/heze-*-stage-cluster.yaml                                                          @adeo/lmru-api-platform-devops @adeo/lmru-flantalfa
+clusters/heze/**                                                                             @adeo/lmru-api-platform-devops @adeo/lmru-flantalfa
